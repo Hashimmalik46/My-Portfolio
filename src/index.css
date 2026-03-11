@@ -1,1 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.cdnfonts.com/css/khumairoh');
+@import url('https://fonts.cdnfonts.com/css/longsile');
+@import url('https://fonts.cdnfonts.com/css/reverie');
 @import "tailwindcss";
+
+@theme {
+  --color-primary: #f8f7f3;
+  --color-secondary: #111827;
+  --color-pAccent: #fdb144;
+  --color-sAccent: #22c55e;
+  --color-text: #e5e7eb;
+  --font-poppins: "Poppins", sans-serif;
+  --font-khuma: "Khumairoh", sans-serif;
+  --font-longsile: "Longsile", sans-serif;
+  --font-reverie: "Reverie", sans-serif;
+
+}
+html {
+  scroll-behavior: smooth;
+}

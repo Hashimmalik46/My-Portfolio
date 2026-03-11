@@ -1,8 +1,19 @@
-function App() {
+import About from "./components/About";
+import Hero from "./components/Hero";
+import Navbar from "./components/Navbar";
 
+function App() {
   return (
-    <h1>Hi! I'm Hashim Malik</h1>
-  )
+    <div className="">
+      <section id="Home" className="h-screen flex flex-col items-center bg-primary">
+        <Navbar />
+        <Hero />
+      </section>
+      <section id="About" className="h-screen bg-black p-10 border drop-shadow-2xl drop-shadow-pAccent">
+        <About/>
+      </section>
+    </div>
+  );
 }
 
-export default App
+export default App;
