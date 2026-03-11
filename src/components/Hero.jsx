@@ -3,7 +3,7 @@ function Hero() {
     <>
       <div className="hidden md:flex w-full h-full flex-col items-center justify-center mt-20">
         <h1 className="text-[160px] font-longsile absolute">Hashim Malik</h1>
-        <img src="character.png" className="text-[160px] absolute bottom-0" />
+        <img src="character.png" className="w-[900px] absolute bottom-0" />
         <h1 className="text-5xl md:text-6xl lg:text-[160px] font-longsile absolute text-transparent [-webkit-text-stroke:0.5px_white]">
           Hashim Malik
         </h1>

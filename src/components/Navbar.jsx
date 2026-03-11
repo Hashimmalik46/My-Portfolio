@@ -4,7 +4,7 @@ function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <nav className="w-full flex items-center justify-between px-10 pt-10">
+    <nav className="w-full flex items-center justify-between px-10 md:px-30 pt-10">
       <h1 className="font-khuma text-3xl font-bold text-black">Hash</h1>
 
       <ul className="hidden md:flex gap-6 font-poppins text-[18px] font-semibold">
