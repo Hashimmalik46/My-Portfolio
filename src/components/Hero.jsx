@@ -11,14 +11,20 @@ function Hero() {
           }}
           transition={{
             duration: 0.5,
-            delay: 0.5,
+            delay: 1 * 0.5,
             ease: easeOut,
           }}
           className="text-[160px] font-longsile absolute"
         >
           Hashim Malik
         </motion.h1>
-        <img src="character.png" className="w-[900px] absolute bottom-0" />
+        <motion.img
+          initial={{ bottom: -500, opacity: 0 }}
+          animate={{ bottom: 0, opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0 * 0.5 }}
+          src="character.png"
+          className="w-[900px] absolute bottom-0 drop-shadow drop-shadow-pAccent"
+        />
         <motion.h1
           initial={{ x: 200, opacity: 0 }}
           animate={{
@@ -27,7 +33,7 @@ function Hero() {
           }}
           transition={{
             duration: 0.5,
-            delay: 0.5,
+            delay: 1 * 0.5,
             ease: easeOut,
           }}
           className="text-5xl md:text-6xl lg:text-[160px] font-longsile absolute text-transparent [-webkit-text-stroke:0.5px_white]"
@@ -89,16 +95,18 @@ function Hero() {
           src="character.png"
           initial={{
             bottom: -500,
+            opacity: 0,
           }}
           animate={{
             bottom: 0,
+            opacity: 1,
           }}
           transition={{
             duration: 0.5,
             delay: 0 * 0.5,
             ease: easeOut,
           }}
-          className="absolute bottom-0"
+          className="absolute bottom-0 drop-shadow drop-shadow-pAccent"
         />
       </div>
     </>
