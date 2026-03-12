@@ -1,13 +1,40 @@
 import { useState } from "react";
+import { motion } from "motion/react";
 
 function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <nav className="w-full flex items-center justify-between px-10 md:px-30 pt-10">
-      <h1 className="font-khuma text-3xl font-bold text-black">Hash</h1>
+    <motion.nav className="w-full flex items-center justify-between px-10 md:px-30 pt-10 cursor-grab">
+      <motion.h1
+        drag
+        whileDrag={{
+          cursor:"grabbing"
+        }
+        }
+        dragConstraints={{
+          left: 0,
+          top: 0,
+          right: 1000,
+          bottom: 1000,
+        }}
+        className="font-khuma text-3xl font-bold text-black"
+      >
+        Hash
+      </motion.h1>
 
-      <ul className="hidden md:flex gap-6 font-poppins text-[18px] font-semibold">
+      <motion.ul
+        initial={{
+          y: -200,
+        }}
+        animate={{
+          y: 0,
+        }}
+        transition={{
+          delay: 0.5,
+        }}
+        className="hidden md:flex gap-6 font-poppins text-[18px] font-semibold"
+      >
         <li>
           <a href="#Home">Home</a>
         </li>
@@ -20,7 +47,7 @@ function Navbar() {
         <li>
           <a href="#Contact">Contact</a>
         </li>
-      </ul>
+      </motion.ul>
 
       <div className="hidden md:flex gap-5">
         <a href="https://github.com/Hashimmalik46" target="_blank">
@@ -60,7 +87,7 @@ function Navbar() {
           </div>
         </div>
       )}
-    </nav>
+    </motion.nav>
   );
 }
 
