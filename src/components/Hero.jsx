@@ -1,16 +1,18 @@
-import { motion } from "motion/react";
+import { anticipate, easeInOut, easeOut, motion } from "motion/react";
 function Hero() {
   return (
     <>
       <div className="hidden md:flex w-full h-full flex-col items-center justify-center mt-20">
         <motion.h1
-          initial={{ x: -200 }}
+          initial={{ x: -200, opacity: 0 }}
           animate={{
             x: 0,
+            opacity: 1,
           }}
           transition={{
-            duration: 1.5,
+            duration: 0.5,
             delay: 0.5,
+            ease: easeOut,
           }}
           className="text-[160px] font-longsile absolute"
         >
@@ -18,13 +20,15 @@ function Hero() {
         </motion.h1>
         <img src="character.png" className="w-[900px] absolute bottom-0" />
         <motion.h1
-          initial={{ x: 200 }}
+          initial={{ x: 200, opacity: 0 }}
           animate={{
             x: 0,
+            opacity: 1,
           }}
           transition={{
-            duration: 1.5,
+            duration: 0.5,
             delay: 0.5,
+            ease: easeOut,
           }}
           className="text-5xl md:text-6xl lg:text-[160px] font-longsile absolute text-transparent [-webkit-text-stroke:0.5px_white]"
         >
@@ -41,7 +45,9 @@ function Hero() {
             x: 0,
           }}
           transition={{
-            delay: 0.2,
+            duration: 0.5,
+            delay: 1 * 0.5,
+            ease: easeOut,
           }}
           className="text-[30px] font-longsile"
         >
@@ -55,7 +61,9 @@ function Hero() {
             x: 0,
           }}
           transition={{
-            delay: 0.5,
+            duration: 0.5,
+            delay: 2 * 0.5,
+            ease: easeOut,
           }}
           className="text-[45px] font-longsile"
         >
@@ -69,8 +77,9 @@ function Hero() {
             y: 0,
           }}
           transition={{
-            delay: 0.8,
             duration: 0.5,
+            delay: 3 * 0.5,
+            ease: easeOut,
           }}
           className="text-[20px] font-longsile text-center"
         >
@@ -85,8 +94,9 @@ function Hero() {
             bottom: 0,
           }}
           transition={{
-            delay: 0.2,
             duration: 0.5,
+            delay: 0 * 0.5,
+            ease: easeOut,
           }}
           className="absolute bottom-0"
         />

@@ -9,7 +9,7 @@ function App() {
         <Navbar />
         <Hero />
       </section>
-      <section id="About" className="h-screen bg-black pt-5 md:p-10 border drop-shadow-2xl drop-shadow-pAccent">
+      <section id="About" className="h-130 bg-black pt-5 md:p-10 border drop-shadow-2xl drop-shadow-pAccent">
         <About/>
       </section>
     </div>
