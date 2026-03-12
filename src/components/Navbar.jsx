@@ -7,17 +7,17 @@ function Navbar() {
   return (
     <motion.nav className="w-full flex items-center justify-between px-10 md:px-30 pt-10 cursor-grab">
       <motion.h1
-        drag
-        whileDrag={{
-          cursor: "grabbing",
-        }}
-        dragConstraints={{
-          left: 0,
-          top: 0,
-          right: 1000,
-          bottom: 700,
-        }}
-        dragDirectionLock={true}
+        // drag
+        // whileDrag={{
+        //   cursor: "grabbing",
+        // }}
+        // dragConstraints={{
+        //   left: 0,
+        //   top: 0,
+        //   right: 1000,
+        //   bottom: 700,
+        // }}
+        // dragDirectionLock={true}
         className="font-khuma text-3xl font-bold text-black"
       >
         Hash
