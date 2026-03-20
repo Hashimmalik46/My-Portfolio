@@ -1,92 +1,81 @@
-import { useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 
 function About() {
   const ref = useRef(null);
-  const [activeTab, setActiveTab] = useState("about");
 
-  const activeClass =
-    "text-sm md:text-xl text-pAccent underline font-poppins cursor-pointer transition-all duration-200";
-
-  const inactiveClass =
-    "text-sm md:text-xl text-white font-poppins cursor-pointer transition-all duration-200";
-
-
+  // Scroll trigger for this section
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ["start 80%", "end 60%"],
+    offset: ["start 0.8", "start 0.3"], // starts at ~20% visibility
   });
 
-  const opacity1 = useTransform(scrollYProgress, [0.2, 0.4], [0, 1]);
-  const y1 = useTransform(scrollYProgress, [0.2, 0.4], [20, 0]);
+  // Image animation (comes up)
+  const imgY = useTransform(scrollYProgress, [0, 1], [100, 0]);
+  const imgOpacity = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
-  const opacity2 = useTransform(scrollYProgress, [0.25, 0.45], [0, 1]);
-  const y2 = useTransform(scrollYProgress, [0.25, 0.45], [20, 0]);
+  // Text container animation (slight delay feel)
+  const textOpacity = useTransform(scrollYProgress, [0.2, 1], [0, 1]);
 
-  const opacity3 = useTransform(scrollYProgress, [0.3, 0.5], [0, 1]);
-  const y3 = useTransform(scrollYProgress, [0.3, 0.5], [20, 0]);
+  // Word animation variants
+  const container = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: 0.05,
+      },
+    },
+  };
 
-  const opacity = useTransform(scrollYProgress, [0, 1], [0, 1]);
-  const y = useTransform(scrollYProgress, [0, 1], [50, 0]);
+  const word = {
+    hidden: { opacity: 0, x: -10 },
+    visible: { opacity: 1, x: 0 },
+  };
+
+  const text =
+    "I am a passionate developer focused on building modern, responsive and visually engaging web experiences.";
 
   return (
-    <div ref={ref} className="px-6 md:px-20">
-      <motion.h1
-        style={{ opacity, y }}
-        className="font-longsile text-3xl md:text-5xl text-white mb-8"
+    <div
+      ref={ref}
+      className="flex flex-col md:flex-row items-start gap-10 px-6 md:px-20"
+    >
+      {/* Image */}
+      <motion.div
+        style={{ y: imgY, opacity: imgOpacity }}
+        className="w-full md:w-1/2"
       >
-        About Me
-      </motion.h1>
+        <img
+          src="/character.png"
+          alt="About"
+          className="w-full shadow-2xl"
+        />
+      </motion.div>
 
-      <ul ref={ref} className="flex gap-6 md:gap-10 my-6 md:my-10">
-        <motion.li
-          style={{ opacity: opacity1, y: y1 }}
-          className={activeTab === "about" ? activeClass : inactiveClass}
-          onClick={() => setActiveTab("about")}
+      {/* Text */}
+      <motion.div
+        style={{ opacity: textOpacity }}
+        className="w-full md:w-1/2 text-white"
+      >
+        <h2 className="text-4xl font-bold mb-4 font-longsile">About Me</h2>
+
+        <motion.p
+          variants={container}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ amount: 0.2 }}
+          className="text-lg text-gray-300 leading-relaxed font-poppins"
         >
-          About
-        </motion.li>
-
-        <motion.li
-          style={{ opacity: opacity2, y: y2 }}
-          className={activeTab === "skills" ? activeClass : inactiveClass}
-          onClick={() => setActiveTab("skills")}
-        >
-          Skills
-        </motion.li>
-
-        <motion.li
-          style={{ opacity: opacity3, y: y3 }}
-          className={activeTab === "exp" ? activeClass : inactiveClass}
-          onClick={() => setActiveTab("exp")}
-        >
-          Experience
-        </motion.li>
-      </ul>
-
-      <motion.div style={{ opacity, y }} className="overflow-hidden">
-        {activeTab === "about" && (
-          <p className="text-base md:text-xl text-white font-poppins max-w-[600px]">
-            I'm Hashim Malik, a passionate Frontend Developer who enjoys
-            building clean and interactive web applications.
-          </p>
-        )}
-
-        {activeTab === "skills" && (
-          <div className="flex gap-6 md:gap-10 items-center flex-wrap">
-            <img src="html.png" className="w-10 md:w-14" />
-            <img src="css.png" className="w-10 md:w-14" />
-            <img src="js.png" className="w-10 md:w-14" />
-            <img src="react.png" className="w-10 md:w-14" />
-            <img src="tailwind.png" className="w-10 md:w-14" />
-          </div>
-        )}
-
-        {activeTab === "exp" && (
-          <p className="text-base md:text-xl text-white font-poppins">
-            Currently building projects and improving my frontend skills.
-          </p>
-        )}
+          {text.split(" ").map((wordText, i) => (
+            <motion.span
+              key={i}
+              variants={word}
+              className="inline-block mr-2"
+            >
+              {wordText}
+            </motion.span>
+          ))}
+        </motion.p>
       </motion.div>
     </div>
   );

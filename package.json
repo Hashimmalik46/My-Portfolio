@@ -10,7 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@formspree/react": "^3.0.0",
     "@tailwindcss/vite": "^4.2.1",
+    "hamburger-react": "^2.5.2",
     "motion": "^12.35.2",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",

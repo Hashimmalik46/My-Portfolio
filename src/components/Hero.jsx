@@ -1,5 +1,8 @@
 import { anticipate, easeInOut, easeOut, motion } from "motion/react";
+import { useState } from "react";
+
 function Hero() {
+  const [imgLoaded, setImgLoaded] = useState(false);
   return (
     <>
       <div className="hidden md:flex w-full h-full flex-col items-center justify-center mt-20">
@@ -19,10 +22,11 @@ function Hero() {
           Hashim Malik
         </motion.h1>
         <motion.img
-          initial={{ bottom: -500, opacity: 0 }}
-          animate={{ bottom: 0, opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0 * 0.5 }}
           src="character.png"
+          onLoad={() => setImgLoaded(true)}
+          initial={{ bottom: -500, opacity: 0 }}
+          animate={imgLoaded ? { bottom: 0, opacity: 1 } : {}}
+          transition={{ duration: 0.5, ease: easeOut }}
           className="w-[900px] absolute bottom-0 drop-shadow drop-shadow-pAccent"
         />
         <motion.h1
@@ -77,7 +81,7 @@ function Hero() {
         </motion.h1>
         <motion.h1
           initial={{
-            y: 500,
+            y: 600,
           }}
           animate={{
             y: 0,
@@ -89,7 +93,7 @@ function Hero() {
           }}
           className="text-[20px] font-longsile text-center"
         >
-          Frontend Developer crafting modern web experiences
+          Frontend Dev | Designer | Gamer
         </motion.h1>
         <motion.img
           src="character.png"
