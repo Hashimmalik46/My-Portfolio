@@ -1,7 +1,6 @@
 import About from "./components/About";
 import Hero from "./components/Hero";
 import Navbar from "./components/Navbar";
-import Skills from "./components/Skills";
 import Contact from "./components/Contact";
 import Projects from "./components/Projects";
 import Cursor from "./components/Cursor";
@@ -29,7 +28,6 @@ function App() {
         id="Portfolio"
         className="min-h-screen relative bg-pAccent pt-16 pb-20 md:px-10 z-30 rounded-t-4xl px-5 -mt-10"
       >
-        <Skills />
 
         <div className="mt-10">
           <Projects />
