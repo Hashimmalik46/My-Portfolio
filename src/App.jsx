@@ -11,7 +11,7 @@ function App() {
       <Cursor />
       <section
         id="Home"
-        className="h-screen sticky top-0 flex flex-col items-center bg-primary z-10 px-5"
+        className="h-screen sticky top-0 flex flex-col items-center bg-c1 z-10 px-5"
       >
         <Navbar />
         <Hero />
@@ -19,24 +19,22 @@ function App() {
 
       <section
         id="About"
-        className="min-h-[70vh] sticky top-0 bg-black md:px-10 z-20 rounded-t-4xl pt-15 px-10"
+        className="h-screen 
+        sticky top-0 bg-black md:px-10 z-20 rounded-t-4xl pt-15 px-10"
       >
         <About />
       </section>
 
       <section
         id="Portfolio"
-        className="min-h-screen relative bg-pAccent pt-16 pb-20 md:px-10 z-30 rounded-t-4xl px-5 -mt-10"
+        className="h-screen sticky top-0 bg-c1 py-10 md:px-10 z-30 rounded-t-4xl"
       >
-
-        <div className="mt-10">
-          <Projects />
-        </div>
+        <Projects />
       </section>
 
       <section
         id="Contact"
-        className="min-h-screen bg-black pt-20 pb-16 md:px-10 z-40 relative px-5 rounded-t-4xl overflow-hidden -mt-10"
+        className="min-h-screen bg-black pt-20 pb-16 md:px-10 z-40 sticky top-0 px-5 rounded-t-4xl overflow-hidden -mt-10"
       >
         <Contact />
       </section>

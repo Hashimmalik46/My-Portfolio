@@ -1,82 +1,52 @@
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useState } from "react";
 
+import Skills from "./Skills";
+import Orbit from "./OrbitSkills";
+
+const tabs = ["About", "Skills", "Experience"];
 function About() {
-  const ref = useRef(null);
-
-  // Scroll trigger for this section
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start 0.8", "start 0.3"], // starts at ~20% visibility
-  });
-
-  // Image animation (comes up)
-  const imgY = useTransform(scrollYProgress, [0, 1], [100, 0]);
-  const imgOpacity = useTransform(scrollYProgress, [0, 1], [0, 1]);
-
-  // Text container animation (slight delay feel)
-  const textOpacity = useTransform(scrollYProgress, [0.2, 1], [0, 1]);
-
-  // Word animation variants
-  const container = {
-    hidden: {},
-    visible: {
-      transition: {
-        staggerChildren: 0.05,
-      },
-    },
-  };
-
-  const word = {
-    hidden: { opacity: 0, x: -10 },
-    visible: { opacity: 1, x: 0 },
-  };
-
-  const text =
-    "I am a passionate developer focused on building modern, responsive and visually engaging web experiences.";
-
+  const [activeTab, setActiveTab] = useState("About");
   return (
-    <div
-      ref={ref}
-      className="flex flex-col md:flex-row items-start gap-10 px-6 md:px-20"
-    >
-      {/* Image */}
-      <motion.div
-        style={{ y: imgY, opacity: imgOpacity }}
-        className="w-full md:w-1/2"
-      >
-        <img
-          src="/character.png"
-          alt="About"
-          className="w-full shadow-2xl"
-        />
-      </motion.div>
+    <div className="flex p-5">
+      <div className="w-1/2">
+        <img src="/character.png" />
+      </div>
 
-      {/* Text */}
-      <motion.div
-        style={{ opacity: textOpacity }}
-        className="w-full md:w-1/2 text-white"
-      >
-        <h2 className="text-4xl font-bold mb-4 font-longsile">About Me</h2>
+      <div className="w-1/2 flex flex-col gap-5">
+        <h1 className="text-3xl text-white font-longsile self-center">
+          About Me
+        </h1>
 
-        <motion.p
-          variants={container}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ amount: 0.2 }}
-          className="text-lg text-gray-300 leading-relaxed font-poppins"
-        >
-          {text.split(" ").map((wordText, i) => (
-            <motion.span
-              key={i}
-              variants={word}
-              className="inline-block mr-2"
-            >
-              {wordText}
-            </motion.span>
-          ))}
-        </motion.p>
-      </motion.div>
+        <div className="border border-primary w-full rounded-xl p-2 flex items-center justify-around font-poppins">
+          {tabs.map((tab) => {
+            return (
+              <span
+                className={`${activeTab === tab ? "bg-white  text-xl px-3 py-1 rounded-xl cursor-pointer transition-all duration-200" : "text-white text-xl px-3 py-1 rounded cursor-pointer"}`}
+                onClick={() => setActiveTab(tab)}
+              >
+                {tab}
+              </span>
+            );
+          })}
+        </div>
+        {activeTab === "About" && (
+          <div>
+            <p className="text-white text-xl font-poppins text-justify">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              Laboriosam harum quibusdam reiciendis id corporis dolorem odit
+              laborum explicabo earum nihil dolores minima voluptatum
+              consectetur, rerum repudiandae. Cumque amet molestiae quaerat?
+            </p>
+          </div>
+        )}
+
+        {activeTab === "Skills" && (
+          <div className="flex flex-wrap gap-5">
+            <Orbit />
+          </div>
+        )}
+        {activeTab === "Experience" && ""}
+      </div>
     </div>
   );
 }
