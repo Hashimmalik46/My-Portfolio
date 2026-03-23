@@ -1,11 +1,14 @@
 import { anticipate, easeInOut, easeOut, motion } from "motion/react";
 import { useState } from "react";
+import { FlipWords } from "./ui/flip-words";
+
+const words = ["Frontend Dev", "Designer", "Tech Enthusiast"];
 
 function Hero() {
   const [imgLoaded, setImgLoaded] = useState(false);
   return (
     <>
-      <div className="hidden md:flex w-full h-full flex-col items-center justify-center mt-20">
+      <div className="hidden md:flex w-full h-full flex-col items-center justify-center mt-20 z-10">
         <motion.h1
           initial={{ x: -200, opacity: 0 }}
           animate={{
@@ -27,7 +30,7 @@ function Hero() {
           initial={{ bottom: -500, opacity: 0 }}
           animate={imgLoaded ? { bottom: 0, opacity: 1 } : {}}
           transition={{ duration: 0.5, ease: easeOut }}
-          className="w-[900px] absolute bottom-0 drop-shadow drop-shadow-pAccent"
+          className="w-[900px] absolute bottom-0 drop-shadow drop-shadow-pAccent z-20"
         />
         <motion.h1
           initial={{ x: 200, opacity: 0 }}
@@ -40,9 +43,25 @@ function Hero() {
             delay: 1 * 0.5,
             ease: easeOut,
           }}
-          className="text-5xl md:text-6xl lg:text-[160px] font-longsile absolute text-transparent [-webkit-text-stroke:0.5px_white]"
+          className="text-5xl md:text-6xl lg:text-[160px] font-longsile absolute text-transparent [-webkit-text-stroke:0.5px_white] z-30"
         >
           Hashim Malik
+        </motion.h1>
+
+        <motion.h1
+          initial={{ y: 200, opacity: 0 }}
+          animate={{
+            y: 0,
+            opacity: 1,
+          }}
+          transition={{
+            duration: 0.5,
+            delay: 2 * 0.5,
+            ease: easeOut,
+          }}
+          className="text-4xl font-poppins z-40 absolute top-140 text-white"
+        >
+          <FlipWords words={words} duration={2000} className={`text-white font-longsile`} />
         </motion.h1>
       </div>
 

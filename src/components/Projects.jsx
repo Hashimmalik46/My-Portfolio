@@ -1,6 +1,6 @@
 import Project from "./Project";
-import ProjectDesc from "./ProjectDesc";
-import { useState } from "react";
+import { motion, useMotionValue, useSpring } from "motion/react";
+import { useEffect, useState } from "react";
 
 const projects = [
   {
@@ -10,7 +10,18 @@ const projects = [
     short_desc:
       " Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis in debitis velit praesentium aspernatur tempora laudantium odio, nullanon pariatur quibusdam quos voluptatem, voluptatibus modi.",
 
-    tags: ["React", "Tailwind", "Framer Motion"],
+    tags: [
+      {
+        id: 1,
+        img: "react.png",
+        tag: "React",
+      },
+      {
+        id: 2,
+        img: "tailwind.png",
+        tag: "Tailwind",
+      },
+    ],
     link: "https://hashimmalik.in",
   },
   {
@@ -20,27 +31,71 @@ const projects = [
     short_desc:
       " Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis in debitis velit praesentium aspernatur tempora laudantium odio, nullanon pariatur quibusdam quos voluptatem, voluptatibus modi.",
 
-    tags: ["JavaScript"],
+    tags: [
+      {
+        id: 1,
+        img: "html.png",
+        tag: "HTML",
+      },
+      {
+        id: 2,
+        img: "css.png",
+        tag: "CSS",
+      },
+      {
+        id: 3,
+        img: "js.png",
+        tag: "JavaScript",
+      },
+    ],
     link: "https://hashimmalik.in",
   },
 ];
 
 function Projects() {
-  const [activeProject, setActiveProject] = useState(null);
+  const [isPreview, setPreviewOpen] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const springX = useSpring(x, { damping: 10 }, { stiffness: 50 });
+  const springY = useSpring(y, { damping: 10 }, { stiffness: 50 });
+
+  const handleMouseMove = (e) => {
+    x.set(e.clientX + 20);
+    y.set(e.clientY + 20);
+  };
 
   return (
-    <div className="flex flex-col gap-5">
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ amount: 0.2 }}
+      transition={{ duration: 0.6 }}
+      className="flex flex-col gap-5"
+      onMouseMove={handleMouseMove}
+    >
+      <h1 className="text-4xl font-longsile self-center">Projects</h1>
       {projects.map((project, index) => (
         <Project
           key={index}
           project={project}
-          isActive={activeProject === index}
-          setActive={() =>
-            setActiveProject(activeProject === index ? null : index)
-          }
+          isPreview={isPreview}
+          setPreviewOpen={setPreviewOpen}
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
         />
       ))}
-    </div>
+      {isPreview && !isOpen && (
+        <motion.div
+          className="fixed top-0 left-0 pointer-events-none z-50 object-cover w-80 shadow-lg rounded-xl overflow-hidden"
+          style={{ x: springX, y: springY }}
+        >
+          <img src={isPreview} className="w-full h-full object-cover" />
+        </motion.div>
+      )}
+    </motion.div>
   );
 }
 

@@ -1,38 +1,50 @@
+import { useState } from "react";
 import ProjectDesc from "./ProjectDesc";
-function Project({ project, isActive, setActive }) {
-  const { title, short_desc, tags } = project;
+function Project({ project, isPreview, setPreviewOpen,isOpen,setIsOpen }) {
+  const { title, short_desc, tags, img } = project;
+
+  function handleModalOpen() {
+    setIsOpen(true);
+  }
+  function handleModalClose() {
+    setIsOpen(false);
+  }
 
   return (
-    <div className="border border-black rounded-xl p-5 flex flex-col gap-3">
+    <div
+      onMouseEnter={() => !isOpen && setPreviewOpen(img)}
+      onMouseLeave={() => !isOpen && setPreviewOpen("")}
+      className="border border-black/10 p-5 flex flex-col gap-3 shadow-lg transition-all duration-200"
+    >
       <h1 className="text-xl font-poppins font-bold">{title}</h1>
       <p className="font-poppins">{short_desc}</p>
 
-      <div className="flex items-center gap-5">
-        {tags.map((tag, index) => (
-          <span
-            key={index}
-            className="font-poppins bg-black text-white px-3 py-1 rounded-full text-center"
-          >
-            {tag}
-          </span>
-        ))}
+      <div className="w-full flex items-center justify-between">
+        <div className="flex items-center w-1/2 gap-5">
+          {tags.map((tag) => (
+            <span
+              key={tag.id}
+              className="font-poppins px-3 py-1 rounded-full text-sm bg-black/10 border border-black/10 transition-all duration-300 hover:bg-white/30 hover:scale-105"
+            >
+              {tag.tag}
+            </span>
+          ))}
+        </div>
+
+        <button
+          type="button"
+          className="w-30 rounded p-2 cursor-pointer hover:text-pAccent transition-all duration-200"
+          onClick={handleModalOpen}
+        >
+          Read More &rarr;
+        </button>
       </div>
 
-      <button
-        type="button"
-        className="w-30 bg-pAccent rounded p-2 cursor-pointer hover:bg-amber-400 transition-all duration-200"
-        onClick={setActive}
-      >
-        Read More &rarr;
-      </button>
-
-      {isActive && (
-        <ProjectDesc
-          project={project}
-          isActive={isActive}
-          setIsActive={setActive}
-        />
-      )}
+      <ProjectDesc
+        project={project}
+        handleModalClose={handleModalClose}
+        isOpen={isOpen}
+      />
     </div>
   );
 }
