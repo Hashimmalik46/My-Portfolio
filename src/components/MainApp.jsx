@@ -1,11 +1,11 @@
-import About from "./components/About";
-import Hero from "./components/Hero";
-import Navbar from "./components/Navbar";
-import Contact from "./components/Contact";
-import Projects from "./components/Projects";
-import Cursor from "./components/Cursor";
+import About from "./About";
+import Hero from "./Hero";
+import Navbar from "./Navbar";
+import Contact from "./Contact";
+import Projects from "./Projects";
+import Cursor from "./Cursor";
 import { ScrollProgress } from "@/components/ui/scroll-progress";
-import Footer from "./components/Footer";
+import Footer from "./Footer";
 
 function MainApp() {
   return (

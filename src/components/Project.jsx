@@ -1,19 +1,26 @@
-import { useState } from "react";
 import ProjectDesc from "./ProjectDesc";
-function Project({ project, isPreview, setPreviewOpen,isOpen,setIsOpen }) {
+function Project({
+  project,
+  setPreviewOpen,
+  setActiveProject,
+  index,
+  activeProject,
+}) {
   const { title, short_desc, tags, img } = project;
 
+  const isActive = activeProject === index;
+
   function handleModalOpen() {
-    setIsOpen(true);
+    setActiveProject(index);
   }
   function handleModalClose() {
-    setIsOpen(false);
+    setActiveProject(null);
   }
 
   return (
     <div
-      onMouseEnter={() => !isOpen && setPreviewOpen(img)}
-      onMouseLeave={() => !isOpen && setPreviewOpen("")}
+      onMouseEnter={() => !isActive && setPreviewOpen(img)}
+      onMouseLeave={() => !isActive && setPreviewOpen("")}
       className="border border-black/10 p-5 flex flex-col gap-3 shadow-lg transition-all duration-200"
     >
       <h1 className="text-xl font-poppins font-bold">{title}</h1>
@@ -42,8 +49,8 @@ function Project({ project, isPreview, setPreviewOpen,isOpen,setIsOpen }) {
 
       <ProjectDesc
         project={project}
+        isActive={isActive}
         handleModalClose={handleModalClose}
-        isOpen={isOpen}
       />
     </div>
   );

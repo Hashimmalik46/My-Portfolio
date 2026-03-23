@@ -1,12 +1,12 @@
 import { LuExternalLink } from "react-icons/lu";
 import { AnimatePresence, motion } from "motion/react";
 
-function ProjectDesc({ project, handleModalClose, isOpen }) {
+function ProjectDesc({ project, isActive, handleModalClose }) {
   const { title, img, desc, short_desc, tags, link } = project;
-
+  
   return (
     <AnimatePresence>
-      {isOpen && (
+      {isActive && (
         <motion.div
           key="overlay"
           initial={{ opacity: 0 }}
@@ -22,8 +22,8 @@ function ProjectDesc({ project, handleModalClose, isOpen }) {
             className="flex flex-col gap-5 w-full max-w-2xl backdrop-blur-lg text-black rounded-2xl border border-black/10 shadow-lg p-5 mb-15"
           >
             <button
-              className="bg-white/20 text-black w-10 h-10 absolute right-3 top-3 text-2xl rounded-full hover:scale-105 transition-all duration-200 cursor-pointer backdrop-blur-lg shadow-lg"
               onClick={handleModalClose}
+              className="bg-white/20 text-black w-10 h-10 absolute right-3 top-3 text-2xl rounded-full hover:scale-105 transition-all duration-200 cursor-pointer backdrop-blur-lg shadow-lg"
             >
               &times;
             </button>

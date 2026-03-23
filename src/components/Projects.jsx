@@ -54,7 +54,7 @@ const projects = [
 
 function Projects() {
   const [isPreview, setPreviewOpen] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
+  const [activeProject, setActiveProject] = useState(null);
 
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -81,13 +81,14 @@ function Projects() {
         <Project
           key={index}
           project={project}
+          index={index}
           isPreview={isPreview}
           setPreviewOpen={setPreviewOpen}
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
+          activeProject={activeProject}
+          setActiveProject={setActiveProject}
         />
       ))}
-      {isPreview && !isOpen && (
+      {isPreview && activeProject === null && (
         <motion.div
           className="fixed top-0 left-0 pointer-events-none z-50 object-cover w-80 shadow-lg rounded-xl overflow-hidden"
           style={{ x: springX, y: springY }}

@@ -1,5 +1,5 @@
-import { useEffect,useState } from "react";
-import MainApp from "./MainApp";
+import { useEffect, useState } from "react";
+import MainApp from "./components/MainApp";
 import Preloader from "./components/Preloader";
 
 function App() {
@@ -8,13 +8,12 @@ function App() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 6000);
+    }, 3500);
 
     return () => clearTimeout(timer);
   }, []);
 
-  return <>{isLoading ? <Preloader /> : <MainApp />}</>;
-  
+  return <>{isLoading?<Preloader/>:<MainApp />}</>;
 }
 
 export default App;

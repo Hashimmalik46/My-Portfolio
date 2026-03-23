@@ -59,7 +59,7 @@ function Hero() {
             delay: 2 * 0.5,
             ease: easeOut,
           }}
-          className="text-4xl font-poppins z-40 absolute top-140 text-white"
+          className="text-4xl font-poppins z-40  text-white mt-40"
         >
           <FlipWords words={words} duration={2000} className={`text-white font-longsile`} />
         </motion.h1>

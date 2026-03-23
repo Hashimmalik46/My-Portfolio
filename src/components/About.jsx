@@ -19,10 +19,15 @@ function About() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ amount: 0.1 }}
       transition={{ duration: 0.6 }}
-      className="flex p-5"
+      className="flex p-5 justify-around"
     >
-      <div className="w-1/2">
-        <img src="/character.png" />
+      <div className="w-150 h-150  mt-10">
+        <img
+          src="/character.png"
+         className="w-full h-full object-cover rounded-full 
+               filter drop-shadow-[0_0_15px_rgba(253,177,68,1)]"
+          alt="character"
+        />
       </div>
 
       <div className="w-1/2 flex flex-col gap-5">
