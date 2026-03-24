@@ -1,11 +1,14 @@
+import { ScrollProgress } from "@/components/ui/scroll-progress";
+import { Particles } from "@/components/ui/particles";
+
 import About from "./About";
 import Hero from "./Hero";
 import Navbar from "./Navbar";
 import Contact from "./Contact";
 import Projects from "./Projects";
 import Cursor from "./Cursor";
-import { ScrollProgress } from "@/components/ui/scroll-progress";
 import Footer from "./Footer";
+import { motion } from "motion/react";
 
 function MainApp() {
   return (
@@ -14,19 +17,32 @@ function MainApp() {
       <ScrollProgress className={`h-0.75`} />
       <section
         id="Home"
-        className="h-screen sticky top-0 flex flex-col items-center bg-c1 z-10 px-5"
+        className="h-screen sticky top-0 flex flex-col items-center bg-c1 z-10 px-5 md:p-0"
       >
+        {/* <div className="h-screen z-999 absolute w-full overflow-hidden">
+          <Particles color="#000" quantity={200} size={10} ease={1}/>
+        </div> */}
         <Navbar />
         <Hero />
       </section>
 
-      <section
+      <motion.section
+        initial={{
+          scale: 0.5,
+          y: 50,
+        }}
+        whileInView={{
+          scale: 1,
+          y: 0,
+        }}
+        viewport={{ once: false, amount: 0.3 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
         id="About"
         className="h-screen 
-        sticky top-0 bg-black md:px-10 z-20 rounded-t-4xl pt-15 px-5"
+  sticky top-0 bg-black md:px-10 z-20 rounded-t-4xl pt-15 px-5"
       >
         <About />
-      </section>
+      </motion.section>
 
       <section
         id="Portfolio"

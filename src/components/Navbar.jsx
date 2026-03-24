@@ -7,7 +7,7 @@ function Navbar() {
   const [isHamOpen, setHamOpen] = useState(false);
 
   return (
-    <motion.nav className="w-full flex items-center justify-between px-10 md:px-30 pt-10 bg-c1">
+    <motion.nav className="w-full flex items-center justify-between px-10 md:px-30 py-8">
       <motion.h1
         // drag
         // whileDrag={{
