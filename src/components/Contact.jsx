@@ -23,9 +23,9 @@ function ContactForm() {
   }, [state.succeeded]);
 
   return (
-    <div className="min-h-[80vh] flex px-6 md:px-20 py-10 text-white font-longsile justify-between">
+    <div className="flex flex-wrap min-h-[80vh] px-3 md:px-20 py-5 text-white font-longsile md:justify-between justify-center gap-5 md:gap-0">
       {/* Heading */}
-      <div className="flex flex-col items-center gap-5 w-1/2">
+      <div className="flex flex-col items-center gap-5 md:w-1/2">
         <motion.h2
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}

@@ -13,7 +13,7 @@ const Icons = {
 
 function Orbit() {
   return (
-    <div className="relative flex h-[500px] w-full flex-col items-center justify-center overflow-hidden">
+    <div className="relative flex h-[350px] md:h-[500px] w-full flex-col items-center justify-center overflow-hidden">
       <OrbitingCircles iconSize={40}>
         <Icons.html className="text-orange-500 w-8 h-8" />
         <Icons.css className="text-blue-500 w-8 h-8" />

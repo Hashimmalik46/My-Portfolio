@@ -5,8 +5,8 @@ import {
 } from "@/components/ui/terminal";
 function Preloader() {
   return (
-    <div className="fixed inset-0 bg-black flex items-center justify-center z-50">
-      <Terminal>
+    <div className="fixed inset-0 bg-c1 flex items-center justify-center z-50 p-5">
+      <Terminal className={`bg-black text-white`}>
         <TypingAnimation duration={30}>Initializing Portfolio v2.3...</TypingAnimation>
         <AnimatedSpan className={`text-blue-500`}>✔ Loading personal projects.</AnimatedSpan>
         <AnimatedSpan>✔ Compiling creativity modules.</AnimatedSpan>

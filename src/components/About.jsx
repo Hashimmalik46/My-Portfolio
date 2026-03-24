@@ -19,23 +19,22 @@ function About() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ amount: 0.1 }}
       transition={{ duration: 0.6 }}
-      className="flex p-5 justify-around"
+      className="md:flex md:justify-around flex flex-wrap gap-5 justify-center"
     >
-      <div className="w-150 h-150  mt-10">
+      <div className="w-[300px] h-[300px] md:w-150 md:h-150 mt-10">
         <img
           src="/character.png"
-         className="w-full h-full object-cover rounded-full 
-               filter drop-shadow-[0_0_15px_rgba(253,177,68,1)]"
+          className="w-full h-full object-cover rounded-full"
           alt="character"
         />
       </div>
 
-      <div className="w-1/2 flex flex-col gap-5">
-        <h1 className="text-3xl text-white font-longsile self-center">
+      <div className="gap-3 md:w-1/2 flex flex-col md:gap-5">
+        <h1 className="text-3xl text-white font-longsile self-center mt-5">
           About Me
         </h1>
 
-        <div className="bg-white/10 backdrop-blur-xl border border-white/20 w-full rounded-2xl p-2 flex items-center justify-around font-poppins shadow-lg">
+        <div className="bg-white/10 backdrop-blur-xl border border-white/20 w-full rounded-2xl p-2 flex items-center justify-between font-poppins shadow-lg md:justify-around">
           {tabs.map((tab) => (
             <span
               key={tab}

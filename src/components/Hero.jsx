@@ -24,13 +24,14 @@ function Hero() {
         >
           Hashim Malik
         </motion.h1>
+
         <motion.img
           src="character.png"
           onLoad={() => setImgLoaded(true)}
           initial={{ bottom: -500, opacity: 0 }}
           animate={imgLoaded ? { bottom: 0, opacity: 1 } : {}}
           transition={{ duration: 0.5, ease: easeOut }}
-          className="w-[900px] absolute bottom-0 drop-shadow drop-shadow-pAccent z-20"
+          className="w-[900px] absolute bottom-0 filter drop-shadow-[0_0_15px_rgba(168,218,34,1)] z-20"
         />
         <motion.h1
           initial={{ x: 200, opacity: 0 }}
@@ -61,7 +62,11 @@ function Hero() {
           }}
           className="text-4xl font-poppins z-40  text-white mt-40"
         >
-          <FlipWords words={words} duration={2000} className={`text-white font-longsile`} />
+          <FlipWords
+            words={words}
+            duration={2000}
+            className={`text-white font-longsile`}
+          />
         </motion.h1>
       </div>
 
@@ -110,9 +115,13 @@ function Hero() {
             delay: 3 * 0.5,
             ease: easeOut,
           }}
-          className="text-[20px] font-longsile text-center"
+          className="text-[30px] font-longsile"
         >
-          Frontend Dev | Designer | Gamer
+          <FlipWords
+            words={words}
+            duration={2000}
+            className={`font-longsile`}
+          />
         </motion.h1>
         <motion.img
           src="character.png"

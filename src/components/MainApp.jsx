@@ -23,7 +23,7 @@ function MainApp() {
       <section
         id="About"
         className="h-screen 
-        sticky top-0 bg-black md:px-10 z-20 rounded-t-4xl pt-15 px-10"
+        sticky top-0 bg-black md:px-10 z-20 rounded-t-4xl pt-15 px-5"
       >
         <About />
       </section>

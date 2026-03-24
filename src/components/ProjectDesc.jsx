@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "motion/react";
 
 function ProjectDesc({ project, isActive, handleModalClose }) {
   const { title, img, desc, short_desc, tags, link } = project;
-  
+
   return (
     <AnimatePresence>
       {isActive && (
@@ -19,7 +19,7 @@ function ProjectDesc({ project, isActive, handleModalClose }) {
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.5 }}
-            className="flex flex-col gap-5 w-full max-w-2xl backdrop-blur-lg text-black rounded-2xl border border-black/10 shadow-lg p-5 mb-15"
+            className="w-full flex flex-col gap-5 md:max-w-2xl backdrop-blur-lg text-black rounded-2xl border border-black/10 shadow-lg p-5 mb-15"
           >
             <button
               onClick={handleModalClose}
@@ -30,7 +30,9 @@ function ProjectDesc({ project, isActive, handleModalClose }) {
             <img src={img} className="w-full h-64" />
             <div className="p-3 flex flex-col gap-5">
               <h1 className="text-xl font-poppins font-bold">{title}</h1>
-              <p className="font-poppins text-justify">{desc}</p>
+              <div className="overflow-y-scroll h-40 md:overflow-hidden md:h-auto">
+                <p className="font-poppins text-justify">{desc}</p>
+              </div>
               <div className="w-full flex items-center justify-between">
                 <div className="w-1/2 flex items-center gap-5">
                   {tags.map((tag) => {

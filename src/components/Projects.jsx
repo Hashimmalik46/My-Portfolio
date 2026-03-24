@@ -73,7 +73,7 @@ function Projects() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ amount: 0.2 }}
       transition={{ duration: 0.6 }}
-      className="flex flex-col gap-5"
+      className="flex flex-col gap-5 p-3 md:p-1"
       onMouseMove={handleMouseMove}
     >
       <h1 className="text-4xl font-longsile self-center">Projects</h1>
@@ -90,7 +90,7 @@ function Projects() {
       ))}
       {isPreview && activeProject === null && (
         <motion.div
-          className="fixed top-0 left-0 pointer-events-none z-50 object-cover w-80 shadow-lg rounded-xl overflow-hidden"
+          className="hidden md:flex fixed top-0 left-0 pointer-events-none z-50 object-cover w-80 shadow-lg rounded-xl overflow-hidden"
           style={{ x: springX, y: springY }}
         >
           <img src={isPreview} className="w-full h-full object-cover" />

@@ -21,7 +21,7 @@ function Project({
     <div
       onMouseEnter={() => !isActive && setPreviewOpen(img)}
       onMouseLeave={() => !isActive && setPreviewOpen("")}
-      className="border border-black/10 p-5 flex flex-col gap-3 shadow-lg transition-all duration-200"
+      className="border border-black/10 p-5 flex flex-col gap-3 shadow-lg transition-all duration-200 text-justify"
     >
       <h1 className="text-xl font-poppins font-bold">{title}</h1>
       <p className="font-poppins">{short_desc}</p>

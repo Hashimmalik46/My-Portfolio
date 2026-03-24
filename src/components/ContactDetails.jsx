@@ -12,7 +12,7 @@ function ContactDetails() {
       className="font-poppins mt-10 flex flex-col items-center gap-10"
     >
       <div className="flex items-center gap-3">
-        <MdEmail size={35} color="#fdb144" />
+        <MdEmail size={35} color="#A8da22" />
         <a
           href="mailto:hashimzahoor2003@gmail.com"
           className="underline hover:text-pAccent transition-all duration-300"
@@ -21,7 +21,7 @@ function ContactDetails() {
         </a>
       </div>
       <div className="flex items-center gap-3 self-start">
-        <IoLocationSharp size={35} color="#fdb144" />
+        <IoLocationSharp size={35} color="#A8da22" />
         <p>Srinagar, Kashmir</p>
       </div>
       <div className="flex items-center gap-3">
