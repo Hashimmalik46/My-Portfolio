@@ -6,9 +6,9 @@ const projects = [
   {
     title: "Role Based Clinic Management System",
     img: "/Zooncare.png",
-    desc: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eos voluptatem veniam dolorem tempore voluptatibus ipsum quibusdam, molestiae laboriosam officiis necessitatibus nemo, numquam et iusto culpa harum molestias! Reiciendis, sequi quasQuis beatae unde qui rerum quisquam, atque at perspiciatis in, optio eos dolorem officiis repudiandae blanditiis doloribus molestiae, illum nihil ipsum aperiam velit quas praesentium repellat voluptas veniam voluptates? RecusandaeVoluptatum illum autem, possimus quibusdam tempora temporibus a ad maiores porro nam dolores cumque veniam laudantium deserunt ducimus numquam, similique hic laboriosam non earum aut tenetur! Nihil vitae ut veniam.Suscipit earum aut et sunt.",
+    desc: "ZoonCare is a full-stack clinical management system designed with a role-based architecture to streamline healthcare workflows. Built using the MERN stack (MongoDB, Express.js, React, Node.js), the platform supports multiple user roles such as administrators, doctors, and staff, each with controlled access to specific functionalities. It enables efficient management of patient records, appointments, and clinical data through a structured and secure interface. The project demonstrates strong backend design, authentication systems, and scalable frontend architecture, making it suitable for real-world clinical environments",
     short_desc:
-      " Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis in debitis velit praesentium aspernatur tempora laudantium odio, nullanon pariatur quibusdam quos voluptatem, voluptatibus modi.",
+      "Role-based clinical management platform built using the MERN stack.",
 
     tags: [
       {
@@ -22,14 +22,14 @@ const projects = [
         tag: "Tailwind",
       },
     ],
-    link: "https://hashimmalik.in",
+    link: "https://zooncare.in",
   },
   {
     title: "Campus Connect",
     img: "/CC.png",
-    desc: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eos voluptatem veniam dolorem tempore voluptatibus ipsum quibusdam, molestiae laboriosam officiis necessitatibus nemo, numquam et iusto culpa harum molestias! Reiciendis, sequi quasQuis beatae unde qui rerum quisquam, atque at perspiciatis in, optio eos dolorem officiis repudiandae blanditiis doloribus molestiae, illum nihil ipsum aperiam velit quas praesentium repellat voluptas veniam voluptates? RecusandaeVoluptatum illum autem, possimus quibusdam tempora temporibus a ad maiores porro nam dolores cumque veniam laudantium deserunt ducimus numquam, similique hic laboriosam non earum aut tenetur! Nihil vitae ut veniam.Suscipit earum aut et sunt.",
+    desc: "It is a social media platform tailored specifically for university environments, allowing students to connect, share updates, and engage within a closed academic community. It provides core features like posting, feeds, and interactions, while maintaining a clean and intuitive user experience.The platform emphasizes community-driven communication within campuses and showcases the implementation of real-time interactions, user authentication, and efficient data handling. It highlights the ability to build scalable and engaging social platforms with a focused audience.",
     short_desc:
-      " Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis in debitis velit praesentium aspernatur tempora laudantium odio, nullanon pariatur quibusdam quos voluptatem, voluptatibus modi.",
+      "A university-focused social media platform for connecting students and sharing updates.",
 
     tags: [
       {
@@ -48,7 +48,24 @@ const projects = [
         tag: "JavaScript",
       },
     ],
-    link: "https://hashimmalik.in",
+    link: "https://kwitter-nine.vercel.app/",
+  },
+  {
+    title: "Arabic with Dr Sajad",
+    img: "/SS.png",
+    desc: "A full-featured bookstore and content platform built on WordPress, designed with a strong focus on ease of publishing and user experience. The platform allows administrators to add books, upload video courses, and manage content as effortlessly as posting on social media.The frontend emphasizes a clean, intuitive interface for browsing books, consuming content, and accessing premium material through membership-based access. Integrated payment systems enable smooth subscription workflows, while the content structure ensures scalability for both written and video-based learning.This project highlights the ability to transform a traditional CMS into a streamlined, product-like experience by prioritizing usability, content flow, and frontend interaction design.",
+    short_desc:
+      "Content-driven bookstore platform with seamless publishing, memberships, and integrated video learning.",
+
+    tags: [
+      {
+        id: 1,
+        img: "wordpress.png",
+        tag: "WordPress",
+      },
+      
+    ],
+    link: "https://arabicwithdrsajad.com/",
   },
 ];
 

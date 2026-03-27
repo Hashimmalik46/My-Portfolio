@@ -27,16 +27,16 @@ function MainApp() {
       </section>
 
       <motion.section
-        initial={{
-          scale: 0.5,
-          y: 50,
-        }}
-        whileInView={{
-          scale: 1,
-          y: 0,
-        }}
-        viewport={{ once: false, amount: 0.3 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
+        // initial={{
+        //   scale: 0.5,
+        //   y: 50,
+        // }}
+        // whileInView={{
+        //   scale: 1,
+        //   y: 0,
+        // }}
+        // viewport={{ once: false, amount: 0.3 }}
+        // transition={{ duration: 0.6, ease: "easeOut" }}
         id="About"
         className="h-screen 
   sticky top-0 bg-black md:px-10 z-20 rounded-t-4xl pt-15 px-5"
