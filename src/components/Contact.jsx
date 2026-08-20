@@ -4,7 +4,7 @@ import { Send, CheckCircle2, Sparkles } from "lucide-react";
 import { BorderBeam } from "./ui/border-beam";
 import { MdEmail } from "react-icons/md";
 import { IoLocationSharp } from "react-icons/io5";
-import { FaLinkedinIn } from "react-icons/fa";
+import { FaLinkedinIn, FaInstagram, FaXTwitter } from "react-icons/fa6";
 import { motion, AnimatePresence } from "motion/react";
 
 function Contact() {
@@ -24,7 +24,7 @@ function Contact() {
   return (
     <section
       id="Contact"
-      className="relative w-full min-h-screen flex items-center justify-center px-6 md:px-16 py-28 z-10 text-white"
+      className="relative w-full min-h-screen flex items-center justify-center px-6 md:px-16 py-28 z-10 bg-c1 text-secondary selection:bg-secondary selection:text-white"
     >
       <div className="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
         {/* Left Column: Heading, Info & Direct Contact Channels */}
@@ -37,44 +37,46 @@ function Contact() {
         >
           {/* Editorial Eyebrow */}
           <div className="flex items-center gap-3">
-            <span className="font-clashM text-xs text-pAccent tracking-[0.25em] uppercase font-semibold">03</span>
-            <span className="w-6 h-px bg-white/20" />
-            <span className="font-jakarta text-[11px] uppercase tracking-[0.25em] text-white/50 font-medium">
+            <span className="font-clashM text-xs px-2.5 py-0.5 rounded-full bg-secondary text-pAccent tracking-[0.2em] uppercase font-bold shadow-sm">
+              03
+            </span>
+            <span className="w-6 h-px bg-secondary/20" />
+            <span className="font-jakarta text-[11px] uppercase tracking-[0.25em] text-secondary/60 font-semibold">
               Get In Touch
             </span>
           </div>
 
           {/* Editorial Heading */}
-          <h2 className="font-longsile text-5xl sm:text-6xl md:text-7xl text-white leading-[0.9]">
+          <h2 className="font-longsile text-5xl sm:text-6xl md:text-7xl text-secondary leading-[0.9]">
             Let’s Connect
           </h2>
 
-          <p className="font-cormorant italic text-2xl sm:text-3xl text-white/85 font-light leading-relaxed">
+          <p className="font-cormorant italic text-2xl sm:text-3xl text-secondary/85 font-light leading-relaxed">
             Have a project in mind, an opportunity, or just want to talk tech?
           </p>
 
-          <p className="font-jakarta text-sm sm:text-base text-white/60 leading-relaxed max-w-lg">
+          <p className="font-jakarta text-sm sm:text-base text-secondary/70 leading-relaxed max-w-lg">
             My inbox is always open. Whether it’s a full-stack system, AI pipeline, 
             or UI/UX design collaboration, let’s build something impactful together.
           </p>
 
-          {/* Apple-Style Glassmorphic Contact Tiles */}
+          {/* Porcelain Contact Tiles */}
           <div className="flex flex-col gap-3 pt-2 w-full max-w-md">
             {/* Email Card */}
             <motion.a
               href="mailto:hashimzahoor2003@gmail.com"
               whileHover={{ x: 6 }}
               transition={{ type: "spring", stiffness: 350, damping: 25 }}
-              className="group flex items-center gap-4 p-3 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] backdrop-blur-2xl backdrop-saturate-[180%] border border-white/15 hover:border-white/30 shadow-[0_8px_32px_0_rgba(0,0,0,0.37),inset_0_1px_1px_0_rgba(255,255,255,0.2)] transition-colors duration-300"
+              className="group flex items-center gap-4 p-3 rounded-2xl bg-white/80 hover:bg-white backdrop-blur-xl border border-secondary/10 hover:border-secondary/25 shadow-[0_10px_25px_rgba(0,0,0,0.04)] transition-all duration-300"
             >
-              <div className="w-10 h-10 rounded-xl bg-white/[0.06] border border-white/10 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
+              <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center flex-shrink-0 shadow-sm group-hover:scale-105 transition-transform duration-300">
                 <MdEmail size={20} className="text-pAccent" />
               </div>
               <div className="flex flex-col text-left overflow-hidden">
-                <span className="text-[10px] font-jakarta uppercase tracking-wider text-white/40 font-semibold">
+                <span className="text-[10px] font-jakarta uppercase tracking-wider text-secondary/50 font-semibold">
                   Email
                 </span>
-                <span className="text-xs sm:text-sm font-jakarta text-white/90 group-hover:text-white truncate">
+                <span className="text-xs sm:text-sm font-jakarta text-secondary/90 group-hover:text-secondary truncate font-medium">
                   hashimzahoor2003@gmail.com
                 </span>
               </div>
@@ -84,16 +86,16 @@ function Contact() {
             <motion.div
               whileHover={{ x: 6 }}
               transition={{ type: "spring", stiffness: 350, damping: 25 }}
-              className="flex items-center gap-4 p-3 rounded-2xl bg-white/[0.04] backdrop-blur-2xl backdrop-saturate-[180%] border border-white/15 shadow-[0_8px_32px_0_rgba(0,0,0,0.37),inset_0_1px_1px_0_rgba(255,255,255,0.2)]"
+              className="group flex items-center gap-4 p-3 rounded-2xl bg-white/80 hover:bg-white backdrop-blur-xl border border-secondary/10 hover:border-secondary/25 shadow-[0_10px_25px_rgba(0,0,0,0.04)] transition-all duration-300"
             >
-              <div className="w-10 h-10 rounded-xl bg-white/[0.06] border border-white/10 flex items-center justify-center flex-shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center flex-shrink-0 shadow-sm group-hover:scale-105 transition-transform duration-300">
                 <IoLocationSharp size={20} className="text-pAccent" />
               </div>
               <div className="flex flex-col text-left">
-                <span className="text-[10px] font-jakarta uppercase tracking-wider text-white/40 font-semibold">
+                <span className="text-[10px] font-jakarta uppercase tracking-wider text-secondary/50 font-semibold">
                   Location
                 </span>
-                <span className="text-xs sm:text-sm font-jakarta text-white/90">
+                <span className="text-xs sm:text-sm font-jakarta text-secondary/90 font-medium">
                   Srinagar, Kashmir
                 </span>
               </div>
@@ -105,12 +107,12 @@ function Contact() {
                 href="https://www.linkedin.com/in/hashim-malik-a868102b0/"
                 target="_blank"
                 rel="noreferrer"
-                whileHover={{ y: -2 }}
+                whileHover={{ y: -3, scale: 1.02 }}
                 whileTap={{ scale: 0.96 }}
-                className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] backdrop-blur-2xl border border-white/10 hover:border-white/25 shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.15)] transition-colors duration-300 group"
+                className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-white/80 hover:bg-secondary backdrop-blur-xl border border-secondary/10 hover:border-secondary shadow-[0_4px_16px_rgba(0,0,0,0.04)] transition-all duration-300 group"
               >
-                <FaLinkedinIn size={13} className="text-white/70 group-hover:text-pAccent transition-colors" />
-                <span className="text-xs font-jakarta text-white/70 group-hover:text-white font-medium">
+                <FaLinkedinIn size={14} className="text-pAccent" />
+                <span className="text-xs font-jakarta text-secondary/80 group-hover:text-white font-medium transition-colors">
                   LinkedIn
                 </span>
               </motion.a>
@@ -119,16 +121,12 @@ function Contact() {
                 href="https://instagram.com/i_hash46"
                 target="_blank"
                 rel="noreferrer"
-                whileHover={{ y: -2 }}
+                whileHover={{ y: -3, scale: 1.02 }}
                 whileTap={{ scale: 0.96 }}
-                className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] backdrop-blur-2xl border border-white/10 hover:border-white/25 shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.15)] transition-colors duration-300 group"
+                className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-white/80 hover:bg-secondary backdrop-blur-xl border border-secondary/10 hover:border-secondary shadow-[0_4px_16px_rgba(0,0,0,0.04)] transition-all duration-300 group"
               >
-                <img
-                  src="/gallery/instagram.webp"
-                  alt="Instagram"
-                  className="w-3.5 h-3.5 object-contain opacity-70 group-hover:opacity-100 transition-opacity"
-                />
-                <span className="text-xs font-jakarta text-white/70 group-hover:text-white font-medium">
+                <FaInstagram size={14} className="text-pAccent" />
+                <span className="text-xs font-jakarta text-secondary/80 group-hover:text-white font-medium transition-colors">
                   Instagram
                 </span>
               </motion.a>
@@ -137,16 +135,12 @@ function Contact() {
                 href="https://x.com/hashimm447"
                 target="_blank"
                 rel="noreferrer"
-                whileHover={{ y: -2 }}
+                whileHover={{ y: -3, scale: 1.02 }}
                 whileTap={{ scale: 0.96 }}
-                className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] backdrop-blur-2xl border border-white/10 hover:border-white/25 shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.15)] transition-colors duration-300 group"
+                className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-white/80 hover:bg-secondary backdrop-blur-xl border border-secondary/10 hover:border-secondary shadow-[0_4px_16px_rgba(0,0,0,0.04)] transition-all duration-300 group"
               >
-                <img
-                  src="/gallery/twitter.webp"
-                  alt="X (Twitter)"
-                  className="w-3.5 h-3.5 object-contain opacity-70 group-hover:opacity-100 transition-opacity"
-                />
-                <span className="text-xs font-jakarta text-white/70 group-hover:text-white font-medium">
+                <FaXTwitter size={14} className="text-pAccent" />
+                <span className="text-xs font-jakarta text-secondary/80 group-hover:text-white font-medium transition-colors">
                   Twitter
                 </span>
               </motion.a>
@@ -154,7 +148,7 @@ function Contact() {
           </div>
         </motion.div>
 
-        {/* Right Column: Liquid Glass Contact Form */}
+        {/* Right Column: Porcelain Glass Contact Form */}
         <motion.div
           initial={{ opacity: 0, scale: 0.96, y: 30 }}
           whileInView={{ opacity: 1, scale: 1, y: 0 }}
@@ -162,14 +156,16 @@ function Contact() {
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           className="lg:col-span-6 flex flex-col justify-center"
         >
-          <div className="relative w-full rounded-3xl overflow-hidden bg-[#121214]/65 backdrop-blur-2xl backdrop-saturate-[180%] border border-white/[0.18] p-7 md:p-9 shadow-[0_16px_40px_rgba(0,0,0,0.5),inset_0_1px_1px_0_rgba(255,255,255,0.25),inset_0_-1px_1px_0_rgba(0,0,0,0.4)]">
-            <BorderBeam duration={8} size={120} />
+          <div className="relative w-full rounded-3xl overflow-hidden bg-white/90 backdrop-blur-2xl border border-secondary/10 p-7 md:p-9 shadow-[0_24px_60px_rgba(0,0,0,0.07),0_1px_3px_rgba(0,0,0,0.04)]">
+            <BorderBeam duration={8} size={130} colorFrom="#111827" colorTo="#a8da22" />
 
             <div className="flex items-center justify-between mb-6">
-              <span className="text-[11px] font-jakarta tracking-[0.2em] uppercase text-white/40 font-semibold">
+              <span className="text-[11px] font-jakarta tracking-[0.2em] uppercase text-secondary/50 font-semibold">
                 Send a Direct Message
               </span>
-              <Sparkles className="w-4 h-4 text-pAccent" />
+              <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center shadow-sm">
+                <Sparkles className="w-4 h-4 text-pAccent animate-pulse" />
+              </div>
             </div>
 
             {/* Success Toast */}
@@ -180,10 +176,10 @@ function Contact() {
                   animate={{ opacity: 1, height: "auto", y: 0 }}
                   exit={{ opacity: 0, height: 0, y: -10 }}
                   transition={{ duration: 0.35 }}
-                  className="mb-6 flex items-center gap-3 p-4 rounded-2xl bg-pAccent/15 border border-pAccent/30 text-white font-jakarta text-xs sm:text-sm shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)] overflow-hidden"
+                  className="mb-6 flex items-center gap-3 p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 font-jakarta text-xs sm:text-sm shadow-[0_4px_16px_rgba(0,0,0,0.04)] overflow-hidden"
                 >
-                  <CheckCircle2 className="w-4 h-4 text-pAccent flex-shrink-0" />
-                  <span>Message delivered! I will get back to you shortly.</span>
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                  <span className="font-medium">Message delivered! I will get back to you shortly.</span>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -193,7 +189,7 @@ function Contact() {
 
               {/* Name Field */}
               <div className="flex flex-col gap-1.5">
-                <label className="text-[11px] uppercase tracking-wider text-white/50 font-medium">
+                <label className="text-[11px] uppercase tracking-wider text-secondary/60 font-semibold">
                   Your Name
                 </label>
                 <input
@@ -201,13 +197,13 @@ function Contact() {
                   name="name"
                   required
                   placeholder="e.g. John Doe"
-                  className="w-full px-4 py-3 rounded-xl bg-white/[0.04] backdrop-blur-xl border border-white/10 text-white placeholder-white/25 text-sm focus:outline-none focus:border-white/35 focus:bg-white/[0.07] shadow-[inset_0_1px_1px_rgba(0,0,0,0.4)] transition-all"
+                  className="w-full px-4 py-3 rounded-xl bg-secondary/[0.03] focus:bg-white border border-secondary/15 focus:border-secondary/40 text-secondary placeholder-secondary/35 text-sm focus:outline-none focus:ring-2 focus:ring-secondary/5 shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)] transition-all"
                 />
               </div>
 
               {/* Email Field */}
               <div className="flex flex-col gap-1.5">
-                <label className="text-[11px] uppercase tracking-wider text-white/50 font-medium">
+                <label className="text-[11px] uppercase tracking-wider text-secondary/60 font-semibold">
                   Email Address
                 </label>
                 <input
@@ -215,19 +211,19 @@ function Contact() {
                   name="email"
                   required
                   placeholder="e.g. john@example.com"
-                  className="w-full px-4 py-3 rounded-xl bg-white/[0.04] backdrop-blur-xl border border-white/10 text-white placeholder-white/25 text-sm focus:outline-none focus:border-white/35 focus:bg-white/[0.07] shadow-[inset_0_1px_1px_rgba(0,0,0,0.4)] transition-all"
+                  className="w-full px-4 py-3 rounded-xl bg-secondary/[0.03] focus:bg-white border border-secondary/15 focus:border-secondary/40 text-secondary placeholder-secondary/35 text-sm focus:outline-none focus:ring-2 focus:ring-secondary/5 shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)] transition-all"
                 />
                 <ValidationError
                   prefix="Email"
                   field="email"
                   errors={state.errors}
-                  className="text-xs text-red-400 mt-0.5"
+                  className="text-xs text-red-600 mt-0.5"
                 />
               </div>
 
               {/* Message Field */}
               <div className="flex flex-col gap-1.5">
-                <label className="text-[11px] uppercase tracking-wider text-white/50 font-medium">
+                <label className="text-[11px] uppercase tracking-wider text-secondary/60 font-semibold">
                   Your Message
                 </label>
                 <textarea
@@ -235,13 +231,13 @@ function Contact() {
                   rows={4}
                   required
                   placeholder="Tell me about your project, timeline, or idea..."
-                  className="w-full px-4 py-3 rounded-xl bg-white/[0.04] backdrop-blur-xl border border-white/10 text-white placeholder-white/25 text-sm focus:outline-none focus:border-white/35 focus:bg-white/[0.07] shadow-[inset_0_1px_1px_rgba(0,0,0,0.4)] transition-all resize-none"
+                  className="w-full px-4 py-3 rounded-xl bg-secondary/[0.03] focus:bg-white border border-secondary/15 focus:border-secondary/40 text-secondary placeholder-secondary/35 text-sm focus:outline-none focus:ring-2 focus:ring-secondary/5 shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)] transition-all resize-none"
                 />
                 <ValidationError
                   prefix="Message"
                   field="message"
                   errors={state.errors}
-                  className="text-xs text-red-400 mt-0.5"
+                  className="text-xs text-red-600 mt-0.5"
                 />
               </div>
 
@@ -249,12 +245,12 @@ function Contact() {
               <motion.button
                 type="submit"
                 disabled={state.submitting}
-                whileHover={{ scale: 1.02, y: -1 }}
+                whileHover={{ scale: 1.01, y: -1 }}
                 whileTap={{ scale: 0.98 }}
-                className="mt-2 w-full py-3.5 px-6 rounded-xl bg-white hover:bg-white/90 text-black font-clash font-bold text-xs sm:text-sm uppercase tracking-wider transition-colors flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_25px_rgba(255,255,255,0.2)]"
+                className="group mt-2 w-full py-3.5 px-6 rounded-xl bg-secondary hover:bg-black text-white font-clash font-bold text-xs sm:text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_10px_25px_rgba(17,24,39,0.18)] hover:shadow-[0_14px_30px_rgba(17,24,39,0.25)]"
               >
                 <span>{state.submitting ? "Sending..." : "Send Message"}</span>
-                <Send className="w-3.5 h-3.5" />
+                <Send className="w-3.5 h-3.5 text-pAccent group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
               </motion.button>
             </form>
           </div>

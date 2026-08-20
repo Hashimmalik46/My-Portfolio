@@ -125,28 +125,13 @@ function MainApp({ isLoading = false }) {
       <SkillsMarquee />
 
       {/* About Section */}
-      <section
-        id="About"
-        className="relative w-full min-h-screen flex items-center justify-center bg-black/95 px-5 md:px-0"
-      >
-        <About />
-      </section>
+      <About />
 
       {/* Projects Section */}
-      <section
-        id="Projects"
-        className="relative w-full min-h-screen flex items-center justify-center bg-black px-5 md:px-0"
-      >
-        <Projects />
-      </section>
+      <Projects />
 
       {/* Contact Section */}
-      <section
-        id="Contact"
-        className="relative w-full min-h-screen flex items-center justify-center bg-black/95 px-5 md:px-0"
-      >
-        <Contact />
-      </section>
+      <Contact />
 
       {/* Footer */}
       <Footer />
