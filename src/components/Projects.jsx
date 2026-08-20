@@ -1,4 +1,5 @@
-import { ArrowUpRight, Code2 } from "lucide-react";
+import { useRef, useState } from "react";
+import { ArrowUpRight, Code2, ExternalLink } from "lucide-react";
 import { motion } from "motion/react";
 
 const projects = [
@@ -75,7 +76,7 @@ const projects = [
     link: "#",
   },
   {
-    title: "Safee School Bus Tracker",
+    title: "Safe School Bus Tracker",
     img: "/gallery/bus.webp",
     category: "Real-Time Tracking",
     short_desc:
@@ -89,11 +90,137 @@ const projects = [
   },
 ];
 
+function StackingCard({ project, index, total }) {
+  const containerRef = useRef(null);
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  // Curvy organic rotation deck angles
+  const angles = [-1.8, 1.6, -1.4, 1.8, -1.5, 1.4, -1.6];
+  const angle = angles[index % angles.length];
+
+  const isLongDesc = project.short_desc && project.short_desc.length > 180;
+
+  return (
+    <div
+      ref={containerRef}
+      className="sticky top-24 sm:top-28 w-full max-w-xl sm:max-w-2xl mx-auto mb-20 sm:mb-28 md:mb-36 last:mb-0"
+      style={{
+        zIndex: index + 10,
+      }}
+    >
+      <div
+        className="group relative w-full rounded-3xl bg-[#0e0f13] hover:bg-[#121319] border border-white/15 hover:border-pAccent/40 p-4 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.85),inset_0_1px_1px_rgba(255,255,255,0.2)] hover:shadow-[0_30px_70px_rgba(0,0,0,0.95),0_0_30px_rgba(168,218,34,0.12)] transition-all duration-300 flex flex-col gap-4 will-change-transform origin-center hover:scale-[1.02] hover:!rotate-0"
+        style={{
+          transform: `rotate(${angle}deg)`,
+          WebkitFontSmoothing: "antialiased",
+          MozOsxFontSmoothing: "grayscale",
+        }}
+      >
+        {/* Top: Card Image Container */}
+        <a
+          href={project.link}
+          target="_blank"
+          rel="noreferrer"
+          className="relative block w-full aspect-[16/9] sm:aspect-[16/9.5] rounded-2xl overflow-hidden bg-[#070709] border border-white/10 group-hover:border-pAccent/30 p-1.5 transition-colors duration-300 shadow-xl cursor-pointer"
+        >
+          <img
+            src={project.img}
+            alt={project.title}
+            className="w-full h-full object-contain rounded-xl opacity-90 group-hover:opacity-100 group-hover:scale-[1.02] transition-transform duration-500"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none rounded-xl" />
+
+          {/* Top-Left: Category Tag with Code Icon */}
+          <div className="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-black/85 border border-white/20 shadow-md">
+            <Code2 className="w-3 h-3 text-pAccent shrink-0" strokeWidth={2.2} />
+            <span className="text-[10px] font-jakarta uppercase tracking-wider text-white font-medium">
+              {project.category}
+            </span>
+          </div>
+
+          {/* Top-Right: Glassmorphic External Link Badge */}
+          <div className="absolute top-3 right-3 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-black/85 border border-white/25 flex items-center justify-center text-pAccent group-hover:bg-pAccent group-hover:text-black group-hover:border-pAccent transition-all duration-300 shadow-md">
+            <ExternalLink className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
+          </div>
+        </a>
+
+        {/* Bottom: Card Content, Metadata, Tech Stack & CTA */}
+        <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-1.5">
+            <div className="flex items-center gap-2">
+              <span className="font-clashM text-xs px-2 py-0.5 rounded-full bg-white/[0.08] text-pAccent border border-pAccent/30 tracking-[0.15em] uppercase font-bold shadow-[0_0_10px_rgba(168,218,34,0.2)]">
+                0{index + 1}
+              </span>
+              <h3 className="font-clash text-lg sm:text-xl md:text-2xl font-semibold text-white group-hover:text-pAccent transition-colors duration-300 truncate">
+                {project.title}
+              </h3>
+            </div>
+
+            <div className="text-xs sm:text-sm text-white/80 leading-relaxed font-jakarta">
+              <span>
+                {isLongDesc && !isExpanded
+                  ? `${project.short_desc.slice(0, 170)}...`
+                  : project.short_desc}
+              </span>
+              {isLongDesc && (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setIsExpanded(!isExpanded);
+                  }}
+                  className="inline-block ml-1.5 font-semibold text-pAccent hover:text-white transition-colors cursor-pointer text-xs underline decoration-pAccent/50 hover:decoration-white"
+                >
+                  {isExpanded ? "Show less" : "Read more"}
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Bottom Row: Tech Stack Pills & Visit CTA */}
+          <div className="flex flex-wrap items-center justify-between gap-3 pt-2.5 border-t border-white/10">
+            {/* Tech Stack Pills */}
+            <div className="flex flex-wrap items-center gap-1.5">
+              {project.tags.map((tag) => (
+                <div
+                  key={tag.id}
+                  className="flex items-center gap-1.5 text-[11px] font-jakarta text-white/85 bg-white/[0.05] hover:bg-white/[0.1] border border-white/15 hover:border-white/30 hover:text-white px-2.5 py-1 rounded-lg transition-colors duration-200 shadow-sm"
+                >
+                  <img
+                    src={tag.img}
+                    alt={tag.tag}
+                    className="w-3.5 h-3.5 object-contain"
+                  />
+                  <span className="font-medium">{tag.tag}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Visit Project CTA */}
+            {project.link && project.link !== "#" && (
+              <a
+                href={project.link}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white hover:bg-pAccent text-black font-clash font-bold text-xs uppercase tracking-wider hover:scale-105 active:scale-95 transition-all duration-200 shadow-[0_4px_16px_rgba(255,255,255,0.15)] shrink-0 cursor-pointer"
+              >
+                <span>Visit Site</span>
+                <ArrowUpRight className="w-3.5 h-3.5" />
+              </a>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function Projects() {
   return (
     <section
       id="Projects"
-      className="relative w-full min-h-screen flex flex-col items-center justify-center px-6 md:px-16 py-28 z-10 text-white"
+      className="relative w-full flex flex-col items-center justify-center px-6 md:px-16 pt-28 pb-36 z-10 text-white"
     >
       <div className="max-w-6xl w-full flex flex-col gap-14">
         {/* Section Header */}
@@ -125,81 +252,15 @@ function Projects() {
           </p>
         </motion.div>
 
-        {/* Project Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
+        {/* Stacking Cards Deck Container */}
+        <div className="relative w-full flex flex-col items-center">
           {projects.map((project, index) => (
-            <motion.a
+            <StackingCard
               key={index}
-              href={project.link}
-              target="_blank"
-              rel="noreferrer"
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-40px" }}
-              transition={{
-                duration: 0.6,
-                delay: (index % 3) * 0.12,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-              whileHover={{
-                y: -6,
-                scale: 1.015,
-                transition: { type: "spring", stiffness: 400, damping: 25 },
-              }}
-              className="group relative flex flex-col rounded-3xl overflow-hidden bg-white/[0.04] hover:bg-white/[0.08] backdrop-blur-2xl backdrop-saturate-[180%] border border-white/15 hover:border-pAccent/40 p-4 transition-colors duration-200 shadow-[0_8px_32px_0_rgba(0,0,0,0.37),inset_0_1px_1px_0_rgba(255,255,255,0.2)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.6),0_0_30px_rgba(168,218,34,0.12)] flex-1 justify-between"
-            >
-              {/* Card Image Container */}
-              <div className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden bg-[#0c0c0e] border border-white/10 group-hover:border-pAccent/30 flex items-center justify-center p-1.5 transition-colors duration-300">
-                <img
-                  src={project.img}
-                  alt={project.title}
-                  className="w-full h-full object-contain rounded-xl opacity-90 group-hover:opacity-100 transition-opacity duration-300"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none rounded-xl" />
-
-                {/* Top-Left: Category Tag with Code Icon */}
-                <div className="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/70 backdrop-blur-xl border border-white/15 shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)]">
-                  <Code2 className="w-3 h-3 text-pAccent shrink-0" strokeWidth={2.2} />
-                  <span className="text-[10px] font-jakarta uppercase tracking-wider text-white/85 font-medium">
-                    {project.category}
-                  </span>
-                </div>
-
-                {/* Top-Right: Glassmorphic Arrow Badge in Lime */}
-                <div className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/70 backdrop-blur-xl border border-white/20 flex items-center justify-center text-pAccent group-hover:bg-pAccent group-hover:text-black group-hover:border-pAccent transition-all duration-300 shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)]">
-                  <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                </div>
-              </div>
-
-              {/* Card Content */}
-              <div className="flex flex-col flex-1 justify-between gap-4 p-2 pt-5">
-                <div>
-                  <h3 className="font-clash text-lg md:text-xl font-medium text-white group-hover:text-pAccent transition-colors duration-300">
-                    {project.title}
-                  </h3>
-                  <p className="font-jakarta text-xs md:text-sm text-white/60 line-clamp-3 leading-relaxed mt-2">
-                    {project.short_desc}
-                  </p>
-                </div>
-
-                {/* Minimalist Tech Badges */}
-                <div className="flex flex-wrap items-center gap-2 pt-3 border-t border-white/10">
-                  {project.tags.map((tag) => (
-                    <div
-                      key={tag.id}
-                      className="flex items-center gap-1.5 text-[11px] font-jakarta text-white/80 bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-white/25 hover:text-white px-2.5 py-1 rounded-lg transition-colors duration-200 shadow-[inset_0_1px_0.5px_rgba(255,255,255,0.08)]"
-                    >
-                      <img
-                        src={tag.img}
-                        alt={tag.tag}
-                        className="w-3.5 h-3.5 object-contain"
-                      />
-                      <span className="font-medium">{tag.tag}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </motion.a>
+              project={project}
+              index={index}
+              total={projects.length}
+            />
           ))}
         </div>
       </div>
