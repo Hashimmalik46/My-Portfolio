@@ -1,19 +1,19 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import MainApp from "./components/MainApp";
 import Preloader from "./components/Preloader";
+import { AnimatePresence } from "motion/react";
 
 function App() {
-  const [isLoading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 3500);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  return <>{isLoading?<Preloader/>:<MainApp />}</>;
+  return (
+    <>
+      <AnimatePresence>
+        {isLoading && <Preloader onComplete={() => setIsLoading(false)} />}
+      </AnimatePresence>
+      <MainApp isLoading={isLoading} />
+    </>
+  );
 }
 
 export default App;
