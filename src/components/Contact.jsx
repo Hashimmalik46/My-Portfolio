@@ -109,10 +109,10 @@ function Contact() {
                 rel="noreferrer"
                 whileHover={{ y: -3, scale: 1.02 }}
                 whileTap={{ scale: 0.96 }}
-                className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-white/80 hover:bg-secondary backdrop-blur-xl border border-secondary/10 hover:border-secondary shadow-[0_4px_16px_rgba(0,0,0,0.04)] transition-all duration-300 group"
+                className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-secondary hover:bg-black text-white border border-secondary shadow-[0_4px_16px_rgba(17,24,39,0.15)] transition-all duration-300 group"
               >
-                <FaLinkedinIn size={14} className="text-pAccent" />
-                <span className="text-xs font-jakarta text-secondary/80 group-hover:text-white font-medium transition-colors">
+                <FaLinkedinIn size={14} className="text-pAccent group-hover:scale-110 transition-transform" />
+                <span className="text-xs font-jakarta text-white font-medium">
                   LinkedIn
                 </span>
               </motion.a>
@@ -123,10 +123,10 @@ function Contact() {
                 rel="noreferrer"
                 whileHover={{ y: -3, scale: 1.02 }}
                 whileTap={{ scale: 0.96 }}
-                className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-white/80 hover:bg-secondary backdrop-blur-xl border border-secondary/10 hover:border-secondary shadow-[0_4px_16px_rgba(0,0,0,0.04)] transition-all duration-300 group"
+                className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-secondary hover:bg-black text-white border border-secondary shadow-[0_4px_16px_rgba(17,24,39,0.15)] transition-all duration-300 group"
               >
-                <FaInstagram size={14} className="text-pAccent" />
-                <span className="text-xs font-jakarta text-secondary/80 group-hover:text-white font-medium transition-colors">
+                <FaInstagram size={14} className="text-pAccent group-hover:scale-110 transition-transform" />
+                <span className="text-xs font-jakarta text-white font-medium">
                   Instagram
                 </span>
               </motion.a>
@@ -137,10 +137,10 @@ function Contact() {
                 rel="noreferrer"
                 whileHover={{ y: -3, scale: 1.02 }}
                 whileTap={{ scale: 0.96 }}
-                className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-white/80 hover:bg-secondary backdrop-blur-xl border border-secondary/10 hover:border-secondary shadow-[0_4px_16px_rgba(0,0,0,0.04)] transition-all duration-300 group"
+                className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-secondary hover:bg-black text-white border border-secondary shadow-[0_4px_16px_rgba(17,24,39,0.15)] transition-all duration-300 group"
               >
-                <FaXTwitter size={14} className="text-pAccent" />
-                <span className="text-xs font-jakarta text-secondary/80 group-hover:text-white font-medium transition-colors">
+                <FaXTwitter size={14} className="text-pAccent group-hover:scale-110 transition-transform" />
+                <span className="text-xs font-jakarta text-white font-medium">
                   Twitter
                 </span>
               </motion.a>

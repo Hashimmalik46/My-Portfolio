@@ -1,10 +1,11 @@
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Code2 } from "lucide-react";
 import { motion } from "motion/react";
 
 const projects = [
   {
     title: "Role Based Clinic Management System",
     img: "/gallery/Zooncare.webp",
+    category: "Full Stack",
     short_desc:
       "Full-stack clinical management platform built with a role-based access architecture, secure doctor-patient records, and real-time scheduling.",
     tags: [
@@ -16,6 +17,7 @@ const projects = [
   {
     title: "Dandwoat Dental Clinic",
     img: "/gallery/dandwoat.webp",
+    category: "Web Platform",
     short_desc:
       "Comprehensive dental healthcare portal featuring online appointment bookings, treatment guides, and patient inquiry workflows.",
     tags: [
@@ -27,6 +29,7 @@ const projects = [
   {
     title: "IntelliSentry Hostel Management System",
     img: "/gallery/intellisentry.webp",
+    category: "Full Stack",
     short_desc:
       "Smart hostel administration platform handling automated check-ins, student records, and room allocations with custom backend logic.",
     tags: [
@@ -39,6 +42,7 @@ const projects = [
   {
     title: "Campus Connect",
     img: "/gallery/CC.webp",
+    category: "Social Platform",
     short_desc:
       "Closed academic social network enabling campus-wide student communication, event feeds, and peer collaborations.",
     tags: [
@@ -51,6 +55,7 @@ const projects = [
   {
     title: "Arabic with Dr Sajad",
     img: "/gallery/SS.webp",
+    category: "EdTech",
     short_desc:
       "Content-driven publishing and educational platform with integrated video course delivery, membership tiers, and payments.",
     tags: [{ id: 1, img: "/gallery/wordpress.webp", tag: "WordPress" }],
@@ -59,6 +64,7 @@ const projects = [
   {
     title: "Agentic AI for Lead Generation",
     img: "/gallery/agentic.webp",
+    category: "AI & Automation",
     short_desc:
       "Autonomous agent-driven workflow designed to extract, qualify, and route high-intent leads using machine intelligence and API pipelines.",
     tags: [
@@ -71,6 +77,7 @@ const projects = [
   {
     title: "Safee School Bus Tracker",
     img: "/gallery/bus.webp",
+    category: "Real-Time Tracking",
     short_desc:
       "Real-time school transport and child tracking application with instant route updates and synchronized parent alerts.",
     tags: [
@@ -99,7 +106,9 @@ function Projects() {
         >
           {/* Editorial Eyebrow */}
           <div className="flex items-center justify-center gap-3">
-            <span className="font-clashM text-xs text-pAccent tracking-[0.25em] uppercase font-semibold">02</span>
+            <span className="font-clashM text-xs px-2.5 py-0.5 rounded-full bg-white/[0.08] text-pAccent border border-pAccent/30 tracking-[0.2em] uppercase font-bold shadow-[0_0_12px_rgba(168,218,34,0.2)]">
+              02
+            </span>
             <span className="w-6 h-px bg-white/20" />
             <span className="font-jakarta text-[11px] uppercase tracking-[0.25em] text-white/50 font-medium">
               Selected Works
@@ -132,11 +141,15 @@ function Projects() {
                 delay: (index % 3) * 0.12,
                 ease: [0.22, 1, 0.36, 1],
               }}
-              whileHover={{ y: -8, scale: 1.015 }}
-              className="group relative flex flex-col rounded-3xl overflow-hidden bg-white/[0.04] hover:bg-white/[0.08] backdrop-blur-2xl backdrop-saturate-[180%] border border-white/15 hover:border-white/30 p-4 transition-colors duration-300 shadow-[0_8px_32px_0_rgba(0,0,0,0.37),inset_0_1px_1px_0_rgba(255,255,255,0.2)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.6),inset_0_1px_1px_0_rgba(255,255,255,0.2)] flex-1 justify-between"
+              whileHover={{
+                y: -6,
+                scale: 1.015,
+                transition: { type: "spring", stiffness: 400, damping: 25 },
+              }}
+              className="group relative flex flex-col rounded-3xl overflow-hidden bg-white/[0.04] hover:bg-white/[0.08] backdrop-blur-2xl backdrop-saturate-[180%] border border-white/15 hover:border-pAccent/40 p-4 transition-colors duration-200 shadow-[0_8px_32px_0_rgba(0,0,0,0.37),inset_0_1px_1px_0_rgba(255,255,255,0.2)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.6),0_0_30px_rgba(168,218,34,0.12)] flex-1 justify-between"
             >
               {/* Card Image Container */}
-              <div className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden bg-[#0c0c0e] border border-white/10 flex items-center justify-center p-1.5">
+              <div className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden bg-[#0c0c0e] border border-white/10 group-hover:border-pAccent/30 flex items-center justify-center p-1.5 transition-colors duration-300">
                 <img
                   src={project.img}
                   alt={project.title}
@@ -144,8 +157,16 @@ function Projects() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none rounded-xl" />
 
-                {/* Glassmorphic Arrow Badge */}
-                <div className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/60 backdrop-blur-xl border border-white/20 flex items-center justify-center text-white/80 group-hover:bg-pAccent group-hover:text-black group-hover:border-transparent transition-all duration-300 shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)]">
+                {/* Top-Left: Category Tag with Code Icon */}
+                <div className="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/70 backdrop-blur-xl border border-white/15 shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)]">
+                  <Code2 className="w-3 h-3 text-pAccent shrink-0" strokeWidth={2.2} />
+                  <span className="text-[10px] font-jakarta uppercase tracking-wider text-white/85 font-medium">
+                    {project.category}
+                  </span>
+                </div>
+
+                {/* Top-Right: Glassmorphic Arrow Badge in Lime */}
+                <div className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/70 backdrop-blur-xl border border-white/20 flex items-center justify-center text-pAccent group-hover:bg-pAccent group-hover:text-black group-hover:border-pAccent transition-all duration-300 shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)]">
                   <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                 </div>
               </div>
@@ -153,7 +174,7 @@ function Projects() {
               {/* Card Content */}
               <div className="flex flex-col flex-1 justify-between gap-4 p-2 pt-5">
                 <div>
-                  <h3 className="font-clash text-lg md:text-xl font-medium text-white group-hover:text-pAccent transition-colors">
+                  <h3 className="font-clash text-lg md:text-xl font-medium text-white group-hover:text-pAccent transition-colors duration-300">
                     {project.title}
                   </h3>
                   <p className="font-jakarta text-xs md:text-sm text-white/60 line-clamp-3 leading-relaxed mt-2">
@@ -166,12 +187,12 @@ function Projects() {
                   {project.tags.map((tag) => (
                     <div
                       key={tag.id}
-                      className="flex items-center gap-1.5 text-[11px] font-jakarta text-white/70 bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 hover:border-white/20 px-2.5 py-1 rounded-lg transition-colors shadow-[inset_0_1px_0.5px_rgba(255,255,255,0.08)]"
+                      className="flex items-center gap-1.5 text-[11px] font-jakarta text-white/80 bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-white/25 hover:text-white px-2.5 py-1 rounded-lg transition-colors duration-200 shadow-[inset_0_1px_0.5px_rgba(255,255,255,0.08)]"
                     >
                       <img
                         src={tag.img}
                         alt={tag.tag}
-                        className="w-3.5 h-3.5 object-contain opacity-80"
+                        className="w-3.5 h-3.5 object-contain"
                       />
                       <span className="font-medium">{tag.tag}</span>
                     </div>

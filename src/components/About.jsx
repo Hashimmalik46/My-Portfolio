@@ -108,7 +108,11 @@ function About() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            whileHover={{ y: -4 }}
+            whileHover={{
+              y: -4,
+              scale: 1.01,
+              transition: { type: "spring", stiffness: 400, damping: 25 },
+            }}
             className="group relative bg-white/80 hover:bg-white/95 backdrop-blur-2xl border border-secondary/10 hover:border-secondary/20 rounded-3xl p-7 md:p-8 shadow-[0_20px_50px_rgba(0,0,0,0.06),0_1px_3px_rgba(0,0,0,0.04)] transition-all duration-300"
           >
             <div className="flex items-center justify-between mb-4">
@@ -142,7 +146,11 @@ function About() {
                     delay: idx * 0.1,
                     ease: [0.22, 1, 0.36, 1],
                   }}
-                  whileHover={{ y: -6, scale: 1.01 }}
+                  whileHover={{
+                    y: -6,
+                    scale: 1.015,
+                    transition: { type: "spring", stiffness: 400, damping: 25 },
+                  }}
                   className="group relative bg-white/70 hover:bg-white backdrop-blur-2xl border border-secondary/10 hover:border-secondary/25 rounded-2xl p-5 flex flex-col justify-between shadow-[0_10px_30px_rgba(0,0,0,0.04),0_1px_2px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.08)] transition-all duration-300"
                 >
                   <div>
