@@ -35,12 +35,12 @@ function Hero({ isLoading = false }) {
       {/* Main Editorial Headline */}
       <motion.div
         variants={itemVariants}
-        className="relative flex flex-col items-center leading-[0.85] tracking-tight"
+        className="relative flex flex-col items-center leading-[0.9] tracking-tight"
       >
-        <span className="font-cormorant italic font-normal text-4xl sm:text-6xl md:text-7xl lg:text-8xl text-white/90 drop-shadow-[0_4px_16px_rgba(0,0,0,0.6)]">
+        <span className="font-cormorant italic font-normal text-3xl sm:text-5xl md:text-7xl lg:text-8xl text-white/90 drop-shadow-[0_4px_16px_rgba(0,0,0,0.6)]">
           Hi, I'm
         </span>
-        <span className="font-clashM text-5xl sm:text-7xl md:text-8xl lg:text-9xl mt-3 sm:mt-4 ml-8 sm:ml-20 md:ml-32 text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-white/70 drop-shadow-[0_8px_24px_rgba(0,0,0,0.8)]">
+        <span className="font-clashM text-4xl sm:text-6xl md:text-8xl lg:text-9xl mt-2 sm:mt-4 ml-0 sm:ml-16 md:ml-28 whitespace-nowrap text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-white/70 drop-shadow-[0_8px_24px_rgba(0,0,0,0.8)]">
           Hashim Malik
         </span>
       </motion.div>
@@ -48,14 +48,14 @@ function Hero({ isLoading = false }) {
       {/* Subtitle & Tagline */}
       <motion.p
         variants={itemVariants}
-        className="mt-6 sm:mt-8 font-jakarta text-base sm:text-xl md:text-2xl font-light text-white/75 tracking-wide max-w-xl"
+        className="mt-4 sm:mt-7 font-jakarta text-sm sm:text-lg md:text-2xl font-light text-white/75 tracking-wide max-w-xl px-2"
       >
         A software engineer crafting interfaces where{" "}
-        <span className="font-cormorant italic text-white font-normal text-xl sm:text-2xl md:text-3xl">
+        <span className="font-cormorant italic text-white font-normal text-lg sm:text-2xl md:text-3xl">
           code
         </span>{" "}
         meets{" "}
-        <span className="font-cormorant italic text-white font-normal text-xl sm:text-2xl md:text-3xl">
+        <span className="font-cormorant italic text-white font-normal text-lg sm:text-2xl md:text-3xl">
           pure aesthetics
         </span>
         .
@@ -64,23 +64,23 @@ function Hero({ isLoading = false }) {
       {/* CTA Buttons */}
       <motion.div
         variants={itemVariants}
-        className="mt-8 flex items-center gap-4 font-jakarta z-20"
+        className="mt-6 sm:mt-8 flex items-center justify-center gap-3 sm:gap-4 font-jakarta z-20"
       >
         <motion.a
           href="#Projects"
-          whileHover={{ scale: 1.05, y: -2 }}
-          whileTap={{ scale: 0.95 }}
+          whileHover={{ scale: 1.04, y: -2 }}
+          whileTap={{ scale: 0.96 }}
           transition={{ type: "spring", stiffness: 400, damping: 17 }}
-          className="px-7 py-3.5 rounded-full bg-white text-black font-bold text-xs sm:text-sm uppercase tracking-wider hover:bg-white/90 transition-colors shadow-[0_0_25px_rgba(255,255,255,0.25)]"
+          className="px-5 sm:px-7 py-2.5 sm:py-3.5 rounded-full bg-white text-black font-bold text-[11px] sm:text-sm uppercase tracking-wider hover:bg-white/90 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.25)] whitespace-nowrap"
         >
           View Projects
         </motion.a>
         <motion.a
           href="#Contact"
-          whileHover={{ scale: 1.05, y: -2 }}
-          whileTap={{ scale: 0.95 }}
+          whileHover={{ scale: 1.04, y: -2 }}
+          whileTap={{ scale: 0.96 }}
           transition={{ type: "spring", stiffness: 400, damping: 17 }}
-          className="px-7 py-3.5 rounded-full bg-gradient-to-b from-white/[0.14] to-white/[0.06] hover:from-white/[0.20] hover:to-white/[0.10] backdrop-blur-2xl backdrop-saturate-[180%] border border-white/25 text-white font-medium text-xs sm:text-sm uppercase tracking-wider hover:border-white/45 transition-colors shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_8px_24px_rgba(0,0,0,0.3)]"
+          className="px-5 sm:px-7 py-2.5 sm:py-3.5 rounded-full bg-gradient-to-b from-white/[0.14] to-white/[0.06] hover:from-white/[0.20] hover:to-white/[0.10] backdrop-blur-2xl backdrop-saturate-[180%] border border-white/25 text-white font-medium text-[11px] sm:text-sm uppercase tracking-wider hover:border-white/45 transition-colors shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_8px_24px_rgba(0,0,0,0.3)] whitespace-nowrap"
         >
           Get In Touch
         </motion.a>

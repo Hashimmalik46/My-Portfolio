@@ -71,7 +71,7 @@ function SeamlessBackgroundVideo() {
         muted
         playsInline
         preload="auto"
-        className={`absolute inset-0 w-full h-full object-cover object-[25%_center] md:object-center transition-opacity duration-700 ease-in-out ${
+        className={`absolute inset-0 w-full h-full object-cover object-[25%_center] lg:object-center transition-opacity duration-700 ease-in-out ${
           activeVideo === 1 ? "opacity-100" : "opacity-0"
         }`}
       >
@@ -84,7 +84,7 @@ function SeamlessBackgroundVideo() {
         muted
         playsInline
         preload="auto"
-        className={`absolute inset-0 w-full h-full object-cover object-[25%_center] md:object-center transition-opacity duration-700 ease-in-out ${
+        className={`absolute inset-0 w-full h-full object-cover object-[25%_center] lg:object-center transition-opacity duration-700 ease-in-out ${
           activeVideo === 2 ? "opacity-100" : "opacity-0"
         }`}
       >
