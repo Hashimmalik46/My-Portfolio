@@ -157,7 +157,7 @@ function Contact() {
           className="lg:col-span-6 flex flex-col justify-center"
         >
           <div className="relative w-full rounded-3xl overflow-hidden bg-white/90 backdrop-blur-2xl border border-secondary/10 p-7 md:p-9 shadow-[0_24px_60px_rgba(0,0,0,0.07),0_1px_3px_rgba(0,0,0,0.04)]">
-            <BorderBeam duration={8} size={130} colorFrom="#111827" colorTo="#a8da22" />
+            <BorderBeam duration={25} size={140} colorFrom="#111827" colorTo="#a8da22" />
 
             <div className="flex items-center justify-between mb-6">
               <span className="text-[11px] font-jakarta tracking-[0.2em] uppercase text-secondary/50 font-semibold">
