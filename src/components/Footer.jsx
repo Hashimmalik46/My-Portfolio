@@ -1,7 +1,10 @@
 import { ArrowUp, Github, Linkedin, Mail } from "lucide-react";
 import { motion } from "motion/react";
+import { portfolioData } from "../data/portfolioData";
 
 function Footer() {
+  const { footer, socials, personal } = portfolioData;
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -20,51 +23,57 @@ function Footer() {
           <div className="flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-pAccent animate-pulse" />
             <span className="font-khuma text-xl font-bold tracking-wider text-white">
-              Hash
+              {footer.brandName}
             </span>
           </div>
           <span className="hidden sm:inline text-white/20">|</span>
           <p className="text-xs sm:text-sm text-white/50">
-            &copy; {new Date().getFullYear()} Hashim Malik. All rights reserved.
+            &copy; {new Date().getFullYear()} {footer.copyrightText}
           </p>
         </div>
 
         {/* Center: Apple-Style Translucent Social Tiles */}
         <div className="flex items-center gap-3">
-          <motion.a
-            href="https://github.com/Hashimmalik46"
-            target="_blank"
-            rel="noreferrer"
-            aria-label="GitHub"
-            whileHover={{ y: -4, scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 400, damping: 17 }}
-            className="w-10 h-10 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] backdrop-blur-xl border border-white/10 hover:border-white/25 flex items-center justify-center text-white/70 hover:text-white transition-colors duration-300 shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.2)]"
-          >
-            <Github className="w-4 h-4" />
-          </motion.a>
-          <motion.a
-            href="https://www.linkedin.com/in/hashim-malik-a868102b0/"
-            target="_blank"
-            rel="noreferrer"
-            aria-label="LinkedIn"
-            whileHover={{ y: -4, scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 400, damping: 17 }}
-            className="w-10 h-10 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] backdrop-blur-xl border border-white/10 hover:border-white/25 flex items-center justify-center text-white/70 hover:text-white transition-colors duration-300 shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.2)]"
-          >
-            <Linkedin className="w-4 h-4" />
-          </motion.a>
-          <motion.a
-            href="mailto:hashimzahoor2003@gmail.com"
-            aria-label="Email"
-            whileHover={{ y: -4, scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 400, damping: 17 }}
-            className="w-10 h-10 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] backdrop-blur-xl border border-white/10 hover:border-white/25 flex items-center justify-center text-white/70 hover:text-white transition-colors duration-300 shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.2)]"
-          >
-            <Mail className="w-4 h-4" />
-          </motion.a>
+          {socials.github && (
+            <motion.a
+              href={socials.github}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="GitHub"
+              whileHover={{ y: -4, scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              className="w-10 h-10 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] backdrop-blur-xl border border-white/10 hover:border-white/25 flex items-center justify-center text-white/70 hover:text-white transition-colors duration-300 shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.2)]"
+            >
+              <Github className="w-4 h-4" />
+            </motion.a>
+          )}
+          {socials.linkedin && (
+            <motion.a
+              href={socials.linkedin}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="LinkedIn"
+              whileHover={{ y: -4, scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              className="w-10 h-10 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] backdrop-blur-xl border border-white/10 hover:border-white/25 flex items-center justify-center text-white/70 hover:text-white transition-colors duration-300 shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.2)]"
+            >
+              <Linkedin className="w-4 h-4" />
+            </motion.a>
+          )}
+          {personal.email && (
+            <motion.a
+              href={`mailto:${personal.email}`}
+              aria-label="Email"
+              whileHover={{ y: -4, scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              className="w-10 h-10 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] backdrop-blur-xl border border-white/10 hover:border-white/25 flex items-center justify-center text-white/70 hover:text-white transition-colors duration-300 shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.2)]"
+            >
+              <Mail className="w-4 h-4" />
+            </motion.a>
+          )}
         </div>
 
         {/* Right: Specular Glass Back to Top Button */}

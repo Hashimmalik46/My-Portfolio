@@ -1,94 +1,7 @@
 import { useRef, useState } from "react";
 import { ArrowUpRight, Code2, ExternalLink } from "lucide-react";
 import { motion } from "motion/react";
-
-const projects = [
-  {
-    title: "Role Based Clinic Management System",
-    img: "/gallery/Zooncare.webp",
-    category: "Full Stack",
-    short_desc:
-      "Full-stack clinical management platform built with a role-based access architecture, secure doctor-patient records, and real-time scheduling.",
-    tags: [
-      { id: 1, img: "/gallery/react.webp", tag: "React" },
-      { id: 2, img: "/gallery/tailwind.webp", tag: "Tailwind" },
-    ],
-    link: "https://zooncare.in",
-  },
-  {
-    title: "Dandwoat Dental Clinic",
-    img: "/gallery/dandwoat.webp",
-    category: "Web Platform",
-    short_desc:
-      "Comprehensive dental healthcare portal featuring online appointment bookings, treatment guides, and patient inquiry workflows.",
-    tags: [
-      { id: 1, img: "/gallery/wordpress.webp", tag: "WordPress" },
-      { id: 2, img: "/gallery/css.webp", tag: "CSS" },
-    ],
-    link: "https://dandwoat.com",
-  },
-  {
-    title: "IntelliSentry Hostel Management System",
-    img: "/gallery/intellisentry.webp",
-    category: "Full Stack",
-    short_desc:
-      "Smart hostel administration platform handling automated check-ins, student records, and room allocations with custom backend logic.",
-    tags: [
-      { id: 1, img: "/gallery/react.webp", tag: "React" },
-      { id: 2, img: "/gallery/supabase.webp", tag: "Supabase" },
-      { id: 3, img: "/gallery/flask.webp", tag: "Flask" },
-    ],
-    link: "https://intellisentry.vercel.app",
-  },
-  {
-    title: "Campus Connect",
-    img: "/gallery/CC.webp",
-    category: "Social Platform",
-    short_desc:
-      "Closed academic social network enabling campus-wide student communication, event feeds, and peer collaborations.",
-    tags: [
-      { id: 1, img: "/gallery/html.webp", tag: "HTML" },
-      { id: 2, img: "/gallery/css.webp", tag: "CSS" },
-      { id: 3, img: "/gallery/js.webp", tag: "JavaScript" },
-    ],
-    link: "https://kwitter-nine.vercel.app/",
-  },
-  {
-    title: "Arabic with Dr Sajad",
-    img: "/gallery/SS.webp",
-    category: "EdTech",
-    short_desc:
-      "Content-driven publishing and educational platform with integrated video course delivery, membership tiers, and payments.",
-    tags: [{ id: 1, img: "/gallery/wordpress.webp", tag: "WordPress" }],
-    link: "https://arabicwithdrsajad.com/",
-  },
-  {
-    title: "Agentic AI for Lead Generation",
-    img: "/gallery/agentic.webp",
-    category: "AI & Automation",
-    short_desc:
-      "Autonomous agent-driven workflow designed to extract, qualify, and route high-intent leads using machine intelligence and API pipelines.",
-    tags: [
-      { id: 1, img: "/gallery/react.webp", tag: "React" },
-      { id: 2, img: "/gallery/flask.webp", tag: "Flask" },
-      { id: 3, img: "/gallery/supabase.webp", tag: "Supabase" },
-    ],
-    link: "#",
-  },
-  {
-    title: "Safe School Bus Tracker",
-    img: "/gallery/bus.webp",
-    category: "Real-Time Tracking",
-    short_desc:
-      "Real-time school transport and child tracking application with instant route updates and synchronized parent alerts.",
-    tags: [
-      { id: 1, img: "/gallery/react.webp", tag: "React" },
-      { id: 2, img: "/gallery/supabase.webp", tag: "Supabase" },
-      { id: 3, img: "/gallery/tailwind.webp", tag: "Tailwind" },
-    ],
-    link: "https://live-school-bus-tracking.vercel.app/",
-  },
-];
+import { portfolioData } from "../data/portfolioData";
 
 function StackingCard({ project, index, total }) {
   const containerRef = useRef(null);
@@ -217,6 +130,9 @@ function StackingCard({ project, index, total }) {
 }
 
 function Projects() {
+  const { projectsSection } = portfolioData;
+  const { projects } = projectsSection;
+
   return (
     <section
       id="Projects"
@@ -234,21 +150,20 @@ function Projects() {
           {/* Editorial Eyebrow */}
           <div className="flex items-center justify-center gap-3">
             <span className="font-clashM text-xs px-2.5 py-0.5 rounded-full bg-white/[0.08] text-pAccent border border-pAccent/30 tracking-[0.2em] uppercase font-bold shadow-[0_0_12px_rgba(168,218,34,0.2)]">
-              02
+              {projectsSection.badgeNumber}
             </span>
             <span className="w-6 h-px bg-white/20" />
             <span className="font-jakarta text-[11px] uppercase tracking-[0.25em] text-white/50 font-medium">
-              Selected Works
+              {projectsSection.badgeLabel}
             </span>
           </div>
 
           <h2 className="font-longsile text-5xl sm:text-6xl md:text-7xl text-white leading-[0.9]">
-            Selected Projects
+            {projectsSection.heading}
           </h2>
 
           <p className="font-cormorant italic text-2xl sm:text-3xl text-white/85 font-light max-w-xl">
-            A showcase of full-stack engineering, AI implementations, and
-            production web platforms.
+            {projectsSection.subheading}
           </p>
         </motion.div>
 

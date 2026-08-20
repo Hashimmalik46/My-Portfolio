@@ -1,7 +1,10 @@
 import { ArrowDown, Sparkles } from "lucide-react";
 import { motion } from "motion/react";
+import { portfolioData } from "../data/portfolioData";
 
 function Hero({ isLoading = false }) {
+  const { hero } = portfolioData;
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -38,10 +41,10 @@ function Hero({ isLoading = false }) {
         className="relative flex flex-col items-center leading-[0.9] tracking-tight"
       >
         <span className="font-cormorant italic font-normal text-3xl sm:text-5xl md:text-7xl lg:text-8xl text-white/90 drop-shadow-[0_4px_16px_rgba(0,0,0,0.6)]">
-          Hi, I'm
+          {hero.greeting}
         </span>
         <span className="font-clashM text-4xl sm:text-6xl md:text-8xl lg:text-9xl mt-2 sm:mt-4 ml-0 sm:ml-16 md:ml-28 whitespace-nowrap text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-white/70 drop-shadow-[0_8px_24px_rgba(0,0,0,0.8)]">
-          Hashim Malik
+          {hero.name}
         </span>
       </motion.div>
 
@@ -50,15 +53,15 @@ function Hero({ isLoading = false }) {
         variants={itemVariants}
         className="mt-4 sm:mt-7 font-jakarta text-sm sm:text-lg md:text-2xl font-light text-white/75 tracking-wide max-w-xl px-2"
       >
-        A software engineer crafting interfaces where{" "}
+        {hero.tagline.prefix}{" "}
         <span className="font-cormorant italic text-white font-normal text-lg sm:text-2xl md:text-3xl">
-          code
+          {hero.tagline.highlight1}
         </span>{" "}
-        meets{" "}
+        {hero.tagline.connector}{" "}
         <span className="font-cormorant italic text-white font-normal text-lg sm:text-2xl md:text-3xl">
-          pure aesthetics
+          {hero.tagline.highlight2}
         </span>
-        .
+        {hero.tagline.suffix}
       </motion.p>
 
       {/* CTA Buttons */}
@@ -67,22 +70,22 @@ function Hero({ isLoading = false }) {
         className="mt-6 sm:mt-8 flex items-center justify-center gap-3 sm:gap-4 font-jakarta z-20"
       >
         <motion.a
-          href="#Projects"
+          href={hero.ctaButtons.primary.href}
           whileHover={{ scale: 1.04, y: -2 }}
           whileTap={{ scale: 0.96 }}
           transition={{ type: "spring", stiffness: 400, damping: 17 }}
           className="px-5 sm:px-7 py-2.5 sm:py-3.5 rounded-full bg-white text-black font-bold text-[11px] sm:text-sm uppercase tracking-wider hover:bg-white/90 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.25)] whitespace-nowrap"
         >
-          View Projects
+          {hero.ctaButtons.primary.label}
         </motion.a>
         <motion.a
-          href="#Contact"
+          href={hero.ctaButtons.secondary.href}
           whileHover={{ scale: 1.04, y: -2 }}
           whileTap={{ scale: 0.96 }}
           transition={{ type: "spring", stiffness: 400, damping: 17 }}
           className="px-5 sm:px-7 py-2.5 sm:py-3.5 rounded-full bg-gradient-to-b from-white/[0.14] to-white/[0.06] hover:from-white/[0.20] hover:to-white/[0.10] backdrop-blur-2xl backdrop-saturate-[180%] border border-white/25 text-white font-medium text-[11px] sm:text-sm uppercase tracking-wider hover:border-white/45 transition-colors shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_8px_24px_rgba(0,0,0,0.3)] whitespace-nowrap"
         >
-          Get In Touch
+          {hero.ctaButtons.secondary.label}
         </motion.a>
       </motion.div>
 
@@ -103,14 +106,14 @@ function Hero({ isLoading = false }) {
       >
         <div className="flex items-center justify-between mb-1.5">
           <p className="text-[10px] tracking-[0.2em] uppercase text-white/50 font-semibold">
-            Philosophy
+            {hero.philosophyCard.badge}
           </p>
           <Sparkles className="w-3.5 h-3.5 text-pAccent" />
         </div>
         <p className="text-xs sm:text-sm text-white/85 leading-snug">
-          Designing with intention, building with precision.{" "}
+          {hero.philosophyCard.quote}{" "}
           <span className="italic font-cormorant text-base sm:text-lg text-white">
-            Code meets aesthetics.
+            {hero.philosophyCard.highlight}
           </span>
         </p>
       </motion.div>
@@ -124,7 +127,9 @@ function Hero({ isLoading = false }) {
         transition={{ delay: 1, duration: 0.8 }}
         className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-white/40 hover:text-white transition-colors"
       >
-        <span className="text-[10px] uppercase tracking-[0.25em] font-jakarta">Scroll</span>
+        <span className="text-[10px] uppercase tracking-[0.25em] font-jakarta">
+          {hero.scrollText}
+        </span>
         <ArrowDown className="w-3.5 h-3.5 animate-bounce" />
       </motion.a>
     </motion.div>

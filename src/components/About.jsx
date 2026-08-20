@@ -1,42 +1,9 @@
-import {
-  Layers,
-  Palette,
-  Clapperboard,
-  BrainCircuit,
-  Sparkles,
-  ArrowUpRight,
-} from "lucide-react";
+import { Sparkles, ArrowUpRight } from "lucide-react";
 import { motion } from "motion/react";
+import { portfolioData } from "../data/portfolioData";
 
 function About() {
-  const stats = [
-    { value: "2+", label: "Years Exp." },
-    { value: "10+", label: "Projects Built" },
-    { value: "End-to-End", label: "Workflow" },
-  ];
-
-  const highlights = [
-    {
-      icon: Layers,
-      title: "Full Stack (MERN)",
-      desc: "Architecting scalable web platforms with MongoDB, Express, React, and Node.js with secure APIs.",
-    },
-    {
-      icon: BrainCircuit,
-      title: "AI, ML & Deep Learning",
-      desc: "Integrating intelligent models, computer vision pipelines, and deep neural network solutions into real-world applications.",
-    },
-    {
-      icon: Palette,
-      title: "UI/UX Design",
-      desc: "Designing high-fidelity design systems, wireframes, and responsive user journeys that prioritize usability and clean aesthetics.",
-    },
-    {
-      icon: Clapperboard,
-      title: "Video Editing & Content Creation",
-      desc: "Producing engaging digital content and post-production workflows that translate ideas into visual narratives.",
-    },
-  ];
+  const { about } = portfolioData;
 
   return (
     <section
@@ -55,32 +22,30 @@ function About() {
           {/* Editorial Eyebrow */}
           <div className="flex items-center gap-3">
             <span className="font-clashM text-xs px-2.5 py-0.5 rounded-full bg-secondary text-pAccent tracking-[0.2em] uppercase font-bold shadow-sm">
-              01
+              {about.badgeNumber}
             </span>
             <span className="w-6 h-px bg-secondary/20" />
             <span className="font-jakarta text-[11px] uppercase tracking-[0.25em] text-secondary/60 font-semibold">
-              Who I Am
+              {about.badgeLabel}
             </span>
           </div>
 
           {/* Heading */}
           <h2 className="font-longsile text-5xl sm:text-6xl md:text-7xl text-secondary leading-[0.9]">
-            About Me
+            {about.heading}
           </h2>
 
           <p className="font-cormorant italic text-2xl sm:text-3xl text-secondary/85 font-light leading-relaxed">
-            Developer, AI Practitioner & Visual Storyteller.
+            {about.subheading}
           </p>
 
           <p className="font-jakarta text-sm sm:text-base text-secondary/70 leading-relaxed">
-            I engineer software across the stack—from scalable MERN architectures
-            and intelligent computer vision models to intuitive UI/UX design and
-            creative digital content.
+            {about.bio}
           </p>
 
           {/* Metrics */}
           <div className="grid grid-cols-3 gap-3 pt-6 border-t border-secondary/15">
-            {stats.map((s, idx) => (
+            {about.stats.map((s, idx) => (
               <motion.div
                 key={idx}
                 initial={{ opacity: 0, y: 20 }}
@@ -117,7 +82,7 @@ function About() {
           >
             <div className="flex items-center justify-between mb-4">
               <span className="text-[11px] font-jakarta tracking-[0.2em] uppercase text-secondary/50 font-semibold">
-                Philosophy
+                {about.philosophy.badge}
               </span>
               <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center shadow-sm">
                 <Sparkles className="w-4 h-4 text-pAccent animate-pulse" />
@@ -125,15 +90,13 @@ function About() {
             </div>
 
             <p className="font-jakarta text-base md:text-lg text-secondary/90 leading-relaxed font-normal">
-              Merging deep technical logic—from machine learning algorithms to full-stack
-              engineering—with intuitive design and creative media production. Every project is
-              approached with architectural rigor, scalability, and visual clarity.
+              {about.philosophy.description}
             </p>
           </motion.div>
 
           {/* 2x2 Specialized Domain Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {highlights.map((item, idx) => {
+            {about.domainCards.map((item, idx) => {
               const IconComp = item.icon;
               return (
                 <motion.div
@@ -170,7 +133,7 @@ function About() {
                   </div>
 
                   <div className="flex items-center gap-1 mt-5 text-[11px] uppercase tracking-wider text-secondary/60 group-hover:text-secondary transition-colors font-medium">
-                    <span>Domain</span>
+                    <span>{item.tag || "Domain"}</span>
                     <ArrowUpRight className="w-3.5 h-3.5 text-pAccent group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                   </div>
                 </motion.div>

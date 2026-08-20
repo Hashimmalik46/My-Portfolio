@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { motion } from "motion/react";
+import { portfolioData } from "../data/portfolioData";
 
 function Preloader({ onComplete }) {
   const [count, setCount] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
+  const { preloader } = portfolioData;
 
   useEffect(() => {
     const startTime = Date.now();
@@ -57,11 +59,11 @@ function Preloader({ onComplete }) {
           <div className="flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-pAccent animate-pulse" />
             <span className="font-cormorant italic text-2xl sm:text-3xl text-white/95 tracking-wide font-normal">
-              Hashim Malik
+              {preloader.name}
             </span>
           </div>
           <span className="font-jakarta text-[11px] tracking-[0.2em] uppercase text-white/40">
-            Software & Creative
+            {preloader.subtitle}
           </span>
         </div>
 

@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { House, UserRound, Code2, Send } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
+import { portfolioData } from "../data/portfolioData";
 
 function Navbar({ isLoading = false }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const { nav, socials } = portfolioData;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -40,75 +41,64 @@ function Navbar({ isLoading = false }) {
           whileTap={{ scale: 0.95 }}
           className="font-khuma text-3xl font-bold text-white tracking-wide hover:opacity-80 transition-opacity"
         >
-          Hash
+          {nav.logoText}
         </motion.a>
 
         {/* Center Links (Apple Light Glass Pill) */}
         <div className="hidden md:flex items-center gap-6 font-poppins text-white/90 bg-white/[0.07] hover:bg-white/[0.1] backdrop-blur-2xl backdrop-saturate-[180%] border border-white/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.37),inset_0_1px_1px_0_rgba(255,255,255,0.3),inset_0_-1px_1px_0_rgba(0,0,0,0.2)] px-6 py-3 rounded-full transition-all duration-300">
-          <motion.a
-            href="#Home"
-            whileHover={{ scale: 1.2, y: -1 }}
-            whileTap={{ scale: 0.9 }}
-            className="text-white/80 hover:text-pAccent transition-colors duration-200"
-          >
-            <House size={20} strokeWidth={1.8} />
-          </motion.a>
-          <motion.a
-            href="#About"
-            whileHover={{ scale: 1.2, y: -1 }}
-            whileTap={{ scale: 0.9 }}
-            className="text-white/80 hover:text-pAccent transition-colors duration-200"
-          >
-            <UserRound size={20} strokeWidth={1.8} />
-          </motion.a>
-          <motion.a
-            href="#Projects"
-            whileHover={{ scale: 1.2, y: -1 }}
-            whileTap={{ scale: 0.9 }}
-            className="text-white/80 hover:text-pAccent transition-colors duration-200"
-          >
-            <Code2 size={20} strokeWidth={1.8} />
-          </motion.a>
-          <motion.a
-            href="#Contact"
-            whileHover={{ scale: 1.2, y: -1 }}
-            whileTap={{ scale: 0.9 }}
-            className="text-white/80 hover:text-pAccent transition-colors duration-200"
-          >
-            <Send size={20} strokeWidth={1.8} />
-          </motion.a>
+          {nav.navLinks.map((link) => {
+            const IconComp = link.icon;
+            return (
+              <motion.a
+                key={link.id}
+                href={link.href}
+                aria-label={link.label}
+                whileHover={{ scale: 1.2, y: -1 }}
+                whileTap={{ scale: 0.9 }}
+                className="text-white/80 hover:text-pAccent transition-colors duration-200"
+              >
+                <IconComp size={20} strokeWidth={1.8} />
+              </motion.a>
+            );
+          })}
         </div>
 
         {/* Social Icons */}
         <div className="flex items-center gap-4">
-          <motion.a
-            href="https://github.com/Hashimmalik46"
-            target="_blank"
-            rel="noreferrer"
-            whileHover={{ scale: 1.1, y: -2 }}
-            whileTap={{ scale: 0.92 }}
-            className="w-10 h-10 rounded-full bg-white/[0.06] hover:bg-white/[0.12] backdrop-blur-xl border border-white/15 shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.2)] flex items-center justify-center transition-colors duration-200"
-          >
-            <img
-              src="/gallery/github.webp"
-              alt="GitHub"
-              className="w-5 h-5 object-contain brightness-0 invert opacity-90"
-            />
-          </motion.a>
-          <motion.a
-            href="https://www.linkedin.com/in/hashim-malik-a868102b0/"
-            target="_blank"
-            rel="noreferrer"
-            whileHover={{ scale: 1.1, y: -2 }}
-            whileTap={{ scale: 0.92 }}
-            className="w-10 h-10 rounded-full bg-white/[0.06] hover:bg-white/[0.12] backdrop-blur-xl border border-white/15 shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.2)] flex items-center justify-center transition-colors duration-200"
-          >
-            <img
-              src="/gallery/linkedin.webp"
-              alt="LinkedIn"
-              className="w-5 h-5 object-contain brightness-0 invert opacity-90"
-            />
-          </motion.a>
+          {socials.github && (
+            <motion.a
+              href={socials.github}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="GitHub"
+              whileHover={{ scale: 1.1, y: -2 }}
+              whileTap={{ scale: 0.92 }}
+              className="w-10 h-10 rounded-full bg-white/[0.06] hover:bg-white/[0.12] backdrop-blur-xl border border-white/15 shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.2)] flex items-center justify-center transition-colors duration-200"
+            >
+              <img
+                src="/gallery/github.webp"
+                alt="GitHub"
+                className="w-5 h-5 object-contain brightness-0 invert opacity-90"
+              />
+            </motion.a>
+          )}
+          {socials.linkedin && (
+            <motion.a
+              href={socials.linkedin}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="LinkedIn"
+              whileHover={{ scale: 1.1, y: -2 }}
+              whileTap={{ scale: 0.92 }}
+              className="w-10 h-10 rounded-full bg-white/[0.06] hover:bg-white/[0.12] backdrop-blur-xl border border-white/15 shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.2)] flex items-center justify-center transition-colors duration-200"
+            >
+              <img
+                src="/gallery/linkedin.webp"
+                alt="LinkedIn"
+                className="w-5 h-5 object-contain brightness-0 invert opacity-90"
+              />
+            </motion.a>
+          )}
         </div>
       </nav>
 
@@ -131,7 +121,7 @@ function Navbar({ isLoading = false }) {
                   whileTap={{ scale: 0.95 }}
                   className="font-khuma text-xl font-bold text-white tracking-wide pl-3 hover:text-pAccent transition-colors"
                 >
-                  Hash
+                  {nav.logoText}
                 </motion.a>
 
                 {/* Expandable Navigation Links with Smooth Fluid Collapse */}
@@ -148,42 +138,22 @@ function Navbar({ isLoading = false }) {
                   className="flex items-center overflow-hidden"
                 >
                   <div className="flex items-center gap-4 pl-3 pr-1 py-1 border-l border-white/15 whitespace-nowrap">
-                    <motion.a
-                      href="#Home"
-                      whileHover={{ scale: 1.2 }}
-                      whileTap={{ scale: 0.9 }}
-                      onClick={() => setIsExpanded(false)}
-                      className="text-white/80 hover:text-pAccent transition-colors"
-                    >
-                      <House size={18} strokeWidth={1.8} />
-                    </motion.a>
-                    <motion.a
-                      href="#About"
-                      whileHover={{ scale: 1.2 }}
-                      whileTap={{ scale: 0.9 }}
-                      onClick={() => setIsExpanded(false)}
-                      className="text-white/80 hover:text-pAccent transition-colors"
-                    >
-                      <UserRound size={18} strokeWidth={1.8} />
-                    </motion.a>
-                    <motion.a
-                      href="#Projects"
-                      whileHover={{ scale: 1.2 }}
-                      whileTap={{ scale: 0.9 }}
-                      onClick={() => setIsExpanded(false)}
-                      className="text-white/80 hover:text-pAccent transition-colors"
-                    >
-                      <Code2 size={18} strokeWidth={1.8} />
-                    </motion.a>
-                    <motion.a
-                      href="#Contact"
-                      whileHover={{ scale: 1.2 }}
-                      whileTap={{ scale: 0.9 }}
-                      onClick={() => setIsExpanded(false)}
-                      className="text-white/80 hover:text-pAccent transition-colors"
-                    >
-                      <Send size={18} strokeWidth={1.8} />
-                    </motion.a>
+                    {nav.navLinks.map((link) => {
+                      const IconComp = link.icon;
+                      return (
+                        <motion.a
+                          key={link.id}
+                          href={link.href}
+                          aria-label={link.label}
+                          whileHover={{ scale: 1.2 }}
+                          whileTap={{ scale: 0.9 }}
+                          onClick={() => setIsExpanded(false)}
+                          className="text-white/80 hover:text-pAccent transition-colors"
+                        >
+                          <IconComp size={18} strokeWidth={1.8} />
+                        </motion.a>
+                      );
+                    })}
                   </div>
                 </motion.div>
 

@@ -1,25 +1,10 @@
 import { useRef } from "react";
 import { motion, useInView } from "motion/react";
 import { Code2 } from "lucide-react";
-
-const skills = [
-  "React.js",
-  "Node.js",
-  "Next.js",
-  "Express.js",
-  "MongoDB",
-  "Python",
-  "Deep Learning",
-  "Machine Learning",
-  "Computer Vision",
-  "Tailwind CSS",
-  "JavaScript",
-  "Supabase",
-  "UI/UX Design",
-  "REST APIs",
-];
+import { portfolioData } from "../data/portfolioData";
 
 function SkillsMarquee() {
+  const { skills } = portfolioData;
   const containerRef = useRef(null);
   const isInView = useInView(containerRef, { margin: "100px 0px" });
 

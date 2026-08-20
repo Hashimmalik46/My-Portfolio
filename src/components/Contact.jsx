@@ -4,11 +4,12 @@ import { Send, CheckCircle2, Sparkles } from "lucide-react";
 import { BorderBeam } from "./ui/border-beam";
 import { MdEmail } from "react-icons/md";
 import { IoLocationSharp } from "react-icons/io5";
-import { FaLinkedinIn, FaInstagram, FaXTwitter } from "react-icons/fa6";
 import { motion, AnimatePresence } from "motion/react";
+import { portfolioData } from "../data/portfolioData";
 
 function Contact() {
-  const [state, handleSubmit] = useForm("xeerdlnq");
+  const { contact } = portfolioData;
+  const [state, handleSubmit] = useForm(contact.formspreeFormId);
   const [showMessage, setShowMessage] = useState(false);
 
   useEffect(() => {
@@ -38,113 +39,96 @@ function Contact() {
           {/* Editorial Eyebrow */}
           <div className="flex items-center gap-3">
             <span className="font-clashM text-xs px-2.5 py-0.5 rounded-full bg-secondary text-pAccent tracking-[0.2em] uppercase font-bold shadow-sm">
-              03
+              {contact.badgeNumber}
             </span>
             <span className="w-6 h-px bg-secondary/20" />
             <span className="font-jakarta text-[11px] uppercase tracking-[0.25em] text-secondary/60 font-semibold">
-              Get In Touch
+              {contact.badgeLabel}
             </span>
           </div>
 
           {/* Editorial Heading */}
           <h2 className="font-longsile text-5xl sm:text-6xl md:text-7xl text-secondary leading-[0.9]">
-            Let’s Connect
+            {contact.heading}
           </h2>
 
           <p className="font-cormorant italic text-2xl sm:text-3xl text-secondary/85 font-light leading-relaxed">
-            Have a project in mind, an opportunity, or just want to talk tech?
+            {contact.subheading}
           </p>
 
           <p className="font-jakarta text-sm sm:text-base text-secondary/70 leading-relaxed max-w-lg">
-            My inbox is always open. Whether it’s a full-stack system, AI pipeline, 
-            or UI/UX design collaboration, let’s build something impactful together.
+            {contact.description}
           </p>
 
           {/* Porcelain Contact Tiles */}
           <div className="flex flex-col gap-3 pt-2 w-full max-w-md">
             {/* Email Card */}
-            <motion.a
-              href="mailto:hashimzahoor2003@gmail.com"
-              whileHover={{ x: 6 }}
-              transition={{ type: "spring", stiffness: 350, damping: 25 }}
-              className="group flex items-center gap-4 p-3 rounded-2xl bg-white/80 hover:bg-white backdrop-blur-xl border border-secondary/10 hover:border-secondary/25 shadow-[0_10px_25px_rgba(0,0,0,0.04)] transition-all duration-300"
-            >
-              <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center flex-shrink-0 shadow-sm group-hover:scale-105 transition-transform duration-300">
-                <MdEmail size={20} className="text-pAccent" />
-              </div>
-              <div className="flex flex-col text-left overflow-hidden">
-                <span className="text-[10px] font-jakarta uppercase tracking-wider text-secondary/50 font-semibold">
-                  Email
-                </span>
-                <span className="text-xs sm:text-sm font-jakarta text-secondary/90 group-hover:text-secondary truncate font-medium">
-                  hashimzahoor2003@gmail.com
-                </span>
-              </div>
-            </motion.a>
+            {contact.email && (
+              <motion.a
+                href={`mailto:${contact.email}`}
+                whileHover={{ x: 6 }}
+                transition={{ type: "spring", stiffness: 350, damping: 25 }}
+                className="group flex items-center gap-4 p-3 rounded-2xl bg-white/80 hover:bg-white backdrop-blur-xl border border-secondary/10 hover:border-secondary/25 shadow-[0_10px_25px_rgba(0,0,0,0.04)] transition-all duration-300"
+              >
+                <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center flex-shrink-0 shadow-sm group-hover:scale-105 transition-transform duration-300">
+                  <MdEmail size={20} className="text-pAccent" />
+                </div>
+                <div className="flex flex-col text-left overflow-hidden">
+                  <span className="text-[10px] font-jakarta uppercase tracking-wider text-secondary/50 font-semibold">
+                    Email
+                  </span>
+                  <span className="text-xs sm:text-sm font-jakarta text-secondary/90 group-hover:text-secondary truncate font-medium">
+                    {contact.email}
+                  </span>
+                </div>
+              </motion.a>
+            )}
 
             {/* Location Card */}
-            <motion.div
-              whileHover={{ x: 6 }}
-              transition={{ type: "spring", stiffness: 350, damping: 25 }}
-              className="group flex items-center gap-4 p-3 rounded-2xl bg-white/80 hover:bg-white backdrop-blur-xl border border-secondary/10 hover:border-secondary/25 shadow-[0_10px_25px_rgba(0,0,0,0.04)] transition-all duration-300"
-            >
-              <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center flex-shrink-0 shadow-sm group-hover:scale-105 transition-transform duration-300">
-                <IoLocationSharp size={20} className="text-pAccent" />
-              </div>
-              <div className="flex flex-col text-left">
-                <span className="text-[10px] font-jakarta uppercase tracking-wider text-secondary/50 font-semibold">
-                  Location
-                </span>
-                <span className="text-xs sm:text-sm font-jakarta text-secondary/90 font-medium">
-                  Srinagar, Kashmir
-                </span>
-              </div>
-            </motion.div>
+            {contact.location && (
+              <motion.div
+                whileHover={{ x: 6 }}
+                transition={{ type: "spring", stiffness: 350, damping: 25 }}
+                className="group flex items-center gap-4 p-3 rounded-2xl bg-white/80 hover:bg-white backdrop-blur-xl border border-secondary/10 hover:border-secondary/25 shadow-[0_10px_25px_rgba(0,0,0,0.04)] transition-all duration-300"
+              >
+                <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center flex-shrink-0 shadow-sm group-hover:scale-105 transition-transform duration-300">
+                  <IoLocationSharp size={20} className="text-pAccent" />
+                </div>
+                <div className="flex flex-col text-left">
+                  <span className="text-[10px] font-jakarta uppercase tracking-wider text-secondary/50 font-semibold">
+                    Location
+                  </span>
+                  <span className="text-xs sm:text-sm font-jakarta text-secondary/90 font-medium">
+                    {contact.location}
+                  </span>
+                </div>
+              </motion.div>
+            )}
 
             {/* Social Channels Row */}
-            <div className="grid grid-cols-3 gap-2.5 pt-1">
-              <motion.a
-                href="https://www.linkedin.com/in/hashim-malik-a868102b0/"
-                target="_blank"
-                rel="noreferrer"
-                whileHover={{ y: -3, scale: 1.02 }}
-                whileTap={{ scale: 0.96 }}
-                className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-secondary hover:bg-black text-white border border-secondary shadow-[0_4px_16px_rgba(17,24,39,0.15)] transition-all duration-300 group"
-              >
-                <FaLinkedinIn size={14} className="text-pAccent group-hover:scale-110 transition-transform" />
-                <span className="text-xs font-jakarta text-white font-medium">
-                  LinkedIn
-                </span>
-              </motion.a>
-
-              <motion.a
-                href="https://instagram.com/i_hash46"
-                target="_blank"
-                rel="noreferrer"
-                whileHover={{ y: -3, scale: 1.02 }}
-                whileTap={{ scale: 0.96 }}
-                className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-secondary hover:bg-black text-white border border-secondary shadow-[0_4px_16px_rgba(17,24,39,0.15)] transition-all duration-300 group"
-              >
-                <FaInstagram size={14} className="text-pAccent group-hover:scale-110 transition-transform" />
-                <span className="text-xs font-jakarta text-white font-medium">
-                  Instagram
-                </span>
-              </motion.a>
-
-              <motion.a
-                href="https://x.com/hashimm447"
-                target="_blank"
-                rel="noreferrer"
-                whileHover={{ y: -3, scale: 1.02 }}
-                whileTap={{ scale: 0.96 }}
-                className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-secondary hover:bg-black text-white border border-secondary shadow-[0_4px_16px_rgba(17,24,39,0.15)] transition-all duration-300 group"
-              >
-                <FaXTwitter size={14} className="text-pAccent group-hover:scale-110 transition-transform" />
-                <span className="text-xs font-jakarta text-white font-medium">
-                  Twitter
-                </span>
-              </motion.a>
-            </div>
+            {contact.socialLinks && contact.socialLinks.length > 0 && (
+              <div className="grid grid-cols-3 gap-2.5 pt-1">
+                {contact.socialLinks.map((soc, idx) => {
+                  const SocIcon = soc.icon;
+                  return (
+                    <motion.a
+                      key={idx}
+                      href={soc.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      whileHover={{ y: -3, scale: 1.02 }}
+                      whileTap={{ scale: 0.96 }}
+                      className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-secondary hover:bg-black text-white border border-secondary shadow-[0_4px_16px_rgba(17,24,39,0.15)] transition-all duration-300 group"
+                    >
+                      <SocIcon size={14} className="text-pAccent group-hover:scale-110 transition-transform" />
+                      <span className="text-xs font-jakarta text-white font-medium">
+                        {soc.name}
+                      </span>
+                    </motion.a>
+                  );
+                })}
+              </div>
+            )}
           </div>
         </motion.div>
 
