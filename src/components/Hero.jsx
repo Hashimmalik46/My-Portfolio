@@ -379,13 +379,13 @@ export function FloatingBottomRightDiscPlayer({
   return (
     <div
       ref={discRef}
-      className="xl:hidden absolute bottom-6 right-4 sm:right-6 sm:bottom-8 sm:right-8 z-30 pointer-events-auto select-none font-jakarta"
+      className="xl:hidden absolute top-[0px] sm:top-[68px] right-3 sm:right-12 z-30 pointer-events-auto select-none font-jakarta flex justify-end"
     >
       <motion.div
         layout
         transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-        className={`h-11 rounded-full bg-white/[0.13] hover:bg-white/[0.18] border border-white/30 hover:border-white/45 backdrop-blur-2xl backdrop-saturate-[200%] shadow-[0_16px_40px_rgba(0,0,0,0.4),0_0_20px_rgba(255,255,255,0.1),inset_0_1.5px_1px_rgba(255,255,255,0.6)] flex items-center overflow-hidden transition-colors ${
-          isOpen ? "px-3.5 gap-2.5 max-w-[92vw]" : "w-11 justify-center cursor-pointer"
+        className={`h-10 rounded-full bg-white/[0.13] hover:bg-white/[0.18] border border-white/30 hover:border-white/45 backdrop-blur-2xl backdrop-saturate-[200%] shadow-[0_16px_40px_rgba(0,0,0,0.4),0_0_20px_rgba(255,255,255,0.1),inset_0_1.5px_1px_rgba(255,255,255,0.6)] flex items-center overflow-hidden transition-colors ${
+          isOpen ? "px-3 gap-2 sm:gap-2.5 max-w-[90vw]" : "w-10 justify-center cursor-pointer"
         }`}
         onClick={!isOpen ? () => setIsOpen(true) : undefined}
       >
@@ -412,10 +412,10 @@ export function FloatingBottomRightDiscPlayer({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.15, ease: "easeOut" }}
-              className="flex items-center gap-2.5 whitespace-nowrap overflow-hidden"
+              className="flex items-center gap-2 sm:gap-2.5 whitespace-nowrap overflow-hidden"
             >
               {/* Track Info */}
-              <div className="flex flex-col min-w-0 max-w-[105px] sm:max-w-[130px]">
+              <div className="flex flex-col min-w-0 max-w-[100px] sm:max-w-[125px]">
                 <span className="text-[11px] font-semibold text-white truncate tracking-tight">
                   {currentTrack.title || `Ambient 0${currentTrackIndex + 1}`}
                 </span>
@@ -443,10 +443,10 @@ export function FloatingBottomRightDiscPlayer({
                 />
               </div>
 
-              <span className="w-px h-4 bg-white/20 shrink-0" />
+              <span className="w-px h-3.5 bg-white/20 shrink-0" />
 
               {/* Transport Controls */}
-              <div className="flex items-center gap-1.5 shrink-0">
+              <div className="flex items-center gap-1 shrink-0">
                 <motion.button
                   type="button"
                   onClick={handlePrev}
@@ -462,7 +462,7 @@ export function FloatingBottomRightDiscPlayer({
                   onClick={toggleSound}
                   whileTap={{ scale: 0.92 }}
                   aria-label={isPlaying ? "Pause Music" : "Play Music"}
-                  className="w-7 h-7 rounded-full bg-white text-black hover:bg-white/95 shadow-[0_0_12px_rgba(255,255,255,0.4)] flex items-center justify-center cursor-pointer"
+                  className="w-6.5 h-6.5 rounded-full bg-white text-black hover:bg-white/95 shadow-[0_0_10px_rgba(255,255,255,0.4)] flex items-center justify-center cursor-pointer"
                 >
                   {isPlaying ? (
                     <Pause size={10} className="text-black fill-black" />
@@ -500,7 +500,7 @@ export function FloatingBottomRightDiscPlayer({
 
         {/* Live Audio indicator dot when collapsed and playing */}
         {!isOpen && isPlaying && (
-          <span className="absolute top-0.5 right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.9)] animate-pulse border border-black/40" />
+          <span className="absolute top-0.5 right-0.5 w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.9)] animate-pulse border border-black/40" />
         )}
       </motion.div>
     </div>
