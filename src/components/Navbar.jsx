@@ -352,15 +352,51 @@ function Navbar({ isLoading = false }) {
                 </AnimatePresence>
               </motion.button>
 
-              {/* Minimalist Apple Glass Tools Dropdown (Expanding downwards) */}
+              {/* Minimalist Apple Glass Tools Dropdown (Smooth Cascading Pills) */}
               <AnimatePresence>
                 {isToolsOpen && (
                   <motion.div
-                    initial={{ opacity: 0, y: -8, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -6, scale: 0.95 }}
-                    transition={{ type: "spring", stiffness: 450, damping: 28 }}
-                    className="absolute right-0 top-full mt-2.5 flex flex-col gap-1.5 z-50 select-none items-end"
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    variants={{
+                      hidden: {
+                        opacity: 0,
+                        y: -6,
+                        scale: 0.94,
+                        transition: {
+                          duration: 0.15,
+                          ease: [0.32, 0.72, 0, 1],
+                          staggerChildren: 0.04,
+                          staggerDirection: -1,
+                        },
+                      },
+                      visible: {
+                        opacity: 1,
+                        y: 0,
+                        scale: 1,
+                        transition: {
+                          type: "spring",
+                          stiffness: 420,
+                          damping: 26,
+                          mass: 0.6,
+                          staggerChildren: 0.06,
+                          delayChildren: 0.02,
+                        },
+                      },
+                      exit: {
+                        opacity: 0,
+                        y: -6,
+                        scale: 0.94,
+                        transition: {
+                          duration: 0.14,
+                          ease: [0.32, 0.72, 0, 1],
+                          staggerChildren: 0.03,
+                          staggerDirection: -1,
+                        },
+                      },
+                    }}
+                    className="absolute right-0 top-full mt-2.5 flex flex-col gap-1.5 z-50 select-none items-end origin-top-right transform-gpu"
                   >
                     {/* Item 1: Resume Pill */}
                     <motion.button
@@ -369,14 +405,32 @@ function Navbar({ isLoading = false }) {
                         setIsResumeOpen(true);
                         setIsToolsOpen(false);
                       }}
-                      initial={{ opacity: 0, y: -6, scale: 0.9 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: -4, scale: 0.9 }}
-                      transition={{ duration: 0.15, delay: 0.02 }}
+                      variants={{
+                        hidden: { opacity: 0, y: -12, scale: 0.88, filter: "blur(4px)" },
+                        visible: {
+                          opacity: 1,
+                          y: 0,
+                          scale: 1,
+                          filter: "blur(0px)",
+                          transition: {
+                            type: "spring",
+                            stiffness: 400,
+                            damping: 24,
+                            mass: 0.5,
+                          },
+                        },
+                        exit: {
+                          opacity: 0,
+                          y: -8,
+                          scale: 0.9,
+                          filter: "blur(2px)",
+                          transition: { duration: 0.12, ease: "easeOut" },
+                        },
+                      }}
                       whileHover={{ scale: 1.04, x: -2 }}
                       whileTap={{ scale: 0.95 }}
                       aria-label="Resume Generator"
-                      className="group flex items-center gap-2.5 pl-2.5 pr-3.5 py-1.5 rounded-full bg-[#12141c]/90 hover:bg-[#181a24]/95 backdrop-blur-2xl backdrop-saturate-[180%] border border-white/25 hover:border-white/40 shadow-[0_8px_24px_rgba(0,0,0,0.45),inset_0_1px_1px_0_rgba(255,255,255,0.4)] text-white transition-all cursor-pointer whitespace-nowrap"
+                      className="group flex items-center gap-2.5 pl-2.5 pr-3.5 py-1.5 rounded-full bg-[#12141c]/90 hover:bg-[#181a24]/95 backdrop-blur-2xl backdrop-saturate-[180%] border border-white/25 hover:border-white/40 shadow-[0_8px_24px_rgba(0,0,0,0.45),inset_0_1px_1px_0_rgba(255,255,255,0.4)] text-white cursor-pointer whitespace-nowrap transition-colors duration-150"
                     >
                       <div className="w-5 h-5 rounded-full bg-pAccent/20 flex items-center justify-center text-pAccent shrink-0">
                         <FileText className="w-3 h-3 text-pAccent" />
@@ -390,14 +444,32 @@ function Navbar({ isLoading = false }) {
                     <motion.button
                       type="button"
                       onClick={handleCopyEmail}
-                      initial={{ opacity: 0, y: -6, scale: 0.9 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: -4, scale: 0.9 }}
-                      transition={{ duration: 0.15, delay: 0.06 }}
+                      variants={{
+                        hidden: { opacity: 0, y: -12, scale: 0.88, filter: "blur(4px)" },
+                        visible: {
+                          opacity: 1,
+                          y: 0,
+                          scale: 1,
+                          filter: "blur(0px)",
+                          transition: {
+                            type: "spring",
+                            stiffness: 400,
+                            damping: 24,
+                            mass: 0.5,
+                          },
+                        },
+                        exit: {
+                          opacity: 0,
+                          y: -8,
+                          scale: 0.9,
+                          filter: "blur(2px)",
+                          transition: { duration: 0.12, ease: "easeOut" },
+                        },
+                      }}
                       whileHover={{ scale: 1.04, x: -2 }}
                       whileTap={{ scale: 0.95 }}
                       aria-label="Copy Email"
-                      className={`group flex items-center gap-2.5 pl-2.5 pr-3.5 py-1.5 rounded-full backdrop-blur-2xl backdrop-saturate-[180%] border transition-all cursor-pointer whitespace-nowrap ${
+                      className={`group flex items-center gap-2.5 pl-2.5 pr-3.5 py-1.5 rounded-full backdrop-blur-2xl backdrop-saturate-[180%] border cursor-pointer whitespace-nowrap transition-colors duration-150 ${
                         copiedEmail
                           ? "bg-emerald-950/85 border-emerald-400/50 shadow-[0_8px_24px_rgba(52,211,153,0.25),inset_0_1px_1px_0_rgba(255,255,255,0.4)] text-emerald-300"
                           : "bg-[#12141c]/90 hover:bg-[#181a24]/95 border-white/25 hover:border-white/40 shadow-[0_8px_24px_rgba(0,0,0,0.45),inset_0_1px_1px_0_rgba(255,255,255,0.4)] text-white"
