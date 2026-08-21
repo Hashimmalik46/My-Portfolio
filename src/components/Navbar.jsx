@@ -262,13 +262,7 @@ function Navbar({ isLoading = false }) {
       </nav>
 
       {/* 2. Floating Pill Navbar (Authentic Apple Glass Pill on Scroll) */}
-      <div
-        className="fixed top-6 left-1/2 -translate-x-1/2 z-50 pointer-events-none isolate transform-gpu"
-        style={{
-          WebkitTransform: "translate3d(-50%, 0, 0)",
-          transform: "translate3d(-50%, 0, 0)",
-        }}
-      >
+      <div className="fixed top-6 inset-x-0 w-full flex justify-center z-50 pointer-events-none px-4 isolate transform-gpu">
         <AnimatePresence>
           {isScrolled && (
             <motion.div
@@ -281,7 +275,7 @@ function Navbar({ isLoading = false }) {
                 damping: 28,
                 mass: 0.8,
               }}
-              className="pointer-events-auto"
+              className="pointer-events-auto max-w-full"
             >
               <DynamicGlassContainer
                 isFloating={true}

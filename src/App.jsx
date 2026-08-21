@@ -9,16 +9,24 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Initialize Lenis Smooth Scroll with light, snappy response
+    // Only initialize Lenis on non-touch (desktop mouse/trackpad) devices.
+    // Touch devices (iOS / Android) have native hardware 120Hz fling physics which feel best without virtual scroll intervention.
+    const isTouch =
+      "ontouchstart" in window ||
+      navigator.maxTouchPoints > 0 ||
+      window.matchMedia("(pointer: coarse)").matches;
+
+    if (isTouch) {
+      return;
+    }
+
     const lenis = new Lenis({
-      duration: 0.75, // Snappy & agile response (reduced from 1.15s)
+      duration: 0.75, // Snappy & agile response for desktop mouse wheel
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
-      wheelMultiplier: 1.1, // Quick, direct wheel response without dragging
-      touchMultiplier: 1.0, // Natural 1:1 touch response for mobile
-      syncTouch: false, // Prevents mobile touch dragging lag
+      wheelMultiplier: 1.1,
       infinite: false,
     });
 
@@ -32,7 +40,7 @@ function App() {
     }
     rafId = requestAnimationFrame(raf);
 
-    // Global smooth anchor click interceptor
+    // Global smooth anchor click interceptor for desktop
     const handleAnchorClick = (e) => {
       const anchor = e.target.closest('a[href^="#"]');
       if (!anchor) return;
