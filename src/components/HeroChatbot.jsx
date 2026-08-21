@@ -16,6 +16,9 @@ import {
   BrainCircuit,
   Mail,
   ArrowUpRight,
+  Search,
+  Command,
+  Briefcase,
 } from "lucide-react";
 import { portfolioData } from "../data/portfolioData";
 import { askHashimAI } from "../data/hashimAI";
@@ -308,48 +311,74 @@ export default function HeroChatbot() {
     });
   };
 
+  const handleChipClick = (query) => {
+    setIsOpen(true);
+    setTimeout(() => {
+      handleSendMessage(query);
+    }, 150);
+  };
+
   const isInitialState = messages.length <= 1;
 
   return (
     <>
-      {/* 1. FLOATING CHAT BUTTON & SPEECH BUBBLE (BOTTOM RIGHT) */}
-      <div className="absolute bottom-16 sm:bottom-20 xl:bottom-18 right-3 sm:right-14 xl:right-30 z-30 flex items-center gap-2.5 sm:gap-3 pointer-events-auto select-none">
-        {/* Floating Speech Bubble */}
+      {/* 1. INTERACTIVE SEARCH BAR & PROMPT CHIPS (ALL SCREENS - CENTERED) */}
+      <div className="w-full max-w-[325px] sm:max-w-sm mx-auto flex flex-col items-center gap-2 select-none font-jakarta">
+        {/* Main Search Pill */}
         <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{
-            opacity: 1,
-            x: 0,
-            y: [0, -4, 0],
-          }}
-          transition={{
-            opacity: { duration: 0.8, delay: 0.8 },
-            x: { duration: 0.8, delay: 0.8, ease: [0.22, 1, 0.36, 1] },
-            y: { duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 },
-          }}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.97 }}
           onClick={() => setIsOpen(true)}
-          className="hidden sm:flex items-center gap-1.5 bg-white/[0.12] hover:bg-white/[0.2] backdrop-blur-2xl border border-white/25 hover:border-white/40 px-3.5 py-2 rounded-full shadow-[0_12px_32px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.4)] cursor-pointer transition-all group font-jakarta"
+          className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-full bg-[#141520]/80 hover:bg-[#1a1c2a]/90 border border-white/20 hover:border-white/35 backdrop-blur-2xl shadow-[0_12px_32px_rgba(0,0,0,0.5),inset_0_1px_1px_rgba(255,255,255,0.35)] cursor-pointer transition-all duration-200 group"
         >
-          <Sparkles size={13} className="text-pAccent animate-pulse" />
-          <span className="text-xs text-white/90 group-hover:text-white font-medium whitespace-nowrap">
-            {chatbot.speechBubbleText}
-          </span>
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-5 h-5 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white shrink-0">
+              <Sparkles size={11} className="text-white animate-pulse" />
+            </div>
+            <span className="text-xs font-medium text-white/80 group-hover:text-white transition-colors truncate">
+              Ask Hashim AI...
+            </span>
+          </div>
+          <div className="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center text-white/60 group-hover:text-white group-hover:bg-white/20 transition-all shrink-0">
+            <ArrowUpRight size={11} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+          </div>
         </motion.div>
 
-        {/* Circular Apple Glass Chat Button */}
-        <motion.button
-          type="button"
-          whileHover={{ scale: 1.08, y: -2 }}
-          whileTap={{ scale: 0.92 }}
-          onClick={() => setIsOpen(true)}
-          aria-label="Open AI Assistant"
-          className="relative w-12 h-12 sm:w-13 sm:h-13 rounded-full bg-white/[0.16] hover:bg-white/[0.26] border border-white/30 hover:border-white/50 backdrop-blur-2xl shadow-[0_16px_36px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.5)] flex items-center justify-center text-white cursor-pointer group transition-all"
-        >
-          <MessageSquareText
-            size={20}
-            className="text-white group-hover:text-pAccent transition-colors group-hover:scale-105"
-          />
-        </motion.button>
+        {/* Quick-Tap Prompt Chips */}
+        <div className="flex items-center justify-center gap-1.5 w-full flex-wrap">
+          {[
+            {
+              label: "Projects",
+              icon: FolderGit2,
+              query: "What projects have you built?",
+            },
+            {
+              label: "Skills",
+              icon: Code2,
+              query: "What is your tech stack and expertise?",
+            },
+            {
+              label: "Experience",
+              icon: Briefcase,
+              query: "Tell me about your background and experience",
+            },
+          ].map((chip, idx) => {
+            const IconComp = chip.icon;
+            return (
+              <motion.button
+                key={idx}
+                type="button"
+                whileHover={{ scale: 1.05, y: -1 }}
+                whileTap={{ scale: 0.94 }}
+                onClick={() => handleChipClick(chip.query)}
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/[0.08] hover:bg-white/[0.18] active:bg-white/[0.22] border border-white/15 hover:border-white/30 backdrop-blur-xl text-[11px] font-medium text-white/75 hover:text-white transition-all shadow-sm cursor-pointer whitespace-nowrap group"
+              >
+                <IconComp size={11} className="text-white/90 group-hover:text-white group-hover:scale-110 transition-transform shrink-0" />
+                <span>{chip.label}</span>
+              </motion.button>
+            );
+          })}
+        </div>
       </div>
 
       {/* 2. TRANSLUCENT FROSTED GLASS MODAL (PORTALED TO DOCUMENT.BODY) */}

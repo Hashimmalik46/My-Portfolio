@@ -100,9 +100,9 @@ export const portfolioData = {
       },
     },
     philosophyCard: {
-      badge: "Philosophy",
-      quote: "Designing with intention, building with precision.",
-      highlight: "Code meets aesthetics.",
+      badgeNumber: "00",
+      badgeLabel: "Philosophy",
+      text: "Crafting scalable web systems & bespoke digital experiences with high attention to aesthetics and performance.",
     },
     scrollText: "Scroll",
   },
