@@ -95,7 +95,7 @@ function Footer() {
               className="group flex items-center gap-2 px-3.5 py-2 rounded-full bg-white/[0.06] hover:bg-white/[0.14] backdrop-blur-xl border border-white/15 hover:border-pAccent/50 shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.25)] text-xs font-semibold text-white/80 hover:text-white transition-all duration-300 cursor-pointer"
             >
               <FileText className="w-3.5 h-3.5 text-pAccent group-hover:scale-110 transition-transform" />
-              <span>ATS Resume</span>
+              <span>Resume</span>
             </motion.button>
 
             {/* Back to Top Button */}

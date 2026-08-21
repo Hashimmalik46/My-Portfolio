@@ -800,7 +800,7 @@ function Hero({ isLoading = false }) {
       {/* Top-Right Live Time, Location & Audio Dock (Desktop-Only) */}
       <motion.div
         variants={itemVariants}
-        className="hidden xl:flex absolute top-36 right-20 xl:right-28 2xl:right-36 z-20 pointer-events-auto"
+        className="hidden xl:flex absolute top-48 xl:top-52 right-20 xl:right-28 2xl:right-36 z-20 pointer-events-auto"
       >
         {isSimpleAudio ? (
           <SimpleTopRightStatusDock

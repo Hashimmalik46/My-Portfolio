@@ -311,125 +311,127 @@ function Navbar({ isLoading = false }) {
             )}
           </div>
 
-          {/* Tools Icon-Only Circular Button with 2 Circular Pop-under Icons (Available on all screen sizes) */}
-          <div ref={toolsRef} className="relative flex items-center justify-end">
-            <motion.button
-              type="button"
-              onClick={() => {
-                setIsToolsOpen((prev) => !prev);
-                setIsToolsHovered(false);
-              }}
-              onMouseEnter={() => setIsToolsHovered(true)}
-              onMouseLeave={() => setIsToolsHovered(false)}
-              aria-label="Tools"
-              whileHover={{ scale: 1.1, y: -1 }}
-              whileTap={{ scale: 0.92 }}
-              className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full backdrop-blur-xl border shadow-[0_4px_16px_rgba(0,0,0,0.3),inset_0_1px_1px_0_rgba(255,255,255,0.45)] flex items-center justify-center transition-all duration-200 select-none cursor-pointer group ${
-                isToolsOpen
-                  ? "bg-white/[0.22] border-white/50 shadow-[0_0_20px_rgba(255,255,255,0.25)] text-white"
-                  : "bg-white/[0.12] hover:bg-white/[0.22] border-white/25 hover:border-white/40 text-white/85 hover:text-white"
-              }`}
-            >
-              <Wrench
-                className={`w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform duration-300 ${
-                  isToolsOpen ? "rotate-45 text-white" : "group-hover:rotate-45"
+            {/* Tools Menu with Responsive Apple Glass Popover (Accessible on all screen sizes) */}
+            <div ref={toolsRef} className="relative flex items-center justify-end">
+              <motion.button
+                type="button"
+                onClick={() => {
+                  setIsToolsOpen((prev) => !prev);
+                  setIsToolsHovered(false);
+                }}
+                onMouseEnter={() => setIsToolsHovered(true)}
+                onMouseLeave={() => setIsToolsHovered(false)}
+                aria-label="Developer Tools"
+                whileHover={{ scale: 1.1, y: -1 }}
+                whileTap={{ scale: 0.92 }}
+                className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full backdrop-blur-xl border shadow-[0_4px_16px_rgba(0,0,0,0.3),inset_0_1px_1px_0_rgba(255,255,255,0.45)] flex items-center justify-center transition-all duration-200 select-none cursor-pointer group ${
+                  isToolsOpen
+                    ? "bg-white/[0.22] border-white/50 shadow-[0_0_20px_rgba(255,255,255,0.25)] text-white"
+                    : "bg-white/[0.12] hover:bg-white/[0.22] border-white/25 hover:border-white/40 text-white/85 hover:text-white"
                 }`}
-              />
+              >
+                <Wrench
+                  className={`w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform duration-300 ${
+                    isToolsOpen ? "rotate-45 text-white" : "group-hover:rotate-45"
+                  }`}
+                />
 
-              {/* Floating Micro-Tooltip */}
+                {/* Floating Micro-Tooltip (Desktop Hover) */}
+                <AnimatePresence>
+                  {isToolsHovered && !isToolsOpen && (
+                    <motion.span
+                      initial={{ opacity: 0, y: 8, scale: 0.85 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 5, scale: 0.85 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute top-12 px-2.5 py-0.5 text-[11px] font-medium tracking-wide text-white bg-[#101014]/90 backdrop-blur-xl border border-white/20 rounded-full shadow-[0_8px_20px_rgba(0,0,0,0.6)] pointer-events-none whitespace-nowrap hidden sm:block"
+                    >
+                      Tools
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </motion.button>
+
+              {/* Minimalist Apple Glass Tools Dropdown (Expanding downwards) */}
               <AnimatePresence>
-                {isToolsHovered && !isToolsOpen && (
-                  <motion.span
-                    initial={{ opacity: 0, y: 8, scale: 0.85 }}
+                {isToolsOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -8, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 5, scale: 0.85 }}
-                    transition={{ duration: 0.15 }}
-                    className="absolute top-12 px-2.5 py-0.5 text-[11px] font-medium tracking-wide text-white bg-[#101014]/90 backdrop-blur-xl border border-white/20 rounded-full shadow-[0_8px_20px_rgba(0,0,0,0.6)] pointer-events-none whitespace-nowrap"
+                    exit={{ opacity: 0, y: -6, scale: 0.95 }}
+                    transition={{ type: "spring", stiffness: 450, damping: 28 }}
+                    className="absolute right-0 top-full mt-2.5 flex flex-col gap-1.5 z-50 select-none items-end"
                   >
-                    Tools
-                  </motion.span>
-                )}
-              </AnimatePresence>
-            </motion.button>
-
-            {/* 2 Round Circular Shaped Glass Icons Popping Below */}
-            <AnimatePresence>
-              {isToolsOpen && (
-                <motion.div
-                  initial={{ opacity: 0, y: -6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -6 }}
-                  transition={{ duration: 0.18 }}
-                  className="absolute right-0 top-full mt-2.5 flex items-center gap-2.5 z-50 select-none"
-                >
-                  {/* Circle 1: ATS Resume */}
-                  <div className="relative group/tip">
+                    {/* Item 1: Resume Pill */}
                     <motion.button
                       type="button"
                       onClick={() => {
                         setIsResumeOpen(true);
                         setIsToolsOpen(false);
                       }}
-                      initial={{ opacity: 0, scale: 0.5, y: -10 }}
-                      animate={{ opacity: 1, scale: 1, y: 0 }}
-                      exit={{ opacity: 0, scale: 0.5, y: -8 }}
-                      transition={{
-                        type: "spring",
-                        stiffness: 500,
-                        damping: 24,
-                        delay: 0.02,
-                      }}
-                      whileHover={{ scale: 1.15, y: -2 }}
-                      whileTap={{ scale: 0.9 }}
-                      aria-label="ATS Resume Generator"
-                      className="w-10 h-10 rounded-full bg-white/[0.14] hover:bg-white/[0.26] backdrop-blur-2xl backdrop-saturate-[180%] border border-white/30 hover:border-white/50 shadow-[0_8px_24px_rgba(0,0,0,0.4),0_0_12px_rgba(255,255,255,0.15),inset_0_1px_1px_0_rgba(255,255,255,0.6)] flex items-center justify-center text-pAccent cursor-pointer transition-colors duration-200"
+                      initial={{ opacity: 0, y: -6, scale: 0.9 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -4, scale: 0.9 }}
+                      transition={{ duration: 0.15, delay: 0.02 }}
+                      whileHover={{ scale: 1.04, x: -2 }}
+                      whileTap={{ scale: 0.95 }}
+                      aria-label="Resume Generator"
+                      className="group flex items-center gap-2.5 pl-2.5 pr-3.5 py-1.5 rounded-full bg-[#12141c]/90 hover:bg-[#181a24]/95 backdrop-blur-2xl backdrop-saturate-[180%] border border-white/25 hover:border-white/40 shadow-[0_8px_24px_rgba(0,0,0,0.45),inset_0_1px_1px_0_rgba(255,255,255,0.4)] text-white transition-all cursor-pointer whitespace-nowrap"
                     >
-                      <FileText className="w-4 h-4 text-pAccent drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]" />
+                      <div className="w-5 h-5 rounded-full bg-pAccent/20 flex items-center justify-center text-pAccent shrink-0">
+                        <FileText className="w-3 h-3 text-pAccent" />
+                      </div>
+                      <span className="text-xs font-medium text-white/90 group-hover:text-white font-jakarta">
+                        Resume
+                      </span>
                     </motion.button>
 
-                    {/* Tooltip */}
-                    <span className="absolute top-12 left-1/2 -translate-x-1/2 px-2.5 py-0.5 text-[10px] font-medium tracking-wide text-white bg-[#101014]/90 backdrop-blur-xl border border-white/20 rounded-full shadow-[0_8px_20px_rgba(0,0,0,0.6)] pointer-events-none whitespace-nowrap opacity-0 group-hover/tip:opacity-100 transition-opacity duration-150">
-                      ATS Resume
-                    </span>
-                  </div>
-
-                  {/* Circle 2: Copy Email */}
-                  <div className="relative group/tip">
+                    {/* Item 2: Copy Email Pill */}
                     <motion.button
                       type="button"
                       onClick={handleCopyEmail}
-                      initial={{ opacity: 0, scale: 0.5, y: -10 }}
-                      animate={{ opacity: 1, scale: 1, y: 0 }}
-                      exit={{ opacity: 0, scale: 0.5, y: -8 }}
-                      transition={{
-                        type: "spring",
-                        stiffness: 500,
-                        damping: 24,
-                        delay: 0.07,
-                      }}
-                      whileHover={{ scale: 1.15, y: -2 }}
-                      whileTap={{ scale: 0.9 }}
+                      initial={{ opacity: 0, y: -6, scale: 0.9 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -4, scale: 0.9 }}
+                      transition={{ duration: 0.15, delay: 0.06 }}
+                      whileHover={{ scale: 1.04, x: -2 }}
+                      whileTap={{ scale: 0.95 }}
                       aria-label="Copy Email"
-                      className="w-10 h-10 rounded-full bg-white/[0.14] hover:bg-white/[0.26] backdrop-blur-2xl backdrop-saturate-[180%] border border-white/30 hover:border-white/50 shadow-[0_8px_24px_rgba(0,0,0,0.4),0_0_12px_rgba(255,255,255,0.15),inset_0_1px_1px_0_rgba(255,255,255,0.6)] flex items-center justify-center text-white cursor-pointer transition-colors duration-200"
+                      className={`group flex items-center gap-2.5 pl-2.5 pr-3.5 py-1.5 rounded-full backdrop-blur-2xl backdrop-saturate-[180%] border transition-all cursor-pointer whitespace-nowrap ${
+                        copiedEmail
+                          ? "bg-emerald-950/85 border-emerald-400/50 shadow-[0_8px_24px_rgba(52,211,153,0.25),inset_0_1px_1px_0_rgba(255,255,255,0.4)] text-emerald-300"
+                          : "bg-[#12141c]/90 hover:bg-[#181a24]/95 border-white/25 hover:border-white/40 shadow-[0_8px_24px_rgba(0,0,0,0.45),inset_0_1px_1px_0_rgba(255,255,255,0.4)] text-white"
+                      }`}
                     >
-                      {copiedEmail ? (
-                        <Check className="w-4 h-4 text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.6)]" />
-                      ) : (
-                        <Copy className="w-4 h-4 text-white/90" />
-                      )}
+                      <div
+                        className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 transition-colors ${
+                          copiedEmail
+                            ? "bg-emerald-500/30"
+                            : "bg-white/15 group-hover:bg-white/25"
+                        }`}
+                      >
+                        {copiedEmail ? (
+                          <Check className="w-3 h-3 text-emerald-400" />
+                        ) : (
+                          <Copy className="w-3 h-3 text-white/90" />
+                        )}
+                      </div>
+                      <span
+                        className={`text-xs font-medium font-jakarta ${
+                          copiedEmail
+                            ? "text-emerald-400 font-semibold"
+                            : "text-white/90 group-hover:text-white"
+                        }`}
+                      >
+                        {copiedEmail ? "Copied!" : "Copy Email"}
+                      </span>
                     </motion.button>
-
-                    {/* Tooltip */}
-                    <span className="absolute top-12 left-1/2 -translate-x-1/2 px-2.5 py-0.5 text-[10px] font-medium tracking-wide text-white bg-[#101014]/90 backdrop-blur-xl border border-white/20 rounded-full shadow-[0_8px_20px_rgba(0,0,0,0.6)] pointer-events-none whitespace-nowrap opacity-0 group-hover/tip:opacity-100 transition-opacity duration-150">
-                      {copiedEmail ? "Copied!" : "Copy Email"}
-                    </span>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
-        </div>
-      </nav>
+        </nav>
 
       {/* 2. Floating Pill Navbar (Authentic Apple Glass Pill on Scroll) */}
       <div className="fixed top-6 inset-x-0 w-full flex justify-center z-50 pointer-events-none px-4 isolate transform-gpu">
