@@ -44,11 +44,20 @@ export default function HeroChatbot() {
 
   const inputRef = useRef(null);
   const chatEndRef = useRef(null);
+  const latestMessageRef = useRef(null);
 
-  // Auto-scroll chat to bottom
+  // Smart auto-scroll: show top of bot responses so users read from the beginning
   useEffect(() => {
-    if (isOpen && chatEndRef.current) {
-      chatEndRef.current.scrollIntoView({ behavior: "smooth" });
+    if (!isOpen) return;
+
+    const lastMsg = messages[messages.length - 1];
+
+    if (isTyping) {
+      chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    } else if (lastMsg?.sender === "bot" && messages.length > 1) {
+      latestMessageRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else {
+      chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages, isTyping, isOpen]);
 
@@ -420,11 +429,13 @@ export default function HeroChatbot() {
 
                   {/* Messages Area */}
                   <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-3.5 text-xs sm:text-[13px]">
-                    {messages.map((msg) => {
+                    {messages.map((msg, idx) => {
                       const isBot = msg.sender === "bot";
+                      const isLatest = idx === messages.length - 1;
                       return (
                         <div
                           key={msg.id}
+                          ref={isLatest ? latestMessageRef : null}
                           className={`flex flex-col ${isBot ? "items-start" : "items-end"}`}
                         >
                           {isBot ? (
