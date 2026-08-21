@@ -90,6 +90,18 @@ export default function HeroChatbot() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen]);
 
+  // Global custom event listener to open chatbot from anywhere (e.g. Navbar Tools menu)
+  useEffect(() => {
+    const handleOpenEvent = (e) => {
+      setIsOpen(true);
+      if (e.detail?.prompt) {
+        handleSendMessage(e.detail.prompt);
+      }
+    };
+    window.addEventListener("open-chatbot", handleOpenEvent);
+    return () => window.removeEventListener("open-chatbot", handleOpenEvent);
+  }, []);
+
   const handleSendMessage = async (queryText) => {
     const textToSend = queryText || inputValue.trim();
     if (!textToSend || isTyping) return;

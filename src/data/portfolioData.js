@@ -38,6 +38,7 @@ export const portfolioData = {
   title: "I build, experiment, and figure things out.",
   email: "hashimzahoor2003@gmail.com",
   location: "Srinagar, Kashmir",
+  resume: "/resume.pdf",
   copyrightYear: new Date().getFullYear(),
 },
 
@@ -104,6 +105,7 @@ export const portfolioData = {
       badgeLabel: "Philosophy",
       text: "Crafting scalable web systems & bespoke digital experiences with high attention to aesthetics and performance.",
     },
+    ambientAudio: "/audio/ambient.mp3",
     scrollText: "Scroll",
   },
 

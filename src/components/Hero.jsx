@@ -1,5 +1,11 @@
 import { useRef, useState, useEffect } from "react";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Globe, Volume2, VolumeX } from "lucide-react";
+import {
+  FaGithub,
+  FaLinkedinIn,
+  FaXTwitter,
+  FaInstagram,
+} from "react-icons/fa6";
 import {
   motion,
   useMotionValue,
@@ -69,6 +75,169 @@ function TypewriterText({
         />
       )}
     </span>
+  );
+}
+
+/**
+ * Live Time, Location & Quick Socials Dock with Ambient Audio Controller
+ */
+function TopRightStatusDock({
+  location = "Srinagar, Kashmir",
+  socials = {},
+  audioSrc = "/audio/ambient.mp3",
+}) {
+  const [timeStr, setTimeStr] = useState("");
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef(null);
+
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      setTimeStr(
+        now.toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: true,
+        })
+      );
+    };
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, []);
+
+  const toggleSound = () => {
+    if (!audioRef.current) {
+      const audio = new Audio(audioSrc || "/audio/ambient.mp3");
+      audio.loop = true;
+      audio.volume = 0.45;
+      audioRef.current = audio;
+    }
+
+    const audio = audioRef.current;
+    if (isPlaying) {
+      audio.pause();
+      setIsPlaying(false);
+    } else {
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            setIsPlaying(true);
+          })
+          .catch((err) => {
+            console.warn("Ambient audio notice (audio file not yet placed):", err);
+            setIsPlaying((prev) => !prev);
+          });
+      } else {
+        setIsPlaying(true);
+      }
+    }
+  };
+
+  const socialLinks = [
+    { id: "github", label: "GitHub", href: socials.github, icon: FaGithub },
+    { id: "linkedin", label: "LinkedIn", href: socials.linkedin, icon: FaLinkedinIn },
+    { id: "twitter", label: "X / Twitter", href: socials.twitter, icon: FaXTwitter },
+    { id: "instagram", label: "Instagram", href: socials.instagram, icon: FaInstagram },
+  ].filter((item) => Boolean(item.href));
+
+  return (
+    <div className="flex flex-col gap-2.5 p-3 sm:p-3.5 rounded-2xl bg-white/[0.08] hover:bg-white/[0.12] border border-white/20 hover:border-white/35 backdrop-blur-xl shadow-[0_16px_36px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.3)] transition-all group select-none font-jakarta min-w-[220px]">
+      {/* Top Header: Location & Live Clock */}
+      <div className="flex items-center justify-between gap-3 border-b border-white/10 pb-2">
+        <div className="flex items-center gap-1.5">
+          <Globe className="w-3.5 h-3.5 text-white/70 shrink-0" strokeWidth={1.8} />
+          <span className="text-xs font-medium text-white/90 tracking-tight">
+            {location}
+          </span>
+        </div>
+        <span className="text-[11px] font-mono text-white/60 tracking-tight font-medium">
+          {timeStr || "00:00:00"}
+        </span>
+      </div>
+
+      {/* Middle: Ambient Sound / Music Equalizer Controller */}
+      <button
+        type="button"
+        onClick={toggleSound}
+        className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.14] border border-white/10 hover:border-white/25 transition-all text-left cursor-pointer group/audio"
+      >
+        <div className="flex items-center gap-2">
+          {isPlaying ? (
+            <Volume2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+          ) : (
+            <VolumeX className="w-3.5 h-3.5 text-white/50 group-hover/audio:text-white/80 shrink-0" />
+          )}
+          <span className="text-[11px] font-medium text-white/80 group-hover/audio:text-white transition-colors">
+            {isPlaying ? "Ambient Sound" : "Mute Ambience"}
+          </span>
+        </div>
+
+        {/* Live Equalizer Sound Waves */}
+        <div className="flex items-end gap-[3px] h-3 px-0.5">
+          <span
+            className={`w-[2px] rounded-full transition-all duration-300 ${
+              isPlaying
+                ? "h-3 bg-emerald-400 animate-pulse"
+                : "h-1 bg-white/30"
+            }`}
+          />
+          <span
+            className={`w-[2px] rounded-full transition-all duration-300 ${
+              isPlaying
+                ? "h-2 bg-emerald-400 animate-[pulse_0.7s_ease-in-out_infinite_0.2s]"
+                : "h-1 bg-white/30"
+            }`}
+          />
+          <span
+            className={`w-[2px] rounded-full transition-all duration-300 ${
+              isPlaying
+                ? "h-3.5 bg-emerald-400 animate-[pulse_0.85s_ease-in-out_infinite_0.4s]"
+                : "h-1 bg-white/30"
+            }`}
+          />
+          <span
+            className={`w-[2px] rounded-full transition-all duration-300 ${
+              isPlaying
+                ? "h-2 bg-emerald-400 animate-[pulse_0.6s_ease-in-out_infinite_0.1s]"
+                : "h-1 bg-white/30"
+            }`}
+          />
+        </div>
+      </button>
+
+      {/* Bottom Row: Quick Socials Dock */}
+      <div className="flex items-center justify-between gap-2 pt-0.5">
+        {socialLinks.map((item) => {
+          const IconComp = item.icon;
+          return (
+            <motion.a
+              key={item.id}
+              href={item.href}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={item.label}
+              whileHover={{ scale: 1.12, y: -1.5 }}
+              whileTap={{ scale: 0.92 }}
+              className="w-8 h-8 rounded-xl bg-white/[0.08] hover:bg-white/[0.22] border border-white/15 hover:border-white/40 flex items-center justify-center text-white/80 hover:text-white transition-all duration-200 shadow-sm"
+            >
+              <IconComp size={14} />
+            </motion.a>
+          );
+        })}
+      </div>
+    </div>
   );
 }
 
@@ -164,8 +333,20 @@ function Hero({ isLoading = false }) {
       variants={containerVariants}
       initial="hidden"
       animate={!isLoading ? "visible" : "hidden"}
-      className="relative w-full flex-1 flex flex-col justify-between px-6 sm:px-12 lg:px-20 xl:px-28 2xl:px-36 pt-48 sm:pt-36 lg:pt-36 xl:pt-32 mt-65 sm:mt-100 xl:mt-6 pb-8 xl:pb-10 z-10 text-white select-none"
+      className="relative w-full flex-1 flex flex-col justify-between px-6 sm:px-12 lg:px-20 xl:px-28 2xl:px-36 pt-48 sm:pt-36 lg:pt-36 xl:pt-32 mt-50 sm:mt-100 xl:mt-6 pb-8 xl:pb-10 z-10 text-white select-none"
     >
+      {/* Top-Right Live Time, Location & Quick Socials Dock (Desktop-Only) */}
+      <motion.div
+        variants={itemVariants}
+        className="hidden xl:flex absolute top-36 right-20 xl:right-28 2xl:right-36 z-20 pointer-events-auto"
+      >
+        <TopRightStatusDock
+          location={portfolioData.personal.location}
+          socials={portfolioData.socials}
+          audioSrc={portfolioData.hero?.ambientAudio}
+        />
+      </motion.div>
+
       {/* 1. Main Editorial Headline (Top-Left on Desktop, Centered on Mobile/Tablet/iPad) */}
       <div className="flex flex-col items-center xl:items-start text-center xl:text-left">
         <motion.div
