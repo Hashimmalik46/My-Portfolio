@@ -73,17 +73,18 @@ function DynamicGlassContainer({
       className={`relative isolate rounded-full transition-all duration-300 transform-gpu ${className}`}
       style={{
         background: isFloating
-          ? "linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(32, 35, 45, 0.58) 40%, rgba(14, 15, 22, 0.76) 100%)"
+          ? "radial-gradient(ellipse 95% 85% at 50% 50%, rgba(24, 28, 40, 0.60) 35%, rgba(42, 48, 64, 0.48) 75%, rgba(255, 255, 255, 0.22) 100%)"
           : "linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.10) 40%, rgba(20, 20, 30, 0.42) 100%)",
-        backdropFilter: "blur(22px) saturate(190%)",
-        WebkitBackdropFilter: "blur(22px) saturate(190%)",
+        backdropFilter: "blur(28px) saturate(210%) brightness(105%)",
+        WebkitBackdropFilter: "blur(28px) saturate(210%) brightness(105%)",
         boxShadow: isFloating
           ? `
-            0 20px 40px -8px rgba(0, 0, 0, 0.55),
-            0 6px 16px -2px rgba(0, 0, 0, 0.35),
-            0 0 0 1px rgba(255, 255, 255, 0.16),
-            inset 0 1.2px 1px 0 rgba(255, 255, 255, 0.45),
-            inset 0 -1px 2px 0 rgba(0, 0, 0, 0.35)
+            0 24px 48px -10px rgba(0, 0, 0, 0.6),
+            0 8px 20px -4px rgba(0, 0, 0, 0.4),
+            0 0 0 1px rgba(255, 255, 255, 0.28),
+            inset 0 0 18px 2px rgba(255, 255, 255, 0.22),
+            inset 0 1.2px 1px 0 rgba(255, 255, 255, 0.65),
+            inset 0 -1.2px 1px 0 rgba(255, 255, 255, 0.45)
           `
           : `
             0 16px 36px -8px rgba(0, 0, 0, 0.45),
@@ -95,7 +96,7 @@ function DynamicGlassContainer({
       }}
     >
       {/* 1. Dual-tone Contrast Border (Crisp white specular top & dark ambient bottom) */}
-      <div className="absolute inset-0 rounded-full pointer-events-none border border-white/25 -z-10" />
+      <div className="absolute inset-0 rounded-full pointer-events-none border border-white/30 -z-10 shadow-[inset_0_0_14px_rgba(255,255,255,0.15)]" />
 
       {/* 2. Dynamic Cursor-Follow Specular Border Glint */}
       <motion.div
