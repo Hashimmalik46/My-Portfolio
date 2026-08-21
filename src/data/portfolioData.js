@@ -78,6 +78,10 @@ export const portfolioData = {
   hero: {
     greeting: "Hi, I'm",
     name: "Hashim Malik",
+    backgroundVideo: {
+      webm: "/gallery/bg_video_2.webm",
+      mp4: "/gallery/bg_video_2.MP4",
+    },
     tagline: {
       prefix: "A software and design enthusiast blending",
       highlight1: "code",

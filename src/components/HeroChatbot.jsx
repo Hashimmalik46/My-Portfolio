@@ -313,7 +313,7 @@ export default function HeroChatbot() {
   return (
     <>
       {/* 1. FLOATING CHAT BUTTON & SPEECH BUBBLE (BOTTOM RIGHT) */}
-      <div className="absolute bottom-16 sm:bottom-20 xl:bottom-18 right-6 sm:right-8 xl:right-16 z-30 flex items-center gap-2.5 sm:gap-3 pointer-events-auto select-none">
+      <div className="absolute bottom-16 sm:bottom-20 xl:bottom-18 right-3 sm:right-14 xl:right-30 z-30 flex items-center gap-2.5 sm:gap-3 pointer-events-auto select-none">
         {/* Floating Speech Bubble */}
         <motion.div
           initial={{ opacity: 0, x: 20 }}

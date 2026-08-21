@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { ScrollProgress } from "@/components/ui/scroll-progress";
+import { portfolioData } from "../data/portfolioData";
 import About from "./About";
 import Hero from "./Hero";
 import Navbar from "./Navbar";
@@ -8,18 +9,34 @@ import Projects from "./Projects";
 import Footer from "./Footer";
 import SkillsMarquee from "./SkillsMarquee";
 
-function SeamlessBackgroundVideo() {
+function SeamlessBackgroundVideo({ isLoading = false }) {
   const video1Ref = useRef(null);
   const video2Ref = useRef(null);
   const [activeVideo, setActiveVideo] = useState(1);
   const isTransitioning = useRef(false);
+  const { hero } = portfolioData;
+  const videoSrc = hero?.backgroundVideo || {
+    webm: "/gallery/bg_video_2.webm",
+    mp4: "/gallery/bg_video_2.MP4",
+  };
 
   useEffect(() => {
     const v1 = video1Ref.current;
     const v2 = video2Ref.current;
     if (!v1 || !v2) return;
 
-    v1.play().catch(() => {});
+    if (isLoading) {
+      v1.pause();
+      v1.currentTime = 0;
+      v2.pause();
+      v2.currentTime = 0;
+      setActiveVideo(1);
+      return;
+    }
+
+    // When preloader finishes (isLoading is false), start video from beginning
+    v1.currentTime = 0;
+    v1.play().catch(() => { });
 
     const crossfadeDuration = 0.8;
 
@@ -35,7 +52,7 @@ function SeamlessBackgroundVideo() {
               isTransitioning.current = false;
             }, crossfadeDuration * 1000);
           })
-          .catch(() => {});
+          .catch(() => { });
       }
     };
 
@@ -51,7 +68,7 @@ function SeamlessBackgroundVideo() {
               isTransitioning.current = false;
             }, crossfadeDuration * 1000);
           })
-          .catch(() => {});
+          .catch(() => { });
       }
     };
 
@@ -62,7 +79,7 @@ function SeamlessBackgroundVideo() {
       v1.removeEventListener("timeupdate", handleTimeUpdate1);
       v2.removeEventListener("timeupdate", handleTimeUpdate2);
     };
-  }, []);
+  }, [isLoading]);
 
   return (
     <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
@@ -71,12 +88,12 @@ function SeamlessBackgroundVideo() {
         muted
         playsInline
         preload="auto"
-        className={`absolute inset-0 w-full h-full object-cover object-[25%_center] lg:object-center scale-[1.08] transition-opacity duration-700 ease-in-out ${
+        className={`absolute inset-0 w-full h-full object-cover object-[25%_center] sm:object-[26%_center] md:object-[28%_center] lg:object-[32%_center] xl:object-center scale-[1.05] transition-opacity duration-700 ease-in-out ${
           activeVideo === 1 ? "opacity-100" : "opacity-0"
         }`}
       >
-        <source src="/gallery/bg_video.webm" type="video/webm" />
-        <source src="/gallery/bg_video.MP4" type="video/mp4" />
+        <source src={videoSrc.webm} type="video/webm" />
+        <source src={videoSrc.mp4} type="video/mp4" />
       </video>
 
       <video
@@ -84,12 +101,12 @@ function SeamlessBackgroundVideo() {
         muted
         playsInline
         preload="auto"
-        className={`absolute inset-0 w-full h-full object-cover object-[25%_center] lg:object-center scale-[1.08] transition-opacity duration-700 ease-in-out ${
+        className={`absolute inset-0 w-full h-full object-cover object-[25%_center] sm:object-[26%_center] md:object-[28%_center] lg:object-[32%_center] xl:object-center scale-[1.05] transition-opacity duration-700 ease-in-out ${
           activeVideo === 2 ? "opacity-100" : "opacity-0"
         }`}
       >
-        <source src="/gallery/bg_video.webm" type="video/webm" />
-        <source src="/gallery/bg_video.MP4" type="video/mp4" />
+        <source src={videoSrc.webm} type="video/webm" />
+        <source src={videoSrc.mp4} type="video/mp4" />
       </video>
     </div>
   );
@@ -110,7 +127,7 @@ function MainApp({ isLoading = false }) {
         className="relative min-h-screen w-full flex flex-col items-center justify-between px-5 md:px-0 overflow-hidden"
       >
         {/* Seamless Crossfading Background Video */}
-        <SeamlessBackgroundVideo />
+        <SeamlessBackgroundVideo isLoading={isLoading} />
 
         {/* Dark Video Overlay & Edge Gradient */}
         <div className="absolute inset-0 bg-black/40 z-0 pointer-events-none" />
