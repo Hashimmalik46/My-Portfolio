@@ -524,7 +524,7 @@ function AppleGlassButton({
       href={href}
       whileHover={{ scale: 1.05, y: -2 }}
       whileTap={{ scale: 0.95 }}
-      className={`group relative isolate inline-flex items-center justify-center px-7 sm:px-8 py-3.5 sm:py-4 rounded-full font-jakarta text-xs sm:text-sm font-semibold tracking-wide transition-all duration-300 select-none overflow-hidden ${
+      className={`group relative isolate inline-flex items-center justify-center px-4.5 sm:px-8 py-2.5 sm:py-3.5 rounded-full font-jakarta text-xs sm:text-sm font-semibold tracking-wide whitespace-nowrap transition-all duration-300 select-none overflow-hidden shrink-0 ${
         isPrimary
           ? "text-black shadow-[0_12px_36px_rgba(255,255,255,0.22),0_4px_16px_rgba(0,0,0,0.4)] hover:shadow-[0_16px_44px_rgba(255,255,255,0.35),0_6px_20px_rgba(0,0,0,0.5)] border border-white/90"
           : "text-white shadow-[0_12px_36px_rgba(0,0,0,0.45),inset_0_1px_1px_rgba(255,255,255,0.3)] hover:shadow-[0_16px_40px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.45)] border border-white/20 hover:border-white/35"
@@ -676,7 +676,7 @@ function Hero({ isLoading = false }) {
 
           <motion.div
             variants={itemVariants}
-            className="mt-5 sm:mt-6 w-full flex items-center justify-center gap-3 sm:gap-4 font-jakarta z-20"
+            className="mt-5 sm:mt-6 w-full flex items-center justify-center gap-2.5 sm:gap-4 font-jakarta z-20"
           >
             <AppleGlassButton
               href={hero.ctaButtons.primary.href}
