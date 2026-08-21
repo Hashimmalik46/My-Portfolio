@@ -72,17 +72,26 @@ function DynamicGlassContainer({
       onMouseLeave={handleMouseLeave}
       className={`relative isolate rounded-full transition-all duration-300 transform-gpu ${className}`}
       style={{
-        background:
-          "linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.10) 40%, rgba(20, 20, 30, 0.42) 100%)",
-        backdropFilter: "blur(20px) saturate(190%)",
-        WebkitBackdropFilter: "blur(20px) saturate(190%)",
-        boxShadow: `
-          0 16px 36px -8px rgba(0, 0, 0, 0.45),
-          0 4px 12px -2px rgba(0, 0, 0, 0.3),
-          0 0 0 1px rgba(255, 255, 255, 0.12),
-          inset 0 1.2px 1px 0 rgba(255, 255, 255, 0.5),
-          inset 0 -1px 2px 0 rgba(0, 0, 0, 0.25)
-        `,
+        background: isFloating
+          ? "linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(32, 35, 45, 0.58) 40%, rgba(14, 15, 22, 0.76) 100%)"
+          : "linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.10) 40%, rgba(20, 20, 30, 0.42) 100%)",
+        backdropFilter: "blur(22px) saturate(190%)",
+        WebkitBackdropFilter: "blur(22px) saturate(190%)",
+        boxShadow: isFloating
+          ? `
+            0 20px 40px -8px rgba(0, 0, 0, 0.55),
+            0 6px 16px -2px rgba(0, 0, 0, 0.35),
+            0 0 0 1px rgba(255, 255, 255, 0.16),
+            inset 0 1.2px 1px 0 rgba(255, 255, 255, 0.45),
+            inset 0 -1px 2px 0 rgba(0, 0, 0, 0.35)
+          `
+          : `
+            0 16px 36px -8px rgba(0, 0, 0, 0.45),
+            0 4px 12px -2px rgba(0, 0, 0, 0.3),
+            0 0 0 1px rgba(255, 255, 255, 0.12),
+            inset 0 1.2px 1px 0 rgba(255, 255, 255, 0.5),
+            inset 0 -1px 2px 0 rgba(0, 0, 0, 0.25)
+          `,
       }}
     >
       {/* 1. Dual-tone Contrast Border (Crisp white specular top & dark ambient bottom) */}
@@ -322,13 +331,13 @@ function Navbar({ isLoading = false }) {
                             whileHover={{ scale: 1.15, y: -1 }}
                             whileTap={{ scale: 0.9 }}
                             onClick={() => setIsExpanded(false)}
-                            className="relative isolate flex items-center justify-center w-8 h-8 rounded-full text-white/80 hover:text-white transition-colors group"
+                            className="relative isolate flex items-center justify-center w-8 h-8 rounded-full bg-white/[0.12] hover:bg-white/[0.22] backdrop-blur-xl border border-white/25 shadow-[0_4px_16px_rgba(0,0,0,0.3),inset_0_1px_1px_0_rgba(255,255,255,0.45)] text-white hover:text-pAccent transition-all group"
                           >
                             {/* Glass Dock Hover Capsule */}
                             {isLinkHovered && (
                               <motion.div
                                 layoutId="floatingPillHover"
-                                className="absolute inset-0 rounded-full bg-white/[0.18] border border-white/30 shadow-[inset_0_1px_1px_rgba(255,255,255,0.45),0_4px_12px_rgba(0,0,0,0.3)] backdrop-blur-md -z-10"
+                                className="absolute inset-0 rounded-full bg-white/[0.22] border border-white/35 shadow-[inset_0_1px_1px_rgba(255,255,255,0.5),0_4px_12px_rgba(0,0,0,0.3)] backdrop-blur-md -z-10"
                                 transition={{
                                   type: "spring",
                                   stiffness: 480,
@@ -365,7 +374,7 @@ function Navbar({ isLoading = false }) {
                     whileTap={{ scale: 0.9 }}
                     onClick={() => setIsExpanded(!isExpanded)}
                     aria-label="Toggle navigation"
-                    className="relative w-8 h-8 rounded-full bg-white/[0.08] hover:bg-white/[0.2] border border-white/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.4),0_2px_8px_rgba(0,0,0,0.3)] flex flex-col items-center justify-center gap-1 transition-all cursor-pointer overflow-hidden group"
+                    className="relative w-8 h-8 rounded-full bg-white/[0.12] hover:bg-white/[0.22] backdrop-blur-xl border border-white/25 shadow-[0_4px_16px_rgba(0,0,0,0.3),inset_0_1px_1px_0_rgba(255,255,255,0.45)] flex flex-col items-center justify-center gap-1 transition-all cursor-pointer overflow-hidden group"
                   >
                     {/* Subtle button specular shine */}
                     <div className="absolute inset-0 rounded-full bg-gradient-to-b from-white/15 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
