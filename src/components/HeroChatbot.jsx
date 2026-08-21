@@ -72,15 +72,6 @@ export default function HeroChatbot() {
     }
   }, [isOpen]);
 
-  // Focus input when opened
-  useEffect(() => {
-    if (isOpen) {
-      setTimeout(() => {
-        inputRef.current?.focus();
-      }, 150);
-    }
-  }, [isOpen]);
-
   // Keyboard shortcut listener (Escape to close, Cmd+K / Ctrl+K to toggle)
   useEffect(() => {
     const handleKeyDown = (e) => {
