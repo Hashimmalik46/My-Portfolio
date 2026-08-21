@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { ArrowDown, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import {
   motion,
   useMotionValue,
@@ -7,6 +7,7 @@ import {
   useMotionTemplate,
 } from "motion/react";
 import { portfolioData } from "../data/portfolioData";
+import HeroChatbot from "./HeroChatbot";
 
 /**
  * Apple Glass Interactive Button
@@ -72,7 +73,7 @@ function AppleGlassButton({
       style={{
         background: isPrimary
           ? "linear-gradient(135deg, rgba(255, 255, 255, 0.94) 0%, rgba(245, 245, 250, 0.84) 50%, rgba(235, 238, 248, 0.9) 100%)"
-          : "linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(18, 18, 24, 0.65) 45%, rgba(10, 10, 15, 0.78) 100%)",
+          : "linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.10) 40%, rgba(20, 20, 30, 0.42) 100%)",
         backdropFilter: "blur(20px) saturate(190%)",
         WebkitBackdropFilter: "blur(20px) saturate(190%)",
         boxShadow: isPrimary
@@ -83,18 +84,18 @@ function AppleGlassButton({
             inset 0 -1.5px 1.5px 0 rgba(0, 0, 0, 0.15)
           `
           : `
-            0 20px 48px -10px rgba(0, 0, 0, 0.75),
-            0 8px 20px -4px rgba(0, 0, 0, 0.5),
-            0 0 0 1px rgba(0, 0, 0, 0.3),
-            inset 0 1.2px 1px 0 rgba(255, 255, 255, 0.45),
-            inset 0 -1.5px 2px 0 rgba(0, 0, 0, 0.5)
+            0 16px 36px -8px rgba(0, 0, 0, 0.45),
+            0 4px 12px -2px rgba(0, 0, 0, 0.3),
+            0 0 0 1px rgba(255, 255, 255, 0.12),
+            inset 0 1.2px 1px 0 rgba(255, 255, 255, 0.5),
+            inset 0 -1px 2px 0 rgba(0, 0, 0, 0.25)
           `,
       }}
     >
       {/* 1. Contrast Border */}
       <div
         className={`absolute inset-0 rounded-full pointer-events-none ${
-          isPrimary ? "border border-white/60" : "border border-white/[0.18]"
+          isPrimary ? "border border-white/60" : "border border-white/25"
         } -z-10`}
       />
 
@@ -218,49 +219,8 @@ function Hero({ isLoading = false }) {
         />
       </motion.div>
 
-      {/* Bottom Floating Philosophy Glass Card */}
-      <motion.div
-        initial={{ opacity: 0, x: 40 }}
-        animate={{
-          opacity: 1,
-          x: 0,
-          y: [0, -6, 0],
-        }}
-        transition={{
-          opacity: { duration: 0.8, delay: 0.8 },
-          x: { duration: 0.8, delay: 0.8, ease: [0.22, 1, 0.36, 1] },
-          y: { duration: 4.5, repeat: Infinity, ease: "easeInOut", delay: 1 },
-        }}
-        className="hidden lg:flex flex-col absolute bottom-12 right-8 xl:right-16 max-w-[300px] bg-black/40 backdrop-blur-2xl backdrop-saturate-[180%] border-l-2 border-l-pAccent border-y border-r border-white/15 p-4.5 rounded-r-2xl text-left font-jakarta shadow-[0_16px_40px_rgba(0,0,0,0.5),inset_0_1px_1px_0_rgba(255,255,255,0.2)]"
-      >
-        <div className="flex items-center justify-between mb-1.5">
-          <p className="text-[10px] tracking-[0.2em] uppercase text-white/50 font-semibold">
-            {hero.philosophyCard.badge}
-          </p>
-          <Sparkles className="w-3.5 h-3.5 text-pAccent" />
-        </div>
-        <p className="text-xs sm:text-sm text-white/85 leading-snug">
-          {hero.philosophyCard.quote}{" "}
-          <span className="italic font-cormorant text-base sm:text-lg text-white">
-            {hero.philosophyCard.highlight}
-          </span>
-        </p>
-      </motion.div>
-
-      {/* Bottom Scroll Cue */}
-      <motion.a
-        href="#About"
-        aria-label="Scroll to About section"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1, duration: 0.8 }}
-        className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-white/40 hover:text-white transition-colors"
-      >
-        <span className="text-[10px] uppercase tracking-[0.25em] font-jakarta">
-          {hero.scrollText}
-        </span>
-        <ArrowDown className="w-3.5 h-3.5 animate-bounce" />
-      </motion.a>
+      {/* Floating AI Chatbot Icon & Speech Bubble (Right) */}
+      <HeroChatbot />
     </motion.div>
   );
 }

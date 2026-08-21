@@ -57,7 +57,7 @@ function About() {
                 <span className="font-clash text-xl sm:text-2xl font-bold text-secondary tracking-tight">
                   {s.value}
                 </span>
-                <span className="font-jakarta text-[11px] text-secondary/55 uppercase tracking-wider mt-0.5 font-medium">
+                <span className="font-jakarta text-[9px] sm:text-[10px] text-secondary/55 uppercase tracking-wider mt-0.5 font-medium">
                   {s.label}
                 </span>
               </motion.div>

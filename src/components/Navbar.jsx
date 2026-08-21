@@ -73,20 +73,20 @@ function DynamicGlassContainer({
       className={`relative rounded-full transition-all duration-300 ${className}`}
       style={{
         background:
-          "linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(18, 18, 24, 0.65) 45%, rgba(10, 10, 15, 0.78) 100%)",
+          "linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.10) 40%, rgba(20, 20, 30, 0.42) 100%)",
         backdropFilter: "blur(20px) saturate(190%)",
         WebkitBackdropFilter: "blur(20px) saturate(190%)",
         boxShadow: `
-          0 20px 48px -10px rgba(0, 0, 0, 0.75),
-          0 8px 20px -4px rgba(0, 0, 0, 0.5),
-          0 0 0 1px rgba(0, 0, 0, 0.3),
-          inset 0 1.2px 1px 0 rgba(255, 255, 255, 0.45),
-          inset 0 -1.5px 2px 0 rgba(0, 0, 0, 0.5)
+          0 16px 36px -8px rgba(0, 0, 0, 0.45),
+          0 4px 12px -2px rgba(0, 0, 0, 0.3),
+          0 0 0 1px rgba(255, 255, 255, 0.12),
+          inset 0 1.2px 1px 0 rgba(255, 255, 255, 0.5),
+          inset 0 -1px 2px 0 rgba(0, 0, 0, 0.25)
         `,
       }}
     >
       {/* 1. Dual-tone Contrast Border (Crisp white specular top & dark ambient bottom) */}
-      <div className="absolute inset-0 rounded-full pointer-events-none border border-white/[0.18] -z-10" />
+      <div className="absolute inset-0 rounded-full pointer-events-none border border-white/25 -z-10" />
 
       {/* 2. Dynamic Cursor-Follow Specular Border Glint */}
       <motion.div
@@ -224,7 +224,7 @@ function Navbar({ isLoading = false }) {
               aria-label="GitHub"
               whileHover={{ scale: 1.1, y: -2 }}
               whileTap={{ scale: 0.92 }}
-              className="w-10 h-10 rounded-full bg-[#121218]/65 hover:bg-white/[0.18] backdrop-blur-xl border border-white/20 shadow-[0_4px_16px_rgba(0,0,0,0.4),inset_0_1px_1px_0_rgba(255,255,255,0.35)] flex items-center justify-center transition-all duration-200"
+              className="w-10 h-10 rounded-full bg-white/[0.12] hover:bg-white/[0.22] backdrop-blur-xl border border-white/25 shadow-[0_4px_16px_rgba(0,0,0,0.3),inset_0_1px_1px_0_rgba(255,255,255,0.45)] flex items-center justify-center transition-all duration-200"
             >
               <img
                 src="/gallery/github.webp"
@@ -241,7 +241,7 @@ function Navbar({ isLoading = false }) {
               aria-label="LinkedIn"
               whileHover={{ scale: 1.1, y: -2 }}
               whileTap={{ scale: 0.92 }}
-              className="w-10 h-10 rounded-full bg-[#121218]/65 hover:bg-white/[0.18] backdrop-blur-xl border border-white/20 shadow-[0_4px_16px_rgba(0,0,0,0.4),inset_0_1px_1px_0_rgba(255,255,255,0.35)] flex items-center justify-center transition-all duration-200"
+              className="w-10 h-10 rounded-full bg-white/[0.12] hover:bg-white/[0.22] backdrop-blur-xl border border-white/25 shadow-[0_4px_16px_rgba(0,0,0,0.3),inset_0_1px_1px_0_rgba(255,255,255,0.45)] flex items-center justify-center transition-all duration-200"
             >
               <img
                 src="/gallery/linkedin.webp"

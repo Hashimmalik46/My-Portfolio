@@ -71,7 +71,7 @@ function SeamlessBackgroundVideo() {
         muted
         playsInline
         preload="auto"
-        className={`absolute inset-0 w-full h-full object-cover object-[25%_center] lg:object-center transition-opacity duration-700 ease-in-out ${
+        className={`absolute inset-0 w-full h-full object-cover object-[25%_center] lg:object-center scale-[1.08] transition-opacity duration-700 ease-in-out ${
           activeVideo === 1 ? "opacity-100" : "opacity-0"
         }`}
       >
@@ -84,7 +84,7 @@ function SeamlessBackgroundVideo() {
         muted
         playsInline
         preload="auto"
-        className={`absolute inset-0 w-full h-full object-cover object-[25%_center] lg:object-center transition-opacity duration-700 ease-in-out ${
+        className={`absolute inset-0 w-full h-full object-cover object-[25%_center] lg:object-center scale-[1.08] transition-opacity duration-700 ease-in-out ${
           activeVideo === 2 ? "opacity-100" : "opacity-0"
         }`}
       >
@@ -109,8 +109,9 @@ function MainApp({ isLoading = false }) {
         {/* Seamless Crossfading Background Video */}
         <SeamlessBackgroundVideo />
 
-        {/* Dark Video Overlay */}
-        <div className="absolute inset-0 bg-black/45 z-0 pointer-events-none" />
+        {/* Dark Video Overlay & Edge Gradient */}
+        <div className="absolute inset-0 bg-black/40 z-0 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/30 z-0 pointer-events-none" />
 
         {/* Navbar */}
         <div className="w-full relative z-50">
