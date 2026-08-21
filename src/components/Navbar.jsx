@@ -324,14 +324,14 @@ function Navbar({ isLoading = false }) {
               aria-label="Tools"
               whileHover={{ scale: 1.1, y: -1 }}
               whileTap={{ scale: 0.92 }}
-              className={`w-10 h-10 rounded-full backdrop-blur-xl border shadow-[0_4px_16px_rgba(0,0,0,0.3),inset_0_1px_1px_0_rgba(255,255,255,0.45)] flex items-center justify-center transition-all duration-200 select-none cursor-pointer group ${
+              className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full backdrop-blur-xl border shadow-[0_4px_16px_rgba(0,0,0,0.3),inset_0_1px_1px_0_rgba(255,255,255,0.45)] flex items-center justify-center transition-all duration-200 select-none cursor-pointer group ${
                 isToolsOpen
                   ? "bg-white/[0.22] border-white/50 shadow-[0_0_20px_rgba(255,255,255,0.25)] text-white"
                   : "bg-white/[0.12] hover:bg-white/[0.22] border-white/25 hover:border-white/40 text-white/85 hover:text-white"
               }`}
             >
               <Wrench
-                className={`w-4 h-4 transition-transform duration-300 ${
+                className={`w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform duration-300 ${
                   isToolsOpen ? "rotate-45 text-white" : "group-hover:rotate-45"
                 }`}
               />
