@@ -201,10 +201,10 @@ function Navbar({ isLoading = false }) {
       >
         {/* 1. Full Top Navbar (Hero State - Original 3-column Layout) */}
         <nav
-          className={`w-full flex items-center justify-between px-6 sm:px-12 lg:px-20 xl:px-28 2xl:px-36 pt-8 sm:pt-10 xl:pt-11 pb-6 transition-all duration-400 ease-out ${
+          className={`w-full flex items-center justify-between px-6 sm:px-12 lg:px-20 xl:px-28 2xl:px-36 pt-8 sm:pt-10 xl:pt-11 pb-6 transition-all duration-400 ease-out pointer-events-none ${
             isScrolled || isLoading
-              ? "opacity-0 -translate-y-6 pointer-events-none invisible"
-              : "opacity-100 translate-y-0 pointer-events-auto visible"
+              ? "opacity-0 -translate-y-6 invisible"
+              : "opacity-100 translate-y-0 visible"
           }`}
         >
           {/* Logo */}
@@ -271,46 +271,48 @@ function Navbar({ isLoading = false }) {
             </DynamicGlassContainer>
           </div>
 
-        {/* Mobile & Tablet Social Icons (GitHub & LinkedIn) */}
-        <div className="flex xl:hidden items-center gap-2.5 sm:gap-3">
-          {socials.github && (
-            <motion.a
-              href={socials.github}
-              target="_blank"
-              rel="noreferrer"
-              aria-label="GitHub"
-              whileHover={{ scale: 1.1, y: -2 }}
-              whileTap={{ scale: 0.92 }}
-              className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/[0.12] hover:bg-white/[0.22] backdrop-blur-xl border border-white/25 shadow-[0_4px_16px_rgba(0,0,0,0.3),inset_0_1px_1px_0_rgba(255,255,255,0.45)] flex items-center justify-center transition-all duration-200"
-            >
-              <img
-                src="/gallery/github.webp"
-                alt="GitHub"
-                className="w-4 h-4 sm:w-5 sm:h-5 object-contain brightness-0 invert opacity-90"
-              />
-            </motion.a>
-          )}
-          {socials.linkedin && (
-            <motion.a
-              href={socials.linkedin}
-              target="_blank"
-              rel="noreferrer"
-              aria-label="LinkedIn"
-              whileHover={{ scale: 1.1, y: -2 }}
-              whileTap={{ scale: 0.92 }}
-              className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/[0.12] hover:bg-white/[0.22] backdrop-blur-xl border border-white/25 shadow-[0_4px_16px_rgba(0,0,0,0.3),inset_0_1px_1px_0_rgba(255,255,255,0.45)] flex items-center justify-center transition-all duration-200"
-            >
-              <img
-                src="/gallery/linkedin.webp"
-                alt="LinkedIn"
-                className="w-4 h-4 sm:w-5 sm:h-5 object-contain brightness-0 invert opacity-90"
-              />
-            </motion.a>
-          )}
-        </div>
+        {/* Right Navigation Controls (Mobile: GitHub + LinkedIn + Tools | Desktop: Tools) */}
+        <div className="flex items-center gap-2 sm:gap-2.5 pointer-events-auto">
+          {/* Mobile & Tablet Social Icons (GitHub & LinkedIn) */}
+          <div className="flex xl:hidden items-center gap-2 sm:gap-2.5">
+            {socials.github && (
+              <motion.a
+                href={socials.github}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="GitHub"
+                whileHover={{ scale: 1.1, y: -2 }}
+                whileTap={{ scale: 0.92 }}
+                className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/[0.12] hover:bg-white/[0.22] backdrop-blur-xl border border-white/25 shadow-[0_4px_16px_rgba(0,0,0,0.3),inset_0_1px_1px_0_rgba(255,255,255,0.45)] flex items-center justify-center transition-all duration-200"
+              >
+                <img
+                  src="/gallery/github.webp"
+                  alt="GitHub"
+                  className="w-4 h-4 sm:w-5 sm:h-5 object-contain brightness-0 invert opacity-90"
+                />
+              </motion.a>
+            )}
+            {socials.linkedin && (
+              <motion.a
+                href={socials.linkedin}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="LinkedIn"
+                whileHover={{ scale: 1.1, y: -2 }}
+                whileTap={{ scale: 0.92 }}
+                className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/[0.12] hover:bg-white/[0.22] backdrop-blur-xl border border-white/25 shadow-[0_4px_16px_rgba(0,0,0,0.3),inset_0_1px_1px_0_rgba(255,255,255,0.45)] flex items-center justify-center transition-all duration-200"
+              >
+                <img
+                  src="/gallery/linkedin.webp"
+                  alt="LinkedIn"
+                  className="w-4 h-4 sm:w-5 sm:h-5 object-contain brightness-0 invert opacity-90"
+                />
+              </motion.a>
+            )}
+          </div>
 
-        {/* Desktop: Tools Icon-Only Circular Button with 2 Circular Pop-under Icons */}
-        <div ref={toolsRef} className="hidden xl:flex relative items-center justify-end pointer-events-auto">
+          {/* Tools Icon-Only Circular Button with 2 Circular Pop-under Icons (Available on all screen sizes) */}
+          <div ref={toolsRef} className="relative flex items-center justify-end">
             <motion.button
               type="button"
               onClick={() => {
@@ -426,7 +428,8 @@ function Navbar({ isLoading = false }) {
               )}
             </AnimatePresence>
           </div>
-        </nav>
+        </div>
+      </nav>
 
       {/* 2. Floating Pill Navbar (Authentic Apple Glass Pill on Scroll) */}
       <div className="fixed top-6 inset-x-0 w-full flex justify-center z-50 pointer-events-none px-4 isolate transform-gpu">

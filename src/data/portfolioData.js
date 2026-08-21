@@ -105,7 +105,11 @@ export const portfolioData = {
       badgeLabel: "Philosophy",
       text: "Crafting scalable web systems & bespoke digital experiences with high attention to aesthetics and performance.",
     },
-    ambientAudio: "/audio/ambient.mp3",
+    playlist: [
+      { id: 1, title: "Ambient Flow 01", src: "/audio/ambient_1.mp3" },
+      { id: 2, title: "Ambient Flow 02", src: "/audio/ambient_2.mp3" },
+    ],
+    ambientAudio: "/audio/ambient_1.mp3",
     scrollText: "Scroll",
   },
 

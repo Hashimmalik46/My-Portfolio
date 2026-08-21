@@ -356,8 +356,8 @@ export default function HeroChatbot() {
           </div>
         </motion.div>
 
-        {/* Quick-Tap Prompt Chips */}
-        <div className="flex items-center justify-center gap-1.5 w-full flex-wrap">
+        {/* Quick-Tap Prompt Chips (Desktop-Only, hidden on phones & tablets) */}
+        <div className="hidden xl:flex items-center justify-center gap-1.5 w-full flex-wrap">
           {[
             {
               label: "Projects",

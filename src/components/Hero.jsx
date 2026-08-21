@@ -1,5 +1,14 @@
 import { useRef, useState, useEffect } from "react";
-import { Sparkles, Globe, Volume2, VolumeX } from "lucide-react";
+import {
+  Sparkles,
+  Globe,
+  Play,
+  Pause,
+  SkipBack,
+  SkipForward,
+  Disc3,
+  X,
+} from "lucide-react";
 import {
   FaGithub,
   FaLinkedinIn,
@@ -8,6 +17,7 @@ import {
 } from "react-icons/fa6";
 import {
   motion,
+  AnimatePresence,
   useMotionValue,
   useSpring,
   useMotionTemplate,
@@ -79,16 +89,92 @@ function TypewriterText({
 }
 
 /**
- * Live Time, Location & Quick Socials Dock with Ambient Audio Controller
+ * Shared Ambient Audio Hook
+ * Unified playback engine ensuring desktop and mobile/tablet widgets stay 100% in sync
+ */
+function useAmbientAudio(playlist = [], audioSrc = "/audio/ambient_1.mp3") {
+  const tracks =
+    playlist && playlist.length > 0
+      ? playlist
+      : [
+          { id: 1, title: "Ambient Flow 01", src: audioSrc || "/audio/ambient_1.mp3" },
+          { id: 2, title: "Ambient Flow 02", src: "/audio/ambient_2.mp3" },
+        ];
+
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
+  const audioTagRef = useRef(null);
+
+  const currentTrack = tracks[currentTrackIndex] || tracks[0];
+
+  useEffect(() => {
+    const audio = audioTagRef.current;
+    if (audio && isPlaying) {
+      audio.load();
+      audio
+        .play()
+        .catch((err) => console.warn("Auto-play switch notice:", err));
+    }
+  }, [currentTrackIndex]);
+
+  const toggleSound = (e) => {
+    e?.stopPropagation();
+    const audio = audioTagRef.current;
+    if (!audio) return;
+
+    if (audio.paused) {
+      audio.volume = 0.5;
+      audio
+        .play()
+        .then(() => setIsPlaying(true))
+        .catch((err) => console.warn("Audio play notice:", err));
+    } else {
+      audio.pause();
+      setIsPlaying(false);
+    }
+  };
+
+  const handleNext = (e) => {
+    e?.stopPropagation();
+    setCurrentTrackIndex((prev) => (prev + 1) % tracks.length);
+  };
+
+  const handlePrev = (e) => {
+    e?.stopPropagation();
+    setCurrentTrackIndex((prev) => (prev - 1 + tracks.length) % tracks.length);
+  };
+
+  return {
+    tracks,
+    currentTrack,
+    currentTrackIndex,
+    isPlaying,
+    setIsPlaying,
+    audioTagRef,
+    toggleSound,
+    handleNext,
+    handlePrev,
+  };
+}
+
+/**
+ * Luxury Desktop Top-Right Status & Ambient Music Widget
  */
 function TopRightStatusDock({
   location = "Srinagar, Kashmir",
   socials = {},
-  audioSrc = "/audio/ambient.mp3",
+  audioPlayer,
 }) {
   const [timeStr, setTimeStr] = useState("");
-  const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef(null);
+  const {
+    tracks,
+    currentTrack,
+    currentTrackIndex,
+    isPlaying,
+    toggleSound,
+    handleNext,
+    handlePrev,
+  } = audioPlayer;
 
   useEffect(() => {
     const updateTime = () => {
@@ -107,44 +193,6 @@ function TopRightStatusDock({
     return () => clearInterval(interval);
   }, []);
 
-  useEffect(() => {
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
-      }
-    };
-  }, []);
-
-  const toggleSound = () => {
-    if (!audioRef.current) {
-      const audio = new Audio(audioSrc || "/audio/ambient.mp3");
-      audio.loop = true;
-      audio.volume = 0.45;
-      audioRef.current = audio;
-    }
-
-    const audio = audioRef.current;
-    if (isPlaying) {
-      audio.pause();
-      setIsPlaying(false);
-    } else {
-      const playPromise = audio.play();
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            setIsPlaying(true);
-          })
-          .catch((err) => {
-            console.warn("Ambient audio notice (audio file not yet placed):", err);
-            setIsPlaying((prev) => !prev);
-          });
-      } else {
-        setIsPlaying(true);
-      }
-    }
-  };
-
   const socialLinks = [
     { id: "github", label: "GitHub", href: socials.github, icon: FaGithub },
     { id: "linkedin", label: "LinkedIn", href: socials.linkedin, icon: FaLinkedinIn },
@@ -153,72 +201,123 @@ function TopRightStatusDock({
   ].filter((item) => Boolean(item.href));
 
   return (
-    <div className="flex flex-col gap-2.5 p-3 sm:p-3.5 rounded-2xl bg-white/[0.08] hover:bg-white/[0.12] border border-white/20 hover:border-white/35 backdrop-blur-xl shadow-[0_16px_36px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.3)] transition-all group select-none font-jakarta min-w-[220px]">
-      {/* Top Header: Location & Live Clock */}
-      <div className="flex items-center justify-between gap-3 border-b border-white/10 pb-2">
+    <div className="relative flex flex-col gap-3 p-3.5 sm:p-4 rounded-3xl bg-white/[0.13] hover:bg-white/[0.18] border border-white/30 hover:border-white/45 backdrop-blur-2xl backdrop-saturate-[200%] shadow-[0_20px_50px_rgba(0,0,0,0.4),0_0_24px_rgba(255,255,255,0.1),inset_0_1.5px_1px_rgba(255,255,255,0.6)] transition-all duration-300 group select-none font-jakarta min-w-[255px] pointer-events-auto">
+      {/* Top Header: Location & Digital Clock Capsule */}
+      <div className="flex items-center justify-between gap-3 border-b border-white/15 pb-2.5">
         <div className="flex items-center gap-1.5">
-          <Globe className="w-3.5 h-3.5 text-white/70 shrink-0" strokeWidth={1.8} />
-          <span className="text-xs font-medium text-white/90 tracking-tight">
+          <Globe className="w-3.5 h-3.5 text-white/80 shrink-0" strokeWidth={1.8} />
+          <span className="text-[11px] font-semibold text-white tracking-tight">
             {location}
           </span>
         </div>
-        <span className="text-[11px] font-mono text-white/60 tracking-tight font-medium">
+
+        <span className="text-[10px] font-mono font-medium text-white/90 px-2 py-0.5 rounded-full bg-white/[0.12] border border-white/20 tracking-tight shadow-sm">
           {timeStr || "00:00:00"}
         </span>
       </div>
 
-      {/* Middle: Ambient Sound / Music Equalizer Controller */}
-      <button
-        type="button"
-        onClick={toggleSound}
-        className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.14] border border-white/10 hover:border-white/25 transition-all text-left cursor-pointer group/audio"
-      >
-        <div className="flex items-center gap-2">
-          {isPlaying ? (
-            <Volume2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-          ) : (
-            <VolumeX className="w-3.5 h-3.5 text-white/50 group-hover/audio:text-white/80 shrink-0" />
-          )}
-          <span className="text-[11px] font-medium text-white/80 group-hover/audio:text-white transition-colors">
-            {isPlaying ? "Ambient Sound" : "Mute Ambience"}
-          </span>
+      {/* Middle: Luxury Apple-Style Multi-Track Ambient Music Player */}
+      <div className="flex flex-col gap-2 p-2.5 rounded-2xl bg-white/[0.08] hover:bg-white/[0.13] border border-white/20 hover:border-white/35 transition-all shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)]">
+        {/* Track Info Header: Spinning Vinyl Disc, Title & Live Equalizer Waves */}
+        <div className="flex items-center justify-between gap-2.5">
+          <div className="flex items-center gap-2.5 min-w-0">
+            {/* Vinyl Disc Artwork Badge */}
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-white/25 via-white/10 to-white/15 border border-white/30 flex items-center justify-center shadow-inner shrink-0">
+              <Disc3
+                className={`w-4 h-4 text-emerald-300 ${
+                  isPlaying ? "animate-spin" : "opacity-80"
+                }`}
+                style={{ animationDuration: "3.5s" }}
+              />
+            </div>
+
+            {/* Title & Status */}
+            <div className="flex flex-col min-w-0">
+              <span className="text-xs font-semibold text-white tracking-tight truncate max-w-[115px]">
+                {currentTrack.title || `Ambient Flow 0${currentTrackIndex + 1}`}
+              </span>
+              <span className="text-[9.5px] font-mono text-white/70 tracking-wide uppercase">
+                {isPlaying ? "Now Playing" : "Paused"} • {String(currentTrackIndex + 1).padStart(2, "0")}/{String(tracks.length).padStart(2, "0")}
+              </span>
+            </div>
+          </div>
+
+          {/* Dynamic Sound Equalizer Waves */}
+          <div className="flex items-end gap-[2.5px] h-3.5 px-1 shrink-0">
+            <span
+              className={`w-[2px] rounded-full transition-all duration-300 ${
+                isPlaying
+                  ? "h-3.5 bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)] animate-pulse"
+                  : "h-1 bg-white/40"
+              }`}
+            />
+            <span
+              className={`w-[2px] rounded-full transition-all duration-300 ${
+                isPlaying
+                  ? "h-2 bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)] animate-[pulse_0.7s_ease-in-out_infinite_0.2s]"
+                  : "h-1 bg-white/40"
+              }`}
+            />
+            <span
+              className={`w-[2px] rounded-full transition-all duration-300 ${
+                isPlaying
+                  ? "h-4 bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)] animate-[pulse_0.85s_ease-in-out_infinite_0.4s]"
+                  : "h-1 bg-white/40"
+              }`}
+            />
+            <span
+              className={`w-[2px] rounded-full transition-all duration-300 ${
+                isPlaying
+                  ? "h-2.5 bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)] animate-[pulse_0.6s_ease-in-out_infinite_0.1s]"
+                  : "h-1 bg-white/40"
+              }`}
+            />
+          </div>
         </div>
 
-        {/* Live Equalizer Sound Waves */}
-        <div className="flex items-end gap-[3px] h-3 px-0.5">
-          <span
-            className={`w-[2px] rounded-full transition-all duration-300 ${
-              isPlaying
-                ? "h-3 bg-emerald-400 animate-pulse"
-                : "h-1 bg-white/30"
-            }`}
-          />
-          <span
-            className={`w-[2px] rounded-full transition-all duration-300 ${
-              isPlaying
-                ? "h-2 bg-emerald-400 animate-[pulse_0.7s_ease-in-out_infinite_0.2s]"
-                : "h-1 bg-white/30"
-            }`}
-          />
-          <span
-            className={`w-[2px] rounded-full transition-all duration-300 ${
-              isPlaying
-                ? "h-3.5 bg-emerald-400 animate-[pulse_0.85s_ease-in-out_infinite_0.4s]"
-                : "h-1 bg-white/30"
-            }`}
-          />
-          <span
-            className={`w-[2px] rounded-full transition-all duration-300 ${
-              isPlaying
-                ? "h-2 bg-emerald-400 animate-[pulse_0.6s_ease-in-out_infinite_0.1s]"
-                : "h-1 bg-white/30"
-            }`}
-          />
-        </div>
-      </button>
+        {/* Centered Transport Audio Controls */}
+        <div className="flex items-center justify-center gap-3 pt-1 border-t border-white/10">
+          <motion.button
+            type="button"
+            onClick={handlePrev}
+            whileTap={{ scale: 0.88 }}
+            whileHover={{ scale: 1.1 }}
+            aria-label="Previous Track"
+            className="w-7 h-7 rounded-full bg-white/[0.12] hover:bg-white/[0.28] border border-white/20 hover:border-white/40 flex items-center justify-center text-white/80 hover:text-white transition-all cursor-pointer shadow-sm"
+          >
+            <SkipBack size={11} />
+          </motion.button>
 
-      {/* Bottom Row: Quick Socials Dock */}
-      <div className="flex items-center justify-between gap-2 pt-0.5">
+          <motion.button
+            type="button"
+            onClick={toggleSound}
+            whileTap={{ scale: 0.88 }}
+            whileHover={{ scale: 1.08 }}
+            aria-label={isPlaying ? "Pause Ambient Music" : "Play Ambient Music"}
+            className="w-8 h-8 rounded-full bg-white text-black hover:bg-white/95 shadow-[0_0_16px_rgba(255,255,255,0.5),0_2px_8px_rgba(0,0,0,0.3)] flex items-center justify-center cursor-pointer transition-transform"
+          >
+            {isPlaying ? (
+              <Pause size={12} className="text-black fill-black" />
+            ) : (
+              <Play size={12} className="text-black fill-black ml-0.5" />
+            )}
+          </motion.button>
+
+          <motion.button
+            type="button"
+            onClick={handleNext}
+            whileTap={{ scale: 0.88 }}
+            whileHover={{ scale: 1.1 }}
+            aria-label="Next Track"
+            className="w-7 h-7 rounded-full bg-white/[0.12] hover:bg-white/[0.28] border border-white/20 hover:border-white/40 flex items-center justify-center text-white/80 hover:text-white transition-all cursor-pointer shadow-sm"
+          >
+            <SkipForward size={11} />
+          </motion.button>
+        </div>
+      </div>
+
+      {/* Bottom: Quick Social Icon Launchpad */}
+      <div className="flex items-center justify-between gap-1 pt-0.5">
         {socialLinks.map((item) => {
           const IconComp = item.icon;
           return (
@@ -228,15 +327,182 @@ function TopRightStatusDock({
               target="_blank"
               rel="noreferrer"
               aria-label={item.label}
-              whileHover={{ scale: 1.12, y: -1.5 }}
+              whileHover={{ scale: 1.12, y: -2 }}
               whileTap={{ scale: 0.92 }}
-              className="w-8 h-8 rounded-xl bg-white/[0.08] hover:bg-white/[0.22] border border-white/15 hover:border-white/40 flex items-center justify-center text-white/80 hover:text-white transition-all duration-200 shadow-sm"
+              className="w-8 h-8 rounded-xl bg-white/[0.10] hover:bg-white/[0.28] border border-white/18 hover:border-white/45 flex items-center justify-center text-white/85 hover:text-white transition-all duration-200 shadow-sm"
             >
-              <IconComp size={14} />
+              <IconComp size={13} />
             </motion.a>
           );
         })}
       </div>
+    </div>
+  );
+}
+
+/**
+ * Mobile & Tablet Floating Bottom-Right Expanding Disc Pill Player
+ * Smoothly morphs between a circular disc button and a compact horizontal frosted glass capsule.
+ */
+export function FloatingBottomRightDiscPlayer({
+  audioPlayer,
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const discRef = useRef(null);
+  const {
+    tracks,
+    currentTrack,
+    currentTrackIndex,
+    isPlaying,
+    toggleSound,
+    handleNext,
+    handlePrev,
+  } = audioPlayer;
+
+  // Click outside to collapse back into disc
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (discRef.current && !discRef.current.contains(e.target)) {
+        setIsOpen(false);
+      }
+    };
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("touchstart", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    };
+  }, [isOpen]);
+
+  return (
+    <div
+      ref={discRef}
+      className="xl:hidden absolute bottom-6 right-4 sm:right-6 sm:bottom-8 sm:right-8 z-30 pointer-events-auto select-none font-jakarta"
+    >
+      <motion.div
+        layout
+        transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+        className={`h-11 rounded-full bg-white/[0.13] hover:bg-white/[0.18] border border-white/30 hover:border-white/45 backdrop-blur-2xl backdrop-saturate-[200%] shadow-[0_16px_40px_rgba(0,0,0,0.4),0_0_20px_rgba(255,255,255,0.1),inset_0_1.5px_1px_rgba(255,255,255,0.6)] flex items-center overflow-hidden transition-colors ${
+          isOpen ? "px-3.5 gap-2.5 max-w-[92vw]" : "w-11 justify-center cursor-pointer"
+        }`}
+        onClick={!isOpen ? () => setIsOpen(true) : undefined}
+      >
+        {/* Left: Spinning Vinyl Disc Icon */}
+        <div
+          onClick={isOpen ? () => setIsOpen(false) : undefined}
+          className={`w-6 h-6 rounded-full bg-white/20 border border-white/30 flex items-center justify-center shrink-0 ${
+            isOpen ? "cursor-pointer" : ""
+          }`}
+        >
+          <Disc3
+            className={`w-3.5 h-3.5 text-emerald-300 ${
+              isPlaying ? "animate-spin" : "opacity-80"
+            }`}
+            style={{ animationDuration: "3.5s" }}
+          />
+        </div>
+
+        {/* Expanded Content (Subtle Minimal Fade) */}
+        <AnimatePresence mode="sync">
+          {isOpen && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.15, ease: "easeOut" }}
+              className="flex items-center gap-2.5 whitespace-nowrap overflow-hidden"
+            >
+              {/* Track Info */}
+              <div className="flex flex-col min-w-0 max-w-[105px] sm:max-w-[130px]">
+                <span className="text-[11px] font-semibold text-white truncate tracking-tight">
+                  {currentTrack.title || `Ambient 0${currentTrackIndex + 1}`}
+                </span>
+                <span className="text-[8.5px] font-mono text-white/70 tracking-wider uppercase">
+                  {isPlaying ? "Playing" : "Paused"} • {String(currentTrackIndex + 1).padStart(2, "0")}/{String(tracks.length).padStart(2, "0")}
+                </span>
+              </div>
+
+              {/* Live Mini Sound Wave Bars */}
+              <div className="flex items-end gap-[2px] h-3 px-0.5 shrink-0">
+                <span
+                  className={`w-[2px] rounded-full transition-all duration-300 ${
+                    isPlaying ? "h-3 bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)] animate-pulse" : "h-1 bg-white/40"
+                  }`}
+                />
+                <span
+                  className={`w-[2px] rounded-full transition-all duration-300 ${
+                    isPlaying ? "h-2 bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)] animate-[pulse_0.7s_ease-in-out_infinite_0.2s]" : "h-1 bg-white/40"
+                  }`}
+                />
+                <span
+                  className={`w-[2px] rounded-full transition-all duration-300 ${
+                    isPlaying ? "h-3.5 bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)] animate-[pulse_0.85s_ease-in-out_infinite_0.4s]" : "h-1 bg-white/40"
+                  }`}
+                />
+              </div>
+
+              <span className="w-px h-4 bg-white/20 shrink-0" />
+
+              {/* Transport Controls */}
+              <div className="flex items-center gap-1.5 shrink-0">
+                <motion.button
+                  type="button"
+                  onClick={handlePrev}
+                  whileTap={{ scale: 0.92 }}
+                  aria-label="Previous Track"
+                  className="w-6 h-6 rounded-full bg-white/[0.12] hover:bg-white/[0.28] border border-white/25 flex items-center justify-center text-white/85 transition-all cursor-pointer"
+                >
+                  <SkipBack size={10} />
+                </motion.button>
+
+                <motion.button
+                  type="button"
+                  onClick={toggleSound}
+                  whileTap={{ scale: 0.92 }}
+                  aria-label={isPlaying ? "Pause Music" : "Play Music"}
+                  className="w-7 h-7 rounded-full bg-white text-black hover:bg-white/95 shadow-[0_0_12px_rgba(255,255,255,0.4)] flex items-center justify-center cursor-pointer"
+                >
+                  {isPlaying ? (
+                    <Pause size={10} className="text-black fill-black" />
+                  ) : (
+                    <Play size={10} className="text-black fill-black ml-0.5" />
+                  )}
+                </motion.button>
+
+                <motion.button
+                  type="button"
+                  onClick={handleNext}
+                  whileTap={{ scale: 0.92 }}
+                  aria-label="Next Track"
+                  className="w-6 h-6 rounded-full bg-white/[0.12] hover:bg-white/[0.28] border border-white/25 flex items-center justify-center text-white/85 transition-all cursor-pointer"
+                >
+                  <SkipForward size={10} />
+                </motion.button>
+              </div>
+
+              {/* Close / Collapse Button */}
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsOpen(false);
+                }}
+                aria-label="Collapse Player"
+                className="w-5 h-5 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 flex items-center justify-center text-white/70 hover:text-white transition-all cursor-pointer ml-0.5"
+              >
+                <X size={10} />
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Live Audio indicator dot when collapsed and playing */}
+        {!isOpen && isPlaying && (
+          <span className="absolute top-0.5 right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.9)] animate-pulse border border-black/40" />
+        )}
+      </motion.div>
     </div>
   );
 }
@@ -258,13 +524,10 @@ function AppleGlassButton({
       href={href}
       whileHover={{ scale: 1.05, y: -2 }}
       whileTap={{ scale: 0.95 }}
-      transition={{ type: "spring", stiffness: 400, damping: 20 }}
-      className={`relative group px-5 sm:px-7 py-2.5 sm:py-3.5 rounded-full ${
-        isPrimary ? "text-black font-bold" : "text-white font-medium"
-      } text-[11px] sm:text-sm uppercase tracking-wider transition-all duration-300 overflow-hidden select-none whitespace-nowrap border ${
+      className={`group relative isolate inline-flex items-center justify-center px-7 sm:px-8 py-3.5 sm:py-4 rounded-full font-jakarta text-xs sm:text-sm font-semibold tracking-wide transition-all duration-300 select-none overflow-hidden ${
         isPrimary
-          ? "border-white/80 hover:border-white shadow-[0_20px_48px_-10px_rgba(0,0,0,0.5),0_0_24px_rgba(255,255,255,0.35)]"
-          : "border-white/20 hover:border-white/40 shadow-[0_16px_36px_-8px_rgba(0,0,0,0.45),0_4px_12px_-2px_rgba(0,0,0,0.3)] hover:shadow-[0_0_20px_rgba(255,255,255,0.15)]"
+          ? "text-black shadow-[0_12px_36px_rgba(255,255,255,0.22),0_4px_16px_rgba(0,0,0,0.4)] hover:shadow-[0_16px_44px_rgba(255,255,255,0.35),0_6px_20px_rgba(0,0,0,0.5)] border border-white/90"
+          : "text-white shadow-[0_12px_36px_rgba(0,0,0,0.45),inset_0_1px_1px_rgba(255,255,255,0.3)] hover:shadow-[0_16px_40px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.45)] border border-white/20 hover:border-white/35"
       } ${className}`}
       style={{
         background: isPrimary
@@ -305,6 +568,12 @@ function AppleGlassButton({
 function Hero({ isLoading = false }) {
   const { hero } = portfolioData;
 
+  // Single shared ambient audio controller for Hero
+  const audioPlayer = useAmbientAudio(
+    hero?.playlist,
+    hero?.ambientAudio
+  );
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -333,8 +602,18 @@ function Hero({ isLoading = false }) {
       variants={containerVariants}
       initial="hidden"
       animate={!isLoading ? "visible" : "hidden"}
-      className="relative w-full flex-1 flex flex-col justify-between px-6 sm:px-12 lg:px-20 xl:px-28 2xl:px-36 pt-48 sm:pt-36 lg:pt-36 xl:pt-32 mt-50 sm:mt-100 xl:mt-6 pb-8 xl:pb-10 z-10 text-white select-none"
+      className="relative w-full flex-1 flex flex-col justify-between px-6 sm:px-12 lg:px-20 xl:px-28 2xl:px-36 pt-48 sm:pt-36 lg:pt-36 xl:pt-32 mt-45 sm:mt-100 xl:mt-6 pb-8 xl:pb-10 z-10 text-white select-none"
     >
+      {/* Hidden DOM Audio Element (Single Shared Instance) */}
+      <audio
+        ref={audioPlayer.audioTagRef}
+        src={audioPlayer.currentTrack.src}
+        preload="auto"
+        onPlay={() => audioPlayer.setIsPlaying(true)}
+        onPause={() => audioPlayer.setIsPlaying(false)}
+        onEnded={audioPlayer.handleNext}
+      />
+
       {/* Top-Right Live Time, Location & Quick Socials Dock (Desktop-Only) */}
       <motion.div
         variants={itemVariants}
@@ -343,9 +622,14 @@ function Hero({ isLoading = false }) {
         <TopRightStatusDock
           location={portfolioData.personal.location}
           socials={portfolioData.socials}
-          audioSrc={portfolioData.hero?.ambientAudio}
+          audioPlayer={audioPlayer}
         />
       </motion.div>
+
+      {/* Floating Bottom-Right Expanding Disc Pill Player (Mobile & Tablet - Home Section Only) */}
+      <FloatingBottomRightDiscPlayer
+        audioPlayer={audioPlayer}
+      />
 
       {/* 1. Main Editorial Headline (Top-Left on Desktop, Centered on Mobile/Tablet/iPad) */}
       <div className="flex flex-col items-center xl:items-start text-center xl:text-left">
