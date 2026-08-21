@@ -277,7 +277,7 @@ export default function ResumeModal({ isOpen, onClose }) {
   const modalJSX = (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 md:p-6 pointer-events-auto font-jakarta">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-2 sm:p-4 md:p-6 pointer-events-auto font-jakarta">
           {/* Backdrop (identical to Chatbot) */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -293,7 +293,7 @@ export default function ResumeModal({ isOpen, onClose }) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
             transition={{ type: "spring", stiffness: 450, damping: 32 }}
-            className="relative w-full max-w-3xl h-[640px] max-h-[90vh] flex flex-col rounded-2xl sm:rounded-3xl border border-white/20 overflow-hidden z-10 font-jakarta shadow-2xl"
+            className="relative w-full max-w-3xl h-[640px] max-h-[92vh] sm:max-h-[90vh] flex flex-col rounded-2xl sm:rounded-3xl border border-white/20 overflow-hidden z-10 font-jakarta shadow-2xl"
             style={{
               background:
                 "linear-gradient(135deg, rgba(26, 26, 36, 0.92) 0%, rgba(18, 18, 26, 0.95) 50%, rgba(12, 12, 18, 0.98) 100%)",
@@ -308,33 +308,35 @@ export default function ResumeModal({ isOpen, onClose }) {
             }}
           >
             {/* 1. Header Main Toolbar */}
-            <div className="flex items-center justify-between px-4 sm:px-5 py-3 border-b border-white/10 bg-black/40 backdrop-blur-md shrink-0">
-              <div className="flex items-center gap-2.5">
-                <div className="w-7 h-7 rounded-full bg-white/15 border border-white/25 flex items-center justify-center text-white shadow-inner">
-                  <FileText size={14} className="text-pAccent" />
+            <div className="flex items-center justify-between px-3 sm:px-5 py-2.5 sm:py-3 border-b border-white/10 bg-black/40 backdrop-blur-md shrink-0 gap-2">
+              <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
+                <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-white/15 border border-white/25 flex items-center justify-center text-white shadow-inner shrink-0">
+                  <FileText size={13} className="text-pAccent sm:w-3.5 sm:h-3.5" />
                 </div>
-                <h3 className="text-xs sm:text-sm font-semibold text-white tracking-wide drop-shadow-sm">
+                <h3 className="text-xs sm:text-sm font-semibold text-white tracking-wide drop-shadow-sm whitespace-nowrap truncate">
                   ATS Resume Builder
                 </h3>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
                 {/* Copy Plain Text Button */}
                 <button
                   type="button"
                   onClick={handleCopyPlainText}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.08] hover:bg-white/[0.16] border border-white/15 hover:border-white/30 text-xs text-white/90 hover:text-white font-medium transition-all cursor-pointer shadow-sm"
+                  className="flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-white/[0.08] hover:bg-white/[0.16] border border-white/15 hover:border-white/30 text-[11px] sm:text-xs text-white/90 hover:text-white font-medium transition-colors cursor-pointer shadow-sm whitespace-nowrap"
                   title="Copy ATS formatted plain text"
                 >
                   {copied ? (
                     <>
-                      <Check size={12} className="text-emerald-400" />
-                      <span className="text-emerald-400 text-[11px]">Copied</span>
+                      <Check size={11} className="text-emerald-400 sm:w-3 sm:h-3" />
+                      <span className="text-emerald-400 text-[10.5px] sm:text-[11px]">Copied</span>
                     </>
                   ) : (
                     <>
-                      <Copy size={12} className="text-white/70" />
-                      <span className="text-[11px]">Copy Text</span>
+                      <Copy size={11} className="text-white/70 sm:w-3 sm:h-3" />
+                      <span className="text-[10.5px] sm:text-[11px]">
+                        <span className="hidden xs:inline">Copy </span>Text
+                      </span>
                     </>
                   )}
                 </button>
@@ -343,11 +345,13 @@ export default function ResumeModal({ isOpen, onClose }) {
                 <button
                   type="button"
                   onClick={handlePrint}
-                  className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-pAccent hover:bg-[#bdf328] text-secondary text-xs font-semibold shadow-[0_4px_16px_rgba(168,218,34,0.25)] transition-all cursor-pointer hover:scale-105"
+                  className="flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full bg-pAccent hover:bg-[#bdf328] text-secondary text-[11px] sm:text-xs font-semibold shadow-[0_4px_16px_rgba(168,218,34,0.25)] transition-all cursor-pointer hover:scale-105 whitespace-nowrap"
                   title="Download clean 1-2 page PDF"
                 >
-                  <Download size={12} />
-                  <span className="text-[11px]">Download PDF</span>
+                  <Download size={11} className="sm:w-3 sm:h-3" />
+                  <span className="text-[10.5px] sm:text-[11px]">
+                    <span className="hidden xs:inline">Download </span>PDF
+                  </span>
                 </button>
 
                 {/* Close Button */}
@@ -355,31 +359,31 @@ export default function ResumeModal({ isOpen, onClose }) {
                   type="button"
                   onClick={onClose}
                   title="Close (Esc)"
-                  className="p-1.5 rounded-lg text-white/65 hover:text-white hover:bg-white/15 transition-colors cursor-pointer ml-0.5"
+                  className="p-1 sm:p-1.5 rounded-lg text-white/65 hover:text-white hover:bg-white/15 transition-colors cursor-pointer ml-0.5"
                 >
-                  <X size={16} />
+                  <X size={15} className="sm:w-4 sm:h-4" />
                 </button>
               </div>
             </div>
 
             {/* 2. Customizer Ribbon (Templates & Fonts Selector) */}
-            <div className="px-4 sm:px-5 py-2.5 bg-black/25 border-b border-white/10 flex flex-wrap items-center justify-between gap-3 text-xs shrink-0">
+            <div className="px-3 sm:px-5 py-1.5 sm:py-2 bg-black/25 border-b border-white/10 flex flex-wrap items-center justify-between gap-2 text-xs shrink-0">
               {/* Template Selector */}
-              <div className="flex items-center gap-1.5">
-                <span className="text-[11px] text-white/60 font-medium flex items-center gap-1">
-                  <Layout size={12} className="text-pAccent" /> Template:
+              <div className="flex items-center gap-1 sm:gap-1.5">
+                <span className="text-[10.5px] sm:text-[11px] text-white/60 font-medium flex items-center gap-1 shrink-0">
+                  <Layout size={11} className="text-pAccent sm:w-3 sm:h-3" /> Template:
                 </span>
                 <div className="flex items-center bg-white/[0.08] p-0.5 rounded-lg border border-white/15">
                   {[
                     { id: "modern", label: "Modern" },
                     { id: "executive", label: "Executive" },
-                    { id: "compact", label: "1-Page Tight" },
+                    { id: "compact", label: "Compact" },
                   ].map((t) => (
                     <button
                       key={t.id}
                       type="button"
                       onClick={() => setActiveTemplate(t.id)}
-                      className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-all cursor-pointer ${
+                      className={`px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md text-[10px] sm:text-[11px] font-medium transition-colors cursor-pointer ${
                         activeTemplate === t.id
                           ? "bg-white/25 text-white shadow-sm font-semibold"
                           : "text-white/60 hover:text-white"
@@ -392,21 +396,21 @@ export default function ResumeModal({ isOpen, onClose }) {
               </div>
 
               {/* Font Selector */}
-              <div className="flex items-center gap-1.5">
-                <span className="text-[11px] text-white/60 font-medium flex items-center gap-1">
-                  <Type size={12} className="text-pAccent" /> Font:
+              <div className="flex items-center gap-1 sm:gap-1.5">
+                <span className="text-[10.5px] sm:text-[11px] text-white/60 font-medium flex items-center gap-1 shrink-0">
+                  <Type size={11} className="text-pAccent sm:w-3 sm:h-3" /> Font:
                 </span>
                 <div className="flex items-center bg-white/[0.08] p-0.5 rounded-lg border border-white/15">
                   {[
                     { id: "sans", label: "Sans" },
-                    { id: "serif", label: "Times New Roman" },
-                    { id: "system", label: "Arial / ATS" },
+                    { id: "serif", label: "Serif" },
+                    { id: "system", label: "System" },
                   ].map((f) => (
                     <button
                       key={f.id}
                       type="button"
                       onClick={() => setActiveFont(f.id)}
-                      className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-all cursor-pointer ${
+                      className={`px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md text-[10px] sm:text-[11px] font-medium transition-colors cursor-pointer ${
                         activeFont === f.id
                           ? "bg-white/25 text-white shadow-sm font-semibold"
                           : "text-white/60 hover:text-white"
