@@ -181,7 +181,7 @@ function Contact() {
                   name="name"
                   required
                   placeholder="e.g. John Doe"
-                  className="w-full px-4 py-3 rounded-xl bg-secondary/[0.03] focus:bg-white border border-secondary/15 focus:border-secondary/40 text-secondary placeholder-secondary/35 text-sm focus:outline-none focus:ring-2 focus:ring-secondary/5 shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)] transition-all"
+                  className="w-full px-4 py-3 rounded-xl bg-secondary/[0.03] focus:bg-white border border-secondary/15 focus:border-secondary/40 text-secondary placeholder-secondary/35 text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-secondary/5 shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)] transition-all"
                 />
               </div>
 
@@ -195,7 +195,7 @@ function Contact() {
                   name="email"
                   required
                   placeholder="e.g. john@example.com"
-                  className="w-full px-4 py-3 rounded-xl bg-secondary/[0.03] focus:bg-white border border-secondary/15 focus:border-secondary/40 text-secondary placeholder-secondary/35 text-sm focus:outline-none focus:ring-2 focus:ring-secondary/5 shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)] transition-all"
+                  className="w-full px-4 py-3 rounded-xl bg-secondary/[0.03] focus:bg-white border border-secondary/15 focus:border-secondary/40 text-secondary placeholder-secondary/35 text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-secondary/5 shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)] transition-all"
                 />
                 <ValidationError
                   prefix="Email"
@@ -215,7 +215,7 @@ function Contact() {
                   rows={4}
                   required
                   placeholder="Tell me about your project, timeline, or idea..."
-                  className="w-full px-4 py-3 rounded-xl bg-secondary/[0.03] focus:bg-white border border-secondary/15 focus:border-secondary/40 text-secondary placeholder-secondary/35 text-sm focus:outline-none focus:ring-2 focus:ring-secondary/5 shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)] transition-all resize-none"
+                  className="w-full px-4 py-3 rounded-xl bg-secondary/[0.03] focus:bg-white border border-secondary/15 focus:border-secondary/40 text-secondary placeholder-secondary/35 text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-secondary/5 shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)] transition-all resize-none"
                 />
                 <ValidationError
                   prefix="Message"

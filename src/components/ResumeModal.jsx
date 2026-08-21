@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "motion/react";
 import {
   FileText,
@@ -20,6 +21,17 @@ export default function ResumeModal({ isOpen, onClose }) {
   const printAreaRef = useRef(null);
 
   const { personal, socials, skills, projectsSection, resume } = portfolioData;
+
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
+    }
+  }, [isOpen]);
 
   // Keyboard shortcut listener (Escape to close)
   useEffect(() => {
@@ -262,17 +274,17 @@ export default function ResumeModal({ isOpen, onClose }) {
     }, 250);
   };
 
-  return (
+  const modalJSX = (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 md:p-6 pointer-events-auto font-jakarta">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 md:p-6 pointer-events-auto font-jakarta">
           {/* Backdrop (identical to Chatbot) */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute inset-0 bg-black/45 backdrop-blur-md"
+            className="absolute inset-0 bg-black/50 backdrop-blur-md"
           />
 
           {/* Modal Outer Card (Refined Dark Frosted Glass with Crisp Contrast) */}
@@ -601,4 +613,8 @@ export default function ResumeModal({ isOpen, onClose }) {
       )}
     </AnimatePresence>
   );
+
+  return typeof document !== "undefined"
+    ? createPortal(modalJSX, document.body)
+    : null;
 }

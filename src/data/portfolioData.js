@@ -339,6 +339,12 @@ skills: [
         query: "What experience does Hashim have in AI, Machine Learning, and Computer Vision?",
       },
       {
+        icon: Palette,
+        title: "UI / UX Design",
+        desc: "Figma, motion design & micro-interactions",
+        query: "What is Hashim's design philosophy and UI/UX expertise?",
+      },
+      {
         icon: Mail,
         title: "Contact & Hire",
         desc: "Email, LinkedIn & collaboration",

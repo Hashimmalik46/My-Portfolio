@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "motion/react";
 import {
   Sparkles,
@@ -14,6 +15,7 @@ import {
   FolderGit2,
   BrainCircuit,
   Mail,
+  ArrowUpRight,
 } from "lucide-react";
 import { portfolioData } from "../data/portfolioData";
 import { askHashimAI } from "../data/hashimAI";
@@ -49,6 +51,17 @@ export default function HeroChatbot() {
       chatEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages, isTyping, isOpen]);
+
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
+    }
+  }, [isOpen]);
 
   // Focus input when opened
   useEffect(() => {
@@ -339,206 +352,230 @@ export default function HeroChatbot() {
         </motion.button>
       </div>
 
-      {/* 2. TRANSLUCENT FROSTED GLASS MODAL */}
-      <AnimatePresence>
-        {isOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 md:p-6 pointer-events-auto">
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsOpen(false)}
-              className="absolute inset-0 bg-black/45 backdrop-blur-md"
-            />
+      {/* 2. TRANSLUCENT FROSTED GLASS MODAL (PORTALED TO DOCUMENT.BODY) */}
+      {typeof document !== "undefined" &&
+        createPortal(
+          <AnimatePresence>
+            {isOpen && (
+              <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 md:p-6 pointer-events-auto font-jakarta">
+                {/* Backdrop */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  onClick={() => setIsOpen(false)}
+                  className="absolute inset-0 bg-black/50 backdrop-blur-md"
+                />
 
-            {/* Modal Card (Light VisionOS Frosted Glass) */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.94, y: 15 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 10 }}
-              transition={{ type: "spring", stiffness: 450, damping: 32 }}
-              className="relative w-full max-w-lg h-[520px] max-h-[82vh] flex flex-col rounded-2xl sm:rounded-3xl border border-white/30 overflow-hidden z-10 font-jakarta"
-              style={{
-                background:
-                  "linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(32, 32, 44, 0.72) 50%, rgba(18, 18, 26, 0.82) 100%)",
-                backdropFilter: "blur(32px) saturate(200%)",
-                WebkitBackdropFilter: "blur(32px) saturate(200%)",
-                boxShadow: `
-                  0 24px 64px -12px rgba(0, 0, 0, 0.55),
-                  0 8px 24px -4px rgba(0, 0, 0, 0.35),
-                  inset 0 1.2px 1px 0 rgba(255, 255, 255, 0.5),
-                  inset 0 -1px 2px 0 rgba(0, 0, 0, 0.3)
-                `,
-              }}
-            >
-              {/* Clean Minimal Header */}
-              <div className="flex items-center justify-between px-4 sm:px-5 py-3.5 border-b border-white/15 bg-white/[0.04]">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-full bg-white/20 border border-white/30 flex items-center justify-center text-white shadow-inner">
-                    <Bot size={15} className="text-pAccent" />
-                  </div>
-                  <h3 className="text-xs sm:text-sm font-semibold text-white tracking-wide">
-                    {chatbot.botName}
-                  </h3>
-                </div>
-
-                <div className="flex items-center gap-1.5">
-                  <button
-                    type="button"
-                    onClick={handleClearChat}
-                    title="Reset Conversation"
-                    className="p-1.5 rounded-lg text-white/65 hover:text-white hover:bg-white/15 transition-colors cursor-pointer"
-                  >
-                    <RotateCcw size={14} />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setIsOpen(false)}
-                    title="Close (Esc)"
-                    className="p-1.5 rounded-lg text-white/65 hover:text-white hover:bg-white/15 transition-colors cursor-pointer"
-                  >
-                    <X size={16} />
-                  </button>
-                </div>
-              </div>
-
-              {/* Messages Area */}
-              <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-3.5 text-xs sm:text-[13px]">
-                {messages.map((msg) => {
-                  const isBot = msg.sender === "bot";
-                  return (
-                    <div
-                      key={msg.id}
-                      className={`flex flex-col ${isBot ? "items-start" : "items-end"}`}
-                    >
-                      {isBot ? (
-                        <div className="flex items-start gap-2.5 max-w-[95%]">
-                          <div className="w-6 h-6 rounded-full bg-white/15 border border-white/25 flex items-center justify-center text-pAccent shrink-0 mt-0.5">
-                            <Bot size={13} />
-                          </div>
-                          <div className="flex-1 bg-white/[0.1] hover:bg-white/[0.14] border border-white/20 rounded-2xl rounded-tl-sm p-3 sm:p-3.5 text-white/95 shadow-sm transition-colors text-left">
-                            <div className="space-y-1 text-left">
-                              {renderMessageContent(msg.text)}
-                            </div>
-                            <div className="flex items-center justify-between mt-2 pt-1.5 border-t border-white/10 text-[10px] text-white/50">
-                              <span>{msg.timestamp}</span>
-                              <button
-                                type="button"
-                                onClick={() => handleCopyText(msg.text, msg.id)}
-                                className="flex items-center gap-1 text-white/50 hover:text-white transition-colors cursor-pointer"
-                              >
-                                {copiedId === msg.id ? (
-                                  <>
-                                    <Check size={11} className="text-emerald-400" />
-                                    <span className="text-emerald-400">Copied</span>
-                                  </>
-                                ) : (
-                                  <>
-                                    <Copy size={11} />
-                                    <span>Copy</span>
-                                  </>
-                                )}
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="max-w-[85%] bg-white/[0.22] border border-white/30 text-white rounded-2xl rounded-tr-xs px-3.5 py-2 shadow-sm font-medium text-left">
-                          <p className="leading-relaxed text-left">{msg.text}</p>
-                          <span className="text-[9px] text-white/60 block text-right mt-0.5">
-                            {msg.timestamp}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-
-                {/* Starter Prompt Cards (Only on initial state) */}
-                {isInitialState && (
-                  <div className="pt-1">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      {chatbot.starterPrompts.map((prompt, idx) => {
-                        const Icon = prompt.icon;
-                        return (
-                          <button
-                            key={idx}
-                            type="button"
-                            onClick={() => handleSendMessage(prompt.query)}
-                            className="flex items-start gap-2.5 p-2.5 rounded-xl bg-white/[0.08] hover:bg-white/[0.16] border border-white/20 hover:border-white/35 transition-all text-left group cursor-pointer"
-                          >
-                            <div className="w-6 h-6 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center text-pAccent shrink-0 group-hover:scale-105 transition-transform">
-                              <Icon size={13} />
-                            </div>
-                            <div className="min-w-0">
-                              <p className="text-xs font-semibold text-white group-hover:text-pAccent transition-colors truncate">
-                                {prompt.title}
-                              </p>
-                              <p className="text-[10px] text-white/60 truncate">
-                                {prompt.desc}
-                              </p>
-                            </div>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-
-                {/* Typing Indicator */}
-                {isTyping && (
-                  <div className="flex items-start gap-2.5 max-w-[95%]">
-                    <div className="w-6 h-6 rounded-full bg-white/15 border border-white/25 flex items-center justify-center text-pAccent shrink-0 mt-0.5">
-                      <Bot size={13} />
-                    </div>
-                    <div className="bg-white/[0.1] border border-white/20 rounded-2xl rounded-tl-sm px-3.5 py-2.5 flex items-center gap-1 text-white/60 text-xs">
-                      <span className="w-1.5 h-1.5 rounded-full bg-pAccent animate-bounce" />
-                      <span
-                        className="w-1.5 h-1.5 rounded-full bg-pAccent animate-bounce"
-                        style={{ animationDelay: "0.15s" }}
-                      />
-                      <span
-                        className="w-1.5 h-1.5 rounded-full bg-pAccent animate-bounce"
-                        style={{ animationDelay: "0.3s" }}
-                      />
-                    </div>
-                  </div>
-                )}
-
-                <div ref={chatEndRef} />
-              </div>
-
-              {/* Clean Input Area */}
-              <div className="p-3 sm:p-3.5 border-t border-white/15 bg-white/[0.03]">
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    handleSendMessage();
+                {/* Modal Card (Light VisionOS Frosted Glass) */}
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.94, y: 15 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                  transition={{ type: "spring", stiffness: 450, damping: 32 }}
+                  className="relative w-full max-w-lg h-[520px] max-h-[85dvh] flex flex-col rounded-2xl sm:rounded-3xl border border-white/30 overflow-hidden z-10 font-jakarta shadow-2xl"
+                  style={{
+                    background:
+                      "linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(32, 32, 44, 0.72) 50%, rgba(18, 18, 26, 0.82) 100%)",
+                    backdropFilter: "blur(32px) saturate(200%)",
+                    WebkitBackdropFilter: "blur(32px) saturate(200%)",
+                    boxShadow: `
+                      0 24px 64px -12px rgba(0, 0, 0, 0.55),
+                      0 8px 24px -4px rgba(0, 0, 0, 0.35),
+                      inset 0 1.2px 1px 0 rgba(255, 255, 255, 0.5),
+                      inset 0 -1px 2px 0 rgba(0, 0, 0, 0.3)
+                    `,
                   }}
-                  className="relative flex items-center"
                 >
-                  <input
-                    ref={inputRef}
-                    type="text"
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    placeholder={chatbot.inputPlaceholder}
-                    className="w-full bg-white/[0.1] hover:bg-white/[0.14] focus:bg-white/[0.18] text-white placeholder-white/50 text-xs sm:text-[13px] rounded-full pl-4 pr-11 py-2.5 sm:py-3 border border-white/25 focus:border-white/50 focus:outline-none transition-all"
-                  />
-                  <button
-                    type="submit"
-                    disabled={!inputValue.trim() || isTyping}
-                    className="absolute right-1.5 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/20 hover:bg-pAccent hover:text-black disabled:opacity-30 disabled:hover:bg-white/20 disabled:hover:text-white text-white flex items-center justify-center transition-all cursor-pointer"
-                  >
-                    <Send size={12} />
-                  </button>
-                </form>
+                  {/* Clean Minimal Header */}
+                  <div className="flex items-center justify-between px-4 sm:px-5 py-3.5 border-b border-white/15 bg-white/[0.04] shrink-0">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-7 h-7 rounded-full bg-white/20 border border-white/30 flex items-center justify-center text-white shadow-inner">
+                        <Bot size={15} className="text-pAccent" />
+                      </div>
+                      <h3 className="text-xs sm:text-sm font-semibold text-white tracking-wide">
+                        {chatbot.botName}
+                      </h3>
+                    </div>
+
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={handleClearChat}
+                        title="Reset Conversation"
+                        className="p-1.5 rounded-lg text-white/65 hover:text-white hover:bg-white/15 transition-colors cursor-pointer"
+                      >
+                        <RotateCcw size={14} />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setIsOpen(false)}
+                        title="Close (Esc)"
+                        className="p-1.5 rounded-lg text-white/65 hover:text-white hover:bg-white/15 transition-colors cursor-pointer"
+                      >
+                        <X size={16} />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Messages Area */}
+                  <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-3.5 text-xs sm:text-[13px]">
+                    {messages.map((msg) => {
+                      const isBot = msg.sender === "bot";
+                      return (
+                        <div
+                          key={msg.id}
+                          className={`flex flex-col ${isBot ? "items-start" : "items-end"}`}
+                        >
+                          {isBot ? (
+                            <div className="flex items-start gap-2.5 max-w-[95%]">
+                              <div className="w-6 h-6 rounded-full bg-white/15 border border-white/25 flex items-center justify-center text-pAccent shrink-0 mt-0.5">
+                                <Bot size={13} />
+                              </div>
+                              <div className="flex-1 bg-white/[0.1] hover:bg-white/[0.14] border border-white/20 rounded-2xl rounded-tl-sm p-3 sm:p-3.5 text-white/95 shadow-sm transition-colors text-left">
+                                <div className="space-y-1 text-left">
+                                  {renderMessageContent(msg.text)}
+                                </div>
+                                <div className="flex items-center justify-between mt-2 pt-1.5 border-t border-white/10 text-[10px] text-white/50">
+                                  <span>{msg.timestamp}</span>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleCopyText(msg.text, msg.id)}
+                                    className="flex items-center gap-1 text-white/50 hover:text-white transition-colors cursor-pointer"
+                                  >
+                                    {copiedId === msg.id ? (
+                                      <>
+                                        <Check size={11} className="text-emerald-400" />
+                                        <span className="text-emerald-400">Copied</span>
+                                      </>
+                                    ) : (
+                                      <>
+                                        <Copy size={11} />
+                                        <span>Copy</span>
+                                      </>
+                                    )}
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="max-w-[85%] bg-white/[0.22] border border-white/30 text-white rounded-2xl rounded-tr-xs px-3.5 py-2 shadow-sm font-medium text-left">
+                              <p className="leading-relaxed text-left">{msg.text}</p>
+                              <span className="text-[9px] text-white/60 block text-right mt-0.5">
+                                {msg.timestamp}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+
+                    {/* Horizontal Smooth-Scroll Carousel (Only on initial state) */}
+                    {isInitialState && (
+                      <div className="pt-2 space-y-2">
+                        <div className="flex items-center justify-between px-1 text-[11px] font-medium text-white/50 tracking-wide">
+                          <div className="flex items-center gap-1.5">
+                            <Sparkles size={11} className="text-pAccent animate-pulse" />
+                            <span>Suggested Topics</span>
+                          </div>
+                          <span className="text-[10px] text-white/35 select-none">Swipe / scroll →</span>
+                        </div>
+
+                        {/* Carousel Scroll Track with clean single-line layout */}
+                        <div className="relative -mx-1">
+                          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar scroll-smooth px-1 py-1 snap-x snap-mandatory">
+                            {chatbot.starterPrompts.map((prompt, idx) => {
+                              const Icon = prompt.icon;
+                              return (
+                                <motion.button
+                                  key={idx}
+                                  type="button"
+                                  whileHover={{ y: -1.5, scale: 1.02 }}
+                                  whileTap={{ scale: 0.96 }}
+                                  onClick={() => handleSendMessage(prompt.query)}
+                                  className="group relative flex items-center gap-2 px-3.5 py-2 rounded-full bg-white/[0.08] hover:bg-white/[0.18] border border-white/20 hover:border-pAccent/50 backdrop-blur-xl transition-all duration-200 cursor-pointer shadow-sm hover:shadow-[0_4px_16px_rgba(0,0,0,0.3)] shrink-0 select-none text-left snap-start"
+                                >
+                                  {/* Specular sheen on hover */}
+                                  <div className="absolute inset-0 rounded-full bg-gradient-to-r from-white/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+
+                                  {/* Glowing accent icon badge */}
+                                  <div className="w-5 h-5 rounded-full bg-pAccent/15 border border-pAccent/25 flex items-center justify-center text-pAccent group-hover:bg-pAccent group-hover:text-black transition-all shrink-0">
+                                    <Icon size={11} />
+                                  </div>
+
+                                  {/* Label */}
+                                  <span className="text-xs font-medium text-white/90 group-hover:text-white transition-colors whitespace-nowrap">
+                                    {prompt.title}
+                                  </span>
+
+                                  {/* Mini arrow */}
+                                  <ArrowUpRight
+                                    size={12}
+                                    className="text-white/35 group-hover:text-pAccent group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0"
+                                  />
+                                </motion.button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Typing Indicator */}
+                    {isTyping && (
+                      <div className="flex items-start gap-2.5 max-w-[95%]">
+                        <div className="w-6 h-6 rounded-full bg-white/15 border border-white/25 flex items-center justify-center text-pAccent shrink-0 mt-0.5">
+                          <Bot size={13} />
+                        </div>
+                        <div className="bg-white/[0.1] border border-white/20 rounded-2xl rounded-tl-sm px-3.5 py-2.5 flex items-center gap-1 text-white/60 text-xs">
+                          <span className="w-1.5 h-1.5 rounded-full bg-pAccent animate-bounce" />
+                          <span
+                            className="w-1.5 h-1.5 rounded-full bg-pAccent animate-bounce"
+                            style={{ animationDelay: "0.15s" }}
+                          />
+                          <span
+                            className="w-1.5 h-1.5 rounded-full bg-pAccent animate-bounce"
+                            style={{ animationDelay: "0.3s" }}
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    <div ref={chatEndRef} />
+                  </div>
+
+                  {/* Clean Input Area */}
+                  <div className="p-3 sm:p-3.5 border-t border-white/15 bg-white/[0.03] shrink-0">
+                    <form
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        handleSendMessage();
+                      }}
+                      className="relative flex items-center w-full"
+                    >
+                      <input
+                        ref={inputRef}
+                        type="text"
+                        value={inputValue}
+                        onChange={(e) => setInputValue(e.target.value)}
+                        placeholder={chatbot.inputPlaceholder}
+                        className="w-full bg-white/[0.1] hover:bg-white/[0.14] focus:bg-white/[0.18] text-white placeholder-white/50 text-base sm:text-xs md:text-[13px] rounded-full pl-4 pr-11 py-2.5 sm:py-3 border border-white/25 focus:border-white/50 focus:outline-none transition-all"
+                      />
+                      <button
+                        type="submit"
+                        disabled={!inputValue.trim() || isTyping}
+                        className="absolute right-1.5 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/20 hover:bg-pAccent hover:text-black disabled:opacity-30 disabled:hover:bg-white/20 disabled:hover:text-white text-white flex items-center justify-center transition-all cursor-pointer shrink-0 z-10"
+                      >
+                        <Send size={12} />
+                      </button>
+                    </form>
+                  </div>
+                </motion.div>
               </div>
-            </motion.div>
-          </div>
+            )}
+          </AnimatePresence>,
+          document.body
         )}
-      </AnimatePresence>
     </>
   );
 }

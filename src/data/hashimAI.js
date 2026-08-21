@@ -85,6 +85,24 @@ export function generateLocalResponse(userMessage) {
       `He focuses on practical AI systems that drive measurable business automation.`;
   }
 
+  // 4.5. UI / UX Design & Philosophy
+  if (
+    q.includes("ui") ||
+    q.includes("ux") ||
+    q.includes("design") ||
+    q.includes("figma") ||
+    q.includes("interaction") ||
+    q.includes("animation") ||
+    q.includes("frontend design")
+  ) {
+    return `### 🎨 Hashim's UI/UX & Product Design Expertise\n\n` +
+      `Hashim bridges technical engineering logic with high-fidelity visual design:\n\n` +
+      `- **Design Systems & Prototyping:** Wireframing, interactive prototyping, and component-driven design systems crafted in **Figma**.\n` +
+      `- **Physics-Based Micro-Interactions:** Delivering fluid web interfaces powered by **Framer Motion**, Tailwind CSS, and custom specular shader effects.\n` +
+      `- **Design Aesthetic:** Frosted glassmorphism, responsive editorial typography, and high-contrast accessibility.\n\n` +
+      `💡 *Philosophy:* "${portfolioData.about.philosophy.description}"`;
+  }
+
   // 5. Specific Projects
   if (
     q.includes("project") ||
