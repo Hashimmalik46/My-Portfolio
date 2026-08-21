@@ -423,6 +423,7 @@ export default function ResumeModal({ isOpen, onClose }) {
             <div
               ref={printAreaRef}
               id="ats-resume-document"
+              data-lenis-prevent="true"
               className={`flex-1 overflow-y-auto bg-white text-[#111827] select-text text-left rounded-b-2xl sm:rounded-b-3xl ${
                 activeTemplate === "compact"
                   ? "p-4 sm:p-7 text-[11.5px] leading-snug"

@@ -70,7 +70,7 @@ function DynamicGlassContainer({
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className={`relative rounded-full transition-all duration-300 ${className}`}
+      className={`relative isolate rounded-full transition-all duration-300 transform-gpu ${className}`}
       style={{
         background:
           "linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.10) 40%, rgba(20, 20, 30, 0.42) 100%)",
@@ -141,7 +141,15 @@ function Navbar({ isLoading = false }) {
   }, [isScrolled]);
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50 pointer-events-none">
+    <header
+      className="fixed top-0 left-0 w-full z-50 pointer-events-none isolate transform-gpu"
+      style={{
+        WebkitTransform: "translate3d(0, 0, 0)",
+        transform: "translate3d(0, 0, 0)",
+        WebkitBackfaceVisibility: "hidden",
+        backfaceVisibility: "hidden",
+      }}
+    >
       {/* 1. Full Top Navbar (Hero State - Original 3-column Layout) */}
       <nav
         className={`w-full flex items-center justify-between px-6 md:px-16 py-6 transition-all duration-400 ease-out ${
@@ -177,7 +185,7 @@ function Navbar({ isLoading = false }) {
                     onMouseLeave={() => setHoveredIndex(null)}
                     whileHover={{ scale: 1.15, y: -1 }}
                     whileTap={{ scale: 0.9 }}
-                    className="relative flex items-center justify-center w-8 h-8 rounded-full text-white/80 hover:text-white transition-colors duration-200"
+                    className="relative isolate flex items-center justify-center w-8 h-8 rounded-full text-white/80 hover:text-white transition-colors duration-200"
                   >
                     {/* Apple VisionOS / macOS Dock Sliding Glass Capsule */}
                     {isItemHovered && (
@@ -254,7 +262,13 @@ function Navbar({ isLoading = false }) {
       </nav>
 
       {/* 2. Floating Pill Navbar (Authentic Apple Glass Pill on Scroll) */}
-      <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
+      <div
+        className="fixed top-6 left-1/2 -translate-x-1/2 z-50 pointer-events-none isolate transform-gpu"
+        style={{
+          WebkitTransform: "translate3d(-50%, 0, 0)",
+          transform: "translate3d(-50%, 0, 0)",
+        }}
+      >
         <AnimatePresence>
           {isScrolled && (
             <motion.div
@@ -314,7 +328,7 @@ function Navbar({ isLoading = false }) {
                             whileHover={{ scale: 1.15, y: -1 }}
                             whileTap={{ scale: 0.9 }}
                             onClick={() => setIsExpanded(false)}
-                            className="relative flex items-center justify-center w-8 h-8 rounded-full text-white/80 hover:text-white transition-colors group"
+                            className="relative isolate flex items-center justify-center w-8 h-8 rounded-full text-white/80 hover:text-white transition-colors group"
                           >
                             {/* Glass Dock Hover Capsule */}
                             {isLinkHovered && (

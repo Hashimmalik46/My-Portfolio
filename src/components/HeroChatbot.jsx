@@ -428,7 +428,10 @@ export default function HeroChatbot() {
                   </div>
 
                   {/* Messages Area */}
-                  <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-3.5 text-xs sm:text-[13px]">
+                  <div
+                    data-lenis-prevent="true"
+                    className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-3.5 text-xs sm:text-[13px]"
+                  >
                     {messages.map((msg, idx) => {
                       const isBot = msg.sender === "bot";
                       const isLatest = idx === messages.length - 1;
@@ -494,7 +497,10 @@ export default function HeroChatbot() {
 
                         {/* Carousel Scroll Track with clean single-line layout */}
                         <div className="relative -mx-1">
-                          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar scroll-smooth px-1 py-1 snap-x snap-mandatory">
+                          <div
+                            data-lenis-prevent="true"
+                            className="flex items-center gap-2 overflow-x-auto no-scrollbar scroll-smooth px-1 py-1 snap-x snap-mandatory"
+                          >
                             {chatbot.starterPrompts.map((prompt, idx) => {
                               const Icon = prompt.icon;
                               return (

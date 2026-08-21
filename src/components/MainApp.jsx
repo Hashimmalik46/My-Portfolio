@@ -101,6 +101,9 @@ function MainApp({ isLoading = false }) {
       {/* Global Scroll Progress Bar */}
       <ScrollProgress />
 
+      {/* Global Floating & Top Navbar */}
+      <Navbar isLoading={isLoading} />
+
       {/* Hero Section */}
       <section
         id="Home"
@@ -112,11 +115,6 @@ function MainApp({ isLoading = false }) {
         {/* Dark Video Overlay & Edge Gradient */}
         <div className="absolute inset-0 bg-black/40 z-0 pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/30 z-0 pointer-events-none" />
-
-        {/* Navbar */}
-        <div className="w-full relative z-50">
-          <Navbar isLoading={isLoading} />
-        </div>
 
         {/* Hero Content */}
         <Hero isLoading={isLoading} />
