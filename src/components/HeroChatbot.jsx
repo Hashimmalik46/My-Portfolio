@@ -348,7 +348,7 @@ export default function HeroChatbot() {
               <Sparkles size={11} className="text-white animate-pulse" />
             </div>
             <span className="text-xs font-medium text-white/80 group-hover:text-white transition-colors truncate">
-              Ask Hashim AI...
+              {`Ask ${chatbot.botName || "HashAI"}...`}
             </span>
           </div>
           <div className="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center text-white/60 group-hover:text-white group-hover:bg-white/20 transition-all shrink-0">
@@ -358,24 +358,27 @@ export default function HeroChatbot() {
 
         {/* Quick-Tap Prompt Chips (Desktop-Only, hidden on phones & tablets) */}
         <div className="hidden xl:flex items-center justify-center gap-1.5 w-full flex-wrap">
-          {[
-            {
-              label: "Projects",
-              icon: FolderGit2,
-              query: "What projects have you built?",
-            },
-            {
-              label: "Skills",
-              icon: Code2,
-              query: "What is your tech stack and expertise?",
-            },
-            {
-              label: "Experience",
-              icon: Briefcase,
-              query: "Tell me about your background and experience",
-            },
-          ].map((chip, idx) => {
-            const IconComp = chip.icon;
+          {(chatbot.starterPrompts && chatbot.starterPrompts.length > 0
+            ? chatbot.starterPrompts.slice(0, 3)
+            : [
+                {
+                  title: "Projects",
+                  icon: FolderGit2,
+                  query: "What projects have you built?",
+                },
+                {
+                  title: "Skills",
+                  icon: Code2,
+                  query: "What is your tech stack and expertise?",
+                },
+                {
+                  title: "Experience",
+                  icon: Briefcase,
+                  query: "Tell me about your background and experience",
+                },
+              ]
+          ).map((chip, idx) => {
+            const IconComp = chip.icon || Sparkles;
             return (
               <motion.button
                 key={idx}
@@ -386,7 +389,7 @@ export default function HeroChatbot() {
                 className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/[0.08] hover:bg-white/[0.18] active:bg-white/[0.22] border border-white/15 hover:border-white/30 backdrop-blur-xl text-[11px] font-medium text-white/75 hover:text-white transition-all shadow-sm cursor-pointer whitespace-nowrap group"
               >
                 <IconComp size={11} className="text-white/90 group-hover:text-white group-hover:scale-110 transition-transform shrink-0" />
-                <span>{chip.label}</span>
+                <span>{chip.title || chip.label}</span>
               </motion.button>
             );
           })}
