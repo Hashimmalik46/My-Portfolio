@@ -88,7 +88,7 @@ export const portfolioData = {
       highlight1: "code",
       connector: "with",
       highlight2: "creativity",
-      suffix: ".",
+      suffix: " to build digital experiences.",
     },
     ctaButtons: {
       primary: {
@@ -103,7 +103,7 @@ export const portfolioData = {
     philosophyCard: {
       badgeNumber: "00",
       badgeLabel: "Philosophy",
-      text: "Crafting scalable web systems & bespoke digital experiences with high attention to aesthetics and performance.",
+      text: "I’ve never been too interested in what’s considered difficult or impossible. If it sparks my curiosity, I want to explore it, understand it, and see how far I can take it.",
     },
     // Audio Configuration:
     // "simple" = minimalist ambient audio sound toggle / mute button

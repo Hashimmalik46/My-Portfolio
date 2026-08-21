@@ -99,9 +99,9 @@ function useAmbientAudio(playlist = [], audioSrc = "/audio/ambient_1.mp3") {
     playlist && playlist.length > 0
       ? playlist
       : [
-          { id: 1, title: "Ambient Flow 01", src: audioSrc || "/audio/ambient_1.mp3" },
-          { id: 2, title: "Ambient Flow 02", src: "/audio/ambient_2.mp3" },
-        ];
+        { id: 1, title: "Ambient Flow 01", src: audioSrc || "/audio/ambient_1.mp3" },
+        { id: 2, title: "Ambient Flow 02", src: "/audio/ambient_2.mp3" },
+      ];
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
@@ -226,9 +226,8 @@ function TopRightStatusDock({
             {/* Vinyl Disc Artwork Badge */}
             <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-white/25 via-white/10 to-white/15 border border-white/30 flex items-center justify-center shadow-inner shrink-0">
               <Disc3
-                className={`w-4 h-4 text-emerald-300 ${
-                  isPlaying ? "animate-spin" : "opacity-80"
-                }`}
+                className={`w-4 h-4 text-emerald-300 ${isPlaying ? "animate-spin" : "opacity-80"
+                  }`}
                 style={{ animationDuration: "3.5s" }}
               />
             </div>
@@ -247,32 +246,28 @@ function TopRightStatusDock({
           {/* Dynamic Sound Equalizer Waves */}
           <div className="flex items-end gap-[2.5px] h-3.5 px-1 shrink-0">
             <span
-              className={`w-[2px] rounded-full transition-all duration-300 ${
-                isPlaying
+              className={`w-[2px] rounded-full transition-all duration-300 ${isPlaying
                   ? "h-3.5 bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)] animate-pulse"
                   : "h-1 bg-white/40"
-              }`}
+                }`}
             />
             <span
-              className={`w-[2px] rounded-full transition-all duration-300 ${
-                isPlaying
+              className={`w-[2px] rounded-full transition-all duration-300 ${isPlaying
                   ? "h-2 bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)] animate-[pulse_0.7s_ease-in-out_infinite_0.2s]"
                   : "h-1 bg-white/40"
-              }`}
+                }`}
             />
             <span
-              className={`w-[2px] rounded-full transition-all duration-300 ${
-                isPlaying
+              className={`w-[2px] rounded-full transition-all duration-300 ${isPlaying
                   ? "h-4 bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)] animate-[pulse_0.85s_ease-in-out_infinite_0.4s]"
                   : "h-1 bg-white/40"
-              }`}
+                }`}
             />
             <span
-              className={`w-[2px] rounded-full transition-all duration-300 ${
-                isPlaying
+              className={`w-[2px] rounded-full transition-all duration-300 ${isPlaying
                   ? "h-2.5 bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)] animate-[pulse_0.6s_ease-in-out_infinite_0.1s]"
                   : "h-1 bg-white/40"
-              }`}
+                }`}
             />
           </div>
         </div>
@@ -386,22 +381,19 @@ export function FloatingBottomRightDiscPlayer({
       <motion.div
         layout
         transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-        className={`h-10 rounded-full bg-white/[0.13] hover:bg-white/[0.18] border border-white/30 hover:border-white/45 backdrop-blur-2xl backdrop-saturate-[200%] shadow-[0_16px_40px_rgba(0,0,0,0.4),0_0_20px_rgba(255,255,255,0.1),inset_0_1.5px_1px_rgba(255,255,255,0.6)] flex items-center overflow-hidden transition-colors ${
-          isOpen ? "px-3 gap-2 sm:gap-2.5 max-w-[90vw]" : "w-10 justify-center cursor-pointer"
-        }`}
+        className={`h-10 rounded-full bg-white/[0.13] hover:bg-white/[0.18] border border-white/30 hover:border-white/45 backdrop-blur-2xl backdrop-saturate-[200%] shadow-[0_16px_40px_rgba(0,0,0,0.4),0_0_20px_rgba(255,255,255,0.1),inset_0_1.5px_1px_rgba(255,255,255,0.6)] flex items-center overflow-hidden transition-colors ${isOpen ? "px-3 gap-2 sm:gap-2.5 max-w-[90vw]" : "w-10 justify-center cursor-pointer"
+          }`}
         onClick={!isOpen ? () => setIsOpen(true) : undefined}
       >
         {/* Left: Spinning Vinyl Disc Icon */}
         <div
           onClick={isOpen ? () => setIsOpen(false) : undefined}
-          className={`w-6 h-6 rounded-full bg-white/20 border border-white/30 flex items-center justify-center shrink-0 ${
-            isOpen ? "cursor-pointer" : ""
-          }`}
+          className={`w-6 h-6 rounded-full bg-white/20 border border-white/30 flex items-center justify-center shrink-0 ${isOpen ? "cursor-pointer" : ""
+            }`}
         >
           <Disc3
-            className={`w-3.5 h-3.5 text-emerald-300 ${
-              isPlaying ? "animate-spin" : "opacity-80"
-            }`}
+            className={`w-3.5 h-3.5 text-emerald-300 ${isPlaying ? "animate-spin" : "opacity-80"
+              }`}
             style={{ animationDuration: "3.5s" }}
           />
         </div>
@@ -429,19 +421,16 @@ export function FloatingBottomRightDiscPlayer({
               {/* Live Mini Sound Wave Bars */}
               <div className="flex items-end gap-[2px] h-3 px-0.5 shrink-0">
                 <span
-                  className={`w-[2px] rounded-full transition-all duration-300 ${
-                    isPlaying ? "h-3 bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)] animate-pulse" : "h-1 bg-white/40"
-                  }`}
+                  className={`w-[2px] rounded-full transition-all duration-300 ${isPlaying ? "h-3 bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)] animate-pulse" : "h-1 bg-white/40"
+                    }`}
                 />
                 <span
-                  className={`w-[2px] rounded-full transition-all duration-300 ${
-                    isPlaying ? "h-2 bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)] animate-[pulse_0.7s_ease-in-out_infinite_0.2s]" : "h-1 bg-white/40"
-                  }`}
+                  className={`w-[2px] rounded-full transition-all duration-300 ${isPlaying ? "h-2 bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)] animate-[pulse_0.7s_ease-in-out_infinite_0.2s]" : "h-1 bg-white/40"
+                    }`}
                 />
                 <span
-                  className={`w-[2px] rounded-full transition-all duration-300 ${
-                    isPlaying ? "h-3.5 bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)] animate-[pulse_0.85s_ease-in-out_infinite_0.4s]" : "h-1 bg-white/40"
-                  }`}
+                  className={`w-[2px] rounded-full transition-all duration-300 ${isPlaying ? "h-3.5 bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)] animate-[pulse_0.85s_ease-in-out_infinite_0.4s]" : "h-1 bg-white/40"
+                    }`}
                 />
               </div>
 
@@ -591,32 +580,28 @@ function SimpleTopRightStatusDock({
         {/* Live Sound Equalizer Wave Bars */}
         <div className="flex items-end gap-[2.5px] h-3.5 px-1 shrink-0">
           <span
-            className={`w-[2px] rounded-full transition-all duration-300 ${
-              isPlaying
+            className={`w-[2px] rounded-full transition-all duration-300 ${isPlaying
                 ? "h-3.5 bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)] animate-pulse"
                 : "h-1 bg-white/30"
-            }`}
+              }`}
           />
           <span
-            className={`w-[2px] rounded-full transition-all duration-300 ${
-              isPlaying
+            className={`w-[2px] rounded-full transition-all duration-300 ${isPlaying
                 ? "h-2 bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)] animate-[pulse_0.7s_ease-in-out_infinite_0.2s]"
                 : "h-1 bg-white/30"
-            }`}
+              }`}
           />
           <span
-            className={`w-[2px] rounded-full transition-all duration-300 ${
-              isPlaying
+            className={`w-[2px] rounded-full transition-all duration-300 ${isPlaying
                 ? "h-4 bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)] animate-[pulse_0.85s_ease-in-out_infinite_0.4s]"
                 : "h-1 bg-white/30"
-            }`}
+              }`}
           />
           <span
-            className={`w-[2px] rounded-full transition-all duration-300 ${
-              isPlaying
+            className={`w-[2px] rounded-full transition-all duration-300 ${isPlaying
                 ? "h-2.5 bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)] animate-[pulse_0.6s_ease-in-out_infinite_0.1s]"
                 : "h-1 bg-white/30"
-            }`}
+              }`}
           />
         </div>
       </motion.button>
@@ -672,25 +657,22 @@ function SimpleFloatingAudioButton({ audioPlayer }) {
         {/* Live Sound Equalizer Wave Bars */}
         <div className="flex items-end gap-[2px] h-3 px-0.5 shrink-0">
           <span
-            className={`w-[2px] rounded-full transition-all duration-300 ${
-              isPlaying
+            className={`w-[2px] rounded-full transition-all duration-300 ${isPlaying
                 ? "h-3 bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)] animate-pulse"
                 : "h-1 bg-white/30"
-            }`}
+              }`}
           />
           <span
-            className={`w-[2px] rounded-full transition-all duration-300 ${
-              isPlaying
+            className={`w-[2px] rounded-full transition-all duration-300 ${isPlaying
                 ? "h-2 bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)] animate-[pulse_0.7s_ease-in-out_infinite_0.2s]"
                 : "h-1 bg-white/30"
-            }`}
+              }`}
           />
           <span
-            className={`w-[2px] rounded-full transition-all duration-300 ${
-              isPlaying
+            className={`w-[2px] rounded-full transition-all duration-300 ${isPlaying
                 ? "h-3.5 bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)] animate-[pulse_0.85s_ease-in-out_infinite_0.4s]"
                 : "h-1 bg-white/30"
-            }`}
+              }`}
           />
         </div>
       </motion.button>
@@ -715,11 +697,10 @@ function AppleGlassButton({
       href={href}
       whileHover={{ scale: 1.05, y: -2 }}
       whileTap={{ scale: 0.95 }}
-      className={`group relative isolate inline-flex items-center justify-center px-4.5 sm:px-8 py-2.5 sm:py-3.5 rounded-full font-jakarta text-xs sm:text-sm font-semibold tracking-wide whitespace-nowrap transition-all duration-300 select-none overflow-hidden shrink-0 ${
-        isPrimary
+      className={`group relative isolate inline-flex items-center justify-center px-4.5 sm:px-8 py-2.5 sm:py-3.5 rounded-full font-jakarta text-xs sm:text-sm font-semibold tracking-wide whitespace-nowrap transition-all duration-300 select-none overflow-hidden shrink-0 ${isPrimary
           ? "text-black shadow-[0_12px_36px_rgba(255,255,255,0.22),0_4px_16px_rgba(0,0,0,0.4)] hover:shadow-[0_16px_44px_rgba(255,255,255,0.35),0_6px_20px_rgba(0,0,0,0.5)] border border-white/90"
           : "text-white shadow-[0_12px_36px_rgba(0,0,0,0.45),inset_0_1px_1px_rgba(255,255,255,0.3)] hover:shadow-[0_16px_40px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.45)] border border-white/20 hover:border-white/35"
-      } ${className}`}
+        } ${className}`}
       style={{
         background: isPrimary
           ? "linear-gradient(135deg, rgba(255, 255, 255, 0.96) 0%, rgba(245, 245, 250, 0.88) 50%, rgba(235, 238, 248, 0.92) 100%)"
@@ -744,11 +725,10 @@ function AppleGlassButton({
 
       {/* Button Text */}
       <span
-        className={`relative z-10 ${
-          isPrimary
+        className={`relative z-10 ${isPrimary
             ? "drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]"
             : "drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]"
-        }`}
+          }`}
       >
         {label}
       </span>
@@ -763,12 +743,12 @@ function Hero({ isLoading = false }) {
   // When in simple mode, use dedicated ambientAudio; when in player mode, use multi-track playlist
   const activeTracks = isSimpleAudio
     ? [
-        {
-          id: 1,
-          title: hero?.ambientAudioLabel || "Ambient Audio",
-          src: hero?.ambientAudio || "/audio/ambient_3.mp3",
-        },
-      ]
+      {
+        id: 1,
+        title: hero?.ambientAudioLabel || "Ambient Audio",
+        src: hero?.ambientAudio || "/audio/ambient_3.mp3",
+      },
+    ]
     : hero?.playlist;
 
   // Single shared ambient audio controller for Hero
@@ -905,7 +885,7 @@ function Hero({ isLoading = false }) {
           </motion.div>
 
           {/* AI Chat Bar directly in upper mobile/tablet block */}
-          <div className="mt-8 sm:mt-10 w-full max-w-[325px] sm:max-w-sm mx-auto z-30 pointer-events-auto">
+          <div className="mt-8 sm:mt-10 w-full max-w-[280px] sm:max-w-[300px] mx-auto z-30 pointer-events-auto">
             <HeroChatbot />
           </div>
         </div>
@@ -974,7 +954,7 @@ function Hero({ isLoading = false }) {
       </div>
 
       {/* 4. Desktop-Only Absolute Center AI Chat Bar */}
-      <div className="hidden xl:block xl:absolute xl:bottom-8 xl:left-1/2 xl:-translate-x-1/2 w-full max-w-[325px] sm:max-w-sm mx-auto px-4 z-30 pointer-events-auto">
+      <div className="hidden xl:block xl:absolute xl:bottom-14 2xl:bottom-16 xl:left-1/2 xl:-translate-x-1/2 w-full max-w-[280px] sm:max-w-[300px] mx-auto px-4 z-30 pointer-events-auto">
         <HeroChatbot />
       </div>
     </motion.div>

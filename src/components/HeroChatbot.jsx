@@ -335,7 +335,7 @@ export default function HeroChatbot() {
   return (
     <>
       {/* 1. INTERACTIVE SEARCH BAR & PROMPT CHIPS (ALL SCREENS - CENTERED) */}
-      <div className="w-full max-w-[325px] sm:max-w-sm mx-auto flex flex-col items-center gap-2 select-none font-jakarta">
+      <div className="w-full max-w-[280px] sm:max-w-[300px] mx-auto flex flex-col items-center gap-2 select-none font-jakarta">
         {/* Main Search Pill */}
         <motion.div
           whileHover={{ scale: 1.02 }}
