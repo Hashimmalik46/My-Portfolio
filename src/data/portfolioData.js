@@ -105,11 +105,18 @@ export const portfolioData = {
       badgeLabel: "Philosophy",
       text: "Crafting scalable web systems & bespoke digital experiences with high attention to aesthetics and performance.",
     },
+    // Audio Configuration:
+    // "simple" = minimalist ambient audio sound toggle / mute button
+    // "player" = full-fledged vinyl music player with playlist & track navigation
+    audioWidgetType: "simple",
+    //Simple
+    ambientAudioLabel: "Ambient Audio",
+    ambientAudio: "/audio/ambient_3.mp3",
+    //Player
     playlist: [
       { id: 1, title: "Ambient Flow 01", src: "/audio/ambient_1.mp3" },
-      { id: 2, title: "Ambient Flow 02", src: "/audio/ambient_2.mp3" },
+      { id: 1, title: "Ambient Flow 02", src: "/audio/ambient_2.mp3" },
     ],
-    ambientAudio: "/audio/ambient_1.mp3",
     scrollText: "Scroll",
   },
 

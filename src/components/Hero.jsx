@@ -8,6 +8,8 @@ import {
   SkipForward,
   Disc3,
   X,
+  Volume2,
+  VolumeX,
 } from "lucide-react";
 import {
   FaGithub,
@@ -317,7 +319,7 @@ function TopRightStatusDock({
       </div>
 
       {/* Bottom: Quick Social Icon Launchpad */}
-      <div className="flex items-center justify-between gap-1 pt-0.5">
+      <div className="flex items-center justify-center gap-2 pt-0.5">
         {socialLinks.map((item) => {
           const IconComp = item.icon;
           return (
@@ -508,6 +510,195 @@ export function FloatingBottomRightDiscPlayer({
 }
 
 /**
+ * Simple Desktop Top-Right Status & Ambient Sound Mute Dock
+ * Minimal ambient audio toggle without playlist or track navigation
+ */
+function SimpleTopRightStatusDock({
+  location = "Srinagar, Kashmir",
+  socials = {},
+  audioPlayer,
+  label = "Ambient Audio",
+}) {
+  const [timeStr, setTimeStr] = useState("");
+  const { isPlaying, toggleSound } = audioPlayer;
+
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      setTimeStr(
+        now.toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: true,
+        })
+      );
+    };
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const socialLinks = [
+    { id: "github", label: "GitHub", href: socials.github, icon: FaGithub },
+    { id: "linkedin", label: "LinkedIn", href: socials.linkedin, icon: FaLinkedinIn },
+    { id: "twitter", label: "X / Twitter", href: socials.twitter, icon: FaXTwitter },
+    { id: "instagram", label: "Instagram", href: socials.instagram, icon: FaInstagram },
+  ].filter((item) => Boolean(item.href));
+
+  return (
+    <div className="relative flex flex-col gap-3 p-3.5 sm:p-4 rounded-3xl bg-white/[0.13] hover:bg-white/[0.18] border border-white/30 hover:border-white/45 backdrop-blur-2xl backdrop-saturate-[200%] shadow-[0_20px_50px_rgba(0,0,0,0.4),0_0_24px_rgba(255,255,255,0.1),inset_0_1.5px_1px_rgba(255,255,255,0.6)] transition-all duration-300 group select-none font-jakarta min-w-[255px] pointer-events-auto">
+      {/* Top Header: Location & Digital Clock Capsule */}
+      <div className="flex items-center justify-between gap-3 border-b border-white/15 pb-2.5">
+        <div className="flex items-center gap-1.5">
+          <Globe className="w-3.5 h-3.5 text-white/80 shrink-0" strokeWidth={1.8} />
+          <span className="text-[11px] font-semibold text-white tracking-tight">
+            {location}
+          </span>
+        </div>
+
+        <span className="text-[10px] font-mono font-medium text-white/90 px-2 py-0.5 rounded-full bg-white/[0.12] border border-white/20 tracking-tight shadow-sm">
+          {timeStr || "00:00:00"}
+        </span>
+      </div>
+
+      {/* Middle: Simple Ambient Audio Mute / Unmute Button */}
+      <motion.button
+        type="button"
+        onClick={toggleSound}
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.96 }}
+        className="flex items-center justify-between p-2.5 rounded-2xl bg-white/[0.08] hover:bg-white/[0.14] border border-white/20 hover:border-white/35 transition-all cursor-pointer shadow-[inset_0_1px_1px_rgba(255,255,255,0.25)] text-left"
+      >
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-xl bg-white/[0.12] border border-white/25 flex items-center justify-center shrink-0">
+            {isPlaying ? (
+              <Volume2 className="w-4 h-4 text-emerald-300 drop-shadow-[0_0_6px_rgba(52,211,153,0.6)]" />
+            ) : (
+              <VolumeX className="w-4 h-4 text-white/60" />
+            )}
+          </div>
+          <div className="flex flex-col">
+            <span className="text-xs font-semibold text-white tracking-tight">
+              {label}
+            </span>
+            <span className="text-[9.5px] font-mono text-white/60 tracking-wide uppercase">
+              {isPlaying ? "Sound Active" : "Sound Muted"}
+            </span>
+          </div>
+        </div>
+
+        {/* Live Sound Equalizer Wave Bars */}
+        <div className="flex items-end gap-[2.5px] h-3.5 px-1 shrink-0">
+          <span
+            className={`w-[2px] rounded-full transition-all duration-300 ${
+              isPlaying
+                ? "h-3.5 bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)] animate-pulse"
+                : "h-1 bg-white/30"
+            }`}
+          />
+          <span
+            className={`w-[2px] rounded-full transition-all duration-300 ${
+              isPlaying
+                ? "h-2 bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)] animate-[pulse_0.7s_ease-in-out_infinite_0.2s]"
+                : "h-1 bg-white/30"
+            }`}
+          />
+          <span
+            className={`w-[2px] rounded-full transition-all duration-300 ${
+              isPlaying
+                ? "h-4 bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)] animate-[pulse_0.85s_ease-in-out_infinite_0.4s]"
+                : "h-1 bg-white/30"
+            }`}
+          />
+          <span
+            className={`w-[2px] rounded-full transition-all duration-300 ${
+              isPlaying
+                ? "h-2.5 bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)] animate-[pulse_0.6s_ease-in-out_infinite_0.1s]"
+                : "h-1 bg-white/30"
+            }`}
+          />
+        </div>
+      </motion.button>
+
+      {/* Bottom: Quick Social Icon Launchpad */}
+      <div className="flex items-center justify-center gap-2 pt-0.5">
+        {socialLinks.map((item) => {
+          const IconComp = item.icon;
+          return (
+            <motion.a
+              key={item.id}
+              href={item.href}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={item.label}
+              whileHover={{ scale: 1.12, y: -2 }}
+              whileTap={{ scale: 0.92 }}
+              className="w-8 h-8 rounded-xl bg-white/[0.10] hover:bg-white/[0.28] border border-white/18 hover:border-white/45 flex items-center justify-center text-white/85 hover:text-white transition-all duration-200 shadow-sm"
+            >
+              <IconComp size={13} />
+            </motion.a>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Simple Mobile & Tablet Floating Mute/Sound Toggle Button
+ */
+function SimpleFloatingAudioButton({ audioPlayer }) {
+  const { isPlaying, toggleSound } = audioPlayer;
+
+  return (
+    <div className="xl:hidden absolute top-[0px] sm:top-[68px] right-3 sm:right-12 z-30 pointer-events-auto select-none font-jakarta flex justify-end">
+      <motion.button
+        type="button"
+        onClick={toggleSound}
+        whileTap={{ scale: 0.9 }}
+        whileHover={{ scale: 1.05 }}
+        aria-label={isPlaying ? "Mute Ambient Sound" : "Play Ambient Sound"}
+        className="h-10 px-3.5 rounded-full bg-white/[0.13] hover:bg-white/[0.2] border border-white/30 hover:border-white/45 backdrop-blur-2xl backdrop-saturate-[200%] shadow-[0_16px_40px_rgba(0,0,0,0.4),0_0_20px_rgba(255,255,255,0.1),inset_0_1.5px_1px_rgba(255,255,255,0.6)] flex items-center gap-2 cursor-pointer transition-colors"
+      >
+        <div className="w-5 h-5 rounded-full bg-white/20 border border-white/30 flex items-center justify-center shrink-0">
+          {isPlaying ? (
+            <Volume2 className="w-3 h-3 text-emerald-300" />
+          ) : (
+            <VolumeX className="w-3 h-3 text-white/70" />
+          )}
+        </div>
+
+        {/* Live Sound Equalizer Wave Bars */}
+        <div className="flex items-end gap-[2px] h-3 px-0.5 shrink-0">
+          <span
+            className={`w-[2px] rounded-full transition-all duration-300 ${
+              isPlaying
+                ? "h-3 bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)] animate-pulse"
+                : "h-1 bg-white/30"
+            }`}
+          />
+          <span
+            className={`w-[2px] rounded-full transition-all duration-300 ${
+              isPlaying
+                ? "h-2 bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)] animate-[pulse_0.7s_ease-in-out_infinite_0.2s]"
+                : "h-1 bg-white/30"
+            }`}
+          />
+          <span
+            className={`w-[2px] rounded-full transition-all duration-300 ${
+              isPlaying
+                ? "h-3.5 bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)] animate-[pulse_0.85s_ease-in-out_infinite_0.4s]"
+                : "h-1 bg-white/30"
+            }`}
+          />
+        </div>
+      </motion.button>
+    </div>
+  );
+}
+
+/**
  * Apple Glass Interactive Button
  * Implements real-time visionOS frosted glass (both Light/Primary and Dark/Secondary)
  */
@@ -567,10 +758,22 @@ function AppleGlassButton({
 
 function Hero({ isLoading = false }) {
   const { hero } = portfolioData;
+  const isSimpleAudio = hero?.audioWidgetType === "simple";
+
+  // When in simple mode, use dedicated ambientAudio; when in player mode, use multi-track playlist
+  const activeTracks = isSimpleAudio
+    ? [
+        {
+          id: 1,
+          title: hero?.ambientAudioLabel || "Ambient Audio",
+          src: hero?.ambientAudio || "/audio/ambient_3.mp3",
+        },
+      ]
+    : hero?.playlist;
 
   // Single shared ambient audio controller for Hero
   const audioPlayer = useAmbientAudio(
-    hero?.playlist,
+    activeTracks,
     hero?.ambientAudio
   );
 
@@ -614,22 +817,33 @@ function Hero({ isLoading = false }) {
         onEnded={audioPlayer.handleNext}
       />
 
-      {/* Top-Right Live Time, Location & Quick Socials Dock (Desktop-Only) */}
+      {/* Top-Right Live Time, Location & Audio Dock (Desktop-Only) */}
       <motion.div
         variants={itemVariants}
         className="hidden xl:flex absolute top-36 right-20 xl:right-28 2xl:right-36 z-20 pointer-events-auto"
       >
-        <TopRightStatusDock
-          location={portfolioData.personal.location}
-          socials={portfolioData.socials}
-          audioPlayer={audioPlayer}
-        />
+        {isSimpleAudio ? (
+          <SimpleTopRightStatusDock
+            location={portfolioData.personal.location}
+            socials={portfolioData.socials}
+            audioPlayer={audioPlayer}
+            label={hero.ambientAudioLabel || "Ambient Audio"}
+          />
+        ) : (
+          <TopRightStatusDock
+            location={portfolioData.personal.location}
+            socials={portfolioData.socials}
+            audioPlayer={audioPlayer}
+          />
+        )}
       </motion.div>
 
-      {/* Floating Bottom-Right Expanding Disc Pill Player (Mobile & Tablet - Home Section Only) */}
-      <FloatingBottomRightDiscPlayer
-        audioPlayer={audioPlayer}
-      />
+      {/* Floating Bottom-Right Expanding Disc Pill Player / Sound Toggle (Mobile & Tablet - Home Section Only) */}
+      {isSimpleAudio ? (
+        <SimpleFloatingAudioButton audioPlayer={audioPlayer} />
+      ) : (
+        <FloatingBottomRightDiscPlayer audioPlayer={audioPlayer} />
+      )}
 
       {/* 1. Main Editorial Headline (Top-Left on Desktop, Centered on Mobile/Tablet/iPad) */}
       <div className="flex flex-col items-center xl:items-start text-center xl:text-left">
