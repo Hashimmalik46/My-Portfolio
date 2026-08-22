@@ -59,13 +59,12 @@ export default function HeroChatbot() {
     }
   }, [messages, isTyping, isOpen]);
 
-  // Lock body scroll when modal is open
+  // Pause Lenis smooth scrolling when modal is open
   useEffect(() => {
     if (isOpen) {
-      const originalOverflow = document.body.style.overflow;
-      document.body.style.overflow = "hidden";
+      window.lenis?.stop();
       return () => {
-        document.body.style.overflow = originalOverflow;
+        window.lenis?.start();
       };
     }
   }, [isOpen]);

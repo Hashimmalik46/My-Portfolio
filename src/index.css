@@ -80,12 +80,19 @@
     scrollbar-width: none !important;
   }
 
+  /* Hardware Accelerated Layer Compositing */
+  .transform-gpu {
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+
   /* Prevent browser autofill grey/yellow tint */
   input:-webkit-autofill,
   input:-webkit-autofill:hover, 
   input:-webkit-autofill:focus, 
   textarea:-webkit-autofill,
-  textarea:-webkit-autofill:hover,
+  textarea:-webkit-autofill:hover, 
   textarea:-webkit-autofill:focus {
     -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important;
     -webkit-text-fill-color: #111827 !important;

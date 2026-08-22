@@ -89,17 +89,19 @@ function AboutImageCard({ imageSrc, imageCaption, imageTag }) {
       viewport={{ once: true, amount: 0.25 }}
       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       whileHover={{ y: -4, transition: { duration: 0.25, ease: "easeOut" } }}
-      className="relative w-full aspect-[4/3] sm:aspect-[16/10] md:aspect-[4/3] rounded-3xl overflow-hidden bg-white/40 backdrop-blur-xl border border-secondary/10 shadow-[0_20px_50px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04)] group select-none isolate"
+      className="relative w-full aspect-[4/3] sm:aspect-[16/10] md:aspect-[4/3] rounded-3xl overflow-hidden bg-white/40 backdrop-blur-xl border border-secondary/10 shadow-[0_20px_50px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04)] group select-none isolate transform-gpu"
     >
       {/* 1. Cinematic Zoom & Unblur Image Reveal on Scroll */}
       <motion.img
         src={imageSrc}
         alt={imageCaption || "Hashim Malik"}
+        loading="lazy"
+        decoding="async"
         initial={{ scale: 1.15, filter: "blur(8px)" }}
         whileInView={{ scale: 1, filter: "blur(0px)" }}
         viewport={{ once: true, amount: 0.25 }}
         transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-        className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
+        className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out transform-gpu"
       />
 
       {/* 2. Luxury Curtain Wipe Shutter with Glowing Lime Accent Edge */}

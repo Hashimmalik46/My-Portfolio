@@ -1,28 +1,37 @@
-import { useRef, useState, lazy, Suspense } from "react";
+import React, { useState, lazy, Suspense, useCallback } from "react";
 import { ArrowUpRight, Code2 } from "lucide-react";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { portfolioData } from "../data/portfolioData";
 
 const ProjectModal = lazy(() => import("./ProjectModal"));
 
-function StackingCard({ project, index, onOpenDetails }) {
-  const containerRef = useRef(null);
+// Curvy organic rotation deck angles
+const ANGLES = [-1.8, 1.6, -1.4, 1.8, -1.5, 1.4, -1.6];
 
-  // Curvy organic rotation deck angles
-  const angles = [-1.8, 1.6, -1.4, 1.8, -1.5, 1.4, -1.6];
-  const angle = angles[index % angles.length];
+const StackingCard = React.memo(function StackingCard({ project, index, onOpenDetails }) {
+  const angle = ANGLES[index % ANGLES.length];
+
+  const handleClick = (e) => {
+    e.currentTarget?.blur();
+    onOpenDetails(project);
+  };
+
+  const handleDetailsBtnClick = (e) => {
+    e.stopPropagation();
+    e.currentTarget?.blur();
+    onOpenDetails(project);
+  };
 
   return (
     <div
-      ref={containerRef}
       className="sticky top-24 sm:top-28 w-full max-w-xl sm:max-w-2xl mx-auto mb-20 sm:mb-28 md:mb-36 last:mb-0 z-10"
       style={{
         zIndex: index + 10,
       }}
     >
       <div
-        onClick={() => onOpenDetails(project)}
-        className="group relative w-full rounded-3xl bg-[#0e0f13] hover:bg-[#121319] border border-white/15 hover:border-pAccent/40 p-4 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.85),inset_0_1px_1px_rgba(255,255,255,0.2)] hover:shadow-[0_30px_70px_rgba(0,0,0,0.95),0_0_30px_rgba(168,218,34,0.12)] transition-all duration-300 flex flex-col gap-4 will-change-transform origin-center hover:scale-[1.02] hover:!rotate-0 cursor-pointer"
+        onClick={handleClick}
+        className="group relative w-full rounded-3xl bg-[#0e0f13] hover:bg-[#121319] border border-white/15 hover:border-pAccent/40 p-4 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.85),inset_0_1px_1px_rgba(255,255,255,0.2)] hover:shadow-[0_30px_70px_rgba(0,0,0,0.95),0_0_30px_rgba(168,218,34,0.12)] transition-[border-color,background-color,box-shadow,transform] duration-300 flex flex-col gap-4 will-change-transform origin-center hover:scale-[1.02] hover:!rotate-0 cursor-pointer"
         style={{
           transform: `rotate(${angle}deg)`,
           WebkitFontSmoothing: "antialiased",
@@ -34,6 +43,8 @@ function StackingCard({ project, index, onOpenDetails }) {
           <img
             src={project.img}
             alt={project.title}
+            loading="lazy"
+            decoding="async"
             className="w-full h-full object-contain rounded-xl opacity-90 group-hover:opacity-100 group-hover:scale-[1.02] transition-transform duration-500"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none rounded-xl" />
@@ -87,10 +98,7 @@ function StackingCard({ project, index, onOpenDetails }) {
             <div className="flex items-center p-0.5 rounded-full bg-white/[0.07] hover:bg-white/[0.1] border border-white/15 backdrop-blur-md shrink-0 ml-auto shadow-sm transition-colors">
               <button
                 type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onOpenDetails(project);
-                }}
+                onClick={handleDetailsBtnClick}
                 className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-white/80 hover:text-white font-jakarta font-medium text-xs transition-all hover:bg-white/10 cursor-pointer whitespace-nowrap"
               >
                 <span>Details</span>
@@ -117,12 +125,20 @@ function StackingCard({ project, index, onOpenDetails }) {
       </div>
     </div>
   );
-}
+});
 
 function Projects() {
   const { projectsSection } = portfolioData;
   const { projects, floatingImages = [] } = projectsSection;
   const [selectedProject, setSelectedProject] = useState(null);
+
+  const handleOpenDetails = useCallback((p) => {
+    setSelectedProject(p);
+  }, []);
+
+  const handleCloseDetails = useCallback(() => {
+    setSelectedProject(null);
+  }, []);
 
   return (
     <section
@@ -132,43 +148,47 @@ function Projects() {
       {/* Ambient Background Haze & Ghost Project Screen Overlays */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 select-none">
         {/* Top-Right Lime Haze Mesh Orb */}
-        <div className="absolute top-[6%] -right-24 w-[480px] sm:w-[650px] h-[480px] sm:h-[650px] rounded-full bg-pAccent/[0.08] blur-[140px]" />
+        <div className="absolute top-[6%] -right-24 w-[480px] sm:w-[650px] h-[480px] sm:h-[650px] rounded-full bg-[radial-gradient(circle_at_center,rgba(168,218,34,0.08)_0%,transparent_70%)] pointer-events-none" />
 
         {/* Mid-Left Cyan/Emerald Haze Orb */}
-        <div className="absolute top-[40%] -left-32 w-[450px] sm:w-[600px] h-[450px] sm:h-[600px] rounded-full bg-[#06b6d4]/[0.06] blur-[150px]" />
+        <div className="absolute top-[40%] -left-32 w-[450px] sm:w-[600px] h-[450px] sm:h-[600px] rounded-full bg-[radial-gradient(circle_at_center,rgba(6,182,212,0.06)_0%,transparent_70%)] pointer-events-none" />
 
         {/* Bottom-Right Deep Lime/Purple Haze Orb */}
-        <div className="absolute top-[70%] -right-24 w-[500px] sm:w-[650px] h-[500px] sm:h-[650px] rounded-full bg-[#a8da22]/[0.07] blur-[150px]" />
+        <div className="absolute top-[70%] -right-24 w-[500px] sm:w-[650px] h-[500px] sm:h-[650px] rounded-full bg-[radial-gradient(circle_at_center,rgba(168,218,34,0.07)_0%,transparent_70%)] pointer-events-none" />
 
-        {/* Dynamically Mapped Floating Ghost Project Canvases from Data */}
-        {floatingImages.map((item, idx) => {
-          const rot = item.rotation !== undefined ? item.rotation : (idx % 2 === 0 ? -3.5 : 4);
-          return (
-            <motion.div
-              key={item.id || idx}
-              animate={{
-                y: [0, idx % 2 === 0 ? -12 : 12, 0],
-                rotate: [rot, rot + (idx % 2 === 0 ? 0.8 : -0.8), rot],
-              }}
-              transition={{
-                duration: item.duration || 10,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: item.delay || idx * 0.3,
-              }}
-              className={`absolute ${item.positionClass || "top-[10%] left-[2%]"} ${item.sizeClass || "w-[280px] sm:w-[380px] lg:w-[440px]"} aspect-[16/10] rounded-3xl overflow-hidden bg-[#070709]/80 border border-white/[0.12] shadow-[0_20px_60px_rgba(0,0,0,0.85)] ${item.opacityClass || "opacity-20 sm:opacity-25"} filter ${item.blurClass || "blur-[3px] sm:blur-[5px]"}`}
-            >
-              <img
-                src={item.src}
-                alt={item.alt || ""}
-                className="w-full h-full object-cover grayscale-[25%]"
-              />
-              <div
-                className={`absolute inset-0 bg-gradient-to-tr ${item.tintGradient || "from-black/85 via-black/30 to-pAccent/15"}`}
-              />
-            </motion.div>
-          );
-        })}
+        {/* Dynamically Mapped Floating Ghost Project Canvases (rendered on desktop viewports) */}
+        <div className="hidden md:block">
+          {floatingImages.map((item, idx) => {
+            const rot = item.rotation !== undefined ? item.rotation : (idx % 2 === 0 ? -3.5 : 4);
+            return (
+              <motion.div
+                key={item.id || idx}
+                animate={{
+                  y: [0, idx % 2 === 0 ? -12 : 12, 0],
+                  rotate: [rot, rot + (idx % 2 === 0 ? 0.8 : -0.8), rot],
+                }}
+                transition={{
+                  duration: item.duration || 10,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: item.delay || idx * 0.3,
+                }}
+                className={`absolute ${item.positionClass || "top-[10%] left-[2%]"} ${item.sizeClass || "w-[280px] sm:w-[380px] lg:w-[440px]"} aspect-[16/10] rounded-3xl overflow-hidden bg-[#070709]/80 border border-white/[0.12] shadow-[0_20px_60px_rgba(0,0,0,0.85)] ${item.opacityClass || "opacity-20 sm:opacity-25"} filter ${item.blurClass || "blur-[3px] sm:blur-[5px]"} transform-gpu`}
+              >
+                <img
+                  src={item.src}
+                  alt={item.alt || ""}
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full h-full object-cover grayscale-[25%]"
+                />
+                <div
+                  className={`absolute inset-0 bg-gradient-to-tr ${item.tintGradient || "from-black/85 via-black/30 to-pAccent/15"}`}
+                />
+              </motion.div>
+            );
+          })}
+        </div>
       </div>
 
       <div className="max-w-6xl w-full flex flex-col gap-14 relative z-10">
@@ -207,7 +227,7 @@ function Projects() {
               key={project.id || index}
               project={project}
               index={index}
-              onOpenDetails={(p) => setSelectedProject(p)}
+              onOpenDetails={handleOpenDetails}
             />
           ))}
         </div>
@@ -215,13 +235,16 @@ function Projects() {
 
       {/* High-Fidelity Project Architecture & Details Modal */}
       <Suspense fallback={null}>
-        {selectedProject && (
-          <ProjectModal
-            isOpen={Boolean(selectedProject)}
-            onClose={() => setSelectedProject(null)}
-            project={selectedProject}
-          />
-        )}
+        <AnimatePresence>
+          {selectedProject && (
+            <ProjectModal
+              key={selectedProject.id || selectedProject.title || "project-modal"}
+              isOpen={Boolean(selectedProject)}
+              onClose={handleCloseDetails}
+              project={selectedProject}
+            />
+          )}
+        </AnimatePresence>
       </Suspense>
     </section>
   );

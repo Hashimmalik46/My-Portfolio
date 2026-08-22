@@ -71,8 +71,9 @@ export default function CloudPreloader({ onStartReveal }) {
     return () => clearTimeout(fallbackTimer);
   }, []);
 
-  // Real-time Subtle Pixelation Render Loop
+  // Real-time Subtle Pixelation Render Loop (automatically halts on exit to free GPU/CPU)
   useEffect(() => {
+    if (isExiting) return;
     const video = videoRef.current;
     const canvas = canvasRef.current;
     if (!video || !canvas) return;
@@ -107,7 +108,7 @@ export default function CloudPreloader({ onStartReveal }) {
     return () => {
       cancelAnimationFrame(animId);
     };
-  }, []);
+  }, [isExiting]);
 
   useEffect(() => {
     // Intercept scroll/touch gestures

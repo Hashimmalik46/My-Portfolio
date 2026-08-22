@@ -645,12 +645,15 @@ function Navbar({ isLoading = false }) {
 
     {/* ATS Resume Generation Modal */}
     <Suspense fallback={null}>
-      {isResumeOpen && (
-        <ResumeModal
-          isOpen={isResumeOpen}
-          onClose={() => setIsResumeOpen(false)}
-        />
-      )}
+      <AnimatePresence>
+        {isResumeOpen && (
+          <ResumeModal
+            key="resume-modal-nav"
+            isOpen={isResumeOpen}
+            onClose={() => setIsResumeOpen(false)}
+          />
+        )}
+      </AnimatePresence>
     </Suspense>
   </>
   );

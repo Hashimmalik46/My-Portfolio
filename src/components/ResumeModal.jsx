@@ -24,6 +24,8 @@ import {
   Linkedin,
   Github,
   Globe,
+  Target,
+  Code2,
 } from "lucide-react";
 import { portfolioData } from "../data/portfolioData";
 
@@ -58,13 +60,12 @@ export default function ResumeModal({ isOpen, onClose }) {
     }
   }, [isOpen, getDefaultResumeState]);
 
-  // Lock body scroll when modal is open
+  // Pause Lenis smooth scrolling when modal is open
   useEffect(() => {
     if (isOpen) {
-      const originalOverflow = document.body.style.overflow;
-      document.body.style.overflow = "hidden";
+      window.lenis?.stop();
       return () => {
-        document.body.style.overflow = originalOverflow;
+        window.lenis?.start();
       };
     }
   }, [isOpen]);
@@ -395,14 +396,18 @@ export default function ResumeModal({ isOpen, onClose }) {
   const modalJSX = (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 md:p-6 pointer-events-auto font-jakarta selection:bg-gray-900 selection:text-white">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 md:p-6 pointer-events-auto font-jakarta selection:bg-gray-900 selection:text-white isolate">
           {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="absolute inset-0 bg-black/65 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/65 backdrop-blur-sm transform-gpu cursor-pointer touch-manipulation select-none"
+            style={{
+              WebkitBackdropFilter: "blur(8px)",
+              WebkitTransform: "translate3d(0,0,0)",
+            }}
           />
 
           {/* Modal Outer Card (Industry Standard Clean SaaS Theme) */}
@@ -411,7 +416,10 @@ export default function ResumeModal({ isOpen, onClose }) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 8 }}
             transition={{ type: "spring", stiffness: 420, damping: 30 }}
-            className="relative w-full max-w-3xl h-[680px] max-h-[88dvh] flex flex-col rounded-2xl sm:rounded-3xl bg-white border border-gray-200 overflow-hidden z-10 font-jakarta shadow-2xl selection:bg-gray-900 selection:text-white"
+            className="relative w-full max-w-3xl h-[680px] max-h-[88dvh] flex flex-col rounded-2xl sm:rounded-3xl bg-white border border-gray-200 overflow-hidden z-10 font-jakarta shadow-2xl selection:bg-gray-900 selection:text-white transform-gpu"
+            style={{
+              WebkitTransform: "translate3d(0,0,0)",
+            }}
           >
             {/* 1. Header Main Toolbar */}
             <div className="flex items-center justify-between px-4 sm:px-5 py-3 border-b border-gray-200 bg-white shrink-0 gap-2">
@@ -753,10 +761,13 @@ export default function ResumeModal({ isOpen, onClose }) {
                 </div>
 
                 {/* 2. Target Role & Title */}
-                <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-5 shadow-xs space-y-2">
-                  <label className="block text-xs font-semibold text-gray-700">
-                    Target Job Title / Role
-                  </label>
+                <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-5 shadow-xs space-y-2.5">
+                  <div className="flex items-center justify-between pb-2 border-b border-gray-100">
+                    <label className="text-[11px] sm:text-xs font-bold text-gray-900 uppercase tracking-wider flex items-center gap-1.5 min-w-0">
+                      <Target size={14} className="text-gray-700 shrink-0" />
+                      <span>Target Job Title / Role</span>
+                    </label>
+                  </div>
                   <input
                     type="text"
                     value={customResume.targetRole || ""}
@@ -769,10 +780,13 @@ export default function ResumeModal({ isOpen, onClose }) {
                 </div>
 
                 {/* 3. Professional Summary */}
-                <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-5 shadow-xs space-y-2">
-                  <label className="block text-xs font-semibold text-gray-700">
-                    Professional Summary
-                  </label>
+                <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-5 shadow-xs space-y-2.5">
+                  <div className="flex items-center justify-between pb-2 border-b border-gray-100">
+                    <label className="text-[11px] sm:text-xs font-bold text-gray-900 uppercase tracking-wider flex items-center gap-1.5 min-w-0">
+                      <FileText size={14} className="text-gray-700 shrink-0" />
+                      <span>Professional Summary</span>
+                    </label>
+                  </div>
                   <textarea
                     rows={5}
                     value={customResume.summary || ""}
@@ -786,9 +800,12 @@ export default function ResumeModal({ isOpen, onClose }) {
 
                 {/* 4. Education Customization */}
                 <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-5 shadow-xs space-y-3">
-                  <div className="flex items-center justify-between pb-2 border-b border-gray-100">
-                    <label className="text-xs font-bold text-gray-900 uppercase tracking-wide flex items-center gap-1.5">
-                      <GraduationCap size={13} className="text-gray-700" /> Education & Credentials
+                  <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-gray-100">
+                    <label className="text-[11px] sm:text-xs font-bold text-gray-900 uppercase tracking-wider flex items-center gap-1.5 min-w-0">
+                      <GraduationCap size={14} className="text-gray-700 shrink-0" />
+                      <span className="truncate">
+                        Education <span className="hidden sm:inline">& Credentials</span>
+                      </span>
                     </label>
                     <button
                       type="button"
@@ -804,17 +821,18 @@ export default function ResumeModal({ isOpen, onClose }) {
                         ];
                         setCustomResume({ ...customResume, education: newEdu });
                       }}
-                      className="flex items-center gap-1.5 text-xs text-white bg-gray-900 hover:bg-black px-3 py-1.5 rounded-lg font-semibold transition-all shadow-xs cursor-pointer"
+                      className="flex items-center gap-1 text-[11px] sm:text-xs text-white bg-gray-900 hover:bg-black px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg font-semibold transition-all shadow-xs cursor-pointer shrink-0 whitespace-nowrap"
                     >
-                      <Plus size={12} /> Add Education
+                      <Plus size={12} className="shrink-0" />
+                      <span>Add Education</span>
                     </button>
                   </div>
 
                   <div className="space-y-3.5">
                     {customResume.education?.map((edu, eIdx) => (
                       <div key={eIdx} className="p-3.5 sm:p-4 rounded-lg bg-gray-50 border border-gray-200 space-y-3">
-                        <div className="flex items-center justify-between pb-2 border-b border-gray-200">
-                          <span className="text-xs font-bold text-gray-900">
+                        <div className="flex items-center justify-between gap-2 pb-2 border-b border-gray-200">
+                          <span className="text-xs font-bold text-gray-900 shrink-0">
                             Degree #{eIdx + 1}
                           </span>
                           <button
@@ -824,10 +842,11 @@ export default function ResumeModal({ isOpen, onClose }) {
                               newEdu.splice(eIdx, 1);
                               setCustomResume({ ...customResume, education: newEdu });
                             }}
-                            className="flex items-center gap-1 text-xs text-gray-500 hover:text-red-600 px-2 py-0.5 rounded hover:bg-gray-200/50 transition-colors font-medium"
+                            className="flex items-center gap-1 text-xs text-gray-500 hover:text-red-600 px-2 py-0.5 rounded hover:bg-gray-200/50 transition-colors font-medium shrink-0 cursor-pointer"
                             title="Delete entry"
                           >
-                            <Trash2 size={12} /> Delete
+                            <Trash2 size={12} className="shrink-0" />
+                            <span>Delete</span>
                           </button>
                         </div>
 
@@ -890,7 +909,7 @@ export default function ResumeModal({ isOpen, onClose }) {
                                 setCustomResume({ ...customResume, education: newEdu });
                               }}
                               placeholder="e.g. GPA: 3.8 / 4.0, Coursework in Algorithms & AI"
-                              className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-xs text-gray-900 shadow-xs focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 focus:outline-none transition-all resize-y min-h-[46px] leading-relaxed font-normal"
+                              className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-xs text-gray-900 placeholder:text-gray-400 shadow-xs focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 focus:outline-none transition-all resize-y min-h-[58px] leading-relaxed font-normal"
                             />
                           </div>
                         </div>
@@ -899,11 +918,12 @@ export default function ResumeModal({ isOpen, onClose }) {
                   </div>
                 </div>
 
-                {/* 4. Technical Skills Categories */}
+                {/* 5. Technical Skills Categories */}
                 <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-5 shadow-xs space-y-3">
-                  <div className="flex items-center justify-between pb-2 border-b border-gray-100">
-                    <label className="text-xs font-bold text-gray-900 uppercase tracking-wide">
-                      Technical Skills
+                  <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-gray-100">
+                    <label className="text-[11px] sm:text-xs font-bold text-gray-900 uppercase tracking-wider flex items-center gap-1.5 min-w-0">
+                      <Code2 size={14} className="text-gray-700 shrink-0" />
+                      <span className="truncate">Technical Skills</span>
                     </label>
                     <button
                       type="button"
@@ -918,9 +938,10 @@ export default function ResumeModal({ isOpen, onClose }) {
                           },
                         });
                       }}
-                      className="flex items-center gap-1.5 text-xs text-white bg-gray-900 hover:bg-black px-3 py-1.5 rounded-lg font-semibold transition-all shadow-xs cursor-pointer"
+                      className="flex items-center gap-1 text-[11px] sm:text-xs text-white bg-gray-900 hover:bg-black px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg font-semibold transition-all shadow-xs cursor-pointer shrink-0 whitespace-nowrap"
                     >
-                      <Plus size={12} /> Add Category
+                      <Plus size={12} className="shrink-0" />
+                      <span>Add Category</span>
                     </button>
                   </div>
 
@@ -972,11 +993,12 @@ export default function ResumeModal({ isOpen, onClose }) {
                   </div>
                 </div>
 
-                {/* 5. Experience Bullets */}
+                {/* 6. Experience Bullets */}
                 <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-5 shadow-xs space-y-3">
-                  <div className="flex items-center justify-between pb-2 border-b border-gray-100">
-                    <label className="text-xs font-bold text-gray-900 uppercase tracking-wide">
-                      Work Experience
+                  <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-gray-100">
+                    <label className="text-[11px] sm:text-xs font-bold text-gray-900 uppercase tracking-wider flex items-center gap-1.5 min-w-0">
+                      <Briefcase size={14} className="text-gray-700 shrink-0" />
+                      <span className="truncate">Work Experience</span>
                     </label>
                     <button
                       type="button"
@@ -993,17 +1015,18 @@ export default function ResumeModal({ isOpen, onClose }) {
                         ];
                         setCustomResume({ ...customResume, experience: newExp });
                       }}
-                      className="flex items-center gap-1.5 text-xs text-white bg-gray-900 hover:bg-black px-3 py-1.5 rounded-lg font-semibold transition-all shadow-xs cursor-pointer"
+                      className="flex items-center gap-1 text-[11px] sm:text-xs text-white bg-gray-900 hover:bg-black px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg font-semibold transition-all shadow-xs cursor-pointer shrink-0 whitespace-nowrap"
                     >
-                      <Plus size={12} /> Add Experience
+                      <Plus size={12} className="shrink-0" />
+                      <span>Add Experience</span>
                     </button>
                   </div>
 
                   <div className="space-y-3.5">
                     {customResume.experience?.map((exp, expIdx) => (
                       <div key={expIdx} className="p-3.5 sm:p-4 rounded-lg bg-gray-50 border border-gray-200 space-y-3">
-                        <div className="flex items-center justify-between pb-2 border-b border-gray-200">
-                          <span className="text-xs font-bold text-gray-900">
+                        <div className="flex items-center justify-between gap-2 pb-2 border-b border-gray-200">
+                          <span className="text-xs font-bold text-gray-900 shrink-0">
                             Position #{expIdx + 1}
                           </span>
                           <button
@@ -1013,10 +1036,11 @@ export default function ResumeModal({ isOpen, onClose }) {
                               newExp.splice(expIdx, 1);
                               setCustomResume({ ...customResume, experience: newExp });
                             }}
-                            className="flex items-center gap-1 text-xs text-gray-500 hover:text-red-600 px-2 py-0.5 rounded hover:bg-gray-200/50 transition-colors font-medium"
+                            className="flex items-center gap-1 text-xs text-gray-500 hover:text-red-600 px-2 py-0.5 rounded hover:bg-gray-200/50 transition-colors font-medium shrink-0 cursor-pointer"
                             title="Delete entry"
                           >
-                            <Trash2 size={12} /> Delete
+                            <Trash2 size={12} className="shrink-0" />
+                            <span>Delete</span>
                           </button>
                         </div>
 
@@ -1096,11 +1120,12 @@ export default function ResumeModal({ isOpen, onClose }) {
                   </div>
                 </div>
 
-                {/* 6. Projects Customization */}
+                {/* 7. Projects Customization */}
                 <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-5 shadow-xs space-y-3">
-                  <div className="flex items-center justify-between pb-2 border-b border-gray-100">
-                    <label className="text-xs font-bold text-gray-900 uppercase tracking-wide">
-                      Featured Projects
+                  <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-gray-100">
+                    <label className="text-[11px] sm:text-xs font-bold text-gray-900 uppercase tracking-wider flex items-center gap-1.5 min-w-0">
+                      <Layout size={14} className="text-gray-700 shrink-0" />
+                      <span className="truncate">Featured Projects</span>
                     </label>
                     <button
                       type="button"
@@ -1115,17 +1140,18 @@ export default function ResumeModal({ isOpen, onClose }) {
                         ];
                         setCustomResume({ ...customResume, projects: newProj });
                       }}
-                      className="flex items-center gap-1.5 text-xs text-white bg-gray-900 hover:bg-black px-3 py-1.5 rounded-lg font-semibold transition-all shadow-xs cursor-pointer"
+                      className="flex items-center gap-1 text-[11px] sm:text-xs text-white bg-gray-900 hover:bg-black px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg font-semibold transition-all shadow-xs cursor-pointer shrink-0 whitespace-nowrap"
                     >
-                      <Plus size={12} /> Add Project
+                      <Plus size={12} className="shrink-0" />
+                      <span>Add Project</span>
                     </button>
                   </div>
 
                   <div className="space-y-3.5">
                     {customResume.projects?.map((proj, pIdx) => (
                       <div key={pIdx} className="p-3.5 sm:p-4 rounded-lg bg-gray-50 border border-gray-200 space-y-3">
-                        <div className="flex items-center justify-between pb-2 border-b border-gray-200">
-                          <span className="text-xs font-bold text-gray-900">
+                        <div className="flex items-center justify-between gap-2 pb-2 border-b border-gray-200">
+                          <span className="text-xs font-bold text-gray-900 shrink-0">
                             Project #{pIdx + 1}
                           </span>
                           <button
@@ -1135,10 +1161,11 @@ export default function ResumeModal({ isOpen, onClose }) {
                               newProj.splice(pIdx, 1);
                               setCustomResume({ ...customResume, projects: newProj });
                             }}
-                            className="flex items-center gap-1 text-xs text-gray-500 hover:text-red-600 px-2 py-0.5 rounded hover:bg-gray-200/50 transition-colors font-medium"
+                            className="flex items-center gap-1 text-xs text-gray-500 hover:text-red-600 px-2 py-0.5 rounded hover:bg-gray-200/50 transition-colors font-medium shrink-0 cursor-pointer"
                             title="Delete project"
                           >
-                            <Trash2 size={12} /> Delete
+                            <Trash2 size={12} className="shrink-0" />
+                            <span>Delete</span>
                           </button>
                         </div>
 

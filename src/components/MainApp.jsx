@@ -11,28 +11,69 @@ import SkillsMarquee from "./SkillsMarquee";
 import CursorFollower from "./CursorFollower";
 
 function SeamlessBackgroundVideo({ isLoading = false }) {
+  const containerRef = useRef(null);
   const video1Ref = useRef(null);
   const video2Ref = useRef(null);
   const [activeVideo, setActiveVideo] = useState(1);
   const isTransitioning = useRef(false);
+  const isVisibleRef = useRef(true);
+  const isTouchRef = useRef(
+    typeof window !== "undefined" &&
+      (window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 768)
+  );
+
   const { hero } = portfolioData;
   const videoSrc = hero?.backgroundVideo || {
     webm: "/gallery/bg_video_2.webm",
     mp4: "/gallery/bg_video_2.MP4",
   };
 
+  // IntersectionObserver: auto-pause video decoding when off-screen to preserve 60-120fps scrolling
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el || !("IntersectionObserver" in window)) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisibleRef.current = entry.isIntersecting;
+        const v1 = video1Ref.current;
+        const v2 = video2Ref.current;
+
+        if (entry.isIntersecting) {
+          if (activeVideo === 1) v1?.play().catch(() => {});
+          else v2?.play().catch(() => {});
+        } else {
+          v1?.pause();
+          v2?.pause();
+        }
+      },
+      { threshold: 0.05 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [activeVideo]);
+
+  // Playback lifecycle & seamless loop
   useEffect(() => {
     const v1 = video1Ref.current;
     const v2 = video2Ref.current;
-    if (!v1 || !v2) return;
+    if (!v1) return;
 
-    // Start video playback immediately on mount
-    v1.play().catch(() => { });
+    // Touch/mobile devices use lightweight native loop on single video
+    if (isTouchRef.current) {
+      v1.loop = true;
+      if (isVisibleRef.current) v1.play().catch(() => {});
+      return;
+    }
+
+    if (!v2) return;
+    if (isVisibleRef.current) v1.play().catch(() => {});
 
     const crossfadeDuration = 0.8;
 
     const handleTimeUpdate1 = () => {
-      if (!v1.duration) return;
+      if (!v1.duration || !isVisibleRef.current) return;
       if (v1.currentTime >= v1.duration - crossfadeDuration && !isTransitioning.current) {
         isTransitioning.current = true;
         v2.currentTime = 0;
@@ -43,12 +84,12 @@ function SeamlessBackgroundVideo({ isLoading = false }) {
               isTransitioning.current = false;
             }, crossfadeDuration * 1000);
           })
-          .catch(() => { });
+          .catch(() => {});
       }
     };
 
     const handleTimeUpdate2 = () => {
-      if (!v2.duration) return;
+      if (!v2.duration || !isVisibleRef.current) return;
       if (v2.currentTime >= v2.duration - crossfadeDuration && !isTransitioning.current) {
         isTransitioning.current = true;
         v1.currentTime = 0;
@@ -59,7 +100,7 @@ function SeamlessBackgroundVideo({ isLoading = false }) {
               isTransitioning.current = false;
             }, crossfadeDuration * 1000);
           })
-          .catch(() => { });
+          .catch(() => {});
       }
     };
 
@@ -73,26 +114,36 @@ function SeamlessBackgroundVideo({ isLoading = false }) {
   }, [isLoading]);
 
   return (
-    <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
+    <div
+      ref={containerRef}
+      className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0 transform-gpu"
+    >
       <video
         ref={video1Ref}
         muted
         playsInline
         preload="auto"
-        className={`absolute inset-0 w-full h-full object-cover object-[25%_center] sm:object-[26%_center] md:object-[28%_center] lg:object-[32%_center] xl:object-center scale-[1.05] transition-opacity duration-700 ease-in-out ${activeVideo === 1 ? "opacity-100" : "opacity-0"
-          }`}
+        className={`absolute inset-0 w-full h-full object-cover object-[25%_center] sm:object-[26%_center] md:object-[28%_center] lg:object-[32%_center] xl:object-center scale-[1.05] transition-opacity duration-700 ease-in-out ${
+          activeVideo === 1 ? "opacity-100" : "opacity-0"
+        }`}
       >
         <source src={videoSrc.webm} type="video/webm" />
         <source src={videoSrc.mp4} type="video/mp4" />
       </video>
 
+      {/* Dual crossfade video decoder only instantiated on non-touch desktop */}
       <video
         ref={video2Ref}
         muted
         playsInline
-        preload="auto"
-        className={`absolute inset-0 w-full h-full object-cover object-[25%_center] sm:object-[26%_center] md:object-[28%_center] lg:object-[32%_center] xl:object-center scale-[1.05] transition-opacity duration-700 ease-in-out ${activeVideo === 2 ? "opacity-100" : "opacity-0"
-          }`}
+        preload={isTouchRef.current ? "none" : "auto"}
+        className={`absolute inset-0 w-full h-full object-cover object-[25%_center] sm:object-[26%_center] md:object-[28%_center] lg:object-[32%_center] xl:object-center scale-[1.05] transition-opacity duration-700 ease-in-out ${
+          isTouchRef.current
+            ? "hidden"
+            : activeVideo === 2
+            ? "opacity-100"
+            : "opacity-0"
+        }`}
       >
         <source src={videoSrc.webm} type="video/webm" />
         <source src={videoSrc.mp4} type="video/mp4" />
