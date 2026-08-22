@@ -57,7 +57,11 @@ export const portfolioData = {
   // ==========================================
   preloader: {
     name: "Hashim Malik",
-    subtitle: "Software & Creative",
+    subtitle: "Welcome to HashVerse",
+    topTag: "PORTFOLIO",
+    scrollPrompt: "SCROLL",
+    durationSeconds: 6,
+    videoSrc: "/gallery/clouds.webm",
   },
 
   // ==========================================

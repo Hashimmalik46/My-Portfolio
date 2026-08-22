@@ -7,20 +7,29 @@ import { portfolioData } from "../data/portfolioData";
  * CloudPreloader Component
  * 
  * Minimalist cinematic cloud preloader with subtle pixelation:
- * - Plays seamless cloud video up to 7 seconds.
+ * - Waits for video frame buffer readiness before fading in text & UI,
+ *   eliminating any blank-background text flash on live deployments.
+ * - Pulls all text, subtitles, durations, and video sources from portfolioData.js.
+ * - Plays seamless cloud video with customizable duration.
  * - Subtle, delicate pixelated texture.
- * - Minimalist Longsile typography for "Hashim Malik".
+ * - Minimalist Longsile typography for name and subtitle.
  * - Side and radial cinematic vignettes.
  */
 export default function CloudPreloader({ onStartReveal }) {
+  const [isVideoReady, setIsVideoReady] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const touchStartY = useRef(null);
   const hasTriggeredRef = useRef(false);
 
-  const { personal } = portfolioData || {};
-  const name = personal?.name || "Hashim Malik";
+  const { personal, preloader } = portfolioData || {};
+  const name = preloader?.name || personal?.name || "Hashim Malik";
+  const subtitle = preloader?.subtitle || "Welcome to HashVerse";
+  const topTag = preloader?.topTag || "PORTFOLIO";
+  const scrollPrompt = preloader?.scrollPrompt || "SCROLL";
+  const durationSeconds = preloader?.durationSeconds ?? 6;
+  const videoSrc = preloader?.videoSrc || "/gallery/clouds.webm";
 
   const handleTrigger = useCallback(() => {
     if (hasTriggeredRef.current) return;
@@ -34,21 +43,32 @@ export default function CloudPreloader({ onStartReveal }) {
     if (onStartReveal) onStartReveal();
   }, [onStartReveal]);
 
-  // Auto-reveal after exactly 6 seconds of playback
+  // Auto-reveal after durationSeconds of active playback
   useEffect(() => {
+    if (!isVideoReady) return;
     const timer = setTimeout(() => {
       handleTrigger();
-    }, 6000);
+    }, durationSeconds * 1000);
 
     return () => clearTimeout(timer);
-  }, [handleTrigger]);
+  }, [isVideoReady, handleTrigger, durationSeconds]);
 
-  // Ensure Video plays immediately on mount
+  // Ensure Video plays immediately on mount & fallback safety timer
   useEffect(() => {
     const video = videoRef.current;
     if (video) {
       video.play().catch(() => {});
+      if (video.readyState >= 2) {
+        setIsVideoReady(true);
+      }
     }
+
+    // Safety fallback so UI always emerges gracefully even on slow connections
+    const fallbackTimer = setTimeout(() => {
+      setIsVideoReady(true);
+    }, 500);
+
+    return () => clearTimeout(fallbackTimer);
   }, []);
 
   // Real-time Subtle Pixelation Render Loop
@@ -65,6 +85,7 @@ export default function CloudPreloader({ onStartReveal }) {
 
     const render = () => {
       if (video.readyState >= 2) {
+        setIsVideoReady(true);
         const vw = video.videoWidth || 1280;
         const vh = video.videoHeight || 720;
         const targetW = Math.max(Math.floor(vw / pixelBlockSize), 120);
@@ -152,15 +173,17 @@ export default function CloudPreloader({ onStartReveal }) {
       onClick={handleTrigger}
       className="fixed inset-0 z-[100] flex flex-col justify-between items-center py-12 sm:py-16 px-6 bg-black cursor-pointer overflow-hidden touch-none select-none pointer-events-auto"
     >
-      {/* 10-Second Seamless Cloud Video (Active in DOM for decoder playback) */}
+      {/* Video element (Active in DOM for decoder playback) */}
       <video
         ref={videoRef}
-        src="/gallery/clouds.webm"
+        src={videoSrc}
         autoPlay
         loop
         muted
         playsInline
         preload="auto"
+        onLoadedData={() => setIsVideoReady(true)}
+        onCanPlay={() => setIsVideoReady(true)}
         onEnded={handleTrigger}
         className="absolute inset-0 w-full h-full object-cover object-center scale-[1.02] pointer-events-none opacity-0"
       />
@@ -168,10 +191,11 @@ export default function CloudPreloader({ onStartReveal }) {
       {/* Real-time Subtle Pixelated Render Canvas */}
       <canvas
         ref={canvasRef}
-        className="absolute inset-0 w-full h-full object-cover object-center scale-[1.03] pointer-events-none"
+        className="absolute inset-0 w-full h-full object-cover object-center scale-[1.03] pointer-events-none transition-opacity duration-700 ease-out"
         style={{
           imageRendering: "pixelated",
           filter: "contrast(1.04) brightness(0.96)",
+          opacity: isVideoReady ? 1 : 0,
         }}
       />
 
@@ -198,20 +222,34 @@ export default function CloudPreloader({ onStartReveal }) {
 
       {/* Top Minimal Line Accent */}
       <motion.div
-        animate={isExiting ? { opacity: 0, y: -10 } : { opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
+        initial={{ opacity: 0, y: -10 }}
+        animate={
+          isExiting
+            ? { opacity: 0, y: -10 }
+            : isVideoReady
+            ? { opacity: 1, y: 0 }
+            : { opacity: 0, y: -10 }
+        }
+        transition={{ duration: 0.6, delay: 0.1 }}
         className="relative z-10 flex items-center gap-3 font-mono text-[9px] tracking-[0.35em] uppercase text-white/40 font-light"
       >
         <span className="w-1 h-1 rounded-full bg-white/40" />
-        <span>PORTFOLIO</span>
+        <span>{topTag}</span>
         <span>•</span>
         <span>{new Date().getFullYear()}</span>
       </motion.div>
 
       {/* Center: Ultra-Minimal "Hashim Malik" in Longsile Font */}
       <motion.div
-        animate={isExiting ? { opacity: 0, y: -15, scale: 0.97 } : { opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.45 }}
+        initial={{ opacity: 0, y: 15 }}
+        animate={
+          isExiting
+            ? { opacity: 0, y: -15, scale: 0.97 }
+            : isVideoReady
+            ? { opacity: 1, y: 0, scale: 1 }
+            : { opacity: 0, y: 15 }
+        }
+        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
         className="relative z-10 flex flex-col items-center text-center gap-3.5 my-auto"
       >
         <motion.h1
@@ -251,14 +289,21 @@ export default function CloudPreloader({ onStartReveal }) {
           }}
           className="font-jakarta text-[9.5px] sm:text-[10.5px] tracking-[0.4em] uppercase text-white/60 font-light"
         >
-          Full Stack & AI Engineer
+          {subtitle}
         </motion.span>
       </motion.div>
 
       {/* Bottom: Minimalist Downward Floating Indicator */}
       <motion.div
-        animate={isExiting ? { opacity: 0, y: 10 } : { opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
+        initial={{ opacity: 0, y: 10 }}
+        animate={
+          isExiting
+            ? { opacity: 0, y: 10 }
+            : isVideoReady
+            ? { opacity: 1, y: 0 }
+            : { opacity: 0, y: 10 }
+        }
+        transition={{ duration: 0.6, delay: 0.15 }}
         className="relative z-10 flex flex-col items-center gap-2"
       >
         <motion.div
@@ -278,7 +323,7 @@ export default function CloudPreloader({ onStartReveal }) {
           className="flex flex-col items-center gap-1.5 cursor-pointer"
         >
           <span className="font-mono text-[8.5px] tracking-[0.35em] uppercase text-white/40">
-            SCROLL
+            {scrollPrompt}
           </span>
           <ChevronDown className="w-3.5 h-3.5 text-white/60" strokeWidth={1.5} />
         </motion.div>
