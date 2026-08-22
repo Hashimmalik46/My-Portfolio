@@ -22,6 +22,13 @@ import {
   GraduationCap,
   Code2,
   Layers,
+  User,
+  MapPin,
+  Mail,
+  Phone,
+  Linkedin,
+  Github,
+  Globe,
 } from "lucide-react";
 import { portfolioData } from "../data/portfolioData";
 
@@ -34,15 +41,27 @@ export default function ResumeModal({ isOpen, onClose }) {
   const printAreaRef = useRef(null);
 
   const { personal, socials, skills, projectsSection, resume: defaultResume } = portfolioData;
-  const [customResume, setCustomResume] = useState(() => JSON.parse(JSON.stringify(defaultResume)));
+
+  const getDefaultResumeState = () => ({
+    name: personal.name || "",
+    location: personal.location || "",
+    email: personal.email || "",
+    phone: personal.phone || "",
+    linkedin: socials.linkedin || "",
+    github: socials.github || "",
+    website: socials.website || "",
+    ...JSON.parse(JSON.stringify(defaultResume)),
+  });
+
+  const [customResume, setCustomResume] = useState(getDefaultResumeState);
 
   // Reset custom resume when default changes
   useEffect(() => {
     if (isOpen) {
-      setCustomResume(JSON.parse(JSON.stringify(defaultResume)));
+      setCustomResume(getDefaultResumeState());
       setActiveTab("preview");
     }
-  }, [isOpen, defaultResume]);
+  }, [isOpen]);
 
   // Lock body scroll when modal is open
   useEffect(() => {
@@ -84,11 +103,22 @@ export default function ResumeModal({ isOpen, onClose }) {
     const lines = [];
 
     // Header
-    lines.push(personal.name.toUpperCase());
-    lines.push(customResume.targetRole || defaultResume.targetRole);
-    lines.push(
-      `${personal.location} | ${personal.email} | LinkedIn: ${socials.linkedin} | GitHub: ${socials.github}`
-    );
+    const name = customResume.name || personal.name || "YOUR NAME";
+    const targetRole = customResume.targetRole || defaultResume.targetRole;
+    lines.push(name.toUpperCase());
+    if (targetRole) lines.push(targetRole);
+
+    const contactParts = [];
+    if (customResume.location) contactParts.push(customResume.location);
+    if (customResume.email) contactParts.push(customResume.email);
+    if (customResume.phone) contactParts.push(customResume.phone);
+    if (customResume.linkedin) contactParts.push(`LinkedIn: ${customResume.linkedin}`);
+    if (customResume.github) contactParts.push(`GitHub: ${customResume.github}`);
+    if (customResume.website) contactParts.push(`Portfolio: ${customResume.website}`);
+
+    if (contactParts.length > 0) {
+      lines.push(contactParts.join(" | "));
+    }
     lines.push("\n" + "=".repeat(60) + "\n");
 
     // Summary
@@ -343,11 +373,18 @@ export default function ResumeModal({ isOpen, onClose }) {
   };
 
   const handleResetToDefault = () => {
-    setCustomResume(JSON.parse(JSON.stringify(defaultResume)));
+    setCustomResume(getDefaultResumeState());
   };
 
   const handleClearToScratch = () => {
     setCustomResume({
+      name: "",
+      location: "",
+      email: "",
+      phone: "",
+      linkedin: "",
+      github: "",
+      website: "",
       targetRole: "",
       summary: "",
       skillCategories: {
@@ -556,10 +593,15 @@ export default function ResumeModal({ isOpen, onClose }) {
             {/* 3. Modal Body: Tab Content (Preview OR Customize Form) */}
             {activeTab === "customize" ? (
               /* CUSTOMIZE FORM VIEW (Industry Standard Clean SaaS Theme) */
-              <div
-                data-lenis-prevent="true"
-                className="flex-1 overflow-y-auto p-4 sm:p-7 space-y-6 text-gray-900 text-left font-jakarta bg-[#f9fafb] scrollbar-thin scrollbar-thumb-gray-300"
-              >
+              <div className="flex-1 flex flex-col min-h-0 bg-[#f9fafb]">
+                <div
+                  data-lenis-prevent="true"
+                  className="flex-1 overflow-y-auto p-4 sm:p-7 space-y-6 text-gray-900 text-left font-jakarta"
+                  style={{
+                    scrollbarColor: "rgba(0, 0, 0, 0.15) transparent",
+                    scrollbarWidth: "thin",
+                  }}
+                >
                 {/* Form Header & Action Buttons */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-gray-200">
                   <div>
@@ -592,7 +634,130 @@ export default function ResumeModal({ isOpen, onClose }) {
                   </div>
                 </div>
 
-                {/* 1. Target Role & Title */}
+                {/* 1. Personal & Contact Information */}
+                <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-5 shadow-xs space-y-4">
+                  <div className="flex items-center justify-between pb-2 border-b border-gray-100">
+                    <label className="text-xs font-bold text-gray-900 uppercase tracking-wide flex items-center gap-1.5">
+                      <User size={13} className="text-gray-700" /> Personal & Contact Info
+                    </label>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    {/* Full Name */}
+                    <div className="space-y-1.5">
+                      <label className="block text-xs font-semibold text-gray-700 flex items-center gap-1">
+                        <User size={11} className="text-gray-500" /> Full Name
+                      </label>
+                      <input
+                        type="text"
+                        value={customResume.name || ""}
+                        onChange={(e) =>
+                          setCustomResume({ ...customResume, name: e.target.value })
+                        }
+                        placeholder="e.g. Hashim Malik"
+                        className="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 bg-white text-xs text-gray-900 placeholder:text-gray-400 shadow-xs focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 focus:outline-none transition-all font-medium"
+                      />
+                    </div>
+
+                    {/* Location */}
+                    <div className="space-y-1.5">
+                      <label className="block text-xs font-semibold text-gray-700 flex items-center gap-1">
+                        <MapPin size={11} className="text-gray-500" /> Location / City
+                      </label>
+                      <input
+                        type="text"
+                        value={customResume.location || ""}
+                        onChange={(e) =>
+                          setCustomResume({ ...customResume, location: e.target.value })
+                        }
+                        placeholder="e.g. Srinagar, Kashmir / Remote"
+                        className="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 bg-white text-xs text-gray-900 placeholder:text-gray-400 shadow-xs focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 focus:outline-none transition-all font-medium"
+                      />
+                    </div>
+
+                    {/* Email */}
+                    <div className="space-y-1.5">
+                      <label className="block text-xs font-semibold text-gray-700 flex items-center gap-1">
+                        <Mail size={11} className="text-gray-500" /> Email Address
+                      </label>
+                      <input
+                        type="email"
+                        value={customResume.email || ""}
+                        onChange={(e) =>
+                          setCustomResume({ ...customResume, email: e.target.value })
+                        }
+                        placeholder="e.g. you@example.com"
+                        className="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 bg-white text-xs text-gray-900 placeholder:text-gray-400 shadow-xs focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 focus:outline-none transition-all font-medium"
+                      />
+                    </div>
+
+                    {/* Phone */}
+                    <div className="space-y-1.5">
+                      <label className="block text-xs font-semibold text-gray-700 flex items-center gap-1">
+                        <Phone size={11} className="text-gray-500" /> Phone Number (Optional)
+                      </label>
+                      <input
+                        type="text"
+                        value={customResume.phone || ""}
+                        onChange={(e) =>
+                          setCustomResume({ ...customResume, phone: e.target.value })
+                        }
+                        placeholder="e.g. +91 90300 00000"
+                        className="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 bg-white text-xs text-gray-900 placeholder:text-gray-400 shadow-xs focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 focus:outline-none transition-all font-medium"
+                      />
+                    </div>
+
+                    {/* LinkedIn URL */}
+                    <div className="space-y-1.5">
+                      <label className="block text-xs font-semibold text-gray-700 flex items-center gap-1">
+                        <Linkedin size={11} className="text-gray-500" /> LinkedIn URL
+                      </label>
+                      <input
+                        type="text"
+                        value={customResume.linkedin || ""}
+                        onChange={(e) =>
+                          setCustomResume({ ...customResume, linkedin: e.target.value })
+                        }
+                        placeholder="e.g. linkedin.com/in/username"
+                        className="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 bg-white text-xs text-gray-900 placeholder:text-gray-400 shadow-xs focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 focus:outline-none transition-all font-medium"
+                      />
+                    </div>
+
+                    {/* GitHub URL */}
+                    <div className="space-y-1.5">
+                      <label className="block text-xs font-semibold text-gray-700 flex items-center gap-1">
+                        <Github size={11} className="text-gray-500" /> GitHub URL
+                      </label>
+                      <input
+                        type="text"
+                        value={customResume.github || ""}
+                        onChange={(e) =>
+                          setCustomResume({ ...customResume, github: e.target.value })
+                        }
+                        placeholder="e.g. github.com/username"
+                        className="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 bg-white text-xs text-gray-900 placeholder:text-gray-400 shadow-xs focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 focus:outline-none transition-all font-medium"
+                      />
+                    </div>
+
+                    {/* Portfolio / Website URL */}
+                    <div className="space-y-1.5 sm:col-span-2">
+                      <label className="block text-xs font-semibold text-gray-700 flex items-center gap-1">
+                        <Globe size={11} className="text-gray-500" /> Portfolio / Website Link (Optional)
+                      </label>
+                      <input
+                        type="text"
+                        value={customResume.website || ""}
+                        onChange={(e) =>
+                          setCustomResume({ ...customResume, website: e.target.value })
+                        }
+                        placeholder="e.g. yourportfolio.dev"
+                        className="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 bg-white text-xs text-gray-900 placeholder:text-gray-400 shadow-xs focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 focus:outline-none transition-all font-medium"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* 2. Target Role & Title */}
                 <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-5 shadow-xs space-y-2">
                   <label className="block text-xs font-semibold text-gray-700">
                     Target Job Title / Role
@@ -608,7 +773,7 @@ export default function ResumeModal({ isOpen, onClose }) {
                   />
                 </div>
 
-                {/* 2. Professional Summary */}
+                {/* 3. Professional Summary */}
                 <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-5 shadow-xs space-y-2">
                   <label className="block text-xs font-semibold text-gray-700">
                     Professional Summary
@@ -1066,12 +1231,14 @@ export default function ResumeModal({ isOpen, onClose }) {
                   </div>
                 </div>
 
-                {/* Bottom Action Bar */}
-                <div className="pt-3 sticky bottom-0 bg-[#f9fafb]/95 backdrop-blur-md pb-1 flex justify-end border-t border-gray-200">
+                </div>
+
+                {/* Solid Bottom Action Bar (Seals completely with zero background gap) */}
+                <div className="shrink-0 px-4 sm:px-7 py-3 bg-white border-t border-gray-200 flex items-center justify-end z-10 shadow-[0_-4px_20px_rgba(0,0,0,0.04)]">
                   <button
                     type="button"
                     onClick={() => setActiveTab("preview")}
-                    className="flex items-center gap-2 px-6 py-2.5 rounded-lg bg-gray-900 hover:bg-black text-white font-semibold text-xs shadow-sm transition-all cursor-pointer"
+                    className="flex items-center gap-2 px-5 sm:px-6 py-2.5 rounded-lg bg-gray-900 hover:bg-black text-white font-semibold text-xs shadow-sm transition-all cursor-pointer"
                   >
                     <Eye size={13} />
                     <span>View Generated Resume</span>
@@ -1093,6 +1260,8 @@ export default function ResumeModal({ isOpen, onClose }) {
                 }`}
                 style={{
                   fontFamily: getFontFamily(),
+                  scrollbarColor: "rgba(0, 0, 0, 0.15) transparent",
+                  scrollbarWidth: "thin",
                 }}
               >
                 {/* 1. Header Box */}
@@ -1104,42 +1273,90 @@ export default function ResumeModal({ isOpen, onClose }) {
                   } ${activeStyle === "executive" ? "text-center" : "text-left"}`}
                 >
                   <h1 className="text-xl sm:text-2xl font-black text-[#111827] uppercase tracking-tight">
-                    {personal.name}
+                    {customResume.name || personal.name}
                   </h1>
-                  <p className="text-xs sm:text-sm font-bold text-[#1f2937] mt-0.5 tracking-wide">
-                    {customResume.targetRole !== undefined ? customResume.targetRole : defaultResume.targetRole}
-                  </p>
+                  {(customResume.targetRole !== undefined ? customResume.targetRole : defaultResume.targetRole) && (
+                    <p className="text-xs sm:text-sm font-bold text-[#1f2937] mt-0.5 tracking-wide">
+                      {customResume.targetRole !== undefined ? customResume.targetRole : defaultResume.targetRole}
+                    </p>
+                  )}
                   <div
-                    className={`contact-links flex flex-wrap gap-2 text-[11px] text-[#4b5563] mt-1 font-medium ${
+                    className={`contact-links flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-[#4b5563] mt-1 font-medium ${
                       activeStyle === "executive" ? "justify-center" : "justify-start"
                     }`}
                   >
-                    <span>{personal.location}</span>
-                    <span>•</span>
-                    <a
-                      href={`mailto:${personal.email}`}
-                      className="text-[#111827] underline hover:text-black"
-                    >
-                      {personal.email}
-                    </a>
-                    <span>•</span>
-                    <a
-                      href={socials.linkedin}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-[#111827] underline hover:text-black"
-                    >
-                      LinkedIn
-                    </a>
-                    <span>•</span>
-                    <a
-                      href={socials.github}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-[#111827] underline hover:text-black"
-                    >
-                      GitHub
-                    </a>
+                    {customResume.location && <span>{customResume.location}</span>}
+                    
+                    {customResume.location && (customResume.email || customResume.phone || customResume.linkedin || customResume.github || customResume.website) && (
+                      <span className="text-gray-400">•</span>
+                    )}
+
+                    {customResume.email && (
+                      <a
+                        href={`mailto:${customResume.email}`}
+                        className="text-[#111827] underline hover:text-black"
+                      >
+                        {customResume.email}
+                      </a>
+                    )}
+
+                    {customResume.email && (customResume.phone || customResume.linkedin || customResume.github || customResume.website) && (
+                      <span className="text-gray-400">•</span>
+                    )}
+
+                    {customResume.phone && (
+                      <a
+                        href={`tel:${customResume.phone}`}
+                        className="text-[#111827] hover:text-black"
+                      >
+                        {customResume.phone}
+                      </a>
+                    )}
+
+                    {customResume.phone && (customResume.linkedin || customResume.github || customResume.website) && (
+                      <span className="text-gray-400">•</span>
+                    )}
+
+                    {customResume.linkedin && (
+                      <a
+                        href={customResume.linkedin.startsWith("http") ? customResume.linkedin : `https://${customResume.linkedin}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-[#111827] underline hover:text-black"
+                      >
+                        LinkedIn
+                      </a>
+                    )}
+
+                    {customResume.linkedin && (customResume.github || customResume.website) && (
+                      <span className="text-gray-400">•</span>
+                    )}
+
+                    {customResume.github && (
+                      <a
+                        href={customResume.github.startsWith("http") ? customResume.github : `https://${customResume.github}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-[#111827] underline hover:text-black"
+                      >
+                        GitHub
+                      </a>
+                    )}
+
+                    {customResume.github && customResume.website && (
+                      <span className="text-gray-400">•</span>
+                    )}
+
+                    {customResume.website && (
+                      <a
+                        href={customResume.website.startsWith("http") ? customResume.website : `https://${customResume.website}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-[#111827] underline hover:text-black"
+                      >
+                        Portfolio
+                      </a>
+                    )}
                   </div>
                 </div>
 
