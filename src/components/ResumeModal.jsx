@@ -779,25 +779,17 @@ export default function ResumeModal({ isOpen, onClose }) {
                     Professional Summary
                   </label>
                   <textarea
-                    rows={4}
+                    rows={5}
                     value={customResume.summary || ""}
                     onChange={(e) =>
                       setCustomResume({ ...customResume, summary: e.target.value })
                     }
-                    onInput={(e) => {
-                      e.target.style.height = "auto";
-                      e.target.style.height = `${e.target.scrollHeight}px`;
-                    }}
-                    placeholder="Brief overview of your engineering background and core strengths..."
-                    style={{
-                      resize: "none",
-                      overflow: "hidden",
-                    }}
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 bg-white text-xs text-gray-900 placeholder:text-gray-400 shadow-xs focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 focus:outline-none transition-all resize-none overflow-hidden no-scrollbar leading-relaxed font-normal"
+                    placeholder="Brief overview of your engineering background, core strengths, and technical specializations..."
+                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 bg-white text-xs text-gray-900 placeholder:text-gray-400 shadow-xs focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 focus:outline-none transition-all resize-y min-h-[110px] leading-relaxed font-normal"
                   />
                 </div>
 
-                {/* 3. Education Customization */}
+                {/* 4. Education Customization */}
                 <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-5 shadow-xs space-y-3">
                   <div className="flex items-center justify-between pb-2 border-b border-gray-100">
                     <label className="text-xs font-bold text-gray-900 uppercase tracking-wide flex items-center gap-1.5">
@@ -892,9 +884,9 @@ export default function ResumeModal({ isOpen, onClose }) {
                             />
                           </div>
                           <div className="space-y-1">
-                            <span className="text-xs font-medium text-gray-600">Grade / Honors (Optional)</span>
-                            <input
-                              type="text"
+                            <span className="text-xs font-medium text-gray-600">Grade / Honors / Coursework (Optional)</span>
+                            <textarea
+                              rows={2}
                               value={edu.grade || edu.details || ""}
                               onChange={(e) => {
                                 const newEdu = [...customResume.education];
@@ -902,8 +894,8 @@ export default function ResumeModal({ isOpen, onClose }) {
                                 newEdu[eIdx].details = e.target.value;
                                 setCustomResume({ ...customResume, education: newEdu });
                               }}
-                              placeholder="e.g. GPA: 3.8 / 4.0 or Dean's List"
-                              className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-xs text-gray-900 shadow-xs focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 focus:outline-none transition-all"
+                              placeholder="e.g. GPA: 3.8 / 4.0, Coursework in Algorithms & AI"
+                              className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-xs text-gray-900 shadow-xs focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 focus:outline-none transition-all resize-y min-h-[46px] leading-relaxed font-normal"
                             />
                           </div>
                         </div>
@@ -970,14 +962,15 @@ export default function ResumeModal({ isOpen, onClose }) {
                               <Trash2 size={13} />
                             </button>
                           </div>
-                          <input
-                            type="text"
+                          <textarea
+                            rows={2}
                             value={items}
                             onChange={(e) => {
                               const updated = { ...customResume.skillCategories, [category]: e.target.value };
                               setCustomResume({ ...customResume, skillCategories: updated });
                             }}
-                            className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-xs text-gray-900 placeholder:text-gray-400 shadow-xs focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 focus:outline-none transition-all"
+                            placeholder="e.g. React.js, Next.js, Node.js, TypeScript, Tailwind CSS, PostgreSQL"
+                            className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-xs text-gray-900 placeholder:text-gray-400 shadow-xs focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 focus:outline-none transition-all resize-y min-h-[46px] leading-relaxed font-normal"
                           />
                         </div>
                       ))}
@@ -1065,17 +1058,17 @@ export default function ResumeModal({ isOpen, onClose }) {
                         <div className="space-y-2 pt-1">
                           <span className="text-xs font-medium text-gray-600 block">Key Accomplishments</span>
                           {exp.bullets?.map((bullet, bIdx) => (
-                            <div key={bIdx} className="flex items-center gap-2">
-                              <input
-                                type="text"
+                            <div key={bIdx} className="flex items-start gap-2">
+                              <textarea
+                                rows={2}
                                 value={bullet}
                                 onChange={(e) => {
                                   const newExp = [...customResume.experience];
                                   newExp[expIdx].bullets[bIdx] = e.target.value;
                                   setCustomResume({ ...customResume, experience: newExp });
                                 }}
-                                placeholder="Describe accomplishment..."
-                                className="flex-1 px-3 py-2 rounded-lg border border-gray-300 bg-white text-xs text-gray-900 shadow-xs focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 focus:outline-none transition-all"
+                                placeholder="Describe accomplishment or engineering contribution..."
+                                className="flex-1 px-3 py-2 rounded-lg border border-gray-300 bg-white text-xs text-gray-900 shadow-xs focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 focus:outline-none transition-all resize-y min-h-[48px] leading-relaxed font-normal"
                               />
                               <button
                                 type="button"
@@ -1084,7 +1077,7 @@ export default function ResumeModal({ isOpen, onClose }) {
                                   newExp[expIdx].bullets.splice(bIdx, 1);
                                   setCustomResume({ ...customResume, experience: newExp });
                                 }}
-                                className="p-1.5 rounded text-gray-400 hover:text-red-600 hover:bg-gray-200/50 transition-colors"
+                                className="p-1.5 mt-1 rounded text-gray-400 hover:text-red-600 hover:bg-gray-200/50 transition-colors"
                                 title="Delete bullet"
                               >
                                 <Trash2 size={13} />
@@ -1187,17 +1180,17 @@ export default function ResumeModal({ isOpen, onClose }) {
                         <div className="space-y-2 pt-1">
                           <span className="text-xs font-medium text-gray-600 block">Key Highlights</span>
                           {proj.bullets?.map((b, bIdx) => (
-                            <div key={bIdx} className="flex items-center gap-2">
-                              <input
-                                type="text"
+                            <div key={bIdx} className="flex items-start gap-2">
+                              <textarea
+                                rows={2}
                                 value={b}
                                 onChange={(e) => {
                                   const newProj = [...customResume.projects];
                                   newProj[pIdx].bullets[bIdx] = e.target.value;
                                   setCustomResume({ ...customResume, projects: newProj });
                                 }}
-                                placeholder="Describe project highlight..."
-                                className="flex-1 px-3 py-2 rounded-lg border border-gray-300 bg-white text-xs text-gray-900 shadow-xs focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 focus:outline-none transition-all"
+                                placeholder="Describe project highlight or technical challenge solved..."
+                                className="flex-1 px-3 py-2 rounded-lg border border-gray-300 bg-white text-xs text-gray-900 shadow-xs focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 focus:outline-none transition-all resize-y min-h-[48px] leading-relaxed font-normal"
                               />
                               <button
                                 type="button"
@@ -1206,7 +1199,7 @@ export default function ResumeModal({ isOpen, onClose }) {
                                   newProj[pIdx].bullets.splice(bIdx, 1);
                                   setCustomResume({ ...customResume, projects: newProj });
                                 }}
-                                className="p-1.5 rounded text-gray-400 hover:text-red-600 hover:bg-gray-200/50 transition-colors"
+                                className="p-1.5 mt-1 rounded text-gray-400 hover:text-red-600 hover:bg-gray-200/50 transition-colors"
                                 title="Delete bullet"
                               >
                                 <Trash2 size={13} />
