@@ -393,27 +393,27 @@ export default function ResumeModal({ isOpen, onClose }) {
                   <button
                     type="button"
                     onClick={() => setActiveTab("preview")}
-                    className={`flex items-center gap-1.5 px-2 sm:px-3 py-1 rounded-md text-xs transition-all cursor-pointer ${
+                    className={`flex items-center justify-center gap-1.5 px-2 py-1 sm:px-3 sm:py-1 rounded-md text-xs transition-all cursor-pointer ${
                       activeTab === "preview"
                         ? "bg-white text-gray-900 font-semibold shadow-xs"
                         : "text-gray-600 hover:text-gray-900 font-medium"
                     }`}
                     title="Preview Resume"
                   >
-                    <Eye size={13} />
+                    <Eye className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
                     <span className="hidden sm:inline">Preview</span>
                   </button>
                   <button
                     type="button"
                     onClick={() => setActiveTab("customize")}
-                    className={`flex items-center gap-1.5 px-2 sm:px-3 py-1 rounded-md text-xs transition-all cursor-pointer ${
+                    className={`flex items-center justify-center gap-1.5 px-2 py-1 sm:px-3 sm:py-1 rounded-md text-xs transition-all cursor-pointer ${
                       activeTab === "customize"
                         ? "bg-white text-gray-900 font-semibold shadow-xs"
                         : "text-gray-600 hover:text-gray-900 font-medium"
                     }`}
                     title="Customize Resume"
                   >
-                    <Edit3 size={13} />
+                    <Edit3 className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
                     <span className="hidden sm:inline">Customize</span>
                   </button>
                 </div>
