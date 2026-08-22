@@ -171,7 +171,17 @@ export default function CloudPreloader({ onStartReveal }) {
       }
       transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
       onClick={handleTrigger}
-      className="fixed inset-0 w-screen h-screen h-[100dvh] min-h-[100dvh] z-[100] flex flex-col justify-between items-center py-12 sm:py-16 px-6 bg-black cursor-pointer overflow-hidden touch-none select-none pointer-events-auto"
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        width: "100vw",
+        height: "100vh",
+        minHeight: "100%",
+      }}
+      className="fixed inset-0 z-[100] flex flex-col justify-between items-center py-12 sm:py-16 px-6 bg-black cursor-pointer overflow-hidden touch-none select-none pointer-events-auto"
     >
       {/* Off-screen source video element (kept active in layout tree for continuous WebKit decoding) */}
       <video
@@ -191,19 +201,17 @@ export default function CloudPreloader({ onStartReveal }) {
       {/* Real-time Subtle Pixelated Render Canvas */}
       <canvas
         ref={canvasRef}
-        className="absolute inset-0 w-full h-full min-w-full min-h-full object-cover object-center scale-[1.03] pointer-events-none transition-opacity duration-700 ease-out"
+        className="absolute -inset-2 w-[calc(100%+16px)] h-[calc(100%+16px)] object-cover object-center pointer-events-none transition-opacity duration-700 ease-out"
         style={{
           imageRendering: "pixelated",
           filter: "contrast(1.04) brightness(0.96)",
           opacity: isVideoReady ? 1 : 0,
-          width: "100%",
-          height: "100%",
         }}
       />
 
       {/* Subtle Micro Dither Mesh */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-[0.08]"
+        className="absolute -inset-2 pointer-events-none opacity-[0.08]"
         style={{
           backgroundImage:
             "radial-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 0)",
@@ -212,10 +220,10 @@ export default function CloudPreloader({ onStartReveal }) {
       />
 
       {/* Cinematic Edge & Side Vignettes */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-transparent to-black/75 pointer-events-none" />
-      <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-transparent to-black/45 pointer-events-none" />
+      <div className="absolute -inset-2 bg-gradient-to-r from-black/75 via-transparent to-black/75 pointer-events-none" />
+      <div className="absolute -inset-2 bg-gradient-to-b from-black/45 via-transparent to-black/45 pointer-events-none" />
       <div
-        className="absolute inset-0 pointer-events-none"
+        className="absolute -inset-2 pointer-events-none"
         style={{
           background:
             "radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0.85) 100%)",
