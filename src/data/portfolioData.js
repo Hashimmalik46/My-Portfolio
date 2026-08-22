@@ -80,8 +80,8 @@ export const portfolioData = {
     greeting: "Hi, I'm",
     name: "Hashim Malik",
     backgroundVideo: {
-      webm: "/gallery/bg_video_2.webm",
-      mp4: "/gallery/bg_video_2.MP4",
+      webm: "/gallery/bg_video_3.webm",
+      mp4: "/gallery/bg_video_3.MP4",
     },
     tagline: {
       prefix: "A software and design enthusiast blending",
@@ -187,6 +187,39 @@ skills: [
         tag: "What I Create",
       },
     ],
+    timeline: [
+       {
+        id: "edu-1",
+        year: "2023 – Present",
+        role: "B.Tech in Computer Science & Engineering",
+        organization: "Islamic University of Science & Technology, Pulwama",
+        badge: "Education",
+        description:
+          "Deep focus on Data Structures & Algorithms, Object-Oriented System Design, Database Management Systems, Machine Learning pipelines, Computer architecture and Computer networks",
+        tags: ["DSA", "Computer Vision", "Machine Learning", "System Design"],
+      },
+       {
+        id: "exp-1",
+        year: "2024 – Present",
+        role: "UI/UX & Product Designer",
+        organization: "Freelance & Design Systems",
+        badge: "Design",
+        description:
+          "Crafting intuitive user journeys, high-fidelity interfaces, and responsive design systems with a focus on minimalist aesthetics, typography hierarchy, and fluid micro-interactions.",
+        tags: ["Figma", "UI/UX", "Design Systems", "Prototyping", "Wireframing"],
+      },
+      {
+        id: "exp-2",
+        year: "2025 – Present",
+        role: "Full Stack & AI Developer",
+        organization: "Independent & Freelance Engineering",
+        badge: "Experience",
+        description:
+          "Architecting end-to-end full stack web platforms, real-time doctor-patient clinic portals (Zooncare, Dandwoat), autonomous lead generation AI agents, and IoT student safety tracking systems.",
+        tags: ["React", "Node.js", "Python", "Supabase", "Flask", "AI Agents"],
+      },
+     
+    ],
   },
 
   // ==========================================
@@ -200,89 +233,164 @@ skills: [
       "A showcase of full-stack engineering, AI implementations, and production web platforms.",
     projects: [
       {
+        id: "zooncare",
         title: "Role Based Clinic Management System",
         img: "/gallery/Zooncare.webp",
+        img2: "/gallery/Zooncare.webp",
         category: "Full Stack",
         short_desc:
-          "Full-stack clinical management platform built with a role-based access architecture, secure doctor-patient records, and real-time scheduling.",
+          "Full-stack clinical management platform built with role-based access architecture, secure doctor-patient records, and real-time scheduling.",
+        full_desc:
+          "Zooncare is a comprehensive, production-grade medical management system engineered to streamline daily outpatient workflows. It enforces granular role-based access control (RBAC) separating Doctors, Receptionists, and Patients, complete with real-time appointment booking, consultation history, and prescription generation.",
+        highlights: [
+          "Granular Role-Based Access Control (Admin, Doctor, Receptionist, Patient)",
+          "Real-time appointment conflict resolution and slot management",
+          "Encrypted digital patient records and instant PDF prescription generator",
+        ],
         tags: [
           { id: 1, img: "/gallery/react.webp", tag: "React" },
           { id: 2, img: "/gallery/tailwind.webp", tag: "Tailwind" },
+          { id: 3, img: "/gallery/supabase.webp", tag: "Supabase" },
         ],
         link: "https://zooncare.in",
+        github: "https://github.com/Hashimmalik46",
       },
       {
+        id: "dandwoat",
         title: "Dandwoat Dental Clinic",
         img: "/gallery/dandwoat.webp",
+        img2: "/gallery/dandwoat.webp",
         category: "Web Platform",
         short_desc:
           "Comprehensive dental healthcare portal featuring online appointment bookings, treatment guides, and patient inquiry workflows.",
+        full_desc:
+          "A modern, patient-first web application designed for a premier dental healthcare clinic. Features interactive cosmetic dentistry showcases, an automated online appointment booking pipeline, patient inquiry management, and optimized SEO performance.",
+        highlights: [
+          "Automated patient appointment routing and WhatsApp notification integration",
+          "High-converting aesthetic UI with procedure guides and pricing estimates",
+          "98+ Google Lighthouse performance & mobile accessibility rating",
+        ],
         tags: [
           { id: 1, img: "/gallery/wordpress.webp", tag: "WordPress" },
           { id: 2, img: "/gallery/css.webp", tag: "CSS" },
+          { id: 3, img: "/gallery/js.webp", tag: "JavaScript" },
         ],
         link: "https://dandwoat.com",
+        github: "https://github.com/Hashimmalik46",
       },
       {
+        id: "intellisentry",
         title: "IntelliSentry Hostel Management System",
         img: "/gallery/intellisentry.webp",
+        img2: "/gallery/intellisentry.webp",
         category: "Full Stack",
         short_desc:
           "Smart hostel administration platform handling automated check-ins, student records, and room allocations with custom backend logic.",
+        full_desc:
+          "IntelliSentry automates traditional campus hostel operations. Built with React and Supabase, it provides warden dashboards, real-time student in/out entry logging, automated room occupancy analytics, and fine management with instant ledger updates.",
+        highlights: [
+          "Real-time student movement tracking with timestamp verification",
+          "Automated room allocation matrices and vacancy heatmaps",
+          "Role-authenticated warden and administrative oversight dashboards",
+        ],
         tags: [
           { id: 1, img: "/gallery/react.webp", tag: "React" },
           { id: 2, img: "/gallery/supabase.webp", tag: "Supabase" },
           { id: 3, img: "/gallery/flask.webp", tag: "Flask" },
         ],
         link: "https://intellisentry.vercel.app",
+        github: "https://github.com/Hashimmalik46",
       },
       {
+        id: "campus-connect",
         title: "Campus Connect",
         img: "/gallery/CC.webp",
+        img2: "/gallery/CC.webp",
         category: "Social Platform",
         short_desc:
           "Closed academic social network enabling campus-wide student communication, event feeds, and peer collaborations.",
+        full_desc:
+          "An exclusive social and networking platform engineered for university campuses. Enables verified students to share academic updates, discover campus events, participate in subject discussions, and form study groups with instant feeds.",
+        highlights: [
+          "Campus-verified domain authentication and user profile curation",
+          "Real-time event discovery feeds and peer interaction posts",
+          "Lightweight modular architecture with zero external framework dependencies",
+        ],
         tags: [
           { id: 1, img: "/gallery/html.webp", tag: "HTML" },
           { id: 2, img: "/gallery/css.webp", tag: "CSS" },
           { id: 3, img: "/gallery/js.webp", tag: "JavaScript" },
         ],
         link: "https://kwitter-nine.vercel.app/",
+        github: "https://github.com/Hashimmalik46",
       },
       {
+        id: "arabic-sajad",
         title: "Arabic with Dr Sajad",
         img: "/gallery/SS.webp",
+        img2: "/gallery/SS.webp",
         category: "EdTech",
         short_desc:
           "Content-driven publishing and educational platform with integrated video course delivery, membership tiers, and payments.",
-        tags: [{ id: 1, img: "/gallery/wordpress.webp", tag: "WordPress" }],
+        full_desc:
+          "An end-to-end e-learning and language education portal tailored for comprehensive Arabic instruction. Integrates secure video module delivery, student progress dashboards, downloadable curriculum resources, and automated subscription access.",
+        highlights: [
+          "Secure structured video course delivery with chapter timestamps",
+          "Tiered subscription paywall and automated student onboarding",
+          "Responsive multi-language typography and global CDN caching",
+        ],
+        tags: [
+          { id: 1, img: "/gallery/wordpress.webp", tag: "WordPress" },
+          { id: 2, img: "/gallery/js.webp", tag: "JavaScript" },
+        ],
         link: "https://arabicwithdrsajad.com/",
+        github: "https://github.com/Hashimmalik46",
       },
       {
+        id: "agentic-ai",
         title: "Agentic AI for Lead Generation",
         img: "/gallery/agentic.webp",
+        img2: "/gallery/agentic.webp",
         category: "AI & Automation",
         short_desc:
           "Autonomous agent-driven workflow designed to extract, qualify, and route high-intent leads using machine intelligence and API pipelines.",
+        full_desc:
+          "An autonomous multi-agent pipeline designed to automate outbound sales research. The system leverages LLM agents with tool calling to scrape prospective leads, verify domain emails, score lead intent via custom heuristics, and compose personalized outreach drafts.",
+        highlights: [
+          "Autonomous multi-agent orchestration with specialized research & qualification agents",
+          "Intent scoring heuristic engine analyzing company signals and funding data",
+          "Seamless Supabase realtime sync with automated CRM export webhooks",
+        ],
         tags: [
           { id: 1, img: "/gallery/react.webp", tag: "React" },
           { id: 2, img: "/gallery/flask.webp", tag: "Flask" },
           { id: 3, img: "/gallery/supabase.webp", tag: "Supabase" },
         ],
         link: "#",
+        github: "https://github.com/Hashimmalik46",
       },
       {
+        id: "school-bus",
         title: "Safe School Bus Tracker",
         img: "/gallery/bus.webp",
+        img2: "/gallery/bus.webp",
         category: "Real-Time Tracking",
         short_desc:
           "Real-time school transport and child tracking application with instant route updates and synchronized parent alerts.",
+        full_desc:
+          "A mission-critical real-time IoT tracking web application for student transit. Connects vehicle telemetry and GPS streams with Supabase Realtime subscriptions to render live bus trajectories on maps and trigger proactive arrival notifications for parents.",
+        highlights: [
+          "Sub-second GPS coordinate sync powered by Supabase Realtime channels",
+          "Dynamic ETA calculation with geofence proximity alerts",
+          "Parent-friendly mobile-first UI with emergency driver contact triggers",
+        ],
         tags: [
           { id: 1, img: "/gallery/react.webp", tag: "React" },
           { id: 2, img: "/gallery/supabase.webp", tag: "Supabase" },
           { id: 3, img: "/gallery/tailwind.webp", tag: "Tailwind" },
         ],
         link: "https://live-school-bus-tracking.vercel.app/",
+        github: "https://github.com/Hashimmalik46",
       },
     ],
   },
@@ -390,9 +498,9 @@ STRICT INSTRUCTIONS:
     education: [
       {
         degree: "Bachelor of Technology in Computer Science & Engineering",
-        institution: "University Institute of Technology",
-        location: "Srinagar, Kashmir",
-        year: "2021 – Present",
+        institution: "Islamic University of Science & Technology (IUST)",
+        location: "Awantipora, Kashmir",
+        year: "2023 – 2027",
         details:
           "Core coursework in Data Structures & Algorithms, Object-Oriented Programming, Database Management Systems, Machine Learning, and Computer Networks.",
       },
@@ -408,6 +516,39 @@ STRICT INSTRUCTIONS:
           "Engineered role-based access architectures, secure doctor-patient workflows, and real-time scheduling portals for healthcare clinics (Zooncare, Dandwoat).",
           "Implemented automated lead-generation agent workflows integrating third-party APIs, Supabase real-time databases, and Flask microservices.",
           "Created computer vision pipelines and deep learning scripts for tracking, student attendance, and IoT vehicle tracking.",
+        ],
+      },
+    ],
+    projects: [
+      {
+        title: "Role Based Clinic Management System (Zooncare)",
+        tech: "React, Tailwind CSS, Supabase, PostgreSQL",
+        bullets: [
+          "Engineered full-stack clinical management platform enforcing granular Role-Based Access Control (Admin, Doctor, Receptionist, Patient).",
+          "Implemented real-time appointment conflict resolution, secure electronic patient records, and automated PDF prescription generation.",
+        ],
+      },
+      {
+        title: "Lead Generation Autonomous Agent System",
+        tech: "Python, Flask, AI Agents, REST APIs, Automation",
+        bullets: [
+          "Architected autonomous multi-step lead discovery workflows scraping, enriching, and scoring prospect data across web channels.",
+          "Integrated real-time database storage and webhook-driven automated notifications for sales pipeline acceleration.",
+        ],
+      },
+      {
+        title: "Dandwoat — Specialized Clinic Outpatient Portal",
+        tech: "React, Node.js, Express, MongoDB, Tailwind CSS",
+        bullets: [
+          "Developed specialized clinic management platform with digital queue tracking, doctor consultation logs, and medical records.",
+          "Engineered secure JWT authentication and optimized REST API endpoints with responsive mobile-first UI.",
+        ],
+      },
+      {
+        title: "IoT Smart Vehicle & Fleet Tracking System",
+        tech: "Python, Flask, GPS Modules, WebSockets, Leaflet",
+        bullets: [
+          "Created live telemetry tracking platform visualizing hardware coordinates on interactive maps with real-time geospatial alerts.",
         ],
       },
     ],

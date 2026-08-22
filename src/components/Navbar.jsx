@@ -146,6 +146,7 @@ function Navbar({ isLoading = false }) {
   const [isToolsOpen, setIsToolsOpen] = useState(false);
   const [isToolsHovered, setIsToolsHovered] = useState(false);
   const [isResumeOpen, setIsResumeOpen] = useState(false);
+  const [isResumeHovered, setIsResumeHovered] = useState(false);
   const [copiedEmail, setCopiedEmail] = useState(false);
   const toolsRef = useRef(null);
   const { nav, socials, personal } = portfolioData;
@@ -311,8 +312,8 @@ function Navbar({ isLoading = false }) {
             )}
           </div>
 
-            {/* Tools Menu with Responsive Apple Glass Popover (Accessible on all screen sizes) */}
-            <div ref={toolsRef} className="relative flex items-center justify-end">
+          {/* Tools Menu with Responsive Apple Glass Popover (Accessible on all screen sizes) */}
+          <div ref={toolsRef} className="relative flex items-center justify-end">
               <motion.button
                 type="button"
                 onClick={() => {

@@ -1,0 +1,190 @@
+import { useEffect } from "react";
+import { createPortal } from "react-dom";
+import { X, ArrowUpRight, Github, Code2, Globe } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
+
+/**
+ * Executive Project Architecture Spotlight Modal
+ * Designed with an editorial, minimalist Apple/Linear design system.
+ */
+export default function ProjectModal({ isOpen, onClose, project }) {
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") onClose();
+    };
+
+    if (isOpen) {
+      const prevBodyOverflow = document.body.style.overflow;
+      const prevHtmlOverflow = document.documentElement.style.overflow;
+      document.body.style.overflow = "hidden";
+      document.documentElement.style.overflow = "hidden";
+      window.addEventListener("keydown", handleKeyDown);
+
+      return () => {
+        document.body.style.overflow = prevBodyOverflow;
+        document.documentElement.style.overflow = prevHtmlOverflow;
+        window.removeEventListener("keydown", handleKeyDown);
+      };
+    }
+  }, [isOpen, onClose]);
+
+  if (!project || typeof document === "undefined") return null;
+
+  const modalJSX = (
+    <AnimatePresence>
+      {isOpen && (
+        <div className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-5 md:p-6 overflow-hidden pointer-events-auto select-auto font-jakarta">
+          {/* Backdrop Blur */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="fixed inset-0 bg-black/80 backdrop-blur-xl transition-opacity"
+          />
+
+          {/* Modal Container */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 16 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.96, y: 10 }}
+            transition={{ type: "spring", stiffness: 450, damping: 32 }}
+            onWheel={(e) => e.stopPropagation()}
+            className="relative w-full max-w-2xl h-[660px] max-h-[92vh] bg-[#0c0d12] border border-white/[0.14] rounded-2xl sm:rounded-3xl shadow-[0_30px_90px_rgba(0,0,0,0.95),inset_0_1px_1px_rgba(255,255,255,0.15)] flex flex-col z-10 overflow-hidden"
+          >
+            {/* 1. Header Bar */}
+            <div className="shrink-0 flex items-center justify-between px-6 py-4 border-b border-white/[0.08] bg-[#090a0f]/80 backdrop-blur-md">
+              <div className="flex items-center gap-3">
+                <span className="text-[10px] font-clashM tracking-[0.2em] uppercase px-2.5 py-0.5 rounded-full bg-white/[0.06] border border-white/[0.12] text-pAccent font-semibold">
+                  {project.category}
+                </span>
+                <span className="w-1.5 h-1.5 rounded-full bg-white/20" />
+                <span className="text-xs text-white/50 font-medium">Architecture Spotlight</span>
+              </div>
+
+              <button
+                type="button"
+                onClick={onClose}
+                aria-label="Close modal"
+                className="w-8 h-8 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 flex items-center justify-center text-white/70 hover:text-white transition-colors cursor-pointer"
+              >
+                <X size={15} />
+              </button>
+            </div>
+
+            {/* 2. Scrollable Body Content */}
+            <div
+              className="p-6 sm:p-8 overflow-y-auto flex-1 min-h-0 space-y-7 overscroll-contain touch-pan-y"
+              style={{
+                scrollbarWidth: "thin",
+                scrollbarColor: "rgba(255, 255, 255, 0.18) transparent",
+              }}
+            >
+              {/* Media Preview Banner */}
+              <div className="relative w-full aspect-[16/9] rounded-2xl overflow-hidden bg-[#050608] border border-white/[0.1] shadow-2xl p-2 group">
+                <img
+                  src={project.img2 || project.img}
+                  alt={project.title}
+                  className="w-full h-full object-contain rounded-xl"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none rounded-xl" />
+              </div>
+
+              {/* Title & Overview */}
+              <div>
+                <h3 className="font-clash text-2xl sm:text-3xl font-bold text-white tracking-tight mb-3">
+                  {project.title}
+                </h3>
+                <p className="text-sm sm:text-base text-white/75 leading-relaxed font-normal">
+                  {project.full_desc || project.short_desc}
+                </p>
+              </div>
+
+              {/* Engineering Highlights */}
+              {project.highlights && project.highlights.length > 0 && (
+                <div className="space-y-3 pt-2">
+                  <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-white/50">
+                    <span>Key Engineering Decisions</span>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-2.5">
+                    {project.highlights.map((item, idx) => (
+                      <div
+                        key={idx}
+                        className="flex items-start gap-3.5 p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.08] hover:border-white/[0.14] transition-colors"
+                      >
+                        <span className="text-[11px] font-clashM text-pAccent font-bold mt-0.5">
+                          0{idx + 1}
+                        </span>
+                        <span className="text-xs sm:text-sm text-white/85 leading-relaxed">
+                          {item}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Tech Stack */}
+              <div className="space-y-3 pt-2">
+                <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-white/50">
+                  <Code2 className="w-3.5 h-3.5 text-pAccent" />
+                  <span>Technologies & Tools</span>
+                </div>
+
+                <div className="flex flex-wrap gap-2">
+                  {project.tags.map((tag) => (
+                    <div
+                      key={tag.id}
+                      className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/[0.04] border border-white/[0.1] text-xs text-white/90 font-medium hover:border-white/20 transition-colors shadow-sm"
+                    >
+                      <img
+                        src={tag.img}
+                        alt={tag.tag}
+                        className="w-3.5 h-3.5 object-contain"
+                      />
+                      <span>{tag.tag}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* 3. Action Footer */}
+            <div className="shrink-0 flex flex-wrap items-center justify-between gap-3 px-6 py-4 border-t border-white/[0.08] bg-[#090a0f]/80 backdrop-blur-md">
+              {/* GitHub Link */}
+              {project.github ? (
+                <a
+                  href={project.github}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/15 text-white text-xs font-medium transition-all hover:scale-105 active:scale-95"
+                >
+                  <Github size={14} className="text-white/80" />
+                  <span>Source Code</span>
+                </a>
+              ) : (
+                <div />
+              )}
+
+              {/* Live Demo Site */}
+              {project.link && project.link !== "#" && (
+                <a
+                  href={project.link}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white hover:bg-pAccent text-black font-clash font-bold text-xs uppercase tracking-wider transition-all hover:scale-105 active:scale-95 shadow-[0_4px_20px_rgba(255,255,255,0.12)]"
+                >
+                  <span>Visit</span>
+                  <ArrowUpRight size={14} />
+                </a>
+              )}
+            </div>
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
+  );
+
+  return createPortal(modalJSX, document.body);
+}

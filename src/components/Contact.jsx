@@ -1,6 +1,6 @@
 import { useForm, ValidationError } from "@formspree/react";
 import { useEffect, useState } from "react";
-import { Send, CheckCircle2, Sparkles } from "lucide-react";
+import { Send, CheckCircle2, Sparkles, Copy, Check } from "lucide-react";
 import { BorderBeam } from "./ui/border-beam";
 import { MdEmail } from "react-icons/md";
 import { IoLocationSharp } from "react-icons/io5";
@@ -11,6 +11,7 @@ function Contact() {
   const { contact } = portfolioData;
   const [state, handleSubmit] = useForm(contact.formspreeFormId);
   const [showMessage, setShowMessage] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     if (state.succeeded) {
@@ -62,26 +63,55 @@ function Contact() {
 
           {/* Porcelain Contact Tiles */}
           <div className="flex flex-col gap-3 pt-2 w-full max-w-md">
-            {/* Email Card */}
+            {/* Email Card with One-Click Copy */}
             {contact.email && (
-              <motion.a
-                href={`mailto:${contact.email}`}
-                whileHover={{ x: 6 }}
+              <motion.div
+                whileHover={{ x: 4 }}
                 transition={{ type: "spring", stiffness: 350, damping: 25 }}
-                className="group flex items-center gap-4 p-3 rounded-2xl bg-white/80 hover:bg-white backdrop-blur-xl border border-secondary/10 hover:border-secondary/25 shadow-[0_10px_25px_rgba(0,0,0,0.04)] transition-all duration-300"
+                className="group relative flex items-center justify-between p-3 rounded-2xl bg-white/80 hover:bg-white backdrop-blur-xl border border-secondary/10 hover:border-secondary/25 shadow-[0_10px_25px_rgba(0,0,0,0.04)] transition-all duration-300"
               >
-                <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center flex-shrink-0 shadow-sm group-hover:scale-105 transition-transform duration-300">
-                  <MdEmail size={20} className="text-pAccent" />
-                </div>
-                <div className="flex flex-col text-left overflow-hidden">
-                  <span className="text-[10px] font-jakarta uppercase tracking-wider text-secondary/50 font-semibold">
-                    Email
-                  </span>
-                  <span className="text-xs sm:text-sm font-jakarta text-secondary/90 group-hover:text-secondary truncate font-medium">
-                    {contact.email}
-                  </span>
-                </div>
-              </motion.a>
+                <a
+                  href={`mailto:${contact.email}`}
+                  className="flex items-center gap-4 flex-1 min-w-0"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center flex-shrink-0 shadow-sm group-hover:scale-105 transition-transform duration-300">
+                    <MdEmail size={20} className="text-pAccent" />
+                  </div>
+                  <div className="flex flex-col text-left overflow-hidden">
+                    <span className="text-[10px] font-jakarta uppercase tracking-wider text-secondary/50 font-semibold">
+                      Email
+                    </span>
+                    <span className="text-xs sm:text-sm font-jakarta text-secondary/90 group-hover:text-secondary truncate font-medium">
+                      {contact.email}
+                    </span>
+                  </div>
+                </a>
+
+                {/* Direct Copy Action Button (Icon Only) */}
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    navigator.clipboard.writeText(contact.email);
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 2000);
+                  }}
+                  aria-label="Copy email address"
+                  title={copied ? "Copied!" : "Copy email"}
+                  className={`w-8 h-8 rounded-xl flex items-center justify-center transition-all duration-200 shrink-0 ml-2 cursor-pointer ${
+                    copied
+                      ? "bg-secondary text-white border border-secondary scale-105 shadow-sm"
+                      : "bg-secondary/[0.06] hover:bg-secondary text-secondary hover:text-white border border-secondary/10 hover:border-secondary hover:scale-105 shadow-none"
+                  }`}
+                >
+                  {copied ? (
+                    <Check className="w-4 h-4 text-pAccent" />
+                  ) : (
+                    <Copy className="w-3.5 h-3.5" />
+                  )}
+                </button>
+              </motion.div>
             )}
 
             {/* Location Card */}
@@ -152,18 +182,27 @@ function Contact() {
               </div>
             </div>
 
-            {/* Success Toast */}
+            {/* Success Toast aligned with Site Theme */}
             <AnimatePresence>
               {showMessage && (
                 <motion.div
                   initial={{ opacity: 0, height: 0, y: -10 }}
                   animate={{ opacity: 1, height: "auto", y: 0 }}
                   exit={{ opacity: 0, height: 0, y: -10 }}
-                  transition={{ duration: 0.35 }}
-                  className="mb-6 flex items-center gap-3 p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 font-jakarta text-xs sm:text-sm shadow-[0_4px_16px_rgba(0,0,0,0.04)] overflow-hidden"
+                  transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                  className="mb-6 flex items-center gap-3.5 p-3.5 sm:p-4 rounded-2xl bg-secondary text-white border border-secondary/20 shadow-[0_12px_30px_rgba(17,24,39,0.18)] overflow-hidden"
                 >
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-                  <span className="font-medium">Message delivered! I will get back to you shortly.</span>
+                  <div className="w-8 h-8 rounded-xl bg-pAccent/15 border border-pAccent/25 text-pAccent flex items-center justify-center shrink-0 shadow-xs">
+                    <CheckCircle2 className="w-4 h-4" />
+                  </div>
+                  <div className="flex flex-col min-w-0">
+                    <span className="font-clash font-bold text-xs sm:text-sm text-white tracking-wide flex items-center gap-1.5">
+                      Message Delivered <span className="w-1.5 h-1.5 rounded-full bg-pAccent animate-pulse" />
+                    </span>
+                    <span className="font-jakarta text-[11px] sm:text-xs text-white/70 font-normal">
+                      Thank you for reaching out. I'll get back to you shortly!
+                    </span>
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -181,7 +220,7 @@ function Contact() {
                   name="name"
                   required
                   placeholder="e.g. John Doe"
-                  className="w-full px-4 py-3 rounded-xl bg-secondary/[0.03] focus:bg-white border border-secondary/15 focus:border-secondary/40 text-secondary placeholder-secondary/35 text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-secondary/5 shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)] transition-all"
+                  className="w-full px-4 py-3 rounded-xl bg-white border border-secondary/15 focus:border-secondary text-secondary placeholder-secondary/35 text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-secondary/10 shadow-[0_2px_8px_rgba(0,0,0,0.02)] transition-all font-medium"
                 />
               </div>
 
@@ -195,7 +234,7 @@ function Contact() {
                   name="email"
                   required
                   placeholder="e.g. john@example.com"
-                  className="w-full px-4 py-3 rounded-xl bg-secondary/[0.03] focus:bg-white border border-secondary/15 focus:border-secondary/40 text-secondary placeholder-secondary/35 text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-secondary/5 shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)] transition-all"
+                  className="w-full px-4 py-3 rounded-xl bg-white border border-secondary/15 focus:border-secondary text-secondary placeholder-secondary/35 text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-secondary/10 shadow-[0_2px_8px_rgba(0,0,0,0.02)] transition-all font-medium"
                 />
                 <ValidationError
                   prefix="Email"
@@ -215,7 +254,7 @@ function Contact() {
                   rows={4}
                   required
                   placeholder="Tell me about your project, timeline, or idea..."
-                  className="w-full px-4 py-3 rounded-xl bg-secondary/[0.03] focus:bg-white border border-secondary/15 focus:border-secondary/40 text-secondary placeholder-secondary/35 text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-secondary/5 shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)] transition-all resize-none"
+                  className="w-full px-4 py-3 rounded-xl bg-white border border-secondary/15 focus:border-secondary text-secondary placeholder-secondary/35 text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-secondary/10 shadow-[0_2px_8px_rgba(0,0,0,0.02)] transition-all resize-none font-medium"
                 />
                 <ValidationError
                   prefix="Message"

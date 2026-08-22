@@ -27,6 +27,28 @@ export function generateLocalResponse(userMessage) {
     return `Hello! 👋 I'm **Hashim's AI Portfolio Assistant**.\n\nI can answer questions about:\n- 🛠️ **Tech Stack & Skills** (React, Node.js, Python, ML, Computer Vision)\n- 📂 **Featured Projects** (Clinic systems, AI lead gen, School tracking)\n- 💼 **Experience & Philosophy** (Full-Stack & AI development)\n- 📬 **Contact & Collaboration** (Email, LinkedIn, GitHub)\n\nWhat would you like to know about Hashim?`;
   }
 
+  // 1.5. Why Hashim / Why Hire / Value Proposition
+  if (
+    q.includes("why hashim") ||
+    q.includes("why hire") ||
+    q.includes("why should") ||
+    q.includes("strengths") ||
+    q.includes("value") ||
+    q.includes("stand out") ||
+    q.includes("sets him apart") ||
+    q.includes("advantage") ||
+    q.includes("hire him") ||
+    (q.includes("why") && (q.includes("him") || q.includes("hashim") || q.includes("hire")))
+  ) {
+    return `### 🚀 Why Work with Hashim Malik?\n\n` +
+      `Hashim is a self-directed software engineer who combines full-stack technical depth with practical AI systems and high-fidelity UI design:\n\n` +
+      `1. **Full-Stack Production Craftsmanship:** Deep expertise in the **MERN stack**, Node.js/Express, RESTful APIs, Supabase real-time databases, and role-based access control (shipped in multi-user healthcare clinic systems).\n` +
+      `2. **Applied AI & Agentic Workflows:** Proven experience building **Computer Vision pipelines**, neural network models, and autonomous **lead-generation AI agents** using Python and Flask.\n` +
+      `3. **Design-First Engineering:** He bridges technical logic with fluid, award-winning UI/UX (Figma, Framer Motion, micro-interactions), creating interfaces users love.\n` +
+      `4. **High Shipping Velocity:** ${portfolioData.about.stats[0].value} of active building with **${portfolioData.about.stats[1].value}** shipped systems and an *End-to-End* mindset.\n\n` +
+      `💡 *Summary:* He brings both the engineering muscle to build complex backends and the product sense to make software look and feel world-class.`;
+  }
+
   // 2. Who is Hashim / Bio / About
   if (
     q.includes("who is hashim") ||
@@ -103,13 +125,38 @@ export function generateLocalResponse(userMessage) {
       `💡 *Philosophy:* "${portfolioData.about.philosophy.description}"`;
   }
 
-  // 5. Specific Projects
+  // 5. Contact, Hiring & Collaboration (Prioritized before project single-word matching)
   if (
-    q.includes("project") ||
-    q.includes("work") ||
-    q.includes("portfolio") ||
-    q.includes("built") ||
-    q.includes("apps")
+    q.includes("contact") ||
+    q.includes("collab") ||
+    q.includes("collaborate") ||
+    q.includes("hire") ||
+    q.includes("email") ||
+    q.includes("reach") ||
+    q.includes("call") ||
+    q.includes("message") ||
+    q.includes("work together") ||
+    q.includes("work with") ||
+    q.includes("freelance") ||
+    q.includes("opportunity")
+  ) {
+    return `### 📬 Connect with Hashim\n\n` +
+      `Hashim is open to software engineering roles, AI collaborations, and freelance opportunities:\n\n` +
+      `• ✉️ **Email:** [${portfolioData.personal.email}](mailto:${portfolioData.personal.email})\n` +
+      `• 💼 **LinkedIn:** [Hashim Malik on LinkedIn](${portfolioData.socials.linkedin})\n` +
+      `• 💻 **GitHub:** [@Hashimmalik46](${portfolioData.socials.github})\n` +
+      `• 📍 **Location:** ${portfolioData.personal.location}\n\n` +
+      `You can also use the contact form at the bottom of this page to send a direct message!`;
+  }
+
+  // 6. Specific Projects List
+  if (
+    q.includes("what projects") ||
+    q.includes("all projects") ||
+    q.includes("show projects") ||
+    q.includes("list projects") ||
+    q.includes("portfolio projects") ||
+    q === "projects"
   ) {
     const list = portfolioData.projectsSection.projects
       .map(
@@ -121,10 +168,14 @@ export function generateLocalResponse(userMessage) {
     return `### 🚀 Featured Projects by Hashim\n\n${list}\n\nAsk me about any specific project for deeper architecture details!`;
   }
 
-  // Dynamic Specific Project Matcher: Checks if user query matches ANY project in portfolioData
+  // 7. Dynamic Specific Project Matcher (Guarded against common English stop-words like "with", "for", "and")
+  const STOP_WORDS = new Set(["with", "the", "and", "for", "from", "into", "that", "this", "what", "which", "your", "have", "been", "about", "project", "projects", "apps", "app", "site", "web", "more", "some", "like"]);
+  
   const matchedProject = portfolioData.projectsSection.projects.find((p) => {
-    const titleWords = p.title.toLowerCase().split(/\s+/).filter((w) => w.length > 2);
-    return titleWords.some((word) => q.includes(word)) || (p.link && p.link !== "#" && q.includes(p.link.toLowerCase().replace(/https?:\/\/(www\.)?/, "").split(".")[0]));
+    const titleLower = p.title.toLowerCase();
+    if (q.includes(titleLower)) return true;
+    const titleWords = titleLower.split(/\s+/).filter((w) => w.length > 3 && !STOP_WORDS.has(w));
+    return titleWords.some((word) => q.includes(word));
   });
 
   if (matchedProject) {
@@ -136,31 +187,10 @@ export function generateLocalResponse(userMessage) {
       (matchedProject.link && matchedProject.link !== "#" ? `- **Link:** [${matchedProject.link}](${matchedProject.link})` : "");
   }
 
-  // Dynamic Specific Skill Matcher: Checks if user query matches ANY skill in portfolioData
+  // 8. Dynamic Specific Skill Matcher
   const matchedSkill = portfolioData.skills.find((s) => q.includes(s.toLowerCase()));
   if (matchedSkill) {
     return `⚡ **${matchedSkill}:** Yes! Hashim has hands-on engineering experience using **${matchedSkill}** in his full-stack and AI projects.\n\nHe uses it as part of his core technical workflow: ${portfolioData.skills.join(" • ")}.`;
-  }
-
-  // 6. Contact, Hiring & Collaboration
-  if (
-    q.includes("contact") ||
-    q.includes("hire") ||
-    q.includes("email") ||
-    q.includes("reach") ||
-    q.includes("call") ||
-    q.includes("message") ||
-    q.includes("work together") ||
-    q.includes("freelance") ||
-    q.includes("opportunity")
-  ) {
-    return `### 📬 Connect with Hashim\n\n` +
-      `Hashim is open to software engineering roles, AI collaborations, and freelance opportunities:\n\n` +
-      `• ✉️ **Email:** [${portfolioData.personal.email}](mailto:${portfolioData.personal.email})\n` +
-      `• 💼 **LinkedIn:** [Hashim Malik on LinkedIn](${portfolioData.socials.linkedin})\n` +
-      `• 💻 **GitHub:** [@Hashimmalik46](${portfolioData.socials.github})\n` +
-      `• 📍 **Location:** ${portfolioData.personal.location}\n\n` +
-      `You can also use the contact form at the bottom of this page to send a direct message!`;
   }
 
   // 7. Location & Availability
@@ -207,47 +237,180 @@ export function generateLocalResponse(userMessage) {
 
 /**
  * Main AI Query Handler
- * Checks for live Gemini API Key (if provided in environment) or uses the instant local knowledge engine.
+ * - ONLY fixed starter pills use hardcoded responses.
+ * - ALL other questions are processed dynamically through Gemini AI.
  */
 export async function askHashimAI(userMessage) {
-  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+  const q = userMessage.toLowerCase().trim();
 
-  if (!apiKey) {
-    // Return instant local intelligence response
+  // 1. Fixed Pills ONLY: Use instant response if and only if it matches a preset pill exactly
+  const matchedStarterPrompt = portfolioData.chatbot.starterPrompts.find(
+    (p) => p.query.toLowerCase().trim() === q
+  );
+
+  if (matchedStarterPrompt) {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(generateLocalResponse(userMessage));
-      }, 450); // slight natural cadence
+      }, 60);
     });
   }
 
-  // If Gemini API Key exists in .env, query Gemini with strict grounding system prompt
+  // 2. All other questions MUST go through Gemini
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+
+  if (!apiKey) {
+    return "To enable live AI answers for custom questions, please add your Google Gemini API key in the `.env` file (`VITE_GEMINI_API_KEY=AIzaSy...`). You can get one for free at https://aistudio.google.com/app/apikey!";
+  }
+
   try {
-    const prompt = `${portfolioData.chatbot.systemPrompt}
+    const projectsDetail = portfolioData.projectsSection.projects
+      .map(
+        (p) =>
+          `• Project: "${p.title}" (${p.category})
+  Summary: ${p.short_desc}
+  Tech Stack: ${p.tags.map((t) => t.tag).join(", ")}
+  Link: ${p.link || "Internal project"}`
+      )
+      .join("\n\n");
 
-CONTEXT ABOUT HASHIM MALIK:
-${JSON.stringify(portfolioData, null, 2)}
+    const domainsDetail = portfolioData.about.domainCards
+      .map((d) => `• ${d.title}: ${d.desc}`)
+      .join("\n");
 
-User Question: ${userMessage}`;
+    const fullContext = `
+YOU ARE: The personal AI representative and technical peer for Hashim Malik.
+YOUR TONE: Sharp, articulate, confident, technically nuanced, and conversational. Speak directly and thoughtfully. Do NOT give repetitive FAQ or template-sounding responses. Adapt your tone to the user's question.
 
-    const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-        }),
+CORE FACTS ABOUT HASHIM MALIK:
+- Name: ${portfolioData.personal.name} (Short: ${portfolioData.personal.shortName})
+- Role: ${portfolioData.personal.role}
+- Location: ${portfolioData.personal.location}
+- Email: ${portfolioData.personal.email}
+- Bio & Mindset: ${portfolioData.about.bio}
+- Work Philosophy: "${portfolioData.about.philosophy.description}"
+- Experience Stats: ${portfolioData.about.stats.map((s) => `${s.value} (${s.label})`).join(", ")}
+
+TECHNICAL STACK:
+- Languages & Core: JavaScript (ES6+), Python, Java, HTML5, CSS3, SQL
+- Frontend & UI: React.js, Next.js, Tailwind CSS, Motion/Framer Motion, Figma, Component Design Systems
+- Backend & APIs: Node.js, Express.js, Flask, RESTful APIs, JWT Auth, Microservices
+- Databases & Cloud: MongoDB, Supabase (PostgreSQL), Firebase, Git/GitHub, Vercel
+- AI, Machine Learning & Vision: Computer Vision, Deep Learning, OpenCV, Neural Networks, Autonomous Agentic Workflows
+
+FEATURED PROJECTS:
+${projectsDetail}
+
+KEY ENGINEERING DOMAINS:
+${domainsDetail}
+
+SOCIALS & CONTACT:
+- Email: ${portfolioData.personal.email}
+- GitHub: ${portfolioData.socials.github}
+- LinkedIn: ${portfolioData.socials.linkedin}
+- Twitter: ${portfolioData.socials.twitter}
+
+INSTRUCTIONS:
+1. Answer the user's specific question directly with authentic depth, context, and insight.
+2. If asked why a team should hire him or what sets him apart, highlight his full-stack engineering ability combined with AI/ML agentic systems and high-fidelity UI design.
+3. If asked about a project or skill, explain the technical implementation and real-world value.
+4. If asked completely unrelated topics (like baking recipes, unrelated politics, general trivia), politely steer the conversation back to Hashim's engineering work and portfolio.
+5. Format your output with clean markdown (bold key phrases, lists when helpful). Keep responses engaging and concise (2-4 paragraphs max).`;
+
+    const headers = {
+      "Content-Type": "application/json",
+      "x-goog-api-key": apiKey,
+    };
+
+    const payload = JSON.stringify({
+      contents: [
+        {
+          role: "user",
+          parts: [
+            {
+              text: `${fullContext}\n\nUser Question: ${userMessage}`,
+            },
+          ],
+        },
+      ],
+      generationConfig: {
+        maxOutputTokens: 600,
+        temperature: 0.75,
+      },
+    });
+
+    // 1. First, attempt dynamic model discovery from Google's ModelService
+    let discoveredModel = null;
+    try {
+      const listRes = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`,
+        { headers }
+      );
+      const listData = await listRes.json();
+      if (listData.models && Array.isArray(listData.models)) {
+        const supported = listData.models.find(
+          (m) =>
+            Array.isArray(m.supportedGenerationMethods) &&
+            m.supportedGenerationMethods.includes("generateContent") &&
+            (m.name.includes("flash") || m.name.includes("pro") || m.name.includes("gemini"))
+        );
+        if (supported && supported.name) {
+          discoveredModel = supported.name.replace(/^models\//, "");
+        }
       }
-    );
-
-    const data = await res.json();
-    if (data.candidates && data.candidates[0]?.content?.parts?.[0]?.text) {
-      return data.candidates[0].content.parts[0].text;
+    } catch (e) {
+      console.warn("Dynamic model discovery skipped:", e);
     }
+
+    const candidateModels = [
+      discoveredModel,
+      "gemini-2.0-flash",
+      "gemini-2.0-flash-exp",
+      "gemini-1.5-flash-latest",
+      "gemini-1.5-flash-001",
+      "gemini-1.5-flash-002",
+      "gemini-1.5-flash",
+      "gemini-pro",
+      "gemini-1.0-pro",
+    ].filter(Boolean);
+
+    let lastError = null;
+
+    for (const modelName of candidateModels) {
+      try {
+        const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
+        const res = await fetch(endpoint, {
+          method: "POST",
+          headers,
+          body: payload,
+        });
+
+        const data = await res.json();
+        if (data.candidates && data.candidates[0]?.content?.parts?.[0]?.text) {
+          return data.candidates[0].content.parts[0].text;
+        }
+
+        if (data.error) {
+          lastError = data.error;
+          // If 404, try next candidate model
+          if (data.error.code === 404) {
+            continue;
+          }
+          break;
+        }
+      } catch (err) {
+        lastError = err;
+      }
+    }
+
+    if (lastError) {
+      console.warn("Gemini API was unavailable, serving response via portfolio intelligence engine:", lastError);
+      return generateLocalResponse(userMessage);
+    }
+
     return generateLocalResponse(userMessage);
   } catch (error) {
-    console.error("Gemini API error, falling back to local engine:", error);
+    console.warn("Gemini API network error, serving response via portfolio intelligence engine:", error);
     return generateLocalResponse(userMessage);
   }
 }

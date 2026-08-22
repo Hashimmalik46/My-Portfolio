@@ -1,17 +1,15 @@
 import { useRef, useState } from "react";
-import { ArrowUpRight, Code2, ExternalLink } from "lucide-react";
+import { ArrowUpRight, Code2, ExternalLink, Sparkles, Layers } from "lucide-react";
 import { motion } from "motion/react";
 import { portfolioData } from "../data/portfolioData";
+import ProjectModal from "./ProjectModal";
 
-function StackingCard({ project, index, total }) {
+function StackingCard({ project, index, total, onOpenDetails }) {
   const containerRef = useRef(null);
-  const [isExpanded, setIsExpanded] = useState(false);
 
   // Curvy organic rotation deck angles
   const angles = [-1.8, 1.6, -1.4, 1.8, -1.5, 1.4, -1.6];
   const angle = angles[index % angles.length];
-
-  const isLongDesc = project.short_desc && project.short_desc.length > 180;
 
   return (
     <div
@@ -22,7 +20,8 @@ function StackingCard({ project, index, total }) {
       }}
     >
       <div
-        className="group relative w-full rounded-3xl bg-[#0e0f13] hover:bg-[#121319] border border-white/15 hover:border-pAccent/40 p-4 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.85),inset_0_1px_1px_rgba(255,255,255,0.2)] hover:shadow-[0_30px_70px_rgba(0,0,0,0.95),0_0_30px_rgba(168,218,34,0.12)] transition-all duration-300 flex flex-col gap-4 will-change-transform origin-center hover:scale-[1.02] hover:!rotate-0"
+        onClick={() => onOpenDetails(project)}
+        className="group relative w-full rounded-3xl bg-[#0e0f13] hover:bg-[#121319] border border-white/15 hover:border-pAccent/40 p-4 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.85),inset_0_1px_1px_rgba(255,255,255,0.2)] hover:shadow-[0_30px_70px_rgba(0,0,0,0.95),0_0_30px_rgba(168,218,34,0.12)] transition-all duration-300 flex flex-col gap-4 will-change-transform origin-center hover:scale-[1.02] hover:!rotate-0 cursor-pointer"
         style={{
           transform: `rotate(${angle}deg)`,
           WebkitFontSmoothing: "antialiased",
@@ -30,18 +29,13 @@ function StackingCard({ project, index, total }) {
         }}
       >
         {/* Top: Card Image Container */}
-        <a
-          href={project.link}
-          target="_blank"
-          rel="noreferrer"
-          className="relative block w-full aspect-[16/9] sm:aspect-[16/9.5] rounded-2xl overflow-hidden bg-[#070709] border border-white/10 group-hover:border-pAccent/30 p-1.5 transition-colors duration-300 shadow-xl cursor-pointer"
-        >
+        <div className="relative block w-full aspect-[16/9] sm:aspect-[16/9.5] rounded-2xl overflow-hidden bg-[#070709] border border-white/10 group-hover:border-pAccent/30 p-1.5 transition-colors duration-300 shadow-xl">
           <img
             src={project.img}
             alt={project.title}
             className="w-full h-full object-contain rounded-xl opacity-90 group-hover:opacity-100 group-hover:scale-[1.02] transition-transform duration-500"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none rounded-xl" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none rounded-xl" />
 
           {/* Top-Left: Category Tag with Code Icon */}
           <div className="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-black/85 border border-white/20 shadow-md">
@@ -50,12 +44,7 @@ function StackingCard({ project, index, total }) {
               {project.category}
             </span>
           </div>
-
-          {/* Top-Right: Glassmorphic External Link Badge */}
-          <div className="absolute top-3 right-3 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-black/85 border border-white/25 flex items-center justify-center text-pAccent group-hover:bg-pAccent group-hover:text-black group-hover:border-pAccent transition-all duration-300 shadow-md">
-            <ExternalLink className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
-          </div>
-        </a>
+        </div>
 
         {/* Bottom: Card Content, Metadata, Tech Stack & CTA */}
         <div className="flex flex-col gap-3">
@@ -69,59 +58,59 @@ function StackingCard({ project, index, total }) {
               </h3>
             </div>
 
-            <div className="text-xs sm:text-sm text-white/80 leading-relaxed font-jakarta">
-              <span>
-                {isLongDesc && !isExpanded
-                  ? `${project.short_desc.slice(0, 170)}...`
-                  : project.short_desc}
-              </span>
-              {isLongDesc && (
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    setIsExpanded(!isExpanded);
-                  }}
-                  className="inline-block ml-1.5 font-semibold text-pAccent hover:text-white transition-colors cursor-pointer text-xs underline decoration-pAccent/50 hover:decoration-white"
-                >
-                  {isExpanded ? "Show less" : "Read more"}
-                </button>
-              )}
-            </div>
+            <p className="text-xs sm:text-sm text-white/80 leading-relaxed font-jakarta line-clamp-2">
+              {project.short_desc}
+            </p>
           </div>
 
-          {/* Bottom Row: Tech Stack Pills & Visit CTA */}
-          <div className="flex flex-wrap items-center justify-between gap-3 pt-2.5 border-t border-white/10">
+          {/* Bottom Row: Tech Stack Pills & Action CTAs */}
+          <div className="flex flex-wrap items-center justify-between gap-2.5 sm:gap-3 pt-3 border-t border-white/10 mt-auto">
             {/* Tech Stack Pills */}
             <div className="flex flex-wrap items-center gap-1.5">
               {project.tags.map((tag) => (
                 <div
                   key={tag.id}
-                  className="flex items-center gap-1.5 text-[11px] font-jakarta text-white/85 bg-white/[0.05] hover:bg-white/[0.1] border border-white/15 hover:border-white/30 hover:text-white px-2.5 py-1 rounded-lg transition-colors duration-200 shadow-sm"
+                  className="flex items-center gap-1.5 text-[11px] font-jakarta text-white/85 bg-white/[0.05] hover:bg-white/[0.1] border border-white/15 hover:border-white/30 hover:text-white px-2.5 py-1 rounded-lg transition-colors duration-200 shadow-sm shrink-0"
                 >
                   <img
                     src={tag.img}
                     alt={tag.tag}
-                    className="w-3.5 h-3.5 object-contain"
+                    className="w-3.5 h-3.5 object-contain shrink-0"
                   />
-                  <span className="font-medium">{tag.tag}</span>
+                  <span className="font-medium whitespace-nowrap">{tag.tag}</span>
                 </div>
               ))}
             </div>
 
-            {/* Visit Project CTA */}
-            {project.link && project.link !== "#" && (
-              <a
-                href={project.link}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white hover:bg-pAccent text-black font-clash font-bold text-xs uppercase tracking-wider hover:scale-105 active:scale-95 transition-all duration-200 shadow-[0_4px_16px_rgba(255,255,255,0.15)] shrink-0 cursor-pointer"
+            {/* Segmented Action Pill Bar */}
+            <div className="flex items-center p-0.5 rounded-full bg-white/[0.07] hover:bg-white/[0.1] border border-white/15 backdrop-blur-md shrink-0 ml-auto shadow-sm transition-colors">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onOpenDetails(project);
+                }}
+                className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-white/80 hover:text-white font-jakarta font-medium text-xs transition-all hover:bg-white/10 cursor-pointer whitespace-nowrap"
               >
-                <span>Visit Site</span>
-                <ArrowUpRight className="w-3.5 h-3.5" />
-              </a>
-            )}
+                <span>Details</span>
+              </button>
+
+              {project.link && project.link !== "#" && (
+                <>
+                  <span className="w-px h-3.5 bg-white/20 mx-0.5 shrink-0" />
+                  <a
+                    href={project.link}
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white hover:bg-pAccent text-black font-clash font-bold text-xs uppercase tracking-wider transition-all hover:scale-105 active:scale-95 shadow-[0_2px_10px_rgba(255,255,255,0.12)] whitespace-nowrap cursor-pointer"
+                  >
+                    <span>Visit</span>
+                    <ArrowUpRight className="w-3 h-3 shrink-0" strokeWidth={2.5} />
+                  </a>
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -132,6 +121,7 @@ function StackingCard({ project, index, total }) {
 function Projects() {
   const { projectsSection } = portfolioData;
   const { projects } = projectsSection;
+  const [selectedProject, setSelectedProject] = useState(null);
 
   return (
     <section
@@ -171,14 +161,22 @@ function Projects() {
         <div className="relative w-full flex flex-col items-center">
           {projects.map((project, index) => (
             <StackingCard
-              key={index}
+              key={project.id || index}
               project={project}
               index={index}
               total={projects.length}
+              onOpenDetails={(p) => setSelectedProject(p)}
             />
           ))}
         </div>
       </div>
+
+      {/* High-Fidelity Project Architecture & Details Modal */}
+      <ProjectModal
+        isOpen={Boolean(selectedProject)}
+        onClose={() => setSelectedProject(null)}
+        project={selectedProject}
+      />
     </section>
   );
 }

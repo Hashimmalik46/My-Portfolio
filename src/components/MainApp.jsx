@@ -8,6 +8,7 @@ import Contact from "./Contact";
 import Projects from "./Projects";
 import Footer from "./Footer";
 import SkillsMarquee from "./SkillsMarquee";
+import CursorFollower from "./CursorFollower";
 
 function SeamlessBackgroundVideo({ isLoading = false }) {
   const video1Ref = useRef(null);
@@ -88,9 +89,8 @@ function SeamlessBackgroundVideo({ isLoading = false }) {
         muted
         playsInline
         preload="auto"
-        className={`absolute inset-0 w-full h-full object-cover object-[25%_center] sm:object-[26%_center] md:object-[28%_center] lg:object-[32%_center] xl:object-center scale-[1.05] transition-opacity duration-700 ease-in-out ${
-          activeVideo === 1 ? "opacity-100" : "opacity-0"
-        }`}
+        className={`absolute inset-0 w-full h-full object-cover object-[25%_center] sm:object-[26%_center] md:object-[28%_center] lg:object-[32%_center] xl:object-center scale-[1.05] transition-opacity duration-700 ease-in-out ${activeVideo === 1 ? "opacity-100" : "opacity-0"
+          }`}
       >
         <source src={videoSrc.webm} type="video/webm" />
         <source src={videoSrc.mp4} type="video/mp4" />
@@ -101,9 +101,8 @@ function SeamlessBackgroundVideo({ isLoading = false }) {
         muted
         playsInline
         preload="auto"
-        className={`absolute inset-0 w-full h-full object-cover object-[25%_center] sm:object-[26%_center] md:object-[28%_center] lg:object-[32%_center] xl:object-center scale-[1.05] transition-opacity duration-700 ease-in-out ${
-          activeVideo === 2 ? "opacity-100" : "opacity-0"
-        }`}
+        className={`absolute inset-0 w-full h-full object-cover object-[25%_center] sm:object-[26%_center] md:object-[28%_center] lg:object-[32%_center] xl:object-center scale-[1.05] transition-opacity duration-700 ease-in-out ${activeVideo === 2 ? "opacity-100" : "opacity-0"
+          }`}
       >
         <source src={videoSrc.webm} type="video/webm" />
         <source src={videoSrc.mp4} type="video/mp4" />
@@ -115,6 +114,9 @@ function SeamlessBackgroundVideo({ isLoading = false }) {
 function MainApp({ isLoading = false }) {
   return (
     <main className="relative w-full bg-black text-white selection:bg-pAccent selection:text-secondary">
+      {/* Spring Physics Lime Cursor Follower */}
+      <CursorFollower />
+
       {/* Global Scroll Progress Bar */}
       <ScrollProgress />
 
@@ -129,9 +131,9 @@ function MainApp({ isLoading = false }) {
         {/* Seamless Crossfading Background Video */}
         <SeamlessBackgroundVideo isLoading={isLoading} />
 
-        {/* Dark Video Overlay & Edge Gradient */}
-        <div className="absolute inset-0 bg-black/40 z-0 pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/30 z-0 pointer-events-none" />
+        {/* Video Overlay & Soft Edge Gradient */}
+        <div className="absolute inset-0 bg-black/30 z-0 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#070709]/50 via-transparent to-black/50 z-0 pointer-events-none" />
 
         {/* Hero Content */}
         <Hero isLoading={isLoading} />
