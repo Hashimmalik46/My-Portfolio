@@ -1,5 +1,18 @@
 import { useRef, useState } from "react";
-import { ArrowUpRight, Code2, ExternalLink, Sparkles, Layers } from "lucide-react";
+import {
+  ArrowUpRight,
+  Code2,
+  ExternalLink,
+  Sparkles,
+  Layers,
+  Terminal,
+  Cpu,
+  Database,
+  GitBranch,
+  Boxes,
+  Workflow,
+  Braces,
+} from "lucide-react";
 import { motion } from "motion/react";
 import { portfolioData } from "../data/portfolioData";
 import ProjectModal from "./ProjectModal";
@@ -14,7 +27,7 @@ function StackingCard({ project, index, total, onOpenDetails }) {
   return (
     <div
       ref={containerRef}
-      className="sticky top-24 sm:top-28 w-full max-w-xl sm:max-w-2xl mx-auto mb-20 sm:mb-28 md:mb-36 last:mb-0"
+      className="sticky top-24 sm:top-28 w-full max-w-xl sm:max-w-2xl mx-auto mb-20 sm:mb-28 md:mb-36 last:mb-0 z-10"
       style={{
         zIndex: index + 10,
       }}
@@ -120,15 +133,57 @@ function StackingCard({ project, index, total, onOpenDetails }) {
 
 function Projects() {
   const { projectsSection } = portfolioData;
-  const { projects } = projectsSection;
+  const { projects, floatingImages = [] } = projectsSection;
   const [selectedProject, setSelectedProject] = useState(null);
 
   return (
     <section
       id="Projects"
-      className="relative w-full flex flex-col items-center justify-center px-6 md:px-16 pt-28 pb-36 z-10 text-white"
+      className="relative w-full flex flex-col items-center justify-center px-4 sm:px-6 md:px-16 pt-28 pb-36 z-10 text-white"
     >
-      <div className="max-w-6xl w-full flex flex-col gap-14">
+      {/* Ambient Background Haze & Ghost Project Screen Overlays */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 select-none">
+        {/* Top-Right Lime Haze Mesh Orb */}
+        <div className="absolute top-[6%] -right-24 w-[480px] sm:w-[650px] h-[480px] sm:h-[650px] rounded-full bg-pAccent/[0.08] blur-[140px]" />
+
+        {/* Mid-Left Cyan/Emerald Haze Orb */}
+        <div className="absolute top-[40%] -left-32 w-[450px] sm:w-[600px] h-[450px] sm:h-[600px] rounded-full bg-[#06b6d4]/[0.06] blur-[150px]" />
+
+        {/* Bottom-Right Deep Lime/Purple Haze Orb */}
+        <div className="absolute top-[70%] -right-24 w-[500px] sm:w-[650px] h-[500px] sm:h-[650px] rounded-full bg-[#a8da22]/[0.07] blur-[150px]" />
+
+        {/* Dynamically Mapped Floating Ghost Project Canvases from Data */}
+        {floatingImages.map((item, idx) => {
+          const rot = item.rotation !== undefined ? item.rotation : (idx % 2 === 0 ? -3.5 : 4);
+          return (
+            <motion.div
+              key={item.id || idx}
+              animate={{
+                y: [0, idx % 2 === 0 ? -12 : 12, 0],
+                rotate: [rot, rot + (idx % 2 === 0 ? 0.8 : -0.8), rot],
+              }}
+              transition={{
+                duration: item.duration || 10,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: item.delay || idx * 0.3,
+              }}
+              className={`absolute ${item.positionClass || "top-[10%] left-[2%]"} ${item.sizeClass || "w-[280px] sm:w-[380px] lg:w-[440px]"} aspect-[16/10] rounded-3xl overflow-hidden bg-[#070709]/80 border border-white/[0.12] shadow-[0_20px_60px_rgba(0,0,0,0.85)] ${item.opacityClass || "opacity-20 sm:opacity-25"} filter ${item.blurClass || "blur-[3px] sm:blur-[5px]"}`}
+            >
+              <img
+                src={item.src}
+                alt={item.alt || ""}
+                className="w-full h-full object-cover grayscale-[25%]"
+              />
+              <div
+                className={`absolute inset-0 bg-gradient-to-tr ${item.tintGradient || "from-black/85 via-black/30 to-pAccent/15"}`}
+              />
+            </motion.div>
+          );
+        })}
+      </div>
+
+      <div className="max-w-6xl w-full flex flex-col gap-14 relative z-10">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}

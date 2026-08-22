@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Sparkles, ArrowUpRight, Briefcase } from "lucide-react";
+import { Sparkles, ArrowUpRight, Briefcase, UserRound } from "lucide-react";
 import { motion, useMotionValue, useSpring, useTransform, useScroll } from "motion/react";
 import { portfolioData } from "../data/portfolioData";
 
@@ -95,7 +95,7 @@ function About() {
   return (
     <section
       id="About"
-      className="relative w-full min-h-screen flex items-center justify-center px-6 md:px-16 py-28 z-10 bg-c1 text-secondary selection:bg-secondary selection:text-white"
+      className="relative w-full min-h-screen flex items-center justify-center px-4 sm:px-6 md:px-16 py-20 sm:py-28 z-10 bg-c1 text-secondary selection:bg-secondary selection:text-white"
     >
       <div className="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
         {/* Left Column: Heading, Bio & Metrics */}
@@ -121,6 +121,49 @@ function About() {
           <h2 className="font-longsile text-5xl sm:text-6xl md:text-7xl text-secondary leading-[0.9]">
             {about.heading}
           </h2>
+
+          {/* Portrait Photo Card */}
+          {(about.image || about.avatar) && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.96, y: 15 }}
+              whileInView={{ opacity: 1, scale: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.1 }}
+              className="relative w-full aspect-[4/3] sm:aspect-[16/10] md:aspect-[4/3] rounded-3xl overflow-hidden bg-gradient-to-br from-white/90 to-white/60 backdrop-blur-2xl border border-secondary/15 shadow-[0_20px_50px_rgba(0,0,0,0.08),0_1px_3px_rgba(0,0,0,0.04)] group"
+            >
+              {/* Image */}
+              <img
+                src={about.image || about.avatar}
+                alt={about.imageCaption || "Hashim Malik"}
+                className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
+              />
+
+              {/* Subtle bottom vignette */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 pointer-events-none" />
+
+              {/* Top-Right Sleek Glass Badge */}
+              {about.imageTag && (
+                <div className="absolute top-3 sm:top-3.5 right-3 sm:right-3.5 z-10 pointer-events-none">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-black/50 backdrop-blur-xl border border-white/20 text-white/95 shadow-lg">
+                    <span className="w-1.5 h-1.5 rounded-full bg-pAccent animate-pulse shadow-[0_0_8px_#a8da22]" />
+                    <span className="text-[10px] font-jakarta font-semibold tracking-[0.12em] uppercase">
+                      {about.imageTag}
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {/* Bottom-Left Editorial Watermark Signature */}
+              {about.imageCaption && (
+                <div className="absolute bottom-3.5 sm:bottom-4 left-3.5 sm:left-4 z-10 pointer-events-none flex items-center gap-2">
+                  <UserRound className="w-3.5 h-3.5 text-pAccent shrink-0 drop-shadow-[0_0_8px_rgba(168,218,34,0.8)]" />
+                  <span className="font-clash text-xs sm:text-sm font-semibold tracking-wide text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.85)]">
+                    {about.imageCaption}
+                  </span>
+                </div>
+              )}
+            </motion.div>
+          )}
 
           <p className="font-cormorant italic text-2xl sm:text-3xl text-secondary/85 font-light leading-relaxed">
             {about.subheading}
@@ -235,25 +278,25 @@ function About() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.15 }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="relative bg-white/80 hover:bg-white/95 backdrop-blur-2xl border border-secondary/10 hover:border-secondary/20 rounded-3xl p-6 md:p-8 shadow-[0_20px_50px_rgba(0,0,0,0.06),0_1px_3px_rgba(0,0,0,0.04)] transition-[background-color,border-color,box-shadow] duration-300"
+              className="relative bg-white/80 hover:bg-white/95 backdrop-blur-2xl border border-secondary/10 hover:border-secondary/20 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 shadow-[0_20px_50px_rgba(0,0,0,0.06),0_1px_3px_rgba(0,0,0,0.04)] transition-[background-color,border-color,box-shadow] duration-300"
             >
-              <div className="flex items-center justify-between mb-6 pb-3 border-b border-secondary/10">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-xl bg-secondary flex items-center justify-center shadow-sm">
-                    <Briefcase className="w-4 h-4 text-pAccent" />
+              <div className="flex items-center justify-between gap-3 mb-5 sm:mb-6 pb-3 border-b border-secondary/10">
+                <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-secondary flex items-center justify-center shadow-sm shrink-0">
+                    <Briefcase className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-pAccent" />
                   </div>
-                  <h3 className="font-clash text-lg md:text-xl font-bold text-secondary tracking-tight">
+                  <h3 className="font-clash text-base sm:text-lg md:text-xl font-bold text-secondary tracking-tight truncate">
                     Journey & Milestones
                   </h3>
                 </div>
-                <span className="text-[11px] font-jakarta tracking-[0.2em] uppercase text-secondary/50 font-semibold">
+                <span className="hidden xs:inline-block text-[10px] sm:text-[11px] font-jakarta tracking-[0.15em] sm:tracking-[0.2em] uppercase text-secondary/50 font-semibold shrink-0">
                   Experience & Education
                 </span>
               </div>
 
               <div
                 ref={timelineRef}
-                className="relative ml-2 sm:ml-3 pl-5 sm:pl-6 space-y-7"
+                className="relative ml-1.5 sm:ml-3 pl-4 sm:pl-6 space-y-6 sm:space-y-7"
               >
                 {/* Vertical Timeline Track (Scroll-Driven Growth) */}
                 <div className="absolute left-0 top-2 bottom-2 w-[2px] bg-secondary/15 rounded-full overflow-hidden">
@@ -280,7 +323,7 @@ function About() {
                       className="relative group"
                     >
                       {/* Timeline Node Dot (Scroll-linked illumination) */}
-                      <div className="absolute -left-5 sm:-left-6 top-1.5 -translate-x-1/2 z-10 flex items-center justify-center pointer-events-none">
+                      <div className="absolute -left-4 sm:-left-6 top-1 sm:top-1.5 -translate-x-1/2 z-10 flex items-center justify-center pointer-events-none">
                         <ScrollTimelineDot
                           isFirst={isFirst}
                           idx={idx}
@@ -289,13 +332,13 @@ function About() {
                         />
                       </div>
 
-                      <div className="flex flex-wrap items-center justify-between gap-2 mb-1.5">
-                        <span className="font-clash text-base md:text-lg font-semibold text-secondary group-hover:text-black transition-colors">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between items-start gap-1 sm:gap-2 mb-1">
+                        <span className="font-clash text-sm sm:text-base md:text-lg font-semibold text-secondary group-hover:text-black transition-colors leading-snug">
                           {item.role}
                         </span>
 
                         {/* Year Badge with Live Pulse Indicator for Present entries */}
-                        <span className="inline-flex items-center gap-1.5 text-[11px] font-jakarta font-semibold px-2.5 py-0.5 rounded-full bg-secondary/[0.08] text-secondary/80 border border-secondary/15 group-hover:border-secondary/30 tracking-wide transition-colors">
+                        <span className="inline-flex items-center gap-1.5 text-[10px] sm:text-[11px] font-jakarta font-semibold px-2 sm:px-2.5 py-0.5 rounded-full bg-secondary/[0.08] text-secondary/80 border border-secondary/15 group-hover:border-secondary/30 tracking-wide transition-colors shrink-0">
                           {item.year.includes("Present") && (
                             <span className="w-1.5 h-1.5 rounded-full bg-pAccent animate-pulse shrink-0" />
                           )}
@@ -303,21 +346,21 @@ function About() {
                         </span>
                       </div>
 
-                      <div className="text-xs md:text-sm font-medium text-secondary/70 font-jakarta mb-2">
+                      <div className="text-[11px] sm:text-xs md:text-sm font-medium text-secondary/70 font-jakarta mb-1.5">
                         {item.organization}
                       </div>
 
-                      <p className="text-xs md:text-sm text-secondary/80 font-jakarta leading-relaxed mb-3">
+                      <p className="text-xs sm:text-sm text-secondary/80 font-jakarta leading-relaxed mb-2.5">
                         {item.description}
                       </p>
 
                       {/* Skill / Domain Tags */}
                       {item.tags && (
-                        <div className="flex flex-wrap gap-1.5">
+                        <div className="flex flex-wrap gap-1 sm:gap-1.5">
                           {item.tags.map((t, tIdx) => (
                             <span
                               key={tIdx}
-                              className="text-[10px] font-semibold font-jakarta px-2.5 py-0.5 rounded-md bg-secondary/[0.06] hover:bg-secondary/[0.12] text-secondary/85 border border-secondary/10 transition-colors"
+                              className="text-[9.5px] sm:text-[10px] font-semibold font-jakarta px-2 sm:px-2.5 py-0.5 rounded-md bg-secondary/[0.06] hover:bg-secondary/[0.12] text-secondary/85 border border-secondary/10 transition-colors"
                             >
                               {t}
                             </span>
