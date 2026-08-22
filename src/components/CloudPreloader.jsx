@@ -7,11 +7,13 @@ import { portfolioData } from "../data/portfolioData";
  * CloudPreloader Component
  * 
  * Minimalist cinematic cloud preloader with subtle pixelation:
- * - Safari/WebKit bulletproof architecture:
- *   Outer fixed container extends past all viewport edges (-inset-10) with pure opacity exit,
- *   preventing WebKit stacking context breakages and eliminating any bottom viewport gap.
- * - Inner layers safely handle the scale, blur, and pixelated canvas rendering.
+ * - Waits for video frame buffer readiness before fading in text & UI,
+ *   eliminating any blank-background text flash on live deployments.
  * - Pulls all text, subtitles, durations, and video sources from portfolioData.js.
+ * - Plays seamless cloud video with customizable duration.
+ * - Subtle, delicate pixelated texture.
+ * - Minimalist Longsile typography for name and subtitle.
+ * - Side and radial cinematic vignettes.
  */
 export default function CloudPreloader({ onStartReveal }) {
   const [isVideoReady, setIsVideoReady] = useState(false);
@@ -150,24 +152,28 @@ export default function CloudPreloader({ onStartReveal }) {
       initial={{ opacity: 1 }}
       exit={{
         opacity: 0,
+        scale: 1.08,
+        filter: "blur(8px)",
         transition: { duration: 0.85, ease: [0.22, 1, 0.36, 1] },
       }}
-      animate={{ opacity: isExiting ? 0 : 1 }}
+      animate={
+        isExiting
+          ? {
+              opacity: 0,
+              scale: 1.08,
+              filter: "blur(8px)",
+            }
+          : {
+              opacity: 1,
+              scale: 1,
+              filter: "blur(0px)",
+            }
+      }
       transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
       onClick={handleTrigger}
-      style={{
-        position: "fixed",
-        top: "-25px",
-        left: "-25px",
-        right: "-25px",
-        bottom: "-25px",
-        width: "calc(100vw + 50px)",
-        height: "calc(100vh + 50px)",
-        minHeight: "calc(100% + 50px)",
-      }}
-      className="fixed -inset-10 z-[100] bg-black cursor-pointer overflow-hidden touch-none select-none pointer-events-auto"
+      className="fixed inset-0 z-[100] flex flex-col justify-between items-center py-12 sm:py-16 px-6 bg-black cursor-pointer overflow-hidden touch-none select-none pointer-events-auto"
     >
-      {/* Off-screen source video element (kept active in layout tree for continuous WebKit decoding) */}
+      {/* Video element (Active in DOM for decoder playback) */}
       <video
         ref={videoRef}
         src={videoSrc}
@@ -179,171 +185,149 @@ export default function CloudPreloader({ onStartReveal }) {
         onLoadedData={() => setIsVideoReady(true)}
         onCanPlay={() => setIsVideoReady(true)}
         onEnded={handleTrigger}
-        className="fixed top-[-9999px] left-[-9999px] w-[16px] h-[16px] opacity-[0.001] pointer-events-none"
+        className="absolute inset-0 w-full h-full object-cover object-center scale-[1.02] pointer-events-none opacity-0"
       />
 
-      {/* Inner Animated Visual Canvas Container (Handles Scale & Blur safely without breaking fixed root) */}
+      {/* Real-time Subtle Pixelated Render Canvas */}
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 w-full h-full object-cover object-center scale-[1.03] pointer-events-none transition-opacity duration-700 ease-out"
+        style={{
+          imageRendering: "pixelated",
+          filter: "contrast(1.04) brightness(0.96)",
+          opacity: isVideoReady ? 1 : 0,
+        }}
+      />
+
+      {/* Subtle Micro Dither Mesh */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.08]"
+        style={{
+          backgroundImage:
+            "radial-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 0)",
+          backgroundSize: "3px 3px",
+        }}
+      />
+
+      {/* Cinematic Edge & Side Vignettes */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-transparent to-black/75 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-transparent to-black/65 pointer-events-none" />
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0.85) 100%)",
+        }}
+      />
+
+      {/* Top Minimal Line Accent */}
       <motion.div
+        initial={{ opacity: 0, y: -10 }}
         animate={
           isExiting
-            ? {
-                scale: 1.08,
-                filter: "blur(8px)",
-                opacity: 0,
-              }
-            : {
-                scale: 1,
-                filter: "blur(0px)",
-                opacity: 1,
-              }
+            ? { opacity: 0, y: -10 }
+            : isVideoReady
+            ? { opacity: 1, y: 0 }
+            : { opacity: 0, y: -10 }
         }
-        transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
-        className="absolute inset-0 w-full h-full pointer-events-none overflow-hidden"
+        transition={{ duration: 0.6, delay: 0.1 }}
+        className="relative z-10 flex items-center gap-3 font-mono text-[9px] tracking-[0.35em] uppercase text-white/40 font-light"
       >
-        {/* Real-time Subtle Pixelated Render Canvas */}
-        <canvas
-          ref={canvasRef}
-          className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none transition-opacity duration-700 ease-out"
-          style={{
-            imageRendering: "pixelated",
-            filter: "contrast(1.04) brightness(0.96)",
-            opacity: isVideoReady ? 1 : 0,
-          }}
-        />
-
-        {/* Subtle Micro Dither Mesh */}
-        <div
-          className="absolute inset-0 pointer-events-none opacity-[0.08]"
-          style={{
-            backgroundImage:
-              "radial-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 0)",
-            backgroundSize: "3px 3px",
-          }}
-        />
-
-        {/* Cinematic Edge & Side Vignettes */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-transparent to-black/75 pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-transparent to-black/45 pointer-events-none" />
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background:
-              "radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0.85) 100%)",
-          }}
-        />
+        <span className="w-1 h-1 rounded-full bg-white/40" />
+        <span>{topTag}</span>
+        <span>•</span>
+        <span>{new Date().getFullYear()}</span>
       </motion.div>
 
-      {/* Foreground UI Layer */}
-      <div className="relative w-full h-full flex flex-col justify-between items-center py-16 sm:py-20 px-8 pointer-events-none">
-        {/* Top Minimal Line Accent */}
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={
-            isExiting
-              ? { opacity: 0, y: -10 }
-              : isVideoReady
-              ? { opacity: 1, y: 0 }
-              : { opacity: 0, y: -10 }
-          }
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="relative z-10 flex items-center gap-3 font-mono text-[9px] tracking-[0.35em] uppercase text-white/40 font-light"
+      {/* Center: Ultra-Minimal "Hashim Malik" in Longsile Font */}
+      <motion.div
+        initial={{ opacity: 0, y: 15 }}
+        animate={
+          isExiting
+            ? { opacity: 0, y: -15, scale: 0.97 }
+            : isVideoReady
+            ? { opacity: 1, y: 0, scale: 1 }
+            : { opacity: 0, y: 15 }
+        }
+        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+        className="relative z-10 flex flex-col items-center text-center gap-3.5 my-auto"
+      >
+        <motion.h1
+          animate={{
+            y: [0, 6, 0],
+            opacity: [0.65, 1, 0.65],
+          }}
+          transition={{
+            repeat: Infinity,
+            duration: 2.2,
+            ease: "easeInOut",
+          }}
+          style={{
+            willChange: "transform, opacity",
+            transform: "translate3d(0, 0, 0)",
+            WebkitFontSmoothing: "antialiased",
+          }}
+          className="font-longsile text-5xl sm:text-7xl md:text-8xl lg:text-9xl text-white/95 font-normal tracking-wide drop-shadow-[0_4px_24px_rgba(0,0,0,0.85)] select-none"
         >
-          <span className="w-1 h-1 rounded-full bg-white/40" />
-          <span>{topTag}</span>
-          <span>•</span>
-          <span>{new Date().getFullYear()}</span>
-        </motion.div>
+          {name}
+        </motion.h1>
 
-        {/* Center: Ultra-Minimal "Hashim Malik" in Longsile Font */}
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={
-            isExiting
-              ? { opacity: 0, y: -15, scale: 0.97 }
-              : isVideoReady
-              ? { opacity: 1, y: 0, scale: 1 }
-              : { opacity: 0, y: 15 }
-          }
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="relative z-10 flex flex-col items-center text-center gap-3.5 my-auto"
+        {/* Minimal Subtitle */}
+        <motion.span
+          animate={{
+            y: [0, 6, 0],
+            opacity: [0.4, 0.8, 0.4],
+          }}
+          transition={{
+            repeat: Infinity,
+            duration: 2.2,
+            ease: "easeInOut",
+          }}
+          style={{
+            willChange: "transform, opacity",
+            transform: "translate3d(0, 0, 0)",
+          }}
+          className="font-jakarta text-[9.5px] sm:text-[10.5px] tracking-[0.4em] uppercase text-white/60 font-light"
         >
-          <motion.h1
-            animate={{
-              y: [0, 6, 0],
-              opacity: [0.65, 1, 0.65],
-            }}
-            transition={{
-              repeat: Infinity,
-              duration: 2.2,
-              ease: "easeInOut",
-            }}
-            style={{
-              willChange: "transform, opacity",
-              transform: "translate3d(0, 0, 0)",
-              WebkitFontSmoothing: "antialiased",
-            }}
-            className="font-longsile text-5xl sm:text-7xl md:text-8xl lg:text-9xl text-white/95 font-normal tracking-wide drop-shadow-[0_4px_24px_rgba(0,0,0,0.85)] select-none"
-          >
-            {name}
-          </motion.h1>
+          {subtitle}
+        </motion.span>
+      </motion.div>
 
-          {/* Minimal Subtitle */}
-          <motion.span
-            animate={{
-              y: [0, 6, 0],
-              opacity: [0.4, 0.8, 0.4],
-            }}
-            transition={{
-              repeat: Infinity,
-              duration: 2.2,
-              ease: "easeInOut",
-            }}
-            style={{
-              willChange: "transform, opacity",
-              transform: "translate3d(0, 0, 0)",
-            }}
-            className="font-jakarta text-[9.5px] sm:text-[10.5px] tracking-[0.4em] uppercase text-white/60 font-light"
-          >
-            {subtitle}
-          </motion.span>
-        </motion.div>
-
-        {/* Bottom: Minimalist Downward Floating Indicator */}
+      {/* Bottom: Minimalist Downward Floating Indicator */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={
+          isExiting
+            ? { opacity: 0, y: 10 }
+            : isVideoReady
+            ? { opacity: 1, y: 0 }
+            : { opacity: 0, y: 10 }
+        }
+        transition={{ duration: 0.6, delay: 0.15 }}
+        className="relative z-10 flex flex-col items-center gap-2"
+      >
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={
-            isExiting
-              ? { opacity: 0, y: 10 }
-              : isVideoReady
-              ? { opacity: 1, y: 0 }
-              : { opacity: 0, y: 10 }
-          }
-          transition={{ duration: 0.6, delay: 0.15 }}
-          className="relative z-10 flex flex-col items-center gap-2"
+          animate={{
+            y: [0, 6, 0],
+            opacity: [0.4, 0.8, 0.4],
+          }}
+          transition={{
+            repeat: Infinity,
+            duration: 2.2,
+            ease: "easeInOut",
+          }}
+          style={{
+            willChange: "transform, opacity",
+            transform: "translate3d(0, 0, 0)",
+          }}
+          className="flex flex-col items-center gap-1.5 cursor-pointer"
         >
-          <motion.div
-            animate={{
-              y: [0, 6, 0],
-              opacity: [0.4, 0.8, 0.4],
-            }}
-            transition={{
-              repeat: Infinity,
-              duration: 2.2,
-              ease: "easeInOut",
-            }}
-            style={{
-              willChange: "transform, opacity",
-              transform: "translate3d(0, 0, 0)",
-            }}
-            className="flex flex-col items-center gap-1.5 cursor-pointer"
-          >
-            <span className="font-mono text-[8.5px] tracking-[0.35em] uppercase text-white/40">
-              {scrollPrompt}
-            </span>
-            <ChevronDown className="w-3.5 h-3.5 text-white/60" strokeWidth={1.5} />
-          </motion.div>
+          <span className="font-mono text-[8.5px] tracking-[0.35em] uppercase text-white/40">
+            {scrollPrompt}
+          </span>
+          <ChevronDown className="w-3.5 h-3.5 text-white/60" strokeWidth={1.5} />
         </motion.div>
-      </div>
+      </motion.div>
     </motion.div>
   );
 }

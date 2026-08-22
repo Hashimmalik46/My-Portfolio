@@ -56,15 +56,6 @@
     overflow-x: hidden;
   }
 
-  /* Safari / WebKit Video Layer & Media Controls Reset */
-  video::-webkit-media-controls,
-  video::-webkit-media-controls-enclosure,
-  video::-webkit-media-controls-panel {
-    display: none !important;
-    opacity: 0 !important;
-    visibility: hidden !important;
-  }
-
   /* Custom Scrollbar */
   ::-webkit-scrollbar {
     width: 6px;
