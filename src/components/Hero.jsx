@@ -26,8 +26,8 @@ import HeroChatbot from "./HeroChatbot";
 function TypewriterText({
   text,
   isLoading,
-  speed = 70,
-  delay = 200,
+  speed = 55,
+  delay = 0,
   showCursor = true,
   cursorClassName = "w-[2.5px] sm:w-[4px] md:w-[6px] h-[0.72em]",
 }) {
@@ -66,8 +66,8 @@ function TypewriterText({
   }, [text, isLoading, speed, delay]);
 
   return (
-    <span className="inline-flex items-baseline">
-      <span>{displayedText}</span>
+    <span className="inline-flex items-baseline min-h-[1.1em]">
+      <span>{displayedText || "\u00A0"}</span>
       {showCursor && (
         <motion.span
           animate={{ opacity: isDone ? [1, 0] : [1, 0, 1] }}
@@ -766,19 +766,19 @@ function Hero({ isLoading = false }) {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.18,
-        delayChildren: 0.25,
+        staggerChildren: 0.08,
+        delayChildren: 0,
       },
     },
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 35 },
+    hidden: { opacity: 0, y: 20 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.85,
+        duration: 0.55,
         ease: [0.22, 1, 0.36, 1],
       },
     },

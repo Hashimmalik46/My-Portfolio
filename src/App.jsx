@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Lenis from "lenis";
 import "lenis/dist/lenis.css";
 import MainApp from "./components/MainApp";
-import Preloader from "./components/Preloader";
+import CloudPreloader from "./components/CloudPreloader";
 import { AnimatePresence } from "motion/react";
 
 function App() {
@@ -21,12 +21,12 @@ function App() {
     }
 
     const lenis = new Lenis({
-      duration: 0.75, // Snappy & agile response for desktop mouse wheel
+      duration: 0.85, // Snappy & agile response for desktop mouse wheel
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
-      wheelMultiplier: 1.1,
+      wheelMultiplier: 1.05,
       infinite: false,
     });
 
@@ -73,14 +73,20 @@ function App() {
     if (isLoading) {
       window.lenis?.stop();
     } else {
-      window.lenis?.start();
+      const timer = setTimeout(() => {
+        window.lenis?.start();
+      }, 400); // 400ms momentum damping buffer during cloud dissolve
+
+      return () => clearTimeout(timer);
     }
   }, [isLoading]);
 
   return (
     <>
       <AnimatePresence>
-        {isLoading && <Preloader onComplete={() => setIsLoading(false)} />}
+        {isLoading && (
+          <CloudPreloader onStartReveal={() => setIsLoading(false)} />
+        )}
       </AnimatePresence>
       <MainApp isLoading={isLoading} />
     </>
@@ -88,3 +94,4 @@ function App() {
 }
 
 export default App;
+

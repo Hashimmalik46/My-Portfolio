@@ -26,16 +26,7 @@ function SeamlessBackgroundVideo({ isLoading = false }) {
     const v2 = video2Ref.current;
     if (!v1 || !v2) return;
 
-    if (isLoading) {
-      v1.pause();
-      v1.currentTime = 0;
-      v2.pause();
-      v2.currentTime = 0;
-      return;
-    }
-
-    // When preloader finishes (isLoading is false), start video from beginning
-    v1.currentTime = 0;
+    // Start video playback immediately on mount
     v1.play().catch(() => { });
 
     const crossfadeDuration = 0.8;
@@ -156,4 +147,4 @@ function MainApp({ isLoading = false }) {
   );
 }
 
-export default MainApp;
+export default MainApp;
