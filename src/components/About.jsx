@@ -1,6 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { Sparkles, ArrowUpRight, Briefcase, UserRound } from "lucide-react";
-import { motion, useMotionValue, useSpring, useTransform, useScroll } from "motion/react";
+import {
+  motion,
+  useMotionValue,
+  useSpring,
+  useTransform,
+  useScroll,
+  AnimatePresence,
+} from "motion/react";
 import { portfolioData } from "../data/portfolioData";
 
 function CounterUp({ value }) {
@@ -45,16 +52,7 @@ function CounterUp({ value }) {
   );
 }
 
-function ScrollTimelineDot({ isFirst, idx, total, progress }) {
-  if (isFirst) {
-    return (
-      <div className="relative flex items-center justify-center">
-        <span className="absolute -inset-1 rounded-full bg-pAccent/25 animate-pulse" />
-        <span className="relative block w-3.5 h-3.5 shrink-0 rounded-full bg-pAccent border-2 border-c1 shadow-[0_0_10px_rgba(168,218,34,0.85)]" />
-      </div>
-    );
-  }
-
+function ScrollTimelineDot({ isFirst, idx, progress }) {
   // Exact physical contact position of each dot along the track
   const threshold = idx === 1 ? 0.42 : 0.84;
   const startHit = Math.max(0.01, threshold - 0.015);
@@ -66,11 +64,116 @@ function ScrollTimelineDot({ isFirst, idx, total, progress }) {
     ["#16161a", "#a8da22", "#a8da22"]
   );
 
+  if (isFirst) {
+    return (
+      <div className="relative flex items-center justify-center">
+        <span className="absolute -inset-1 rounded-full bg-pAccent/25 animate-pulse" />
+        <span className="relative block w-3.5 h-3.5 shrink-0 rounded-full bg-pAccent border-2 border-c1 shadow-[0_0_10px_rgba(168,218,34,0.85)]" />
+      </div>
+    );
+  }
+
   return (
     <motion.span
       style={{ backgroundColor: bg }}
       className="block w-3.5 h-3.5 shrink-0 rounded-full border-2 border-c1"
     />
+  );
+}
+
+function AboutImageCard({ imageSrc, imageCaption, imageTag }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.25 }}
+      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      whileHover={{ y: -4, transition: { duration: 0.25, ease: "easeOut" } }}
+      className="relative w-full aspect-[4/3] sm:aspect-[16/10] md:aspect-[4/3] rounded-3xl overflow-hidden bg-white/40 backdrop-blur-xl border border-secondary/10 shadow-[0_20px_50px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04)] group select-none isolate"
+    >
+      {/* 1. Cinematic Zoom & Unblur Image Reveal on Scroll */}
+      <motion.img
+        src={imageSrc}
+        alt={imageCaption || "Hashim Malik"}
+        initial={{ scale: 1.15, filter: "blur(8px)" }}
+        whileInView={{ scale: 1, filter: "blur(0px)" }}
+        viewport={{ once: true, amount: 0.25 }}
+        transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+        className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
+      />
+
+      {/* 2. Luxury Curtain Wipe Shutter with Glowing Lime Accent Edge */}
+      <motion.div
+        initial={{ scaleY: 1 }}
+        whileInView={{ scaleY: 0 }}
+        viewport={{ once: true, amount: 0.25 }}
+        transition={{ duration: 0.95, ease: [0.77, 0, 0.175, 1], delay: 0.05 }}
+        style={{ originY: 0 }}
+        className="absolute inset-0 z-30 bg-[#0d0e15] pointer-events-none overflow-hidden"
+      >
+        {/* Glowing Lime Leading Tracer Line */}
+        <div className="absolute bottom-0 inset-x-0 h-[2.5px] bg-pAccent shadow-[0_0_14px_#a8da22]" />
+      </motion.div>
+
+      {/* 3. Luminous Specular Flare Light Sweep on Scroll */}
+      <motion.div
+        initial={{ x: "-130%", opacity: 0.7 }}
+        whileInView={{ x: "230%", opacity: 0 }}
+        viewport={{ once: true, amount: 0.25 }}
+        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
+        className="absolute inset-0 w-3/4 bg-gradient-to-r from-transparent via-white/60 to-transparent skew-x-[-25deg] pointer-events-none z-20"
+      />
+
+      {/* 4. Subtle Bottom-Only Scrim for Watermark Legibility */}
+      {imageCaption && (
+        <div className="absolute bottom-0 inset-x-0 h-20 bg-gradient-to-t from-black/45 via-black/15 to-transparent pointer-events-none z-10" />
+      )}
+
+      {/* 5. Top-Right Glass Badge (Spring Pop-In on Scroll) */}
+      {imageTag && (
+        <div className="absolute top-3 sm:top-3.5 right-3 sm:right-3.5 z-20 pointer-events-none">
+          <motion.div
+            initial={{ opacity: 0, y: -10, scale: 0.9 }}
+            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            viewport={{ once: true, amount: 0.25 }}
+            transition={{
+              type: "spring",
+              stiffness: 420,
+              damping: 24,
+              delay: 0.45,
+            }}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-black/60 backdrop-blur-xl border border-white/20 text-white/95 shadow-lg"
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-pAccent animate-pulse shadow-[0_0_8px_#a8da22]" />
+            <span className="text-[10px] font-jakarta font-semibold tracking-[0.12em] uppercase">
+              {imageTag}
+            </span>
+          </motion.div>
+        </div>
+      )}
+
+      {/* 6. Bottom-Left Editorial Signature Watermark (Slide & Fade in on Scroll) */}
+      {imageCaption && (
+        <div className="absolute bottom-3.5 sm:bottom-4 left-3.5 sm:left-4 z-20 pointer-events-none">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.25 }}
+            transition={{
+              duration: 0.5,
+              ease: [0.16, 1, 0.3, 1],
+              delay: 0.5,
+            }}
+            className="flex items-center gap-2"
+          >
+            <UserRound className="w-3.5 h-3.5 text-pAccent shrink-0 drop-shadow-[0_0_8px_rgba(168,218,34,0.9)]" />
+            <span className="font-clash text-xs sm:text-sm font-semibold tracking-wide text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+              {imageCaption}
+            </span>
+          </motion.div>
+        </div>
+      )}
+    </motion.div>
   );
 }
 
@@ -122,47 +225,13 @@ function About() {
             {about.heading}
           </h2>
 
-          {/* Portrait Photo Card */}
+          {/* Portrait Photo Card with Progressive Blur-Up & Loading Shimmer */}
           {(about.image || about.avatar) && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.96, y: 15 }}
-              whileInView={{ opacity: 1, scale: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7, delay: 0.1 }}
-              className="relative w-full aspect-[4/3] sm:aspect-[16/10] md:aspect-[4/3] rounded-3xl overflow-hidden bg-gradient-to-br from-white/90 to-white/60 backdrop-blur-2xl border border-secondary/15 shadow-[0_20px_50px_rgba(0,0,0,0.08),0_1px_3px_rgba(0,0,0,0.04)] group"
-            >
-              {/* Image */}
-              <img
-                src={about.image || about.avatar}
-                alt={about.imageCaption || "Hashim Malik"}
-                className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
-              />
-
-              {/* Subtle bottom vignette */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 pointer-events-none" />
-
-              {/* Top-Right Sleek Glass Badge */}
-              {about.imageTag && (
-                <div className="absolute top-3 sm:top-3.5 right-3 sm:right-3.5 z-10 pointer-events-none">
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-black/50 backdrop-blur-xl border border-white/20 text-white/95 shadow-lg">
-                    <span className="w-1.5 h-1.5 rounded-full bg-pAccent animate-pulse shadow-[0_0_8px_#a8da22]" />
-                    <span className="text-[10px] font-jakarta font-semibold tracking-[0.12em] uppercase">
-                      {about.imageTag}
-                    </span>
-                  </div>
-                </div>
-              )}
-
-              {/* Bottom-Left Editorial Watermark Signature */}
-              {about.imageCaption && (
-                <div className="absolute bottom-3.5 sm:bottom-4 left-3.5 sm:left-4 z-10 pointer-events-none flex items-center gap-2">
-                  <UserRound className="w-3.5 h-3.5 text-pAccent shrink-0 drop-shadow-[0_0_8px_rgba(168,218,34,0.8)]" />
-                  <span className="font-clash text-xs sm:text-sm font-semibold tracking-wide text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.85)]">
-                    {about.imageCaption}
-                  </span>
-                </div>
-              )}
-            </motion.div>
+            <AboutImageCard
+              imageSrc={about.image || about.avatar}
+              imageCaption={about.imageCaption}
+              imageTag={about.imageTag}
+            />
           )}
 
           <p className="font-cormorant italic text-2xl sm:text-3xl text-secondary/85 font-light leading-relaxed">
@@ -327,7 +396,6 @@ function About() {
                         <ScrollTimelineDot
                           isFirst={isFirst}
                           idx={idx}
-                          total={about.timeline.length}
                           progress={smoothScaleY}
                         />
                       </div>

@@ -115,7 +115,7 @@ export const portfolioData = {
     //Player
     playlist: [
       { id: 1, title: "Ambient Flow 01", src: "/audio/ambient_1.mp3" },
-      { id: 1, title: "Ambient Flow 02", src: "/audio/ambient_2.mp3" },
+      { id: 2, title: "Ambient Flow 02", src: "/audio/ambient_2.mp3" },
     ],
     scrollText: "Scroll",
   },

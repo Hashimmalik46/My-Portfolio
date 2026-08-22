@@ -1,8 +1,9 @@
-import { useState } from "react";
-import { ArrowUp, Github, Linkedin, Mail, FileText, Sparkles } from "lucide-react";
+import { useState, lazy, Suspense } from "react";
+import { ArrowUp, Github, Linkedin, Mail, FileText } from "lucide-react";
 import { motion } from "motion/react";
 import { portfolioData } from "../data/portfolioData";
-import ResumeModal from "./ResumeModal";
+
+const ResumeModal = lazy(() => import("./ResumeModal"));
 
 function Footer() {
   const { footer, socials, personal } = portfolioData;
@@ -114,10 +115,14 @@ function Footer() {
       </motion.footer>
 
       {/* ATS Resume Generation Modal */}
-      <ResumeModal
-        isOpen={isResumeOpen}
-        onClose={() => setIsResumeOpen(false)}
-      />
+      <Suspense fallback={null}>
+        {isResumeOpen && (
+          <ResumeModal
+            isOpen={isResumeOpen}
+            onClose={() => setIsResumeOpen(false)}
+          />
+        )}
+      </Suspense>
     </>
   );
 }

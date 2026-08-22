@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "motion/react";
 import {
@@ -6,12 +6,9 @@ import {
   Copy,
   Check,
   X,
-  ExternalLink,
   Download,
   Layout,
   Type,
-  Sparkles,
-  SlidersHorizontal,
   RotateCcw,
   Eraser,
   Plus,
@@ -20,8 +17,6 @@ import {
   Edit3,
   Briefcase,
   GraduationCap,
-  Code2,
-  Layers,
   User,
   MapPin,
   Mail,
@@ -42,7 +37,7 @@ export default function ResumeModal({ isOpen, onClose }) {
 
   const { personal, socials, skills, projectsSection, resume: defaultResume } = portfolioData;
 
-  const getDefaultResumeState = () => ({
+  const getDefaultResumeState = useCallback(() => ({
     name: personal.name || "",
     location: personal.location || "",
     email: personal.email || "",
@@ -51,7 +46,7 @@ export default function ResumeModal({ isOpen, onClose }) {
     github: socials.github || "",
     website: socials.website || "",
     ...JSON.parse(JSON.stringify(defaultResume)),
-  });
+  }), [personal, socials, defaultResume]);
 
   const [customResume, setCustomResume] = useState(getDefaultResumeState);
 
@@ -61,7 +56,7 @@ export default function ResumeModal({ isOpen, onClose }) {
       setCustomResume(getDefaultResumeState());
       setActiveTab("preview");
     }
-  }, [isOpen]);
+  }, [isOpen, getDefaultResumeState]);
 
   // Lock body scroll when modal is open
   useEffect(() => {
@@ -347,7 +342,7 @@ export default function ResumeModal({ isOpen, onClose }) {
       try {
         iframe.contentWindow.focus();
         iframe.contentWindow.print();
-      } catch (err) {
+      } catch {
         window.print();
       } finally {
         setTimeout(() => {

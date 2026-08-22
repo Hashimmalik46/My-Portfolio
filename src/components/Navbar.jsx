@@ -1,14 +1,9 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, lazy, Suspense } from "react";
 import {
-  ArrowUpRight,
-  Sparkles,
   Wrench,
   FileText,
-  Bot,
   Copy,
   Check,
-  ChevronDown,
-  X,
 } from "lucide-react";
 import {
   motion,
@@ -18,7 +13,8 @@ import {
   useMotionTemplate,
 } from "motion/react";
 import { portfolioData } from "../data/portfolioData";
-import ResumeModal from "./ResumeModal";
+
+const ResumeModal = lazy(() => import("./ResumeModal"));
 
 /**
  * Apple Glass Interactive Surface
@@ -146,7 +142,6 @@ function Navbar({ isLoading = false }) {
   const [isToolsOpen, setIsToolsOpen] = useState(false);
   const [isToolsHovered, setIsToolsHovered] = useState(false);
   const [isResumeOpen, setIsResumeOpen] = useState(false);
-  const [isResumeHovered, setIsResumeHovered] = useState(false);
   const [copiedEmail, setCopiedEmail] = useState(false);
   const toolsRef = useRef(null);
   const { nav, socials, personal } = portfolioData;
@@ -649,10 +644,14 @@ function Navbar({ isLoading = false }) {
     </header>
 
     {/* ATS Resume Generation Modal */}
-    <ResumeModal
-      isOpen={isResumeOpen}
-      onClose={() => setIsResumeOpen(false)}
-    />
+    <Suspense fallback={null}>
+      {isResumeOpen && (
+        <ResumeModal
+          isOpen={isResumeOpen}
+          onClose={() => setIsResumeOpen(false)}
+        />
+      )}
+    </Suspense>
   </>
   );
 }

@@ -10,14 +10,15 @@ import { portfolioData } from "../data/portfolioData";
 function Contact() {
   const { contact } = portfolioData;
   const [state, handleSubmit] = useForm(contact.formspreeFormId);
-  const [showMessage, setShowMessage] = useState(false);
+  const [dismissSuccess, setDismissSuccess] = useState(false);
   const [copied, setCopied] = useState(false);
+
+  const showMessage = state.succeeded && !dismissSuccess;
 
   useEffect(() => {
     if (state.succeeded) {
-      setShowMessage(true);
       const timer = setTimeout(() => {
-        setShowMessage(false);
+        setDismissSuccess(true);
       }, 4000);
       return () => clearTimeout(timer);
     }

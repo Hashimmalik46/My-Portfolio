@@ -31,7 +31,6 @@ function SeamlessBackgroundVideo({ isLoading = false }) {
       v1.currentTime = 0;
       v2.pause();
       v2.currentTime = 0;
-      setActiveVideo(1);
       return;
     }
 

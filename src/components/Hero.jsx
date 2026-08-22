@@ -1,6 +1,5 @@
 import { useRef, useState, useEffect } from "react";
 import {
-  Sparkles,
   Globe,
   Play,
   Pause,
@@ -17,13 +16,7 @@ import {
   FaXTwitter,
   FaInstagram,
 } from "react-icons/fa6";
-import {
-  motion,
-  AnimatePresence,
-  useMotionValue,
-  useSpring,
-  useMotionTemplate,
-} from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { portfolioData } from "../data/portfolioData";
 import HeroChatbot from "./HeroChatbot";
 
@@ -105,34 +98,46 @@ function useAmbientAudio(playlist = [], audioSrc = "/audio/ambient_1.mp3") {
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
-  const audioTagRef = useRef(null);
+  const audioInstanceRef = useRef(null);
 
   const currentTrack = tracks[currentTrackIndex] || tracks[0];
 
   useEffect(() => {
-    const audio = audioTagRef.current;
-    if (audio && isPlaying) {
-      audio.load();
-      audio
-        .play()
-        .catch((err) => console.warn("Auto-play switch notice:", err));
+    const audio = new Audio(currentTrack.src);
+    audio.volume = 0.5;
+    audio.preload = "auto";
+    audioInstanceRef.current = audio;
+
+    const handleEnded = () => {
+      setCurrentTrackIndex((prev) => (prev + 1) % tracks.length);
+    };
+    audio.addEventListener("ended", handleEnded);
+
+    if (isPlaying) {
+      audio.play().catch((err) => console.warn("Auto-play switch notice:", err));
     }
-  }, [currentTrackIndex]);
+
+    return () => {
+      audio.removeEventListener("ended", handleEnded);
+      audio.pause();
+      audio.src = "";
+    };
+  }, [currentTrack.src, tracks.length, isPlaying]);
 
   const toggleSound = (e) => {
     e?.stopPropagation();
-    const audio = audioTagRef.current;
+    const audio = audioInstanceRef.current;
     if (!audio) return;
 
-    if (audio.paused) {
+    if (isPlaying) {
+      audio.pause();
+      setIsPlaying(false);
+    } else {
       audio.volume = 0.5;
       audio
         .play()
         .then(() => setIsPlaying(true))
         .catch((err) => console.warn("Audio play notice:", err));
-    } else {
-      audio.pause();
-      setIsPlaying(false);
     }
   };
 
@@ -152,7 +157,6 @@ function useAmbientAudio(playlist = [], audioSrc = "/audio/ambient_1.mp3") {
     currentTrackIndex,
     isPlaying,
     setIsPlaying,
-    audioTagRef,
     toggleSound,
     handleNext,
     handlePrev,
@@ -787,16 +791,6 @@ function Hero({ isLoading = false }) {
       animate={!isLoading ? "visible" : "hidden"}
       className="relative w-full flex-1 flex flex-col justify-between px-6 sm:px-12 lg:px-20 xl:px-28 2xl:px-36 pt-48 sm:pt-36 lg:pt-36 xl:pt-32 mt-45 sm:mt-100 xl:mt-6 pb-8 xl:pb-10 z-10 text-white select-none"
     >
-      {/* Hidden DOM Audio Element (Single Shared Instance) */}
-      <audio
-        ref={audioPlayer.audioTagRef}
-        src={audioPlayer.currentTrack.src}
-        preload="auto"
-        onPlay={() => audioPlayer.setIsPlaying(true)}
-        onPause={() => audioPlayer.setIsPlaying(false)}
-        onEnded={audioPlayer.handleNext}
-      />
-
       {/* Top-Right Live Time, Location & Audio Dock (Desktop-Only) */}
       <motion.div
         variants={itemVariants}

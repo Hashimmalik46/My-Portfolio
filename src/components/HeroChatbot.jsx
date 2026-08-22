@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "motion/react";
 import {
@@ -7,17 +7,12 @@ import {
   X,
   RotateCcw,
   Bot,
-  MessageSquareText,
   ExternalLink,
   Copy,
   Check,
   Code2,
   FolderGit2,
-  BrainCircuit,
-  Mail,
   ArrowUpRight,
-  Search,
-  Command,
   Briefcase,
 } from "lucide-react";
 import { portfolioData } from "../data/portfolioData";
@@ -90,6 +85,62 @@ export default function HeroChatbot() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen]);
 
+  const handleSendMessage = useCallback(
+    async (queryText) => {
+      const textToSend = queryText || inputValue.trim();
+      if (!textToSend || isTyping) return;
+
+      const userMsg = {
+        id: Date.now().toString(),
+        sender: "user",
+        text: textToSend,
+        timestamp: new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+      };
+
+      setMessages((prev) => [...prev, userMsg]);
+      setInputValue("");
+      setIsTyping(true);
+
+      if (!isOpen) {
+        setIsOpen(true);
+      }
+
+      try {
+        const response = await askHashimAI(textToSend);
+        const botMsg = {
+          id: (Date.now() + 1).toString(),
+          sender: "bot",
+          text: response,
+          timestamp: new Date().toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+        };
+        setMessages((prev) => [...prev, botMsg]);
+      } catch (err) {
+        console.error(err);
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: (Date.now() + 1).toString(),
+            sender: "bot",
+            text: "I encountered an error retrieving that info. Please try asking again!",
+            timestamp: new Date().toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            }),
+          },
+        ]);
+      } finally {
+        setIsTyping(false);
+      }
+    },
+    [inputValue, isTyping, isOpen]
+  );
+
   // Global custom event listener to open chatbot from anywhere (e.g. Navbar Tools menu)
   useEffect(() => {
     const handleOpenEvent = (e) => {
@@ -100,60 +151,7 @@ export default function HeroChatbot() {
     };
     window.addEventListener("open-chatbot", handleOpenEvent);
     return () => window.removeEventListener("open-chatbot", handleOpenEvent);
-  }, []);
-
-  const handleSendMessage = async (queryText) => {
-    const textToSend = queryText || inputValue.trim();
-    if (!textToSend || isTyping) return;
-
-    const userMsg = {
-      id: Date.now().toString(),
-      sender: "user",
-      text: textToSend,
-      timestamp: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-    };
-
-    setMessages((prev) => [...prev, userMsg]);
-    setInputValue("");
-    setIsTyping(true);
-
-    if (!isOpen) {
-      setIsOpen(true);
-    }
-
-    try {
-      const response = await askHashimAI(textToSend);
-      const botMsg = {
-        id: (Date.now() + 1).toString(),
-        sender: "bot",
-        text: response,
-        timestamp: new Date().toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-      };
-      setMessages((prev) => [...prev, botMsg]);
-    } catch (err) {
-      console.error(err);
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: (Date.now() + 1).toString(),
-          sender: "bot",
-          text: "I encountered an error retrieving that info. Please try asking again!",
-          timestamp: new Date().toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-        },
-      ]);
-    } finally {
-      setIsTyping(false);
-    }
-  };
+  }, [handleSendMessage]);
 
   const handleClearChat = () => {
     setMessages([
@@ -170,7 +168,7 @@ export default function HeroChatbot() {
   };
 
   const handleCopyText = (text, id) => {
-    const plainText = text.replace(/[*#_\[\]\(\)]/g, "");
+    const plainText = text.replace(/[*#_[\]()]/g, "");
     navigator.clipboard.writeText(plainText);
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);
@@ -180,7 +178,7 @@ export default function HeroChatbot() {
     const parts = [];
     let lastIdx = 0;
     const combinedRegex =
-      /(\[([^\]]+)\]\((https?:\/\/[^\)]+|mailto:[^\)]+)\))|(\*\*([^\*]+)\*\*)|(\*([^\*]+)\*)|(`([^`]+)`)/g;
+      /(\[([^\]]+)\]\((https?:\/\/[^)]+|mailto:[^)]+)\))|(\*\*([^*]+)\*\*)|(\*([^*]+)\*)|(`([^`]+)`)/g;
     let match;
 
     while ((match = combinedRegex.exec(text)) !== null) {

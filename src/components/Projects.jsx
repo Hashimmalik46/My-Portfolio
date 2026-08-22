@@ -1,23 +1,11 @@
-import { useRef, useState } from "react";
-import {
-  ArrowUpRight,
-  Code2,
-  ExternalLink,
-  Sparkles,
-  Layers,
-  Terminal,
-  Cpu,
-  Database,
-  GitBranch,
-  Boxes,
-  Workflow,
-  Braces,
-} from "lucide-react";
+import { useRef, useState, lazy, Suspense } from "react";
+import { ArrowUpRight, Code2 } from "lucide-react";
 import { motion } from "motion/react";
 import { portfolioData } from "../data/portfolioData";
-import ProjectModal from "./ProjectModal";
 
-function StackingCard({ project, index, total, onOpenDetails }) {
+const ProjectModal = lazy(() => import("./ProjectModal"));
+
+function StackingCard({ project, index, onOpenDetails }) {
   const containerRef = useRef(null);
 
   // Curvy organic rotation deck angles
@@ -219,7 +207,6 @@ function Projects() {
               key={project.id || index}
               project={project}
               index={index}
-              total={projects.length}
               onOpenDetails={(p) => setSelectedProject(p)}
             />
           ))}
@@ -227,11 +214,15 @@ function Projects() {
       </div>
 
       {/* High-Fidelity Project Architecture & Details Modal */}
-      <ProjectModal
-        isOpen={Boolean(selectedProject)}
-        onClose={() => setSelectedProject(null)}
-        project={selectedProject}
-      />
+      <Suspense fallback={null}>
+        {selectedProject && (
+          <ProjectModal
+            isOpen={Boolean(selectedProject)}
+            onClose={() => setSelectedProject(null)}
+            project={selectedProject}
+          />
+        )}
+      </Suspense>
     </section>
   );
 }
