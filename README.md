@@ -1,12 +1,17 @@
-<p align="center">
-  <img src="./public/gallery/favicon.webp" alt="Hash Logo" width="96" height="96" />
-</p>
-
-<h3 align="center">Hashim Malik — Developer Portfolio & Standalone Workstation</h3>
-
-<p align="center">
-  A high-performance, immersive personal portfolio and standalone developer workstation engineered with <b>React 19</b>, <b>Vite</b>, <b>TailwindCSS 4</b>, and <b>Motion</b>.
-</p>
+<table>
+  <tr>
+    <td width="110" align="center" valign="middle">
+      <img src="./public/gallery/favicon.webp" alt="Hash Logo" width="88" height="88" />
+    </td>
+    <td valign="middle">
+      <h1 style="margin: 0;">Hashim Malik</h1>
+      <p style="margin: 4px 0 0 0;">
+        <b>Developer Portfolio & Standalone Workstation</b><br />
+        A high-performance, immersive personal portfolio and developer workstation engineered with <b>React 19</b>, <b>Vite</b>, <b>TailwindCSS 4</b>, and <b>Motion</b>.
+      </p>
+    </td>
+  </tr>
+</table>
 
 ---
 
