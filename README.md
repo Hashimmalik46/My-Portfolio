@@ -41,14 +41,14 @@
 ## ✨ Features
 
 ### 1. Immersive Portfolio Experience (`/`)
-- **Atmospheric Audio Engine**: Generative Web Audio API ambient soundscape with floating volume controls and easter-egg Vinyl / Minimalist audio player switcher.
+- **Atmospheric Audio Engine**: Generative Web Audio API ambient soundscape with floating volume controls and Vinyl / Minimalist audio player switcher.
 - **Dynamic Preloader**: Interactive SVG cloud reveal with synchronized smooth scrolling via Lenis.
 - **Interactive Project Modals**: Deep-dive project showcases with live demo links, architecture breakdowns, and tech pills.
 - **AI Portfolio Assistant**: Real-time interactive AI chat agent powered by Gemini Flash and localized knowledge base.
 - **Responsive Floating Dock**: Quick-access global navigation with smooth anchor scrolling and instant resume triggers.
 
 ### 2. Workstation Suite (`/tools`)
-Curated standalone career acceleration utilities engineered for developers and job seekers with **automatic session persistence**:
+Curated standalone career acceleration and developer utilities engineered to run **100% in-browser** with zero server latency and automatic session persistence:
 
 - **📄 ATS Resume Builder (`/tools/resume-builder`)**:
   - High-precision ATS-compliant formatting across 4 curated templates (*Classic, Executive, Compact, Modern*).
@@ -64,7 +64,18 @@ Curated standalone career acceleration utilities engineered for developers and j
     - **3–5 Day Follow-Up Sequences**.
   - **1-Click Mailto Action**: Launches your default email client (Gmail, Apple Mail, Outlook) with Recipient, Subject, and Body pre-filled.
   - Built-in starter scenarios (*Founder Pitch, High-Growth Scale-Up, Big Tech*) and instant **Clear to Scratch** / **Reset** controls.
-  - Automatic `localStorage` session state retention.
+
+- **🖼️ Image & PDF Document Studio (`/tools/media-converter`)**:
+  - **Image Compressor & Converter**: Client-side HTML5 Canvas compression, quality slider (10%–100%), dimension scaler with aspect ratio lock, and format conversion (JPEG, WebP, PNG) with real-time byte savings calculation.
+  - **Images to A4 PDF Compiler**: Multi-image drag-and-drop or tap-to-select, Portrait/Landscape orientation selector, and clean A4 `.pdf` compilation via `jsPDF`.
+  - **PDF Merger**: Combine 2 or more PDF documents into a unified file via `pdf-lib`.
+  - **PDF Splitter & Page Extractor**: Automatic total page count detection, quick presets (*All, Page 1, First Half, Last Page*), and custom page range extraction.
+
+- **🔲 Smart QR Code & Link Studio (`/tools/qr-studio`)**:
+  - Multi-type data encoding: **Website URLs**, **Wi-Fi Networks** (with instant scan-to-connect), **Contact vCards** (direct phone save), **Plain Text**, **Email Links**, and **UPI Payments**.
+  - Curated color themes (*Classic Dark, Electric Indigo, Emerald Forest, Midnight Navy, Sunset Crimson, Minimal Slate*) and custom dot/background color pickers.
+  - Export to **High-Res PNG** (up to 2K resolution), **Vector SVG**, and **1-click Image Copy to Clipboard**.
+  - Mobile-optimized responsive layout with **Configure** ↔ **Preview** view toggle.
 
 ---
 
@@ -74,8 +85,9 @@ Curated standalone career acceleration utilities engineered for developers and j
 - **Styling**: [TailwindCSS 4](https://tailwindcss.com/)
 - **Animations**: [Motion](https://motion.dev/) (Framer Motion)
 - **Smooth Scroll**: [Lenis](https://github.com/darkroomengineering/lenis)
-- **Icons**: [Lucide React](https://lucide.dev/)
-- **Export & Effects**: `html2pdf.js`, `canvas-confetti`
+- **Icons**: [Lucide React](https://lucide.dev/), [React Icons](https://react-icons.github.io/react-icons/)
+- **PDF & Document Engines**: `pdf-lib`, `jspdf`, `html2pdf.js`
+- **QR Engine**: `qrcode`
 - **AI Providers**: Google Gemini (3.6 Flash / 3.5 Flash / Flash Latest), xAI Grok, OpenAI, DeepSeek
 
 ---
@@ -120,11 +132,13 @@ npm run build
 
 ```
 src/
-├── components/          # Reusable UI & standalone tool components
-│   ├── OutreachStudio.jsx          # AI Cold Outreach & Cover Letter Studio
+├── components/          # Reusable UI & standalone workstation tool components
 │   ├── StandaloneResumeBuilder.jsx # Standalone ATS Resume Studio
+│   ├── OutreachStudio.jsx          # AI Cold Outreach & Cover Letter Studio
+│   ├── OmniMediaStudio.jsx         # Image Compressor & PDF Document Studio
+│   ├── QRCodeStudio.jsx            # Smart QR Code & Link Studio
 │   ├── ResumeModal.jsx             # Portfolio embedded resume modal
-│   ├── Hero.jsx                    # Hero header with ambient audio toggle
+│   ├── Hero.jsx                    # Hero header with ambient audio engine
 │   ├── Projects.jsx                # Project showcase section
 │   ├── Skills.jsx                  # Interactive skill pills & metrics
 │   └── ...
@@ -132,11 +146,14 @@ src/
 │   ├── HomePage.jsx                # Portfolio landing page (/)
 │   ├── ToolsHub.jsx                # Workstation hub (/tools)
 │   ├── ResumeBuilderPage.jsx       # ATS Resume studio (/tools/resume-builder)
-│   └── OutreachStudioPage.jsx      # Outreach studio (/tools/outreach-generator)
-├── services/            # Multi-provider AI generation engines
+│   ├── OutreachStudioPage.jsx      # Outreach studio (/tools/outreach-generator)
+│   ├── OmniMediaStudioPage.jsx     # Image & PDF studio (/tools/media-converter)
+│   └── QRCodeStudioPage.jsx        # Smart QR Code studio (/tools/qr-studio)
+├── services/            # Client-side processing & AI generation engines
 │   ├── aiResume.js                 # Universal resume generation service
-│   └── aiOutreach.js               # Universal outreach & cover letter service
-├── data/                # Portfolio content, projects, and bio data
+│   ├── aiOutreach.js               # Universal outreach & cover letter service
+│   └── imageProcessor.js           # Client-side Canvas image & PDF-lib engine
+├── data/                # Portfolio configuration, projects, and bio data
 │   └── portfolioData.js
 └── App.jsx              # Main router & Lenis smooth scroll provider
 ```

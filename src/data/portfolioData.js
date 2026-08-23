@@ -9,6 +9,9 @@ import {
   House,
   UserRound,
   Send,
+  FileText,
+  Download,
+  QrCode,
   Github,
   Linkedin,
   Mail,
@@ -115,11 +118,12 @@ export const portfolioData = {
     audioWidgetType: "simple",
     //Simple
     ambientAudioLabel: "Ambient Audio",
-    ambientAudio: "/audio/ambient_3.mp3",
+    ambientAudio: "/audio/ambient_4.mp3",
     //Player
     playlist: [
-      { id: 1, title: "Ambient Flow 01", src: "/audio/ambient_1.mp3" },
-      { id: 2, title: "Ambient Flow 02", src: "/audio/ambient_2.mp3" },
+      { id: 1, title: "Resonance", src: "/audio/ambient_1.mp3" },
+      { id: 2, title: "Snowfall", src: "/audio/ambient_2.mp3" },
+      { id: 3, title: "Loser", src: "/audio/ambient_3.mp3" },
     ],
     scrollText: "Scroll",
   },
@@ -667,6 +671,52 @@ STRICT INSTRUCTIONS:
       "Databases & Cloud": "MongoDB, Supabase (PostgreSQL), Firebase, Git & GitHub, Vercel",
       "AI & Machine Learning": "Computer Vision, Deep Learning, OpenCV, PyTorch / TensorFlow fundamentals, Autonomous Agents",
     },
+  },
+
+  // ==========================================
+  // 12. WORKSTATION / DIGITAL STUDIO
+  // ==========================================
+  workstation: {
+    status: "All systems operational",
+    isOnline: true,
+    tools: [
+      {
+        id: "resume-builder",
+        name: "ATS Resume Builder",
+        description:
+          "High-precision ATS resume studio with AI auto-fill generation, 4 curated templates, and instant 1-page PDF export.",
+        tags: ["ATS Compliant", "AI Auto-Fill", "Clean PDF", "Interactive Editor"],
+        route: "/tools/resume-builder",
+        icon: FileText,
+      },
+      {
+        id: "outreach-generator",
+        name: "AI Outreach & Cover Letter Studio",
+        description:
+          "Generate high-converting cold emails, recruiter direct messages, and tailored narrative cover letters with 1-click mail links.",
+        tags: ["Cold Emails", "LinkedIn DMs", "Cover Letters", "Follow-Up Sequences"],
+        route: "/tools/outreach-generator",
+        icon: Send,
+      },
+      {
+        id: "media-converter",
+        name: "Image & PDF Document Studio",
+        description:
+          "Instant image compression, multi-format conversion (JPEG/WebP/PNG), images-to-PDF compiler, PDF merger, and page extractor.",
+        tags: ["Image Compressor", "JPEG / WebP / PNG", "Images to PDF", "PDF Merger", "Split PDF"],
+        route: "/tools/media-converter",
+        icon: FileText,
+      },
+      {
+        id: "qr-studio",
+        name: "Smart QR Code & Link Studio",
+        description:
+          "Generate custom high-resolution QR codes for websites, Wi-Fi networks, contact vCards, and payments with Vector SVG & PNG export.",
+        tags: ["Custom Colors", "Wi-Fi QR", "vCard Contacts", "Vector SVG", "High-Res PNG"],
+        route: "/tools/qr-studio",
+        icon: QrCode,
+      },
+    ],
   },
 };
 

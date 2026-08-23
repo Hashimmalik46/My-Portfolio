@@ -1,7 +1,8 @@
 import { useEffect } from "react";
 import { motion } from "motion/react";
 import { useNavigate, Link } from "react-router-dom";
-import { ArrowLeft, ArrowUpRight, FileText, Send, Sparkles } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Wrench } from "lucide-react";
+import { portfolioData } from "../data/portfolioData";
 
 export default function ToolsHub() {
   const navigate = useNavigate();
@@ -11,63 +12,38 @@ export default function ToolsHub() {
     document.title = "Workstation — Hashim Malik";
   }, []);
 
-  const tools = [
-    {
-      id: "resume-builder",
-      name: "ATS Resume Builder",
-      description:
-        "High-precision ATS resume studio with AI auto-fill generation, 4 curated templates, and instant 1-page PDF export.",
-      tags: ["ATS Compliant", "AI Auto-Fill", "Clean PDF", "Interactive Editor"],
-      route: "/tools/resume-builder",
-      icon: FileText,
-    },
-    {
-      id: "outreach-generator",
-      name: "AI Outreach & Cover Letter Studio",
-      description:
-        "Generate high-converting cold emails, recruiter direct messages, and tailored narrative cover letters with 1-click mail links.",
-      tags: ["Cold Emails", "LinkedIn DMs", "Cover Letters", "Follow-Up Sequences"],
-      route: "/tools/outreach-generator",
-      icon: Send,
-    },
-  ];
+  const tools = portfolioData?.workstation?.tools || [];
 
   return (
     <div className="min-h-screen bg-[#f8f7f3] text-[#111827] font-jakarta relative selection:bg-black selection:text-white flex flex-col justify-between overflow-x-hidden">
       {/* 1. Minimal Header */}
       <header className="border-b border-black/[0.08] bg-[#f8f7f3]/90 backdrop-blur-md sticky top-0 z-20">
-        <div className="max-w-4xl mx-auto px-3.5 sm:px-6 h-14 flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+        <div className="max-w-4xl mx-auto px-3.5 sm:px-6 h-14 flex items-center justify-between gap-3">
+          {/* Left: Brand Identity & Breadcrumb */}
+          <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
             <Link
               to="/"
-              className="flex items-center gap-1 text-xs font-medium text-gray-600 hover:text-black transition-colors cursor-pointer group shrink-0"
+              className="font-khuma text-xl sm:text-2xl font-bold text-[#111827] tracking-wider hover:opacity-75 transition-opacity select-none shrink-0"
+              title="Hash Portfolio"
             >
-              <ArrowLeft size={13} className="group-hover:-translate-x-0.5 transition-transform text-black" />
-              <span>Portfolio</span>
+              Hash
             </Link>
-            <span className="text-black/20 shrink-0">/</span>
+            <span className="text-black/20 shrink-0 font-light">/</span>
             <span className="text-xs font-bold text-[#111827] font-clash tracking-wide truncate">
               Workstation
             </span>
           </div>
 
-          {/* Live Status Capsule */}
+          {/* Right: Minimal Portfolio Link */}
           <div className="flex items-center shrink-0">
-            <div className="inline-flex items-center rounded-full bg-white border border-black/[0.09] shadow-2xs py-1 px-2.5 sm:px-3 gap-2 hover:border-black/20 transition-all select-none">
-              <div className="flex items-center gap-1.5">
-                <span className="relative flex h-2 w-2 shrink-0">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-                </span>
-                <span className="text-[10px] sm:text-[10.5px] font-bold uppercase tracking-wider text-[#111827] font-clash">
-                  Live
-                </span>
-              </div>
-              <div className="h-3 w-px bg-black/10" />
-              <span className="text-[10.5px] sm:text-[11px] font-medium text-gray-600 flex items-center gap-1">
-                <span className="font-semibold text-black">2</span> Tools
-              </span>
-            </div>
+            <Link
+              to="/"
+              className="flex items-center gap-1 text-xs font-medium text-gray-600 hover:text-black transition-colors cursor-pointer group shrink-0"
+              title="Return to portfolio"
+            >
+              <ArrowLeft size={13} className="group-hover:-translate-x-0.5 transition-transform text-black" />
+              <span>Portfolio</span>
+            </Link>
           </div>
         </div>
       </header>
@@ -76,9 +52,15 @@ export default function ToolsHub() {
       <main className="flex-1 max-w-4xl w-full mx-auto px-3.5 sm:px-6 py-8 sm:py-16">
         {/* Editorial Heading */}
         <div className="mb-8 sm:mb-12">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-black/5 border border-black/10 text-[11px] font-semibold text-gray-700 mb-2.5 sm:mb-3">
-            <Sparkles size={11} className="text-black" />
-            <span>Digital Studio</span>
+          {/* Editorial Eyebrow matching Portfolio Sections */}
+          <div className="flex items-center gap-2.5 sm:gap-3 mb-2.5 sm:mb-3.5">
+            <span className="w-6 h-6 rounded-full bg-[#111827] text-white flex items-center justify-center shadow-xs shrink-0">
+              <Wrench size={11} strokeWidth={2.2} />
+            </span>
+            <span className="w-5 sm:w-6 h-px bg-black/20" />
+            <span className="font-jakarta text-[11px] uppercase tracking-[0.25em] text-black/60 font-semibold">
+              DIGITAL STUDIO
+            </span>
           </div>
           <h1 className="font-clash text-2xl sm:text-4xl font-bold text-[#111827] tracking-tight">
             Workstation
@@ -148,15 +130,64 @@ export default function ToolsHub() {
       </main>
 
       {/* 3. Minimal Footer */}
-      <footer className="border-t border-black/[0.08] py-5 px-4 text-xs text-gray-600 bg-[#f8f7f3]">
-        <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
-          <span>Engineered by Hashim Malik</span>
-          <Link
-            to="/"
-            className="text-gray-600 hover:text-black font-medium transition-colors cursor-pointer"
-          >
-            ← Return to Portfolio
-          </Link>
+      <footer className="border-t border-black/[0.08] py-5 sm:py-6 px-3.5 sm:px-6 text-xs text-gray-500 bg-[#f8f7f3]">
+        <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 text-center sm:text-left">
+          {/* Left: Attribution */}
+          <div className="flex items-center gap-2">
+            <span className="font-khuma text-base font-bold text-[#111827] tracking-wider">
+              Hash
+            </span>
+            <span className="text-black/20 font-light">•</span>
+            <span className="text-gray-600">Engineered by Hashim Malik</span>
+          </div>
+
+          {/* Center: Subtle Live Status */}
+          <div className="flex items-center gap-1.5 text-[11px] text-gray-500 font-medium select-none">
+            <span className="relative flex h-1.5 w-1.5 shrink-0">
+              <span
+                className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${
+                  portfolioData?.workstation?.isOnline !== false ? "bg-emerald-400" : "bg-amber-400"
+                }`}
+              />
+              <span
+                className={`relative inline-flex rounded-full h-1.5 w-1.5 ${
+                  portfolioData?.workstation?.isOnline !== false ? "bg-emerald-500" : "bg-amber-500"
+                }`}
+              />
+            </span>
+            <span>{portfolioData?.workstation?.status || "All systems operational"}</span>
+          </div>
+
+          {/* Right: Quick Links */}
+          <div className="flex items-center gap-3 sm:gap-4 font-medium text-gray-600">
+            {portfolioData?.socials?.github && (
+              <a
+                href={portfolioData.socials.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-black transition-colors"
+              >
+                GitHub
+              </a>
+            )}
+            {portfolioData?.socials?.linkedin && (
+              <a
+                href={portfolioData.socials.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-black transition-colors"
+              >
+                LinkedIn
+              </a>
+            )}
+            <Link
+              to="/"
+              className="hover:text-black transition-colors flex items-center gap-1 font-semibold text-[#111827]"
+            >
+              <span>Portfolio</span>
+              <ArrowUpRight size={11} className="shrink-0" />
+            </Link>
+          </div>
         </div>
       </footer>
     </div>

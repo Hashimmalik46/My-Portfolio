@@ -30,13 +30,6 @@ export default function ResumeBuilderPage() {
               ATS Resume Studio
             </span>
           </div>
-
-          <Link
-            to="/"
-            className="text-xs font-medium text-gray-600 hover:text-black transition-colors cursor-pointer"
-          >
-            Portfolio Home
-          </Link>
         </div>
       </header>
 

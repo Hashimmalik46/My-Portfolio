@@ -663,53 +663,40 @@ export default function ResumeModal({ isOpen, onClose }) {
                   <FileText size={14} />
                 </div>
                 
-                {/* View / Customize Tab Switcher */}
+                {/* Edit / View Tab Switcher */}
                 <div className="flex items-center bg-gray-100 p-0.5 rounded-lg border border-gray-200 shrink-0">
                   <button
                     type="button"
-                    onClick={() => setActiveTab("preview")}
-                    className={`flex items-center justify-center p-1.5 rounded-md transition-all cursor-pointer ${
-                      activeTab === "preview"
-                        ? "bg-white text-gray-900 shadow-xs"
-                        : "text-gray-500 hover:text-gray-900"
+                    onClick={() => setActiveTab("customize")}
+                    className={`flex items-center justify-center gap-1.5 px-2.5 py-1 rounded-md text-xs transition-all cursor-pointer ${
+                      activeTab === "customize"
+                        ? "bg-white text-gray-900 font-semibold shadow-xs"
+                        : "text-gray-500 hover:text-gray-900 font-medium"
                     }`}
-                    title="Preview Resume"
-                    aria-label="Preview Resume"
+                    title="Edit Resume"
+                    aria-label="Edit Resume"
                   >
-                    <Eye size={15} className="shrink-0" />
+                    <Edit3 size={13} className="shrink-0" />
+                    <span>Edit</span>
                   </button>
                   <button
                     type="button"
-                    onClick={() => setActiveTab("customize")}
-                    className={`flex items-center justify-center p-1.5 rounded-md transition-all cursor-pointer ${
-                      activeTab === "customize"
-                        ? "bg-white text-gray-900 shadow-xs"
-                        : "text-gray-500 hover:text-gray-900"
+                    onClick={() => setActiveTab("preview")}
+                    className={`flex items-center justify-center gap-1.5 px-2.5 py-1 rounded-md text-xs transition-all cursor-pointer ${
+                      activeTab === "preview"
+                        ? "bg-white text-gray-900 font-semibold shadow-xs"
+                        : "text-gray-500 hover:text-gray-900 font-medium"
                     }`}
-                    title="Customize Resume"
-                    aria-label="Customize Resume"
+                    title="View Resume"
+                    aria-label="View Resume"
                   >
-                    <Edit3 size={15} className="shrink-0" />
+                    <Eye size={13} className="shrink-0" />
+                    <span>View</span>
                   </button>
                 </div>
               </div>
 
               <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-                {/* AI Auto-Fill Trigger Button */}
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsAiModalOpen(true);
-                    setAiError("");
-                    setAiSuccess(false);
-                  }}
-                  className="flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white text-xs font-semibold shadow-xs hover:shadow transition-all cursor-pointer whitespace-nowrap"
-                  title="Auto-fill resume with AI from a prompt"
-                >
-                  <Sparkles size={12} className="text-amber-300 animate-pulse shrink-0" />
-                  <span className="hidden md:inline">AI Auto-Fill</span>
-                  <span className="md:hidden font-bold">AI</span>
-                </button>
 
                 {/* Copy Plain Text Button (Icon on mobile, Icon + Text on desktop) */}
                 <button
@@ -1324,10 +1311,11 @@ export default function ResumeModal({ isOpen, onClose }) {
                                 delete updated[category];
                                 setCustomResume({ ...customResume, skillCategories: updated });
                               }}
-                              className="p-1 rounded text-gray-400 hover:text-red-600 hover:bg-gray-200/50 transition-colors"
+                              className="flex items-center gap-1 text-xs text-gray-500 hover:text-red-600 px-2 py-0.5 rounded hover:bg-gray-200/50 transition-colors font-medium shrink-0 cursor-pointer"
                               title="Delete category"
                             >
-                              <Trash2 size={13} />
+                              <Trash2 size={12} className="shrink-0" />
+                              <span>Delete</span>
                             </button>
                           </div>
                           <textarea

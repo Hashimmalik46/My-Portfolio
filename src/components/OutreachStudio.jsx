@@ -58,7 +58,7 @@ export default function OutreachStudio() {
   const [activeTab, setActiveTab] = useState(() => {
     return localStorage.getItem("workstation_outreach_tab") || "coldEmail";
   });
-  const [viewMode, setViewMode] = useState("preview"); // 'preview' | 'edit' for mobile tab toggle
+  const [viewMode, setViewMode] = useState("edit"); // 'edit' | 'preview' - default to edit screen on open
   const [customSubject, setCustomSubject] = useState(() => {
     return localStorage.getItem("workstation_outreach_subject") || DEFAULT_OUTREACH_CAMPAIGN.subjectLines[0];
   });
@@ -236,44 +236,46 @@ export default function OutreachStudio() {
           <div className="flex md:hidden items-center bg-gray-100 p-0.5 rounded-lg border border-gray-200 shrink-0">
             <button
               type="button"
-              onClick={() => setViewMode("preview")}
-              className={`flex items-center justify-center p-1.5 rounded-md transition-all cursor-pointer ${
-                viewMode === "preview"
-                  ? "bg-white text-gray-900 shadow-xs"
-                  : "text-gray-500 hover:text-gray-900"
+              onClick={() => setViewMode("edit")}
+              className={`flex items-center justify-center gap-1.5 px-2.5 py-1 rounded-md text-xs transition-all cursor-pointer ${
+                viewMode === "edit"
+                  ? "bg-white text-gray-900 font-semibold shadow-xs"
+                  : "text-gray-500 hover:text-gray-900 font-medium"
               }`}
-              title="Campaign View"
-              aria-label="Campaign View"
+              title="Edit Inputs"
+              aria-label="Edit Inputs"
             >
-              <Eye size={15} className="shrink-0" />
+              <Edit3 size={13} className="shrink-0" />
+              <span>Edit</span>
             </button>
             <button
               type="button"
-              onClick={() => setViewMode("edit")}
-              className={`flex items-center justify-center p-1.5 rounded-md transition-all cursor-pointer ${
-                viewMode === "edit"
-                  ? "bg-white text-gray-900 shadow-xs"
-                  : "text-gray-500 hover:text-gray-900"
+              onClick={() => setViewMode("preview")}
+              className={`flex items-center justify-center gap-1.5 px-2.5 py-1 rounded-md text-xs transition-all cursor-pointer ${
+                viewMode === "preview"
+                  ? "bg-white text-gray-900 font-semibold shadow-xs"
+                  : "text-gray-500 hover:text-gray-900 font-medium"
               }`}
-              title="Inputs & Config"
-              aria-label="Inputs & Config"
+              title="View Campaign"
+              aria-label="View Campaign"
             >
-              <Edit3 size={15} className="shrink-0" />
+              <Eye size={13} className="shrink-0" />
+              <span>View</span>
             </button>
           </div>
         </div>
 
         {/* Right Toolbar Actions */}
         <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-          {/* Custom Preset Selector Dropdown */}
-          <div className="relative" ref={presetMenuRef}>
+          {/* Custom Preset Selector Dropdown (Hidden in mobile View mode since templates are for Edit form) */}
+          <div className={`relative ${viewMode === "preview" ? "hidden md:block" : "block"}`} ref={presetMenuRef}>
             <button
               type="button"
               onClick={() => setIsPresetMenuOpen(!isPresetMenuOpen)}
-              className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-200/70 border border-gray-200 text-xs font-semibold text-gray-800 transition-all cursor-pointer select-none shrink-0"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-200/70 border border-gray-200 text-xs font-semibold text-gray-800 transition-all cursor-pointer select-none shrink-0"
             >
               <Layers size={13} className="text-gray-600 shrink-0" />
-              <span className="hidden sm:inline">Presets</span>
+              <span>Presets</span>
               <ChevronDown
                 size={12}
                 className={`text-gray-500 transition-transform duration-200 ${
@@ -290,7 +292,7 @@ export default function OutreachStudio() {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 6, scale: 0.97 }}
                   transition={{ duration: 0.15 }}
-                  className="absolute right-[-80px] sm:right-0 top-full mt-1.5 w-64 sm:w-68 max-w-[88vw] p-1.5 rounded-xl bg-white border border-gray-200 shadow-xl z-50 space-y-1 font-jakarta origin-top-right"
+                  className="absolute right-0 top-full mt-1.5 w-64 sm:w-68 max-w-[88vw] p-1.5 rounded-xl bg-white border border-gray-200 shadow-xl z-50 space-y-1 font-jakarta origin-top-right"
                 >
                   <div className="px-2.5 py-1 text-[10.5px] font-bold uppercase tracking-wider text-gray-500 font-jakarta">
                     Starter Templates
@@ -322,7 +324,7 @@ export default function OutreachStudio() {
           <button
             type="button"
             onClick={handleResetToDefault}
-            className="p-1.5 rounded-lg bg-gray-100 hover:bg-gray-200/70 text-gray-500 hover:text-gray-900 border border-gray-200 transition-colors cursor-pointer"
+            className="hidden sm:flex p-1.5 rounded-lg bg-gray-100 hover:bg-gray-200/70 text-gray-500 hover:text-gray-900 border border-gray-200 transition-colors cursor-pointer items-center justify-center shrink-0"
             title="Reset to default template"
             aria-label="Reset to default template"
           >
@@ -333,35 +335,11 @@ export default function OutreachStudio() {
           <button
             type="button"
             onClick={handleClearToScratch}
-            className="p-1.5 rounded-lg bg-gray-100 hover:bg-gray-200/70 text-gray-500 hover:text-red-600 border border-gray-200 transition-colors cursor-pointer"
+            className="hidden sm:flex p-1.5 rounded-lg bg-gray-100 hover:bg-gray-200/70 text-gray-500 hover:text-red-600 border border-gray-200 transition-colors cursor-pointer items-center justify-center shrink-0"
             title="Clear form to scratch"
             aria-label="Clear form to scratch"
           >
             <Eraser size={14} />
-          </button>
-
-          {/* Generate Button */}
-          <button
-            type="button"
-            onClick={handleGenerate}
-            disabled={isGenerating || !formData.company.trim() || !formData.role.trim()}
-            className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer shadow-xs shrink-0 ${
-              isGenerating || !formData.company.trim() || !formData.role.trim()
-                ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                : "bg-gray-900 hover:bg-black text-white active:scale-95"
-            }`}
-          >
-            {isGenerating ? (
-              <>
-                <Loader2 size={12} className="animate-spin text-white" />
-                <span className="hidden sm:inline">Generating...</span>
-              </>
-            ) : (
-              <>
-                <Sparkles size={12} className="text-amber-300" />
-                <span>Generate</span>
-              </>
-            )}
           </button>
         </div>
       </div>
@@ -374,7 +352,35 @@ export default function OutreachStudio() {
             viewMode === "preview" ? "hidden md:flex" : "flex"
           }`}
         >
-          <form onSubmit={handleGenerate} className="p-4 space-y-3.5 text-xs">
+          <form onSubmit={handleGenerate} className="p-3.5 sm:p-4 space-y-3.5 text-xs">
+            {/* Mobile Form Utility Header */}
+            <div className="flex sm:hidden items-center justify-between pb-2.5 border-b border-gray-200/80">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-gray-700">
+                Campaign Inputs
+              </span>
+              <div className="flex items-center gap-2.5 text-[11px]">
+                <button
+                  type="button"
+                  onClick={handleResetToDefault}
+                  className="flex items-center gap-1 text-gray-500 hover:text-gray-900 cursor-pointer font-medium"
+                  title="Reset to default template"
+                >
+                  <RotateCcw size={11} />
+                  <span>Reset</span>
+                </button>
+                <span className="text-gray-300">•</span>
+                <button
+                  type="button"
+                  onClick={handleClearToScratch}
+                  className="flex items-center gap-1 text-gray-500 hover:text-red-600 cursor-pointer font-medium"
+                  title="Clear form to scratch"
+                >
+                  <Eraser size={11} />
+                  <span>Clear</span>
+                </button>
+              </div>
+            </div>
+
             {/* Target Role & Company */}
             <div className="space-y-2.5">
               <div>
@@ -509,20 +515,21 @@ export default function OutreachStudio() {
               </div>
             )}
 
+            {/* Primary Action CTA Button */}
             <button
               type="submit"
               disabled={isGenerating || !formData.company.trim() || !formData.role.trim()}
-              className="w-full py-2.5 rounded-xl bg-gray-900 hover:bg-black text-white font-semibold text-xs transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+              className="w-full py-3 px-4 rounded-xl bg-gray-900 hover:bg-black active:scale-[0.99] text-white font-semibold text-xs transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-gray-900 disabled:active:scale-100"
             >
               {isGenerating ? (
                 <>
-                  <Loader2 size={13} className="animate-spin" />
+                  <Loader2 size={13} className="animate-spin text-white" />
                   <span>Generating Campaign...</span>
                 </>
               ) : (
                 <>
-                  <Sparkles size={13} className="text-amber-300" />
-                  <span>Update & Generate</span>
+                  <Sparkles size={13} className="text-amber-300 animate-pulse" />
+                  <span>Generate Outreach Campaign</span>
                 </>
               )}
             </button>
@@ -561,14 +568,15 @@ export default function OutreachStudio() {
           </div>
 
           {/* Document Content Canvas */}
-          <div className="flex-1 p-3 sm:p-6 flex flex-col min-h-0 overflow-hidden">
+          <div className="flex-1 p-3 sm:p-5 flex flex-col min-h-0 overflow-hidden space-y-3 bg-gray-50/40">
             {/* Subject Line Bar for Cold Email */}
             {activeTab === "coldEmail" && (
-              <div className="mb-2.5 pb-2.5 border-b border-gray-100 space-y-2 shrink-0">
+              <div className="bg-white border border-gray-200 rounded-xl p-3 sm:p-3.5 shadow-2xs space-y-2 shrink-0">
                 <div className="flex items-center justify-between gap-2">
-                  <label className="text-[11px] font-bold uppercase tracking-wider text-gray-700 font-jakarta">
-                    Subject Line
-                  </label>
+                  <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-gray-700 font-jakarta">
+                    <Mail size={12} className="text-gray-500" />
+                    <span>Subject Line</span>
+                  </div>
                   <button
                     type="button"
                     onClick={() => copyToClipboard(customSubject, "subject")}
@@ -590,68 +598,100 @@ export default function OutreachStudio() {
                   value={customSubject}
                   onChange={(e) => setCustomSubject(e.target.value)}
                   placeholder="Email subject line..."
-                  className="w-full px-3 py-1.5 rounded-lg bg-gray-50 border border-gray-200 focus:border-gray-900 focus:bg-white text-xs font-medium text-gray-900 font-jakarta"
+                  className="w-full px-3 py-1.5 rounded-lg bg-gray-50 border border-gray-200 focus:border-gray-900 focus:bg-white text-xs font-medium text-gray-900 font-jakarta transition-all"
                 />
 
                 {/* AI Subject Angles */}
-                {outputData?.subjectLines && (
-                  <div className="flex items-center gap-1.5 flex-wrap pt-0.5">
-                    {outputData.subjectLines.map((subj, idx) => (
-                      <button
-                        key={idx}
-                        type="button"
-                        onClick={() => setCustomSubject(subj)}
-                        className={`text-[10.5px] px-2.5 py-1 rounded-md border transition-all cursor-pointer truncate max-w-full ${
-                          customSubject === subj
-                            ? "bg-gray-900 text-white border-gray-900 font-semibold"
-                            : "bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100"
-                        }`}
-                      >
-                        {subj}
-                      </button>
-                    ))}
+                {outputData?.subjectLines && outputData.subjectLines.length > 0 && (
+                  <div className="space-y-1.5 pt-0.5">
+                    <div className="flex items-center gap-1.5 text-[10.5px] font-semibold text-gray-600">
+                      <Sparkles size={11} className="text-amber-500 shrink-0" />
+                      <span>AI Subject Variations:</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      {outputData.subjectLines.map((subj, idx) => (
+                        <button
+                          key={idx}
+                          type="button"
+                          onClick={() => setCustomSubject(subj)}
+                          className={`text-[10.5px] px-2.5 py-1 rounded-md border transition-all cursor-pointer truncate max-w-full ${
+                            customSubject === subj
+                              ? "bg-gray-900 text-white border-gray-900 font-semibold shadow-2xs"
+                              : "bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100 hover:text-gray-900"
+                          }`}
+                          title={`Select: "${subj}"`}
+                        >
+                          {subj}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>
             )}
 
             {/* Document Text Editor */}
-            <div className="flex-1 flex flex-col min-h-0">
-              {activeTab === "coldEmail" && (
-                <textarea
-                  value={outputData?.coldEmail || ""}
-                  onChange={(e) => setOutputData({ ...outputData, coldEmail: e.target.value })}
-                  placeholder="Your generated cold email will appear here..."
-                  className="w-full flex-1 min-h-0 p-1 rounded-lg bg-transparent border-0 focus:ring-0 text-xs sm:text-[13px] text-gray-900 font-jakarta leading-relaxed resize-none selection:bg-black selection:text-white"
-                />
-              )}
+            <div className="flex-1 flex flex-col min-h-0 bg-white border border-gray-200 rounded-xl p-3 sm:p-4 shadow-2xs">
+              <div className="flex items-center justify-between gap-2 pb-2 mb-2 border-b border-gray-100 shrink-0">
+                <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-gray-700 font-jakarta">
+                  {activeTab === "coldEmail" && <FileText size={12} className="text-gray-500" />}
+                  {activeTab === "linkedinDm" && <MessageSquare size={12} className="text-gray-500" />}
+                  {activeTab === "coverLetter" && <FileText size={12} className="text-gray-500" />}
+                  {activeTab === "followUp" && <Clock size={12} className="text-gray-500" />}
+                  <span>
+                    {activeTab === "coldEmail"
+                      ? "Email Body"
+                      : activeTab === "linkedinDm"
+                      ? "Direct Message Body"
+                      : activeTab === "coverLetter"
+                      ? "Cover Letter Body"
+                      : "Follow-Up Message Body"}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10.5px] text-gray-400 font-medium font-jakarta">
+                    Editable Text
+                  </span>
+                </div>
+              </div>
 
-              {activeTab === "linkedinDm" && (
-                <textarea
-                  value={outputData?.linkedinDm || ""}
-                  onChange={(e) => setOutputData({ ...outputData, linkedinDm: e.target.value })}
-                  placeholder="Your LinkedIn direct message will appear here..."
-                  className="w-full flex-1 min-h-0 p-1 rounded-lg bg-transparent border-0 focus:ring-0 text-xs sm:text-[13px] text-gray-900 font-jakarta leading-relaxed resize-none selection:bg-black selection:text-white"
-                />
-              )}
+              <div className="flex-1 min-h-0 flex flex-col">
+                {activeTab === "coldEmail" && (
+                  <textarea
+                    value={outputData?.coldEmail || ""}
+                    onChange={(e) => setOutputData({ ...outputData, coldEmail: e.target.value })}
+                    placeholder="Your generated cold email will appear here..."
+                    className="w-full flex-1 min-h-0 bg-transparent border-0 focus:ring-0 focus:outline-none text-xs sm:text-[13px] text-gray-900 font-jakarta leading-relaxed resize-none selection:bg-black selection:text-white"
+                  />
+                )}
 
-              {activeTab === "coverLetter" && (
-                <textarea
-                  value={outputData?.coverLetter || ""}
-                  onChange={(e) => setOutputData({ ...outputData, coverLetter: e.target.value })}
-                  placeholder="Your formal cover letter will appear here..."
-                  className="w-full flex-1 min-h-0 p-1 rounded-lg bg-transparent border-0 focus:ring-0 text-xs sm:text-[13px] text-gray-900 font-jakarta leading-relaxed resize-none selection:bg-black selection:text-white overflow-y-auto"
-                />
-              )}
+                {activeTab === "linkedinDm" && (
+                  <textarea
+                    value={outputData?.linkedinDm || ""}
+                    onChange={(e) => setOutputData({ ...outputData, linkedinDm: e.target.value })}
+                    placeholder="Your LinkedIn direct message will appear here..."
+                    className="w-full flex-1 min-h-0 bg-transparent border-0 focus:ring-0 focus:outline-none text-xs sm:text-[13px] text-gray-900 font-jakarta leading-relaxed resize-none selection:bg-black selection:text-white"
+                  />
+                )}
 
-              {activeTab === "followUp" && (
-                <textarea
-                  value={outputData?.followUp || ""}
-                  onChange={(e) => setOutputData({ ...outputData, followUp: e.target.value })}
-                  placeholder="Your polite follow-up nudge will appear here..."
-                  className="w-full flex-1 min-h-0 p-1 rounded-lg bg-transparent border-0 focus:ring-0 text-xs sm:text-[13px] text-gray-900 font-jakarta leading-relaxed resize-none selection:bg-black selection:text-white"
-                />
-              )}
+                {activeTab === "coverLetter" && (
+                  <textarea
+                    value={outputData?.coverLetter || ""}
+                    onChange={(e) => setOutputData({ ...outputData, coverLetter: e.target.value })}
+                    placeholder="Your formal cover letter will appear here..."
+                    className="w-full flex-1 min-h-0 bg-transparent border-0 focus:ring-0 focus:outline-none text-xs sm:text-[13px] text-gray-900 font-jakarta leading-relaxed resize-none selection:bg-black selection:text-white overflow-y-auto"
+                  />
+                )}
+
+                {activeTab === "followUp" && (
+                  <textarea
+                    value={outputData?.followUp || ""}
+                    onChange={(e) => setOutputData({ ...outputData, followUp: e.target.value })}
+                    placeholder="Your polite follow-up nudge will appear here..."
+                    className="w-full flex-1 min-h-0 bg-transparent border-0 focus:ring-0 focus:outline-none text-xs sm:text-[13px] text-gray-900 font-jakarta leading-relaxed resize-none selection:bg-black selection:text-white"
+                  />
+                )}
+              </div>
             </div>
           </div>
 

@@ -7,6 +7,8 @@ import CloudPreloader from "./components/CloudPreloader";
 import ToolsHub from "./pages/ToolsHub";
 import ResumeBuilderPage from "./pages/ResumeBuilderPage";
 import OutreachStudioPage from "./pages/OutreachStudioPage";
+import OmniMediaStudioPage from "./pages/OmniMediaStudioPage";
+import QRCodeStudioPage from "./pages/QRCodeStudioPage";
 import { AnimatePresence } from "motion/react";
 
 function ScrollToTop() {
@@ -127,6 +129,18 @@ function App() {
         <Route path="/tools/cover-letter" element={<OutreachStudioPage />} />
         <Route path="/tools/cold-email" element={<OutreachStudioPage />} />
         <Route path="/cover-letter" element={<OutreachStudioPage />} />
+
+        {/* Tool 3: Image & PDF Document Studio */}
+        <Route path="/tools/media-converter" element={<OmniMediaStudioPage />} />
+        <Route path="/tools/video-downloader" element={<OmniMediaStudioPage />} />
+        <Route path="/tools/image-compressor" element={<OmniMediaStudioPage />} />
+        <Route path="/media-converter" element={<OmniMediaStudioPage />} />
+
+        {/* Tool 4: Smart QR Code & Link Studio */}
+        <Route path="/tools/qr-studio" element={<QRCodeStudioPage />} />
+        <Route path="/tools/qr-generator" element={<QRCodeStudioPage />} />
+        <Route path="/qr-studio" element={<QRCodeStudioPage />} />
+        <Route path="/qr-code" element={<QRCodeStudioPage />} />
 
         {/* Fallback to Home */}
         <Route

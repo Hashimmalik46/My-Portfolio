@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
-import OutreachStudio from "../components/OutreachStudio";
+import QRCodeStudio from "../components/QRCodeStudio";
 
-export default function OutreachStudioPage() {
+export default function QRCodeStudioPage() {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" });
-    document.title = "AI Cold Outreach & Cover Letter Studio — Workstation | Hashim Malik";
+    document.title = "Smart QR Code Studio — Workstation | Hashim Malik";
   }, []);
 
   return (
@@ -25,7 +25,7 @@ export default function OutreachStudioPage() {
             </Link>
             <span className="text-black/20">/</span>
             <span className="text-xs font-bold text-[#111827] font-clash tracking-wide">
-              Outreach Studio
+              Smart QR Studio
             </span>
           </div>
         </div>
@@ -33,33 +33,19 @@ export default function OutreachStudioPage() {
 
       {/* Main Studio Content Area */}
       <main className="flex-1 flex flex-col items-center justify-center max-w-6xl w-full mx-auto px-4 py-3 sm:py-5">
-        <OutreachStudio />
+        <QRCodeStudio />
       </main>
 
-      {/* Sleek Minimal Footer */}
-      <footer className="border-t border-black/[0.08] py-4 px-4 text-xs text-gray-600 bg-[#f8f7f3]">
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-          <span>Engineered by Hashim Malik</span>
-          <div className="flex items-center gap-4">
-            <Link
-              to="/tools"
-              className="text-gray-600 hover:text-black font-medium transition-colors cursor-pointer"
-            >
-              Workstation
-            </Link>
-            <Link
-              to="/tools/resume-builder"
-              className="text-gray-600 hover:text-black font-medium transition-colors cursor-pointer"
-            >
-              Resume Builder
-            </Link>
-            <Link
-              to="/"
-              className="text-gray-600 hover:text-black font-medium transition-colors cursor-pointer"
-            >
-              Portfolio
-            </Link>
-          </div>
+      {/* Footer */}
+      <footer className="border-t border-black/[0.08] py-4 px-4 text-xs text-gray-500 bg-[#f8f7f3]">
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left">
+          <span>Smart QR Code Studio • Workstation Suite</span>
+          <Link
+            to="/tools"
+            className="text-gray-600 hover:text-black font-medium transition-colors cursor-pointer"
+          >
+            ← Back to Workstation Directory
+          </Link>
         </div>
       </footer>
     </div>

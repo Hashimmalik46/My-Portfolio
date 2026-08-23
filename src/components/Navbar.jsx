@@ -469,14 +469,14 @@ function Navbar({ isLoading = false, onNavigate }) {
                       }}
                       whileHover={{ scale: 1.04, x: -2 }}
                       whileTap={{ scale: 0.95 }}
-                      aria-label="Resume Generator"
+                      aria-label="My Resume"
                       className="group flex items-center gap-2.5 pl-2.5 pr-3.5 py-1.5 rounded-full bg-[#12141c]/90 hover:bg-[#181a24]/95 backdrop-blur-2xl backdrop-saturate-[180%] border border-white/25 hover:border-white/40 shadow-[0_8px_24px_rgba(0,0,0,0.45),inset_0_1px_1px_0_rgba(255,255,255,0.4)] text-white cursor-pointer whitespace-nowrap transition-colors duration-150"
                     >
                       <div className="w-5 h-5 rounded-full bg-pAccent/20 flex items-center justify-center text-pAccent shrink-0">
                         <FileText className="w-3 h-3 text-pAccent" />
                       </div>
                       <span className="text-xs font-medium text-white/90 group-hover:text-white font-jakarta">
-                        Resume
+                        My Resume
                       </span>
                     </motion.button>
 
