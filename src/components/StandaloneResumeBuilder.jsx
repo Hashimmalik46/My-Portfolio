@@ -29,8 +29,11 @@ import {
   Code2,
   Sparkles,
   Loader2,
+  ChevronDown,
+  FileCode,
 } from "lucide-react";
 import { generateResumeWithAI } from "../services/aiResume";
+import { downloadResumeDocx } from "../utils/docxResumeExport";
 
 export const AI_PRESET_PROMPTS = [
   {
@@ -273,7 +276,10 @@ export default function StandaloneResumeBuilder({
   const [isGeneratingAi, setIsGeneratingAi] = useState(false);
   const [aiError, setAiError] = useState("");
   const [aiSuccess, setAiSuccess] = useState(false);
+  const [isDownloadMenuOpen, setIsDownloadMenuOpen] = useState(false);
+  const [isExportingDocx, setIsExportingDocx] = useState(false);
   const printAreaRef = useRef(null);
+  const downloadMenuRef = useRef(null);
 
   const mc = MODERN_COLORS[modernColor]?.classes || MODERN_COLORS.indigo.classes;
 
@@ -322,6 +328,28 @@ export default function StandaloneResumeBuilder({
   useEffect(() => {
     localStorage.setItem("workstation_resume_font", activeFont);
   }, [activeFont]);
+
+  // Close download dropdown on outside click or Escape key
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (downloadMenuRef.current && !downloadMenuRef.current.contains(e.target)) {
+        setIsDownloadMenuOpen(false);
+      }
+    };
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        setIsDownloadMenuOpen(false);
+      }
+    };
+    if (isDownloadMenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("keydown", handleKeyDown);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isDownloadMenuOpen]);
 
   // Get section heading title with fallback
   const getSectionTitle = (key) => {
@@ -681,6 +709,22 @@ export default function StandaloneResumeBuilder({
     }
   };
 
+  const handleDownloadDocx = async () => {
+    try {
+      setIsExportingDocx(true);
+      await downloadResumeDocx(customResume, {
+        activeCategory,
+        activeStyle,
+        modernColor,
+        activeFont,
+      });
+    } catch (err) {
+      console.error("Failed to export Word resume:", err);
+    } finally {
+      setIsExportingDocx(false);
+    }
+  };
+
   const handleResetToDefault = () => {
     setCustomResume(getDefaultResumeState());
   };
@@ -813,17 +857,104 @@ export default function StandaloneResumeBuilder({
             )}
           </button>
 
-          {/* Download PDF Button */}
-          <button
-            type="button"
-            onClick={handlePrint}
-            className="flex items-center justify-center gap-1.5 p-1.5 sm:px-3.5 sm:py-1.5 rounded-lg bg-gray-900 hover:bg-black text-white text-xs font-semibold shadow-xs transition-all cursor-pointer shrink-0"
-            title="Download clean 1-2 page PDF"
-            aria-label="Download PDF"
-          >
-            <Download size={13} className="shrink-0" />
-            <span className="hidden md:inline text-xs">Download PDF</span>
-          </button>
+          {/* Download Multi-Format Dropdown (.docx or .pdf) */}
+          <div className="relative inline-block text-left" ref={downloadMenuRef}>
+            <button
+              type="button"
+              onClick={() => setIsDownloadMenuOpen((prev) => !prev)}
+              className="flex items-center justify-center gap-1.5 p-1.5 sm:px-3 sm:py-1.5 rounded-lg bg-gray-900 hover:bg-black text-white text-xs font-semibold shadow-xs transition-all cursor-pointer shrink-0 group"
+              title="Download resume in Word or PDF format"
+              aria-label="Download resume options"
+              aria-haspopup="true"
+              aria-expanded={isDownloadMenuOpen}
+            >
+              <Download size={13} className="shrink-0 group-hover:-translate-y-0.5 transition-transform" />
+              <span className="hidden md:inline text-xs">Download</span>
+              <ChevronDown
+                size={11}
+                className={`shrink-0 text-gray-300 transition-transform duration-200 ${
+                  isDownloadMenuOpen ? "rotate-180" : ""
+                }`}
+              />
+            </button>
+
+            <AnimatePresence>
+              {isDownloadMenuOpen && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95, y: 4 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: 4 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute right-0 mt-1.5 w-60 sm:w-64 origin-top-right bg-white rounded-xl shadow-xl border border-gray-200/90 py-1.5 z-50 overflow-hidden"
+                >
+                  <div className="px-3 py-1.5 border-b border-gray-100 mb-1">
+                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                      Select Format
+                    </p>
+                  </div>
+
+                  {/* PDF Option */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsDownloadMenuOpen(false);
+                      handlePrint();
+                    }}
+                    className="w-full px-3 py-2 text-left hover:bg-gray-50 flex items-center gap-2.5 transition-colors cursor-pointer group"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-red-50 text-red-600 border border-red-100 flex items-center justify-center shrink-0 group-hover:bg-red-100 group-hover:border-red-200 transition-colors">
+                      <FileText size={15} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-gray-900 group-hover:text-black">
+                          PDF Document
+                        </span>
+                        <span className="text-[10px] font-semibold text-red-700 bg-red-50 border border-red-200/80 px-1.5 py-0.2 rounded font-mono">
+                          .pdf
+                        </span>
+                      </div>
+                      <p className="text-[10.5px] text-gray-500 truncate">
+                        Print-ready ATS format (1-2 pages)
+                      </p>
+                    </div>
+                  </button>
+
+                  {/* Word (.docx) Option */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsDownloadMenuOpen(false);
+                      handleDownloadDocx();
+                    }}
+                    disabled={isExportingDocx}
+                    className="w-full px-3 py-2 text-left hover:bg-gray-50 flex items-center gap-2.5 transition-colors cursor-pointer group disabled:opacity-50"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center shrink-0 group-hover:bg-blue-100 group-hover:border-blue-200 transition-colors">
+                      {isExportingDocx ? (
+                        <Loader2 size={15} className="animate-spin text-blue-600" />
+                      ) : (
+                        <FileCode size={15} />
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-gray-900 group-hover:text-black">
+                          Word Document
+                        </span>
+                        <span className="text-[10px] font-semibold text-blue-700 bg-blue-50 border border-blue-200/80 px-1.5 py-0.2 rounded font-mono">
+                          .docx
+                        </span>
+                      </div>
+                      <p className="text-[10.5px] text-gray-500 truncate">
+                        Editable ATS Word document
+                      </p>
+                    </div>
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
 
           {/* Close Button (if in modal mode) */}
           {!standalone && (
