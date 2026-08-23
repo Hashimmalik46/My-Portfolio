@@ -9,40 +9,39 @@
 
   <p align="center">
     <a href="https://hashimmalik.in" target="_blank" rel="noopener noreferrer">
-      <img src="https://img.shields.io/badge/Live%20Demo-hashimmalik.in-000000?style=for-the-badge&logo=vercel&logoColor=white" alt="Live Demo" />
+      <img src="https://img.shields.io/badge/Live_Platform-hashimmalik.in-000000?style=for-the-badge&logo=vercel&logoColor=white" alt="Live Demo" />
     </a>
     <a href="https://react.dev/" target="_blank" rel="noopener noreferrer">
-      <img src="https://img.shields.io/badge/React-19.2-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React 19" />
+      <img src="https://img.shields.io/badge/React_19-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React 19" />
     </a>
     <a href="https://tailwindcss.com/" target="_blank" rel="noopener noreferrer">
-      <img src="https://img.shields.io/badge/Tailwind-v4.0-0F172A?style=for-the-badge&logo=tailwindcss&logoColor=38BDF8" alt="Tailwind 4" />
+      <img src="https://img.shields.io/badge/Tailwind_CSS_v4-0B1120?style=for-the-badge&logo=tailwindcss&logoColor=38BDF8" alt="Tailwind 4" />
     </a>
     <a href="https://vitejs.dev/" target="_blank" rel="noopener noreferrer">
-      <img src="https://img.shields.io/badge/Vite-v7.3-646CFF?style=for-the-badge&logo=vite&logoColor=FFD62E" alt="Vite 7" />
+      <img src="https://img.shields.io/badge/Vite_v7.3-1E1B4B?style=for-the-badge&logo=vite&logoColor=FFD62E" alt="Vite 7" />
     </a>
     <a href="https://motion.dev/" target="_blank" rel="noopener noreferrer">
-      <img src="https://img.shields.io/badge/Motion-v12.0-0055FF?style=for-the-badge&logo=framer&logoColor=white" alt="Motion" />
+      <img src="https://img.shields.io/badge/Motion-0055FF?style=for-the-badge&logo=framer&logoColor=white" alt="Motion" />
     </a>
   </p>
 
   <p align="center">
     <a href="https://aistudio.google.com/" target="_blank" rel="noopener noreferrer">
-      <img src="https://img.shields.io/badge/Google%20Gemini-3.6%20Flash-4285F4?style=flat-square&logo=google&logoColor=white" alt="Google Gemini" />
+      <img src="https://img.shields.io/badge/AI_Engine-Gemini_3.6_Flash-1E293B?style=for-the-badge&logo=google&logoColor=4285F4" alt="Google Gemini" />
     </a>
     <a href="https://docx.js.org/" target="_blank" rel="noopener noreferrer">
-      <img src="https://img.shields.io/badge/Export%20Engine-.DOCX%20%7C%20.PDF-2B579A?style=flat-square&logo=microsoftword&logoColor=white" alt="Word & PDF Export" />
+      <img src="https://img.shields.io/badge/Export_Engine-.DOCX_%7C_.PDF-1E293B?style=for-the-badge&logo=microsoftword&logoColor=2B579A" alt="Word & PDF Export" />
     </a>
-    <img src="https://img.shields.io/badge/Architecture-100%25%20Client--Side-10B981?style=flat-square&logo=speedtest&logoColor=white" alt="Client-Side" />
-    <img src="https://img.shields.io/badge/License-Copyright%20%C2%A9%202026-64748B?style=flat-square" alt="Copyright" />
+    <img src="https://img.shields.io/badge/Architecture-100%25_Client--Side-064E3B?style=for-the-badge&logo=speedtest&logoColor=10B981" alt="Client-Side" />
   </p>
 
   <p align="center">
-    <a href="#features">✨ Features</a> •
-    <a href="#workstation-suite">🛠️ Workstation Suite</a> •
-    <a href="#tech-stack">💻 Tech Stack</a> •
-    <a href="#quick-start">🚀 Quick Start</a> •
-    <a href="#project-architecture">📁 Architecture</a> •
-    <a href="#author">👤 Author</a>
+    <a href="#features"><b>✨ Features</b></a> &nbsp;•&nbsp;
+    <a href="#workstation-suite"><b>🛠️ Workstation Suite</b></a> &nbsp;•&nbsp;
+    <a href="#tech-stack"><b>💻 Tech Stack</b></a> &nbsp;•&nbsp;
+    <a href="#quick-start"><b>🚀 Quick Start</b></a> &nbsp;•&nbsp;
+    <a href="#project-architecture"><b>📁 Architecture</b></a> &nbsp;•&nbsp;
+    <a href="#author"><b>👤 Author</b></a>
   </p>
 
 </div>
