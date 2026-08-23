@@ -10,6 +10,7 @@ import OutreachStudioPage from "./pages/OutreachStudioPage";
 import OmniMediaStudioPage from "./pages/OmniMediaStudioPage";
 import QRCodeStudioPage from "./pages/QRCodeStudioPage";
 import { AnimatePresence } from "motion/react";
+import { ThemeProvider } from "./context/ThemeContext";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -105,55 +106,57 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
 
   return (
-    <BrowserRouter>
-      <ScrollToTop />
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <PortfolioView
-              isLoading={isLoading}
-              setIsLoading={setIsLoading}
-            />
-          }
-        />
-        {/* Workstation Directory */}
-        <Route path="/tools" element={<ToolsHub />} />
+    <ThemeProvider>
+      <BrowserRouter>
+        <ScrollToTop />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <PortfolioView
+                isLoading={isLoading}
+                setIsLoading={setIsLoading}
+              />
+            }
+          />
+          {/* Workstation Directory */}
+          <Route path="/tools" element={<ToolsHub />} />
 
-        {/* Tool 1: ATS Resume Builder */}
-        <Route path="/tools/resume-builder" element={<ResumeBuilderPage />} />
-        <Route path="/resume-builder" element={<ResumeBuilderPage />} />
+          {/* Tool 1: ATS Resume Builder */}
+          <Route path="/tools/resume-builder" element={<ResumeBuilderPage />} />
+          <Route path="/resume-builder" element={<ResumeBuilderPage />} />
 
-        {/* Tool 2: AI Cold Outreach & Cover Letter Studio */}
-        <Route path="/tools/outreach-generator" element={<OutreachStudioPage />} />
-        <Route path="/tools/cover-letter" element={<OutreachStudioPage />} />
-        <Route path="/tools/cold-email" element={<OutreachStudioPage />} />
-        <Route path="/cover-letter" element={<OutreachStudioPage />} />
+          {/* Tool 2: AI Cold Outreach & Cover Letter Studio */}
+          <Route path="/tools/outreach-generator" element={<OutreachStudioPage />} />
+          <Route path="/tools/cover-letter" element={<OutreachStudioPage />} />
+          <Route path="/tools/cold-email" element={<OutreachStudioPage />} />
+          <Route path="/cover-letter" element={<OutreachStudioPage />} />
 
-        {/* Tool 3: Image & PDF Document Studio */}
-        <Route path="/tools/media-converter" element={<OmniMediaStudioPage />} />
-        <Route path="/tools/video-downloader" element={<OmniMediaStudioPage />} />
-        <Route path="/tools/image-compressor" element={<OmniMediaStudioPage />} />
-        <Route path="/media-converter" element={<OmniMediaStudioPage />} />
+          {/* Tool 3: Image & PDF Document Studio */}
+          <Route path="/tools/media-converter" element={<OmniMediaStudioPage />} />
+          <Route path="/tools/video-downloader" element={<OmniMediaStudioPage />} />
+          <Route path="/tools/image-compressor" element={<OmniMediaStudioPage />} />
+          <Route path="/media-converter" element={<OmniMediaStudioPage />} />
 
-        {/* Tool 4: Smart QR Code & Link Studio */}
-        <Route path="/tools/qr-studio" element={<QRCodeStudioPage />} />
-        <Route path="/tools/qr-generator" element={<QRCodeStudioPage />} />
-        <Route path="/qr-studio" element={<QRCodeStudioPage />} />
-        <Route path="/qr-code" element={<QRCodeStudioPage />} />
+          {/* Tool 4: Smart QR Code & Link Studio */}
+          <Route path="/tools/qr-studio" element={<QRCodeStudioPage />} />
+          <Route path="/tools/qr-generator" element={<QRCodeStudioPage />} />
+          <Route path="/qr-studio" element={<QRCodeStudioPage />} />
+          <Route path="/qr-code" element={<QRCodeStudioPage />} />
 
-        {/* Fallback to Home */}
-        <Route
-          path="*"
-          element={
-            <PortfolioView
-              isLoading={isLoading}
-              setIsLoading={setIsLoading}
-            />
-          }
-        />
-      </Routes>
-    </BrowserRouter>
+          {/* Fallback to Home */}
+          <Route
+            path="*"
+            element={
+              <PortfolioView
+                isLoading={isLoading}
+                setIsLoading={setIsLoading}
+              />
+            }
+          />
+        </Routes>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
 

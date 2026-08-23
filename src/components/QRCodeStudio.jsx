@@ -219,20 +219,20 @@ export default function QRCodeStudio() {
   ];
 
   return (
-    <div className="relative w-full max-w-4xl h-[680px] sm:h-[720px] max-h-[92dvh] mx-auto my-auto flex flex-col rounded-2xl sm:rounded-3xl bg-white border border-gray-200 overflow-hidden z-10 font-jakarta shadow-2xl selection:bg-black selection:text-white transform-gpu">
+    <div className="relative w-full max-w-4xl h-[680px] sm:h-[720px] max-h-[92dvh] mx-auto my-auto flex flex-col rounded-2xl sm:rounded-3xl bg-white dark:bg-[#11131b] border border-gray-200 dark:border-white/[0.08] overflow-hidden z-10 font-jakarta shadow-2xl selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black transform-gpu transition-colors duration-200">
       {/* 1. Header Toolbar */}
-      <div className="flex items-center justify-between px-3 sm:px-5 py-2.5 sm:py-3 border-b border-gray-200 bg-white shrink-0 gap-2">
+      <div className="flex items-center justify-between px-3 sm:px-5 py-2.5 sm:py-3 border-b border-gray-200 dark:border-white/[0.08] bg-white dark:bg-[#11131b] shrink-0 gap-2 transition-colors duration-200">
         <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-          <div className="w-7 h-7 rounded-lg bg-gray-900 text-white flex items-center justify-center shadow-xs shrink-0">
+          <div className="w-7 h-7 rounded-lg bg-gray-900 dark:bg-white text-white dark:text-black flex items-center justify-center shadow-xs shrink-0">
             <QrCode size={13} />
           </div>
 
           <div className="flex items-center gap-1.5 sm:gap-2 font-jakarta min-w-0">
-            <span className="text-xs font-bold text-gray-900 tracking-wide truncate">
+            <span className="text-xs font-bold text-gray-900 dark:text-white tracking-wide truncate">
               Smart QR Studio
             </span>
-            <span className="text-gray-300 hidden md:inline">|</span>
-            <span className="text-[11px] text-gray-500 font-medium hidden md:inline truncate">
+            <span className="text-gray-300 dark:text-gray-700 hidden md:inline">|</span>
+            <span className="text-[11px] text-gray-500 dark:text-gray-400 font-medium hidden md:inline truncate">
               Vector & PNG Generator
             </span>
           </div>
@@ -241,14 +241,14 @@ export default function QRCodeStudio() {
         {/* Mobile View Toggle & Resolution Pill */}
         <div className="flex items-center gap-2 shrink-0">
           {/* Mobile View Switcher (Visible only on mobile < lg) */}
-          <div className="flex lg:hidden items-center bg-gray-100 p-0.5 rounded-lg border border-gray-200 shrink-0">
+          <div className="flex lg:hidden items-center bg-gray-100 dark:bg-white/[0.06] p-0.5 rounded-lg border border-gray-200 dark:border-white/10 shrink-0">
             <button
               type="button"
               onClick={() => setMobileView("editor")}
               className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-semibold transition-all cursor-pointer ${
                 mobileView === "editor"
-                  ? "bg-white text-gray-900 shadow-xs"
-                  : "text-gray-500 hover:text-black"
+                  ? "bg-white dark:bg-white/[0.14] text-gray-900 dark:text-white shadow-xs"
+                  : "text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white"
               }`}
             >
               <Edit3 size={11} />
@@ -259,8 +259,8 @@ export default function QRCodeStudio() {
               onClick={() => setMobileView("preview")}
               className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-semibold transition-all cursor-pointer ${
                 mobileView === "preview"
-                  ? "bg-white text-gray-900 shadow-xs"
-                  : "text-gray-500 hover:text-black"
+                  ? "bg-white dark:bg-white/[0.14] text-gray-900 dark:text-white shadow-xs"
+                  : "text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white"
               }`}
             >
               <Eye size={11} />
@@ -269,7 +269,7 @@ export default function QRCodeStudio() {
           </div>
 
           {/* Quick Resolution Selector */}
-          <div className="hidden sm:inline-flex rounded-lg border border-gray-200 bg-gray-50 p-0.5 text-xs">
+          <div className="hidden sm:inline-flex rounded-lg border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/[0.04] p-0.5 text-xs">
             {[
               { res: 512, label: "512px" },
               { res: 1024, label: "1024px HQ" },
@@ -281,8 +281,8 @@ export default function QRCodeStudio() {
                 onClick={() => setExportRes(item.res)}
                 className={`px-2 py-0.5 rounded-md text-[10.5px] sm:text-[11px] font-semibold transition-all cursor-pointer ${
                   exportRes === item.res
-                    ? "bg-white text-gray-900 shadow-xs"
-                    : "text-gray-500 hover:text-black"
+                    ? "bg-white dark:bg-white/[0.16] text-gray-900 dark:text-white shadow-xs"
+                    : "text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white"
                 }`}
               >
                 {item.label}
@@ -293,14 +293,14 @@ export default function QRCodeStudio() {
       </div>
 
       {/* 2. Main Studio Canvas Area */}
-      <div className="flex-1 bg-[#f8f7f3]/50 p-3.5 sm:p-5 overflow-y-auto min-h-0 flex flex-col lg:grid lg:grid-cols-12 gap-4">
+      <div className="flex-1 bg-[#f8f7f3]/50 dark:bg-[#090b10] p-3.5 sm:p-5 overflow-y-auto min-h-0 flex flex-col lg:grid lg:grid-cols-12 gap-4 transition-colors duration-200">
         
         {/* =========================================================================
             SECTION 1: DATA INPUTS & CUSTOMIZATION (Shown on Desktop, or mobile editor view)
         ========================================================================= */}
         <div className={`lg:col-span-7 flex flex-col space-y-3.5 ${mobileView === "preview" ? "hidden lg:flex" : "flex"}`}>
           {/* Data Type Pill Selector */}
-          <div className="bg-white border border-gray-200 rounded-2xl p-2 shadow-2xs">
+          <div className="bg-white dark:bg-[#131620] border border-gray-200 dark:border-white/[0.08] rounded-2xl p-2 shadow-2xs transition-colors duration-200">
             <div className="grid grid-cols-6 gap-1">
               {types.map((t) => {
                 const Icon = t.icon;
@@ -312,8 +312,8 @@ export default function QRCodeStudio() {
                     onClick={() => setActiveType(t.id)}
                     className={`flex flex-col items-center justify-center py-2 px-1 rounded-xl text-center transition-all cursor-pointer ${
                       isSel
-                        ? "bg-gray-900 text-white shadow-xs"
-                        : "bg-gray-50/60 hover:bg-gray-100 text-gray-600 hover:text-black"
+                        ? "bg-gray-900 dark:bg-white text-white dark:text-black shadow-xs"
+                        : "bg-gray-50/60 dark:bg-white/[0.04] hover:bg-gray-100 dark:hover:bg-white/[0.08] text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white"
                     }`}
                   >
                     <Icon size={14} className="mb-0.5 shrink-0" />
@@ -325,14 +325,14 @@ export default function QRCodeStudio() {
           </div>
 
           {/* Form Inputs Container */}
-          <div className="bg-white border border-gray-200 rounded-2xl p-4 shadow-xs space-y-3.5 flex-1 flex flex-col justify-between">
+          <div className="bg-white dark:bg-[#131620] border border-gray-200 dark:border-white/[0.08] rounded-2xl p-4 shadow-xs space-y-3.5 flex-1 flex flex-col justify-between transition-colors duration-200">
             <div>
               {/* Active Type Header */}
-              <div className="flex items-center justify-between pb-2 mb-2.5 border-b border-gray-100">
-                <span className="text-xs font-bold text-gray-900 font-clash">
+              <div className="flex items-center justify-between pb-2 mb-2.5 border-b border-gray-100 dark:border-white/[0.06]">
+                <span className="text-xs font-bold text-gray-900 dark:text-white font-clash">
                   {types.find((t) => t.id === activeType)?.fullLabel}
                 </span>
-                <span className="text-[10.5px] text-gray-400 font-medium">
+                <span className="text-[10.5px] text-gray-400 dark:text-gray-500 font-medium">
                   Instant live encoding
                 </span>
               </div>
@@ -340,17 +340,17 @@ export default function QRCodeStudio() {
               {/* 1. URL Form */}
               {activeType === "url" && (
                 <div className="space-y-1.5">
-                  <label className="text-[10.5px] font-bold uppercase tracking-wider text-gray-600 block">
+                  <label className="text-[10.5px] font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 block">
                     Website or Destination Link
                   </label>
                   <div className="relative flex items-center">
-                    <LinkIcon size={14} className="absolute left-3 text-gray-400" />
+                    <LinkIcon size={14} className="absolute left-3 text-gray-400 dark:text-gray-500" />
                     <input
                       type="url"
                       value={urlValue}
                       onChange={(e) => setUrlValue(e.target.value)}
                       placeholder="https://yourwebsite.com"
-                      className="w-full pl-9 pr-3 py-2 rounded-xl bg-gray-50 border border-gray-200 text-xs font-semibold text-gray-900 focus:bg-white focus:outline-none focus:border-gray-900"
+                      className="w-full pl-9 pr-3 py-2 rounded-xl bg-gray-50 dark:bg-[#0c0e14] border border-gray-200 dark:border-white/10 text-xs font-semibold text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 focus:bg-white dark:focus:bg-[#0c0e14] focus:outline-none focus:border-gray-900 dark:focus:border-white/40"
                     />
                   </div>
                 </div>
@@ -361,7 +361,7 @@ export default function QRCodeStudio() {
                 <div className="space-y-2.5">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <div className="space-y-1">
-                      <label className="text-[10.5px] font-bold uppercase text-gray-600">
+                      <label className="text-[10.5px] font-bold uppercase text-gray-600 dark:text-gray-400">
                         Network Name (SSID)
                       </label>
                       <input
@@ -369,11 +369,11 @@ export default function QRCodeStudio() {
                         value={wifiSsid}
                         onChange={(e) => setWifiSsid(e.target.value)}
                         placeholder="e.g. Studio_5GHz"
-                        className="w-full px-3 py-1.5 rounded-xl bg-gray-50 border border-gray-200 text-xs font-semibold"
+                        className="w-full px-3 py-1.5 rounded-xl bg-gray-50 dark:bg-[#0c0e14] border border-gray-200 dark:border-white/10 text-xs font-semibold text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 focus:bg-white dark:focus:bg-[#0c0e14] focus:outline-none focus:border-gray-900 dark:focus:border-white/40"
                       />
                     </div>
                     <div className="space-y-1">
-                      <label className="text-[10.5px] font-bold uppercase text-gray-600">
+                      <label className="text-[10.5px] font-bold uppercase text-gray-600 dark:text-gray-400">
                         Wi-Fi Password
                       </label>
                       <input
@@ -381,14 +381,14 @@ export default function QRCodeStudio() {
                         value={wifiPassword}
                         onChange={(e) => setWifiPassword(e.target.value)}
                         placeholder="e.g. securepass123"
-                        className="w-full px-3 py-1.5 rounded-xl bg-gray-50 border border-gray-200 text-xs font-semibold"
+                        className="w-full px-3 py-1.5 rounded-xl bg-gray-50 dark:bg-[#0c0e14] border border-gray-200 dark:border-white/10 text-xs font-semibold text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 focus:bg-white dark:focus:bg-[#0c0e14] focus:outline-none focus:border-gray-900 dark:focus:border-white/40"
                       />
                     </div>
                   </div>
 
                   <div className="flex items-center justify-between gap-2 pt-1">
                     <div className="flex items-center gap-1">
-                      <span className="text-[10.5px] text-gray-500 font-medium mr-1">Security:</span>
+                      <span className="text-[10.5px] text-gray-500 dark:text-gray-400 font-medium mr-1">Security:</span>
                       {["WPA", "WEP", "nopass"].map((sec) => (
                         <button
                           key={sec}
@@ -396,8 +396,8 @@ export default function QRCodeStudio() {
                           onClick={() => setWifiEncryption(sec)}
                           className={`px-2 py-0.5 rounded-md text-[10.5px] font-semibold cursor-pointer ${
                             wifiEncryption === sec
-                              ? "bg-gray-900 text-white"
-                              : "bg-gray-100 text-gray-600 hover:text-black"
+                              ? "bg-gray-900 dark:bg-white text-white dark:text-black"
+                              : "bg-gray-100 dark:bg-white/[0.06] text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white"
                           }`}
                         >
                           {sec === "nopass" ? "Open" : sec}
@@ -405,12 +405,12 @@ export default function QRCodeStudio() {
                       ))}
                     </div>
 
-                    <label className="flex items-center gap-1.5 text-xs text-gray-600 cursor-pointer">
+                    <label className="flex items-center gap-1.5 text-xs text-gray-600 dark:text-gray-400 cursor-pointer">
                       <input
                         type="checkbox"
                         checked={wifiHidden}
                         onChange={(e) => setWifiHidden(e.target.checked)}
-                        className="rounded text-black accent-black"
+                        className="rounded text-black dark:text-white accent-black dark:accent-white"
                       />
                       <span className="text-[11px]">Hidden SSID</span>
                     </label>
@@ -422,7 +422,7 @@ export default function QRCodeStudio() {
               {activeType === "vcard" && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   <div className="space-y-0.5">
-                    <label className="text-[10px] font-bold uppercase text-gray-600">
+                    <label className="text-[10px] font-bold uppercase text-gray-600 dark:text-gray-400">
                       Full Name
                     </label>
                     <input
@@ -430,11 +430,11 @@ export default function QRCodeStudio() {
                       value={vcardName}
                       onChange={(e) => setVcardName(e.target.value)}
                       placeholder="e.g. Alex Johnson"
-                      className="w-full px-2.5 py-1.5 rounded-xl bg-gray-50 border border-gray-200 text-xs font-semibold"
+                      className="w-full px-2.5 py-1.5 rounded-xl bg-gray-50 dark:bg-[#0c0e14] border border-gray-200 dark:border-white/10 text-xs font-semibold text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600"
                     />
                   </div>
                   <div className="space-y-0.5">
-                    <label className="text-[10px] font-bold uppercase text-gray-600">
+                    <label className="text-[10px] font-bold uppercase text-gray-600 dark:text-gray-400">
                       Phone Number
                     </label>
                     <input
@@ -442,11 +442,11 @@ export default function QRCodeStudio() {
                       value={vcardPhone}
                       onChange={(e) => setVcardPhone(e.target.value)}
                       placeholder="+1 (555) 019-2834"
-                      className="w-full px-2.5 py-1.5 rounded-xl bg-gray-50 border border-gray-200 text-xs font-semibold"
+                      className="w-full px-2.5 py-1.5 rounded-xl bg-gray-50 dark:bg-[#0c0e14] border border-gray-200 dark:border-white/10 text-xs font-semibold text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600"
                     />
                   </div>
                   <div className="space-y-0.5">
-                    <label className="text-[10px] font-bold uppercase text-gray-600">
+                    <label className="text-[10px] font-bold uppercase text-gray-600 dark:text-gray-400">
                       Email Address
                     </label>
                     <input
@@ -454,11 +454,11 @@ export default function QRCodeStudio() {
                       value={vcardEmail}
                       onChange={(e) => setVcardEmail(e.target.value)}
                       placeholder="name@domain.com"
-                      className="w-full px-2.5 py-1.5 rounded-xl bg-gray-50 border border-gray-200 text-xs font-semibold"
+                      className="w-full px-2.5 py-1.5 rounded-xl bg-gray-50 dark:bg-[#0c0e14] border border-gray-200 dark:border-white/10 text-xs font-semibold text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600"
                     />
                   </div>
                   <div className="space-y-0.5">
-                    <label className="text-[10px] font-bold uppercase text-gray-600">
+                    <label className="text-[10px] font-bold uppercase text-gray-600 dark:text-gray-400">
                       Company
                     </label>
                     <input
@@ -466,11 +466,11 @@ export default function QRCodeStudio() {
                       value={vcardOrg}
                       onChange={(e) => setVcardOrg(e.target.value)}
                       placeholder="e.g. Studio"
-                      className="w-full px-2.5 py-1.5 rounded-xl bg-gray-50 border border-gray-200 text-xs font-semibold"
+                      className="w-full px-2.5 py-1.5 rounded-xl bg-gray-50 dark:bg-[#0c0e14] border border-gray-200 dark:border-white/10 text-xs font-semibold text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600"
                     />
                   </div>
                   <div className="space-y-0.5 sm:col-span-2">
-                    <label className="text-[10px] font-bold uppercase text-gray-600">
+                    <label className="text-[10px] font-bold uppercase text-gray-600 dark:text-gray-400">
                       Website URL
                     </label>
                     <input
@@ -478,7 +478,7 @@ export default function QRCodeStudio() {
                       value={vcardUrl}
                       onChange={(e) => setVcardUrl(e.target.value)}
                       placeholder="https://..."
-                      className="w-full px-2.5 py-1.5 rounded-xl bg-gray-50 border border-gray-200 text-xs font-semibold"
+                      className="w-full px-2.5 py-1.5 rounded-xl bg-gray-50 dark:bg-[#0c0e14] border border-gray-200 dark:border-white/10 text-xs font-semibold text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600"
                     />
                   </div>
                 </div>
@@ -487,7 +487,7 @@ export default function QRCodeStudio() {
               {/* 4. Plain Text Form */}
               {activeType === "text" && (
                 <div className="space-y-1.5">
-                  <label className="text-[10.5px] font-bold uppercase tracking-wider text-gray-600 block">
+                  <label className="text-[10.5px] font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 block">
                     Text Content
                   </label>
                   <textarea
@@ -495,7 +495,7 @@ export default function QRCodeStudio() {
                     value={textValue}
                     onChange={(e) => setTextValue(e.target.value)}
                     placeholder="Enter any text or note to encode into QR..."
-                    className="w-full px-3 py-2 rounded-xl bg-gray-50 border border-gray-200 text-xs font-medium text-gray-900 focus:bg-white focus:outline-none"
+                    className="w-full px-3 py-2 rounded-xl bg-gray-50 dark:bg-[#0c0e14] border border-gray-200 dark:border-white/10 text-xs font-medium text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 focus:bg-white dark:focus:bg-[#0c0e14] focus:outline-none"
                   />
                 </div>
               )}
@@ -504,7 +504,7 @@ export default function QRCodeStudio() {
               {activeType === "email" && (
                 <div className="space-y-2">
                   <div className="space-y-0.5">
-                    <label className="text-[10px] font-bold uppercase text-gray-600">
+                    <label className="text-[10px] font-bold uppercase text-gray-600 dark:text-gray-400">
                       Recipient Email
                     </label>
                     <input
@@ -512,11 +512,11 @@ export default function QRCodeStudio() {
                       value={emailTo}
                       onChange={(e) => setEmailTo(e.target.value)}
                       placeholder="contact@company.com"
-                      className="w-full px-2.5 py-1.5 rounded-xl bg-gray-50 border border-gray-200 text-xs font-semibold"
+                      className="w-full px-2.5 py-1.5 rounded-xl bg-gray-50 dark:bg-[#0c0e14] border border-gray-200 dark:border-white/10 text-xs font-semibold text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600"
                     />
                   </div>
                   <div className="space-y-0.5">
-                    <label className="text-[10px] font-bold uppercase text-gray-600">
+                    <label className="text-[10px] font-bold uppercase text-gray-600 dark:text-gray-400">
                       Subject Line
                     </label>
                     <input
@@ -524,7 +524,7 @@ export default function QRCodeStudio() {
                       value={emailSubject}
                       onChange={(e) => setEmailSubject(e.target.value)}
                       placeholder="e.g. Project Inquiry"
-                      className="w-full px-2.5 py-1.5 rounded-xl bg-gray-50 border border-gray-200 text-xs font-semibold"
+                      className="w-full px-2.5 py-1.5 rounded-xl bg-gray-50 dark:bg-[#0c0e14] border border-gray-200 dark:border-white/10 text-xs font-semibold text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600"
                     />
                   </div>
                 </div>
@@ -534,7 +534,7 @@ export default function QRCodeStudio() {
               {activeType === "upi" && (
                 <div className="space-y-2">
                   <div className="space-y-0.5">
-                    <label className="text-[10px] font-bold uppercase text-gray-600">
+                    <label className="text-[10px] font-bold uppercase text-gray-600 dark:text-gray-400">
                       UPI VPA / ID
                     </label>
                     <input
@@ -542,12 +542,12 @@ export default function QRCodeStudio() {
                       value={upiId}
                       onChange={(e) => setUpiId(e.target.value)}
                       placeholder="e.g. merchant@upi"
-                      className="w-full px-2.5 py-1.5 rounded-xl bg-gray-50 border border-gray-200 text-xs font-semibold"
+                      className="w-full px-2.5 py-1.5 rounded-xl bg-gray-50 dark:bg-[#0c0e14] border border-gray-200 dark:border-white/10 text-xs font-semibold text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600"
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <div className="space-y-0.5">
-                      <label className="text-[10px] font-bold uppercase text-gray-600">
+                      <label className="text-[10px] font-bold uppercase text-gray-600 dark:text-gray-400">
                         Payee Name
                       </label>
                       <input
@@ -555,11 +555,11 @@ export default function QRCodeStudio() {
                         value={upiName}
                         onChange={(e) => setUpiName(e.target.value)}
                         placeholder="e.g. Alex Johnson"
-                        className="w-full px-2.5 py-1.5 rounded-xl bg-gray-50 border border-gray-200 text-xs font-semibold"
+                        className="w-full px-2.5 py-1.5 rounded-xl bg-gray-50 dark:bg-[#0c0e14] border border-gray-200 dark:border-white/10 text-xs font-semibold text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600"
                       />
                     </div>
                     <div className="space-y-0.5">
-                      <label className="text-[10px] font-bold uppercase text-gray-600">
+                      <label className="text-[10px] font-bold uppercase text-gray-600 dark:text-gray-400">
                         Amount (₹ Optional)
                       </label>
                       <input
@@ -567,7 +567,7 @@ export default function QRCodeStudio() {
                         value={upiAmount}
                         onChange={(e) => setUpiAmount(e.target.value)}
                         placeholder="e.g. 500"
-                        className="w-full px-2.5 py-1.5 rounded-xl bg-gray-50 border border-gray-200 text-xs font-semibold"
+                        className="w-full px-2.5 py-1.5 rounded-xl bg-gray-50 dark:bg-[#0c0e14] border border-gray-200 dark:border-white/10 text-xs font-semibold text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600"
                       />
                     </div>
                   </div>
@@ -576,29 +576,29 @@ export default function QRCodeStudio() {
             </div>
 
             {/* Custom Styling Controls */}
-            <div className="pt-2.5 border-t border-gray-100 space-y-2">
+            <div className="pt-2.5 border-t border-gray-100 dark:border-white/[0.06] space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-[10.5px] font-bold uppercase tracking-wider text-gray-500 font-clash">
+                <span className="text-[10.5px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 font-clash">
                   Color Themes:
                 </span>
                 {/* Custom Color Pickers */}
                 <div className="flex items-center gap-2">
-                  <div className="flex items-center gap-1 text-[10.5px] font-medium text-gray-500">
+                  <div className="flex items-center gap-1 text-[10.5px] font-medium text-gray-500 dark:text-gray-400">
                     <span>Dots:</span>
                     <input
                       type="color"
                       value={fgColor}
                       onChange={(e) => setFgColor(e.target.value)}
-                      className="w-4 h-4 rounded cursor-pointer border border-gray-200 p-0"
+                      className="w-4 h-4 rounded cursor-pointer border border-gray-200 dark:border-white/10 p-0"
                     />
                   </div>
-                  <div className="flex items-center gap-1 text-[10.5px] font-medium text-gray-500">
+                  <div className="flex items-center gap-1 text-[10.5px] font-medium text-gray-500 dark:text-gray-400">
                     <span>Bg:</span>
                     <input
                       type="color"
                       value={bgColor}
                       onChange={(e) => setBgColor(e.target.value)}
-                      className="w-4 h-4 rounded cursor-pointer border border-gray-200 p-0"
+                      className="w-4 h-4 rounded cursor-pointer border border-gray-200 dark:border-white/10 p-0"
                     />
                   </div>
                 </div>
@@ -611,7 +611,7 @@ export default function QRCodeStudio() {
                     key={preset.id}
                     type="button"
                     onClick={() => applyPreset(preset)}
-                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-[10px] font-semibold text-gray-700 shadow-2xs transition-colors cursor-pointer"
+                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-white/[0.04] hover:bg-gray-50 dark:hover:bg-white/[0.08] text-[10px] font-semibold text-gray-700 dark:text-gray-300 shadow-2xs transition-colors cursor-pointer"
                   >
                     <span
                       className="w-2 h-2 rounded-full border border-black/10 shrink-0"
@@ -624,11 +624,11 @@ export default function QRCodeStudio() {
             </div>
 
             {/* Mobile Switch to Preview Button */}
-            <div className="lg:hidden pt-2 border-t border-gray-100">
+            <div className="lg:hidden pt-2 border-t border-gray-100 dark:border-white/[0.06]">
               <button
                 type="button"
                 onClick={() => setMobileView("preview")}
-                className="w-full inline-flex items-center justify-center gap-1.5 py-2 rounded-xl bg-gray-900 text-white text-xs font-semibold shadow-xs cursor-pointer"
+                className="w-full inline-flex items-center justify-center gap-1.5 py-2 rounded-xl bg-gray-900 dark:bg-white text-white dark:text-black text-xs font-semibold shadow-xs cursor-pointer"
               >
                 <Eye size={13} />
                 <span>View QR & Download</span>
@@ -642,19 +642,19 @@ export default function QRCodeStudio() {
         ========================================================================= */}
         <div className={`lg:col-span-5 flex flex-col justify-between space-y-3.5 ${mobileView === "editor" ? "hidden lg:flex" : "flex"}`}>
           {/* Large Live Preview Card */}
-          <div className="bg-white border border-gray-200 rounded-2xl p-4 sm:p-6 shadow-xs flex-1 flex flex-col items-center justify-center text-center relative overflow-hidden">
-            <div className="w-full flex items-center justify-between pb-2 mb-2 border-b border-gray-100">
-              <span className="text-xs font-bold text-gray-900 font-clash">
+          <div className="bg-white dark:bg-[#131620] border border-gray-200 dark:border-white/[0.08] rounded-2xl p-4 sm:p-6 shadow-xs flex-1 flex flex-col items-center justify-center text-center relative overflow-hidden transition-colors duration-200">
+            <div className="w-full flex items-center justify-between pb-2 mb-2 border-b border-gray-100 dark:border-white/[0.06]">
+              <span className="text-xs font-bold text-gray-900 dark:text-white font-clash">
                 Live Scannable QR
               </span>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-gray-100 text-gray-700 uppercase">
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-gray-100 dark:bg-white/[0.08] text-gray-700 dark:text-gray-300 uppercase">
                 {exportRes}px
               </span>
             </div>
 
             {/* Generous Large QR Box */}
             <div
-              className="p-4 sm:p-5 rounded-2xl border border-gray-200 shadow-md transition-all duration-300 w-full max-w-[260px] sm:max-w-[280px] aspect-square flex items-center justify-center my-auto"
+              className="p-4 sm:p-5 rounded-2xl border border-gray-200 dark:border-white/10 shadow-md transition-all duration-300 w-full max-w-[260px] sm:max-w-[280px] aspect-square flex items-center justify-center my-auto"
               style={{ backgroundColor: bgColor }}
             >
               {dataUrl ? (
@@ -664,30 +664,30 @@ export default function QRCodeStudio() {
                   className="w-full h-full object-contain rounded-lg"
                 />
               ) : (
-                <div className="flex flex-col items-center justify-center text-gray-300">
+                <div className="flex flex-col items-center justify-center text-gray-300 dark:text-gray-600">
                   <QrCode size={64} />
                 </div>
               )}
             </div>
 
             {/* Payload summary snippet */}
-            <div className="w-full pt-3 mt-2 border-t border-gray-100 flex items-center justify-between text-[11px] text-gray-500">
+            <div className="w-full pt-3 mt-2 border-t border-gray-100 dark:border-white/[0.06] flex items-center justify-between text-[11px] text-gray-500 dark:text-gray-400">
               <span className="font-mono text-[10.5px] truncate max-w-[190px] text-left">
                 {getPayloadString()}
               </span>
-              <span className="text-[10.5px] text-emerald-600 font-semibold flex items-center gap-1">
+              <span className="text-[10.5px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
                 <Check size={11} /> Ready
               </span>
             </div>
           </div>
 
           {/* Export Action Card */}
-          <div className="bg-white border border-gray-200 rounded-2xl p-3.5 shadow-xs space-y-2">
+          <div className="bg-white dark:bg-[#131620] border border-gray-200 dark:border-white/[0.08] rounded-2xl p-3.5 shadow-xs space-y-2 transition-colors duration-200">
             <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
                 onClick={handleDownloadPng}
-                className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-gray-900 hover:bg-black text-white text-xs font-semibold shadow-xs transition-all cursor-pointer"
+                className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-gray-900 hover:bg-black dark:bg-white dark:hover:bg-gray-100 text-white dark:text-black text-xs font-semibold shadow-xs transition-all cursor-pointer"
               >
                 <Download size={13} />
                 <span>Save PNG</span>
@@ -696,7 +696,7 @@ export default function QRCodeStudio() {
               <button
                 type="button"
                 onClick={handleDownloadSvg}
-                className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-xs transition-all cursor-pointer"
+                className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 text-white text-xs font-semibold shadow-xs transition-all cursor-pointer"
               >
                 <FileText size={13} />
                 <span>Vector SVG</span>
@@ -706,12 +706,12 @@ export default function QRCodeStudio() {
             <button
               type="button"
               onClick={handleCopyImage}
-              className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-semibold transition-all cursor-pointer"
+              className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl bg-gray-100 hover:bg-gray-200 dark:bg-white/[0.06] dark:hover:bg-white/[0.12] text-gray-700 dark:text-gray-200 text-xs font-semibold transition-all cursor-pointer"
             >
               {isCopied ? (
                 <>
-                  <Check size={13} className="text-emerald-600" />
-                  <span className="text-emerald-700 font-bold">Copied to Clipboard!</span>
+                  <Check size={13} className="text-emerald-600 dark:text-emerald-400" />
+                  <span className="text-emerald-700 dark:text-emerald-300 font-bold">Copied to Clipboard!</span>
                 </>
               ) : (
                 <>

@@ -55,21 +55,23 @@
 - **Atmospheric Audio Engine**: Generative Web Audio API ambient soundscape with floating volume controls and Vinyl / Minimalist audio player switcher.
 - **Dynamic Preloader**: Interactive SVG cloud reveal with synchronized smooth scrolling via Lenis.
 - **Interactive Project Modals**: Deep-dive project showcases with live demo links, architecture breakdowns, and tech pills.
-- **AI Portfolio Assistant**: Real-time interactive AI chat agent powered by Gemini Flash and localized knowledge base.
+- **AI Portfolio Assistant (`HeroChatbot`)**: Real-time interactive AI chat agent powered by Gemini Flash, contextual topic carousel, and localized **Dark / Light theme toggle**.
 - **Responsive Floating Dock**: Quick-access global navigation with smooth anchor scrolling and instant resume triggers.
+- **Physics-Based Pill Slider Theme Toggle**: Smooth spring-animated celestial slider with scoped theme isolation (`.dark-scope` / `.light-scope`) for zero background flashing.
 
 ---
 
 <a id="workstation-suite"></a>
 ## 🛠️ Workstation Suite (`/tools`)
-Curated standalone career acceleration and developer utilities engineered to run **100% in-browser** with zero server latency and automatic session persistence:
+Curated standalone career acceleration and developer utilities engineered to run **100% in-browser** with zero server latency, dark/light theme support, and automatic session persistence:
 
-- **📄 ATS Resume Builder (`/tools/resume-builder`)**:
+- **📄 ATS Resume Builder (`/tools/resume-builder` & Modal)**:
   - High-precision ATS-compliant formatting across 4 curated styles (*Classic, Executive, Compact, Modern*) and theme color palettes (*Indigo, Emerald, Ocean, Rose*).
   - Career track presets: **Standard (Experienced)** and **Fresher (Graduate)** with tailored section ordering.
   - Multi-format export engine: Download as **Microsoft Word Document (`.docx`)** or **Print-Ready PDF (`.pdf`)** via an interactive download format selector.
   - 1-click **AI Auto-Fill** generation from raw text prompts powered by Gemini AI.
-  - Interactive live editor with real-time text synchronization, ATS plain-text copy, and local session retention across page reloads.
+  - Interactive live editor with real-time text synchronization, ATS plain-text copy, mobile-optimized icon tabs, and localized **Dark / Light mode slider**.
+  - Local session retention across page reloads.
 
 - **✉️ AI Cold Outreach & Cover Letter Studio (`/tools/outreach-generator`)**:
   - Multi-channel campaign pack generator:
@@ -98,11 +100,11 @@ Curated standalone career acceleration and developer utilities engineered to run
 ## 💻 Tech Stack
 
 - **Framework**: [React 19](https://react.dev/) + [Vite](https://vitejs.dev/)
-- **Styling**: [TailwindCSS 4](https://tailwindcss.com/)
+- **Styling**: [TailwindCSS 4](https://tailwindcss.com/) with Scoped CSS Theme Variants
 - **Animations**: [Motion](https://motion.dev/) (Framer Motion)
 - **Smooth Scroll**: [Lenis](https://github.com/darkroomengineering/lenis)
 - **Icons**: [Lucide React](https://lucide.dev/), [React Icons](https://react-icons.github.io/react-icons/)
-- **Document & PDF Engines**: `docx`, `pdf-lib`, `jspdf`
+- **Document & PDF Engines**: `docx`, `pdf-lib`, `jspdf`, `html2canvas`
 - **QR Engine**: `qrcode`
 - **AI Providers**: Google Gemini (3.6 Flash / 3.5 Flash / Flash Latest), xAI Grok, OpenAI, DeepSeek
 
@@ -155,7 +157,9 @@ src/
 │   ├── OutreachStudio.jsx          # AI Cold Outreach & Cover Letter Studio
 │   ├── OmniMediaStudio.jsx         # Image Compressor & PDF Document Studio
 │   ├── QRCodeStudio.jsx            # Smart QR Code & Link Studio
-│   ├── ResumeModal.jsx             # Portfolio embedded resume modal
+│   ├── ResumeModal.jsx             # Portfolio embedded resume modal with theme slider
+│   ├── HeroChatbot.jsx             # AI Career Assistant with isolated theme switcher
+│   ├── ThemeToggle.jsx             # Spring physics pill slider toggle
 │   ├── Hero.jsx                    # Hero header with ambient audio engine
 │   ├── Projects.jsx                # Project showcase section
 │   ├── Skills.jsx                  # Interactive skill pills & metrics
@@ -167,6 +171,8 @@ src/
 │   ├── OutreachStudioPage.jsx      # Outreach studio (/tools/outreach-generator)
 │   ├── OmniMediaStudioPage.jsx     # Image & PDF studio (/tools/media-converter)
 │   └── QRCodeStudioPage.jsx        # Smart QR Code studio (/tools/qr-studio)
+├── context/             # React Context providers
+│   └── ThemeContext.jsx            # Dark/Light theme state & system sync provider
 ├── services/            # Client-side processing & AI generation engines
 │   ├── aiResume.js                 # Universal resume generation service
 │   ├── aiOutreach.js               # Universal outreach & cover letter service

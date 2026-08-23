@@ -8,6 +8,8 @@
 /* 3. TAILWIND CSS */
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *):not(.light-scope, .light-scope *), &:where(.dark-scope, .dark-scope *));
+
 /* 4. LOCAL FONT DEFINITIONS */
 @font-face {
   font-family: "ClashDisplay";
@@ -48,12 +50,26 @@
     color-scheme: dark;
     scrollbar-gutter: stable;
   }
+
+  html.light {
+    color-scheme: light;
+  }
   
   body {
     background-color: #050507;
     color: var(--color-text);
     font-family: var(--font-jakarta);
     overflow-x: hidden;
+  }
+
+  html.light body {
+    background-color: #f8f7f3;
+    color: #111827;
+  }
+
+  html.dark body {
+    background-color: #050507;
+    color: var(--color-text);
   }
 
   /* Custom Scrollbar */

@@ -35,6 +35,7 @@ import {
 import { portfolioData } from "../data/portfolioData";
 import { generateResumeWithAI } from "../services/aiResume";
 import { downloadResumeDocx } from "../utils/docxResumeExport";
+import ThemeToggle from "./ThemeToggle";
 
 export const AI_PRESET_PROMPTS = [
   {
@@ -184,6 +185,24 @@ export default function ResumeModal({ isOpen, onClose }) {
   const [aiSuccess, setAiSuccess] = useState(false);
   const [isDownloadMenuOpen, setIsDownloadMenuOpen] = useState(false);
   const [isExportingDocx, setIsExportingDocx] = useState(false);
+  const [isResumeDark, setIsResumeDark] = useState(() => {
+    try {
+      const saved = localStorage.getItem("portfolio_resume_modal_theme");
+      if (saved !== null) return saved === "dark";
+    } catch (e) {}
+    return false; // Independent default light mode for resume
+  });
+
+  const toggleResumeTheme = () => {
+    setIsResumeDark((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem("portfolio_resume_modal_theme", next ? "dark" : "light");
+      } catch (e) {}
+      return next;
+    });
+  };
+
   const printAreaRef = useRef(null);
   const downloadMenuRef = useRef(null);
 
@@ -695,69 +714,73 @@ export default function ResumeModal({ isOpen, onClose }) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 8 }}
             transition={{ type: "spring", stiffness: 420, damping: 30 }}
-            className="relative w-full max-w-3xl h-[680px] max-h-[88dvh] flex flex-col rounded-2xl sm:rounded-3xl bg-white border border-gray-200 overflow-hidden z-10 font-jakarta shadow-2xl selection:bg-gray-900 selection:text-white transform-gpu"
+            className={`relative w-full max-w-3xl h-[680px] max-h-[88dvh] flex flex-col rounded-2xl sm:rounded-3xl bg-white dark:bg-[#11131b] border border-gray-200 dark:border-white/[0.08] overflow-hidden z-10 font-jakarta shadow-2xl selection:bg-gray-900 selection:text-white dark:selection:bg-white dark:selection:text-black transform-gpu transition-colors duration-200 ${
+              isResumeDark ? "dark-scope" : "light-scope"
+            }`}
             style={{
               WebkitTransform: "translate3d(0,0,0)",
             }}
           >
             {/* 1. Header Main Toolbar */}
-            <div className="flex items-center justify-between px-3 sm:px-5 py-2.5 sm:py-3 border-b border-gray-200 bg-white shrink-0 gap-2">
+            <div className="flex items-center justify-between px-3 sm:px-5 py-2.5 sm:py-3 border-b border-gray-200 dark:border-white/[0.08] bg-white dark:bg-[#11131b] shrink-0 gap-2 transition-colors duration-200">
               <div className="flex items-center gap-2 min-w-0">
-                <div className="w-7 h-7 rounded-lg bg-gray-900 text-white flex items-center justify-center shadow-xs shrink-0">
+                <div className="w-7 h-7 rounded-lg bg-gray-900 dark:bg-white text-white dark:text-black flex items-center justify-center shadow-xs shrink-0">
                   <FileText size={14} />
                 </div>
                 
                 {/* Edit / View Tab Switcher */}
-                <div className="flex items-center bg-gray-100 p-0.5 rounded-lg border border-gray-200 shrink-0">
+                <div className="flex items-center bg-gray-100 dark:bg-white/[0.06] p-0.5 rounded-lg border border-gray-200 dark:border-white/10 shrink-0">
                   <button
                     type="button"
                     onClick={() => setActiveTab("customize")}
-                    className={`flex items-center justify-center gap-1.5 px-2.5 py-1 rounded-md text-xs transition-all cursor-pointer ${
+                    className={`flex items-center justify-center gap-1.5 p-1.5 sm:px-2.5 sm:py-1 rounded-md text-xs transition-all cursor-pointer ${
                       activeTab === "customize"
-                        ? "bg-white text-gray-900 font-semibold shadow-xs"
-                        : "text-gray-500 hover:text-gray-900 font-medium"
+                        ? "bg-white dark:bg-white/[0.14] text-gray-900 dark:text-white font-semibold shadow-xs"
+                        : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white font-medium"
                     }`}
                     title="Edit Resume"
                     aria-label="Edit Resume"
                   >
                     <Edit3 size={13} className="shrink-0" />
-                    <span>Edit</span>
+                    <span className="hidden sm:inline">Edit</span>
                   </button>
                   <button
                     type="button"
                     onClick={() => setActiveTab("preview")}
-                    className={`flex items-center justify-center gap-1.5 px-2.5 py-1 rounded-md text-xs transition-all cursor-pointer ${
+                    className={`flex items-center justify-center gap-1.5 p-1.5 sm:px-2.5 sm:py-1 rounded-md text-xs transition-all cursor-pointer ${
                       activeTab === "preview"
-                        ? "bg-white text-gray-900 font-semibold shadow-xs"
-                        : "text-gray-500 hover:text-gray-900 font-medium"
+                        ? "bg-white dark:bg-white/[0.14] text-gray-900 dark:text-white font-semibold shadow-xs"
+                        : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white font-medium"
                     }`}
                     title="View Resume"
                     aria-label="View Resume"
                   >
                     <Eye size={13} className="shrink-0" />
-                    <span>View</span>
+                    <span className="hidden sm:inline">View</span>
                   </button>
                 </div>
               </div>
 
               <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                {/* Theme Mode Smooth Pill Slider Toggle (Isolated to Resume Modal) */}
+                <ThemeToggle isDark={isResumeDark} onToggle={toggleResumeTheme} size="sm" />
 
                 {/* Copy Plain Text Button (Icon on mobile, Icon + Text on desktop) */}
                 <button
                   type="button"
                   onClick={handleCopyPlainText}
-                  className="flex items-center justify-center gap-1.5 p-1.5 sm:px-3 sm:py-1.5 rounded-lg bg-white hover:bg-gray-50 border border-gray-200 text-xs text-gray-700 font-semibold shadow-xs transition-colors cursor-pointer shrink-0"
+                  className="flex items-center justify-center gap-1.5 p-1.5 sm:px-3 sm:py-1.5 rounded-lg bg-white dark:bg-white/[0.08] hover:bg-gray-50 dark:hover:bg-white/[0.12] border border-gray-200 dark:border-white/10 text-xs text-gray-700 dark:text-gray-200 font-semibold shadow-xs transition-colors cursor-pointer shrink-0"
                   title="Copy ATS formatted plain text"
                   aria-label="Copy plain text"
                 >
                   {copied ? (
                     <>
-                      <Check size={13} className="text-emerald-600 shrink-0" />
-                      <span className="hidden md:inline text-emerald-700 text-xs font-semibold">Copied</span>
+                      <Check size={13} className="text-emerald-600 dark:text-emerald-400 shrink-0" />
+                      <span className="hidden md:inline text-emerald-700 dark:text-emerald-300 text-xs font-semibold">Copied</span>
                     </>
                   ) : (
                     <>
-                      <Copy size={13} className="text-gray-600 shrink-0" />
+                      <Copy size={13} className="text-gray-600 dark:text-gray-400 shrink-0" />
                       <span className="hidden md:inline text-xs">Copy Text</span>
                     </>
                   )}
@@ -768,7 +791,7 @@ export default function ResumeModal({ isOpen, onClose }) {
                   <button
                     type="button"
                     onClick={() => setIsDownloadMenuOpen((prev) => !prev)}
-                    className="flex items-center justify-center gap-1.5 p-1.5 sm:px-3 sm:py-1.5 rounded-lg bg-gray-900 hover:bg-black text-white text-xs font-semibold shadow-xs transition-all cursor-pointer shrink-0 group"
+                    className="flex items-center justify-center gap-1.5 p-1.5 sm:px-3 sm:py-1.5 rounded-lg bg-gray-900 hover:bg-black dark:bg-white dark:hover:bg-gray-100 text-white dark:text-black text-xs font-semibold shadow-xs transition-all cursor-pointer shrink-0 group"
                     title="Download resume in Word or PDF format"
                     aria-label="Download resume options"
                     aria-haspopup="true"
@@ -778,7 +801,7 @@ export default function ResumeModal({ isOpen, onClose }) {
                     <span className="hidden md:inline text-xs">Download</span>
                     <ChevronDown
                       size={11}
-                      className={`shrink-0 text-gray-300 transition-transform duration-200 ${
+                      className={`shrink-0 text-gray-300 dark:text-gray-600 transition-transform duration-200 ${
                         isDownloadMenuOpen ? "rotate-180" : ""
                       }`}
                     />
@@ -791,10 +814,10 @@ export default function ResumeModal({ isOpen, onClose }) {
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 4 }}
                         transition={{ duration: 0.15 }}
-                        className="absolute right-0 mt-1.5 w-60 sm:w-64 origin-top-right bg-white rounded-xl shadow-xl border border-gray-200/90 py-1.5 z-50 overflow-hidden"
+                        className="absolute right-0 mt-1.5 w-60 sm:w-64 origin-top-right bg-white dark:bg-[#161922] rounded-xl shadow-xl border border-gray-200/90 dark:border-white/10 py-1.5 z-50 overflow-hidden font-jakarta"
                       >
-                        <div className="px-3 py-1.5 border-b border-gray-100 mb-1">
-                          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                        <div className="px-3 py-1.5 border-b border-gray-100 dark:border-white/[0.06] mb-1">
+                          <p className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
                             Select Format
                           </p>
                         </div>
@@ -806,21 +829,21 @@ export default function ResumeModal({ isOpen, onClose }) {
                             setIsDownloadMenuOpen(false);
                             handlePrint();
                           }}
-                          className="w-full px-3 py-2 text-left hover:bg-gray-50 flex items-center gap-2.5 transition-colors cursor-pointer group"
+                          className="w-full px-3 py-2 text-left hover:bg-gray-50 dark:hover:bg-white/[0.06] flex items-center gap-2.5 transition-colors cursor-pointer group"
                         >
-                          <div className="w-8 h-8 rounded-lg bg-red-50 text-red-600 border border-red-100 flex items-center justify-center shrink-0 group-hover:bg-red-100 group-hover:border-red-200 transition-colors">
+                          <div className="w-8 h-8 rounded-lg bg-red-50 dark:bg-red-950/50 text-red-600 dark:text-red-400 border border-red-100 dark:border-red-900/50 flex items-center justify-center shrink-0 group-hover:bg-red-100 dark:group-hover:bg-red-900/60 transition-colors">
                             <FileText size={15} />
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center justify-between">
-                              <span className="text-xs font-bold text-gray-900 group-hover:text-black">
+                              <span className="text-xs font-bold text-gray-900 dark:text-white group-hover:text-black dark:group-hover:text-pAccent">
                                 PDF Document
                               </span>
-                              <span className="text-[10px] font-semibold text-red-700 bg-red-50 border border-red-200/80 px-1.5 py-0.2 rounded font-mono">
+                              <span className="text-[10px] font-semibold text-red-700 dark:text-red-300 bg-red-50 dark:bg-red-950/70 border border-red-200/80 dark:border-red-800 px-1.5 py-0.2 rounded font-mono">
                                 .pdf
                               </span>
                             </div>
-                            <p className="text-[10.5px] text-gray-500 truncate">
+                            <p className="text-[10.5px] text-gray-500 dark:text-gray-400 truncate">
                               Print-ready ATS format (1-2 pages)
                             </p>
                           </div>
@@ -834,25 +857,25 @@ export default function ResumeModal({ isOpen, onClose }) {
                             handleDownloadDocx();
                           }}
                           disabled={isExportingDocx}
-                          className="w-full px-3 py-2 text-left hover:bg-gray-50 flex items-center gap-2.5 transition-colors cursor-pointer group disabled:opacity-50"
+                          className="w-full px-3 py-2 text-left hover:bg-gray-50 dark:hover:bg-white/[0.06] flex items-center gap-2.5 transition-colors cursor-pointer group disabled:opacity-50"
                         >
-                          <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center shrink-0 group-hover:bg-blue-100 group-hover:border-blue-200 transition-colors">
+                          <div className="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 border border-blue-100 dark:border-blue-900/50 flex items-center justify-center shrink-0 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/60 transition-colors">
                             {isExportingDocx ? (
-                              <Loader2 size={15} className="animate-spin text-blue-600" />
+                              <Loader2 size={15} className="animate-spin text-blue-600 dark:text-blue-400" />
                             ) : (
                               <FileCode size={15} />
                             )}
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center justify-between">
-                              <span className="text-xs font-bold text-gray-900 group-hover:text-black">
+                              <span className="text-xs font-bold text-gray-900 dark:text-white group-hover:text-black dark:group-hover:text-pAccent">
                                 Word Document
                               </span>
-                              <span className="text-[10px] font-semibold text-blue-700 bg-blue-50 border border-blue-200/80 px-1.5 py-0.2 rounded font-mono">
+                              <span className="text-[10px] font-semibold text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/70 border border-blue-200/80 dark:border-blue-800 px-1.5 py-0.2 rounded font-mono">
                                 .docx
                               </span>
                             </div>
-                            <p className="text-[10.5px] text-gray-500 truncate">
+                            <p className="text-[10.5px] text-gray-500 dark:text-gray-400 truncate">
                               Editable ATS Word document
                             </p>
                           </div>
@@ -868,7 +891,7 @@ export default function ResumeModal({ isOpen, onClose }) {
                   onClick={onClose}
                   title="Close (Esc)"
                   aria-label="Close"
-                  className="p-1.5 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer shrink-0 ml-0.5"
+                  className="p-1.5 rounded-lg text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-white/[0.08] transition-colors cursor-pointer shrink-0 ml-0.5"
                 >
                   <X size={16} />
                 </button>
@@ -877,13 +900,13 @@ export default function ResumeModal({ isOpen, onClose }) {
 
             {/* 2. Customizer Ribbon (Active only in Preview Mode) */}
             {activeTab === "preview" && (
-              <div className="px-3 sm:px-5 py-2.5 bg-gray-50 border-b border-gray-200 flex flex-wrap items-center justify-between gap-2.5 text-xs shrink-0">
+              <div className="px-3 sm:px-5 py-2.5 bg-gray-50 dark:bg-[#0c0e14] border-b border-gray-200 dark:border-white/[0.08] flex flex-wrap items-center justify-between gap-2.5 text-xs shrink-0 transition-colors duration-200">
                 {/* 1. Track / Category Selector */}
                 <div className="flex items-center gap-1.5">
-                  <span className="text-[11px] text-gray-500 font-semibold flex items-center gap-1 shrink-0 uppercase tracking-wider">
-                    <Briefcase size={12} className="text-gray-600" /> Type:
+                  <span className="text-[11px] text-gray-500 dark:text-gray-400 font-semibold flex items-center gap-1 shrink-0 uppercase tracking-wider">
+                    <Briefcase size={12} className="text-gray-600 dark:text-gray-400" /> Type:
                   </span>
-                  <div className="flex items-center bg-gray-200/60 p-0.5 rounded-lg border border-gray-200">
+                  <div className="flex items-center bg-gray-200/60 dark:bg-white/[0.06] p-0.5 rounded-lg border border-gray-200 dark:border-white/10">
                     {[
                       { id: "standard", label: "Standard" },
                       { id: "fresher", label: "Fresher" },
@@ -894,8 +917,8 @@ export default function ResumeModal({ isOpen, onClose }) {
                         onClick={() => setActiveCategory(c.id)}
                         className={`px-2.5 sm:px-3 py-1 rounded-md text-xs transition-colors cursor-pointer ${
                           activeCategory === c.id
-                            ? "bg-white text-gray-900 font-bold shadow-xs"
-                            : "text-gray-600 hover:text-gray-900 font-medium"
+                            ? "bg-white dark:bg-white/[0.14] text-gray-900 dark:text-white font-bold shadow-xs"
+                            : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white font-medium"
                         }`}
                       >
                         {c.label}
@@ -906,10 +929,10 @@ export default function ResumeModal({ isOpen, onClose }) {
 
                 {/* 2. Style Sub-Template Selector */}
                 <div className="flex items-center gap-1.5">
-                  <span className="text-[11px] text-gray-500 font-semibold flex items-center gap-1 shrink-0 uppercase tracking-wider">
-                    <Layout size={12} className="text-gray-600" /> Style:
+                  <span className="text-[11px] text-gray-500 dark:text-gray-400 font-semibold flex items-center gap-1 shrink-0 uppercase tracking-wider">
+                    <Layout size={12} className="text-gray-600 dark:text-gray-400" /> Style:
                   </span>
-                  <div className="flex items-center bg-gray-200/60 p-0.5 rounded-lg border border-gray-200">
+                  <div className="flex items-center bg-gray-200/60 dark:bg-white/[0.06] p-0.5 rounded-lg border border-gray-200 dark:border-white/10">
                     {[
                       { id: "classic", label: "Classic" },
                       { id: "executive", label: "Executive" },
@@ -922,8 +945,8 @@ export default function ResumeModal({ isOpen, onClose }) {
                         onClick={() => setActiveStyle(s.id)}
                         className={`px-2 sm:px-2.5 py-1 rounded-md text-xs transition-colors cursor-pointer ${
                           activeStyle === s.id
-                            ? "bg-white text-gray-900 font-bold shadow-xs"
-                            : "text-gray-600 hover:text-gray-900 font-medium"
+                            ? "bg-white dark:bg-white/[0.14] text-gray-900 dark:text-white font-bold shadow-xs"
+                            : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white font-medium"
                         }`}
                       >
                         {s.label}
@@ -935,10 +958,10 @@ export default function ResumeModal({ isOpen, onClose }) {
                 {/* 3. Modern Color Palette Selector (ONLY visible when Modern style is chosen) */}
                 {activeStyle === "modern" && (
                   <div className="flex items-center gap-1.5 animate-in fade-in slide-in-from-left-2 duration-200">
-                    <span className="text-[11px] text-gray-500 font-semibold flex items-center gap-1 shrink-0 uppercase tracking-wider">
-                      <Palette size={12} className="text-gray-600" /> Theme:
+                    <span className="text-[11px] text-gray-500 dark:text-gray-400 font-semibold flex items-center gap-1 shrink-0 uppercase tracking-wider">
+                      <Palette size={12} className="text-gray-600 dark:text-gray-400" /> Theme:
                     </span>
-                    <div className="flex items-center bg-gray-200/60 p-0.5 rounded-lg border border-gray-200 gap-0.5">
+                    <div className="flex items-center bg-gray-200/60 dark:bg-white/[0.06] p-0.5 rounded-lg border border-gray-200 dark:border-white/10 gap-0.5">
                       {Object.values(MODERN_COLORS).map((c) => (
                         <button
                           key={c.id}
@@ -946,8 +969,8 @@ export default function ResumeModal({ isOpen, onClose }) {
                           onClick={() => setModernColor(c.id)}
                           className={`flex items-center gap-1 px-2 py-1 rounded-md text-xs transition-all cursor-pointer ${
                             modernColor === c.id
-                              ? "bg-white text-gray-900 font-bold shadow-xs"
-                              : "text-gray-600 hover:text-gray-900 font-medium"
+                              ? "bg-white dark:bg-white/[0.14] text-gray-900 dark:text-white font-bold shadow-xs"
+                              : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white font-medium"
                           }`}
                           title={`${c.label} color theme`}
                         >
@@ -961,10 +984,10 @@ export default function ResumeModal({ isOpen, onClose }) {
 
                 {/* 4. Font Selector */}
                 <div className="flex items-center gap-1.5">
-                  <span className="text-[11px] text-gray-500 font-semibold flex items-center gap-1 shrink-0 uppercase tracking-wider">
-                    <Type size={12} className="text-gray-600" /> Font:
+                  <span className="text-[11px] text-gray-500 dark:text-gray-400 font-semibold flex items-center gap-1 shrink-0 uppercase tracking-wider">
+                    <Type size={12} className="text-gray-600 dark:text-gray-400" /> Font:
                   </span>
-                  <div className="flex items-center bg-gray-200/60 p-0.5 rounded-lg border border-gray-200">
+                  <div className="flex items-center bg-gray-200/60 dark:bg-white/[0.06] p-0.5 rounded-lg border border-gray-200 dark:border-white/10">
                     {[
                       { id: "sans", label: "Sans" },
                       { id: "serif", label: "Serif" },
@@ -976,8 +999,8 @@ export default function ResumeModal({ isOpen, onClose }) {
                         onClick={() => setActiveFont(f.id)}
                         className={`px-2.5 sm:px-3 py-1 rounded-md text-xs transition-colors cursor-pointer ${
                           activeFont === f.id
-                            ? "bg-white text-gray-900 font-bold shadow-xs"
-                            : "text-gray-600 hover:text-gray-900 font-medium"
+                            ? "bg-white dark:bg-white/[0.14] text-gray-900 dark:text-white font-bold shadow-xs"
+                            : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white font-medium"
                         }`}
                       >
                         {f.label}
@@ -989,805 +1012,810 @@ export default function ResumeModal({ isOpen, onClose }) {
             )}
 
             {/* 3. Modal Body: Tab Content (Preview OR Customize Form) */}
-            {activeTab === "customize" ? (
-              /* CUSTOMIZE FORM VIEW (Industry Standard Clean SaaS Theme) */
-              <div className="flex-1 flex flex-col min-h-0 bg-[#f9fafb]">
+              {activeTab === "customize" ? (
+                /* CUSTOMIZE FORM VIEW (Industry Standard Clean SaaS Theme) */
+                <div className="flex-1 flex flex-col min-h-0 bg-[#f9fafb] dark:bg-[#090b10]">
+                  <div
+                    data-lenis-prevent="true"
+                    className="flex-1 overflow-y-auto p-4 sm:p-7 space-y-6 text-gray-900 dark:text-white text-left font-jakarta"
+                    style={{
+                      scrollbarColor: "rgba(0, 0, 0, 0.15) transparent",
+                      scrollbarWidth: "thin",
+                    }}
+                  >
+                    {/* Form Header & Action Buttons */}
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-gray-200 dark:border-white/[0.08]">
+                      <div>
+                        <h4 className="text-sm sm:text-base font-bold text-gray-900 dark:text-white tracking-tight">
+                          Edit & Customize Resume
+                        </h4>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                          Tailor your target role, summary, skills, and projects, or build from scratch.
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2 shrink-0 flex-wrap">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setIsAiModalOpen(true);
+                            setAiError("");
+                            setAiSuccess(false);
+                          }}
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white text-xs font-semibold shadow-xs hover:shadow transition-all cursor-pointer"
+                          title="Auto-fill resume with Google Gemini AI from a prompt"
+                        >
+                          <Sparkles size={12} className="text-amber-300 animate-pulse" />
+                          <span>AI Auto-Fill</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleClearToScratch}
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-50 dark:bg-red-950/40 hover:bg-red-100 dark:hover:bg-red-900/50 border border-red-200 dark:border-red-800 text-xs font-semibold text-red-700 dark:text-red-300 shadow-xs transition-all cursor-pointer"
+                          title="Clear all fields and build from scratch"
+                        >
+                          <Eraser size={12} className="text-red-600 dark:text-red-400" />
+                          <span>Start from Scratch</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleResetToDefault}
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white dark:bg-white/[0.08] hover:bg-gray-50 dark:hover:bg-white/[0.12] border border-gray-200 dark:border-white/10 text-xs font-semibold text-gray-700 dark:text-gray-200 shadow-xs transition-all cursor-pointer"
+                          title="Reset to default resume"
+                        >
+                          <RotateCcw size={12} className="text-gray-500 dark:text-gray-400" />
+                          <span>Reset Defaults</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* 1. Personal & Contact Information */}
+                    <div className="bg-white dark:bg-[#131620] border border-gray-200 dark:border-white/[0.08] rounded-xl p-4 sm:p-5 shadow-xs space-y-4 transition-colors duration-200">
+                      <div className="flex items-center justify-between pb-2 border-b border-gray-100 dark:border-white/[0.06]">
+                        <label className="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wide flex items-center gap-1.5">
+                          <User size={13} className="text-gray-700 dark:text-gray-300" /> Personal & Contact Info
+                        </label>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                        {/* Full Name */}
+                        <div className="space-y-1.5">
+                          <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-1">
+                            <User size={11} className="text-gray-500 dark:text-gray-400" /> Full Name
+                          </label>
+                          <input
+                            type="text"
+                            value={customResume.name || ""}
+                            onChange={(e) =>
+                              setCustomResume({ ...customResume, name: e.target.value })
+                            }
+                            placeholder="e.g. Hashim Malik"
+                            className="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#0c0e14] text-xs text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 shadow-xs focus:border-gray-900 dark:focus:border-white/40 focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-white/10 focus:outline-none transition-all font-medium"
+                          />
+                        </div>
+
+                        {/* Location */}
+                        <div className="space-y-1.5">
+                          <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-1">
+                            <MapPin size={11} className="text-gray-500 dark:text-gray-400" /> Location / City
+                          </label>
+                          <input
+                            type="text"
+                            value={customResume.location || ""}
+                            onChange={(e) =>
+                              setCustomResume({ ...customResume, location: e.target.value })
+                            }
+                            placeholder="e.g. Srinagar, Kashmir / Remote"
+                            className="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#0c0e14] text-xs text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 shadow-xs focus:border-gray-900 dark:focus:border-white/40 focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-white/10 focus:outline-none transition-all font-medium"
+                          />
+                        </div>
+
+                        {/* Email */}
+                        <div className="space-y-1.5">
+                          <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-1">
+                            <Mail size={11} className="text-gray-500 dark:text-gray-400" /> Email Address
+                          </label>
+                          <input
+                            type="email"
+                            value={customResume.email || ""}
+                            onChange={(e) =>
+                              setCustomResume({ ...customResume, email: e.target.value })
+                            }
+                            placeholder="e.g. you@example.com"
+                            className="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#0c0e14] text-xs text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 shadow-xs focus:border-gray-900 dark:focus:border-white/40 focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-white/10 focus:outline-none transition-all font-medium"
+                          />
+                        </div>
+
+                        {/* Phone */}
+                        <div className="space-y-1.5">
+                          <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-1">
+                            <Phone size={11} className="text-gray-500 dark:text-gray-400" /> Phone Number (Optional)
+                          </label>
+                          <input
+                            type="text"
+                            value={customResume.phone || ""}
+                            onChange={(e) =>
+                              setCustomResume({ ...customResume, phone: e.target.value })
+                            }
+                            placeholder="e.g. +91 90300 00000"
+                            className="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#0c0e14] text-xs text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 shadow-xs focus:border-gray-900 dark:focus:border-white/40 focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-white/10 focus:outline-none transition-all font-medium"
+                          />
+                        </div>
+
+                        {/* LinkedIn URL */}
+                        <div className="space-y-1.5">
+                          <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-1">
+                            <Linkedin size={11} className="text-gray-500 dark:text-gray-400" /> LinkedIn URL
+                          </label>
+                          <input
+                            type="text"
+                            value={customResume.linkedin || ""}
+                            onChange={(e) =>
+                              setCustomResume({ ...customResume, linkedin: e.target.value })
+                            }
+                            placeholder="e.g. linkedin.com/in/username"
+                            className="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#0c0e14] text-xs text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 shadow-xs focus:border-gray-900 dark:focus:border-white/40 focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-white/10 focus:outline-none transition-all font-medium"
+                          />
+                        </div>
+
+                        {/* GitHub URL */}
+                        <div className="space-y-1.5">
+                          <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-1">
+                            <Github size={11} className="text-gray-500 dark:text-gray-400" /> GitHub URL
+                          </label>
+                          <input
+                            type="text"
+                            value={customResume.github || ""}
+                            onChange={(e) =>
+                              setCustomResume({ ...customResume, github: e.target.value })
+                            }
+                            placeholder="e.g. github.com/username"
+                            className="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#0c0e14] text-xs text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 shadow-xs focus:border-gray-900 dark:focus:border-white/40 focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-white/10 focus:outline-none transition-all font-medium"
+                          />
+                        </div>
+
+                        {/* Portfolio / Personal Website Link */}
+                        <div className="space-y-1.5 sm:col-span-2">
+                          <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-1">
+                            <Globe size={11} className="text-gray-500 dark:text-gray-400" /> Portfolio / Website Link (Optional)
+                          </label>
+                          <input
+                            type="text"
+                            value={customResume.website || ""}
+                            onChange={(e) =>
+                              setCustomResume({ ...customResume, website: e.target.value })
+                            }
+                            placeholder="e.g. hashimmalik.dev"
+                            className="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#0c0e14] text-xs text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 shadow-xs focus:border-gray-900 dark:focus:border-white/40 focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-white/10 focus:outline-none transition-all font-medium"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* 2. Target Role & Title */}
+                    <div className="bg-white dark:bg-[#131620] border border-gray-200 dark:border-white/[0.08] rounded-xl p-4 sm:p-5 shadow-xs space-y-2.5 transition-colors duration-200">
+                      <div className="flex items-center justify-between pb-2 border-b border-gray-100 dark:border-white/[0.06]">
+                        <label className="text-[11px] sm:text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider flex items-center gap-1.5 min-w-0">
+                          <Target size={14} className="text-gray-700 dark:text-gray-300 shrink-0" />
+                          <span>Target Job Title / Role</span>
+                        </label>
+                      </div>
+                      <input
+                        type="text"
+                        value={customResume.targetRole || ""}
+                        onChange={(e) =>
+                          setCustomResume({ ...customResume, targetRole: e.target.value })
+                        }
+                        placeholder="e.g. Full-Stack Software Engineer & AI Systems Developer"
+                        className="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#0c0e14] text-xs text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 shadow-xs focus:border-gray-900 dark:focus:border-white/40 focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-white/10 focus:outline-none transition-all font-medium"
+                      />
+                    </div>
+
+                    {/* 3. Professional Summary */}
+                    <div className="bg-white dark:bg-[#131620] border border-gray-200 dark:border-white/[0.08] rounded-xl p-4 sm:p-5 shadow-xs space-y-3 transition-colors duration-200">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2.5 border-b border-gray-100 dark:border-white/[0.06]">
+                        <label className="text-[11px] sm:text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider flex items-center gap-1.5 min-w-0">
+                          <FileText size={14} className="text-gray-700 dark:text-gray-300 shrink-0" />
+                          <span>Summary</span>
+                        </label>
+                        <div className="flex items-center gap-1.5 bg-gray-50 dark:bg-[#0c0e14] border border-gray-200 dark:border-white/10 rounded-lg px-2.5 py-1 focus-within:border-gray-900 dark:focus-within:border-white/40 focus-within:bg-white dark:focus-within:bg-[#0c0e14] focus-within:ring-2 focus-within:ring-gray-900/10 transition-all">
+                          <span className="text-[10.5px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider shrink-0">
+                            Section Title:
+                          </span>
+                          <input
+                            type="text"
+                            value={customResume.sectionTitles?.summary !== undefined ? customResume.sectionTitles.summary : getSectionTitle("summary")}
+                            onChange={(e) =>
+                              setCustomResume({
+                                ...customResume,
+                                sectionTitles: {
+                                  ...(customResume.sectionTitles || {}),
+                                  summary: e.target.value,
+                                },
+                              })
+                            }
+                            placeholder="e.g. Professional Summary"
+                            className="w-44 sm:w-56 py-0.5 bg-transparent text-xs font-semibold text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 focus:outline-none"
+                          />
+                        </div>
+                      </div>
+                      <textarea
+                        rows={5}
+                        value={customResume.summary || ""}
+                        onChange={(e) =>
+                          setCustomResume({ ...customResume, summary: e.target.value })
+                        }
+                        placeholder="Brief overview of your engineering background, core strengths, and technical specializations..."
+                        className="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#0c0e14] text-xs text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 shadow-xs focus:border-gray-900 dark:focus:border-white/40 focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-white/10 focus:outline-none transition-all resize-y min-h-[110px] leading-relaxed font-normal"
+                      />
+                    </div>
+
+                    {/* 4. Education Customization */}
+                    <div className="bg-white dark:bg-[#131620] border border-gray-200 dark:border-white/[0.08] rounded-xl p-4 sm:p-5 shadow-xs space-y-3 transition-colors duration-200">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2.5 border-b border-gray-100 dark:border-white/[0.06]">
+                        <div className="flex items-center gap-2.5 flex-wrap min-w-0">
+                          <label className="text-[11px] sm:text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider flex items-center gap-1.5 min-w-0">
+                            <GraduationCap size={14} className="text-gray-700 dark:text-gray-300 shrink-0" />
+                            <span>Education</span>
+                          </label>
+                          <div className="flex items-center gap-1.5 bg-gray-50 dark:bg-[#0c0e14] border border-gray-200 dark:border-white/10 rounded-lg px-2.5 py-1 focus-within:border-gray-900 dark:focus-within:border-white/40 focus-within:bg-white dark:focus-within:bg-[#0c0e14] focus-within:ring-2 focus-within:ring-gray-900/10 transition-all">
+                            <span className="text-[10.5px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider shrink-0">
+                              Section Title:
+                            </span>
+                            <input
+                              type="text"
+                              value={customResume.sectionTitles?.education !== undefined ? customResume.sectionTitles.education : getSectionTitle("education")}
+                              onChange={(e) =>
+                                setCustomResume({
+                                  ...customResume,
+                                  sectionTitles: {
+                                    ...(customResume.sectionTitles || {}),
+                                    education: e.target.value,
+                                  },
+                                })
+                              }
+                              placeholder="e.g. Education & Credentials"
+                              className="w-44 sm:w-52 py-0.5 bg-transparent text-xs font-semibold text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 focus:outline-none"
+                            />
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const newEdu = [
+                              ...(customResume.education || []),
+                              {
+                                degree: "Bachelor of Technology in Computer Science & Engineering",
+                                institution: "Islamic University of Science and Technology (IUST)",
+                                period: "2020 – 2024",
+                                grade: "GPA: 8.5 / 10",
+                              },
+                            ];
+                            setCustomResume({ ...customResume, education: newEdu });
+                          }}
+                          className="flex items-center gap-1 text-[11px] sm:text-xs text-white dark:text-black bg-gray-900 dark:bg-white hover:bg-black dark:hover:bg-gray-100 px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg font-semibold transition-all shadow-xs cursor-pointer shrink-0 whitespace-nowrap self-start sm:self-auto"
+                        >
+                          <Plus size={12} className="shrink-0" />
+                          <span>Add Education</span>
+                        </button>
+                      </div>
+
+                      <div className="space-y-3.5">
+                        {customResume.education?.map((edu, eIdx) => (
+                          <div key={eIdx} className="p-3.5 sm:p-4 rounded-lg bg-gray-50 dark:bg-[#0c0e14] border border-gray-200 dark:border-white/10 space-y-3">
+                            <div className="flex items-center justify-between gap-2 pb-2 border-b border-gray-200 dark:border-white/[0.08]">
+                              <span className="text-xs font-bold text-gray-900 dark:text-white shrink-0">
+                                Degree #{eIdx + 1}
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const newEdu = [...customResume.education];
+                                  newEdu.splice(eIdx, 1);
+                                  setCustomResume({ ...customResume, education: newEdu });
+                                }}
+                                className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 px-2 py-0.5 rounded hover:bg-gray-200/50 dark:hover:bg-white/[0.06] transition-colors font-medium shrink-0 cursor-pointer"
+                                title="Delete entry"
+                              >
+                                <Trash2 size={12} className="shrink-0" />
+                                <span>Delete</span>
+                              </button>
+                            </div>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                              <div className="space-y-1">
+                                <span className="text-xs font-medium text-gray-600 dark:text-gray-400">Degree / Major</span>
+                                <input
+                                  type="text"
+                                  value={edu.degree || ""}
+                                  onChange={(e) => {
+                                    const newEdu = [...customResume.education];
+                                    newEdu[eIdx].degree = e.target.value;
+                                    setCustomResume({ ...customResume, education: newEdu });
+                                  }}
+                                  placeholder="e.g. B.Tech in CSE"
+                                  className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#131620] text-xs font-semibold text-gray-900 dark:text-white shadow-xs focus:border-gray-900 dark:focus:border-white/40 focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-white/10 focus:outline-none transition-all"
+                                />
+                              </div>
+                              <div className="space-y-1">
+                                <span className="text-xs font-medium text-gray-600 dark:text-gray-400">Institution & Location</span>
+                                <input
+                                  type="text"
+                                  value={edu.institution || ""}
+                                  onChange={(e) => {
+                                    const newEdu = [...customResume.education];
+                                    newEdu[eIdx].institution = e.target.value;
+                                    setCustomResume({ ...customResume, education: newEdu });
+                                  }}
+                                  placeholder="e.g. University Name, City"
+                                  className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#131620] text-xs font-medium text-gray-900 dark:text-white shadow-xs focus:border-gray-900 dark:focus:border-white/40 focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-white/10 focus:outline-none transition-all"
+                                />
+                              </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                              <div className="space-y-1">
+                                <span className="text-xs font-medium text-gray-600 dark:text-gray-400">Period / Years</span>
+                                <input
+                                  type="text"
+                                  value={edu.period || edu.year || ""}
+                                  onChange={(e) => {
+                                    const newEdu = [...customResume.education];
+                                    newEdu[eIdx].period = e.target.value;
+                                    newEdu[eIdx].year = e.target.value;
+                                    setCustomResume({ ...customResume, education: newEdu });
+                                  }}
+                                  placeholder="e.g. 2020 – 2024"
+                                  className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#131620] text-xs font-medium text-gray-900 dark:text-white shadow-xs focus:border-gray-900 dark:focus:border-white/40 focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-white/10 focus:outline-none transition-all"
+                                />
+                              </div>
+                              <div className="space-y-1">
+                                <span className="text-xs font-medium text-gray-600 dark:text-gray-400">Grade / Honors / Details</span>
+                                <textarea
+                                  rows={2}
+                                  value={edu.grade || edu.details || ""}
+                                  onChange={(e) => {
+                                    const newEdu = [...customResume.education];
+                                    newEdu[eIdx].grade = e.target.value;
+                                    newEdu[eIdx].details = e.target.value;
+                                    setCustomResume({ ...customResume, education: newEdu });
+                                  }}
+                                  placeholder="e.g. First Class with Distinction, Relevant Coursework: Data Structures..."
+                                  className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#131620] text-xs text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 shadow-xs focus:border-gray-900 dark:focus:border-white/40 focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-white/10 focus:outline-none transition-all resize-y min-h-[58px] leading-relaxed font-normal"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* 5. Technical Skills Categories */}
+                    <div className="bg-white dark:bg-[#131620] border border-gray-200 dark:border-white/[0.08] rounded-xl p-4 sm:p-5 shadow-xs space-y-3 transition-colors duration-200">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2.5 border-b border-gray-100 dark:border-white/[0.06]">
+                        <div className="flex items-center gap-2.5 flex-wrap min-w-0">
+                          <label className="text-[11px] sm:text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider flex items-center gap-1.5 min-w-0">
+                            <Code2 size={14} className="text-gray-700 dark:text-gray-300 shrink-0" />
+                            <span>Technical Skills</span>
+                          </label>
+                          <div className="flex items-center gap-1.5 bg-gray-50 dark:bg-[#0c0e14] border border-gray-200 dark:border-white/10 rounded-lg px-2.5 py-1 focus-within:border-gray-900 dark:focus-within:border-white/40 focus-within:bg-white dark:focus-within:bg-[#0c0e14] focus-within:ring-2 focus-within:ring-gray-900/10 transition-all">
+                            <span className="text-[10.5px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider shrink-0">
+                              Section Title:
+                            </span>
+                            <input
+                              type="text"
+                              value={customResume.sectionTitles?.skills !== undefined ? customResume.sectionTitles.skills : getSectionTitle("skills")}
+                              onChange={(e) =>
+                                setCustomResume({
+                                  ...customResume,
+                                  sectionTitles: {
+                                    ...(customResume.sectionTitles || {}),
+                                    skills: e.target.value,
+                                  },
+                                })
+                              }
+                              placeholder="e.g. Technical Skills"
+                              className="w-44 sm:w-52 py-0.5 bg-transparent text-xs font-semibold text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 focus:outline-none"
+                            />
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const count = Object.keys(customResume.skillCategories || {}).length + 1;
+                            const newCatName = `Skill Category ${count}`;
+                            setCustomResume({
+                              ...customResume,
+                              skillCategories: {
+                                ...(customResume.skillCategories || {}),
+                                [newCatName]: "Tool 1, Tool 2, Framework 1",
+                              },
+                            });
+                          }}
+                          className="flex items-center gap-1 text-[11px] sm:text-xs text-white dark:text-black bg-gray-900 dark:bg-white hover:bg-black dark:hover:bg-gray-100 px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg font-semibold transition-all shadow-xs cursor-pointer shrink-0 whitespace-nowrap self-start sm:self-auto"
+                        >
+                          <Plus size={12} className="shrink-0" />
+                          <span>Add Category</span>
+                        </button>
+                      </div>
+
+                      <div className="space-y-3">
+                        {customResume.skillCategories &&
+                          Object.entries(customResume.skillCategories).map(([category, items]) => (
+                            <div key={category} className="p-3.5 rounded-lg bg-gray-50 dark:bg-[#0c0e14] border border-gray-200 dark:border-white/10 space-y-2">
+                              <div className="flex items-center justify-between gap-2">
+                                <input
+                                  type="text"
+                                  value={category}
+                                  onChange={(e) => {
+                                    const newName = e.target.value;
+                                    const entries = Object.entries(customResume.skillCategories || {});
+                                    const updated = {};
+                                    entries.forEach(([k, v]) => {
+                                      if (k === category) updated[newName] = v;
+                                      else updated[k] = v;
+                                    });
+                                    setCustomResume({ ...customResume, skillCategories: updated });
+                                  }}
+                                  className="px-2.5 py-1 rounded-md bg-white dark:bg-[#131620] border border-gray-300 dark:border-white/10 focus:border-gray-900 dark:focus:border-white/40 focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-white/10 text-xs font-semibold text-gray-900 dark:text-white outline-none max-w-[220px] transition-all"
+                                />
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const updated = { ...(customResume.skillCategories || {}) };
+                                    delete updated[category];
+                                    setCustomResume({ ...customResume, skillCategories: updated });
+                                  }}
+                                  className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 px-2 py-0.5 rounded hover:bg-gray-200/50 dark:hover:bg-white/[0.06] transition-colors font-medium shrink-0 cursor-pointer"
+                                  title="Delete category"
+                                >
+                                  <Trash2 size={12} className="shrink-0" />
+                                  <span>Delete</span>
+                                </button>
+                              </div>
+                              <textarea
+                                rows={2}
+                                value={items}
+                                onChange={(e) => {
+                                  const updated = { ...customResume.skillCategories, [category]: e.target.value };
+                                  setCustomResume({ ...customResume, skillCategories: updated });
+                                }}
+                                placeholder="e.g. TypeScript, React, Next.js, Node.js, PostgreSQL"
+                                className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#131620] text-xs text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 shadow-xs focus:border-gray-900 dark:focus:border-white/40 focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-white/10 focus:outline-none transition-all resize-y min-h-[46px] leading-relaxed font-normal"
+                              />
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+
+                    {/* 6. Experience Bullets */}
+                    <div className="bg-white dark:bg-[#131620] border border-gray-200 dark:border-white/[0.08] rounded-xl p-4 sm:p-5 shadow-xs space-y-3 transition-colors duration-200">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2.5 border-b border-gray-100 dark:border-white/[0.06]">
+                        <div className="flex items-center gap-2.5 flex-wrap min-w-0">
+                          <label className="text-[11px] sm:text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider flex items-center gap-1.5 min-w-0">
+                            <Briefcase size={14} className="text-gray-700 dark:text-gray-300 shrink-0" />
+                            <span>Experience</span>
+                          </label>
+                          <div className="flex items-center gap-1.5 bg-gray-50 dark:bg-[#0c0e14] border border-gray-200 dark:border-white/10 rounded-lg px-2.5 py-1 focus-within:border-gray-900 dark:focus-within:border-white/40 focus-within:bg-white dark:focus-within:bg-[#0c0e14] focus-within:ring-2 focus-within:ring-gray-900/10 transition-all">
+                            <span className="text-[10.5px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider shrink-0">
+                              Section Title:
+                            </span>
+                            <input
+                              type="text"
+                              value={customResume.sectionTitles?.experience !== undefined ? customResume.sectionTitles.experience : getSectionTitle("experience")}
+                              onChange={(e) =>
+                                setCustomResume({
+                                  ...customResume,
+                                  sectionTitles: {
+                                    ...(customResume.sectionTitles || {}),
+                                    experience: e.target.value,
+                                  },
+                                })
+                              }
+                              placeholder="e.g. Engineering Experience"
+                              className="w-44 sm:w-52 py-0.5 bg-transparent text-xs font-semibold text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 focus:outline-none"
+                            />
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const newExp = [
+                              ...(customResume.experience || []),
+                              {
+                                role: "Software Engineer",
+                                organization: "Tech Company",
+                                location: "Remote",
+                                period: "2024 – Present",
+                                bullets: ["Architected scalable web workflows and microservices with high test coverage."],
+                              },
+                            ];
+                            setCustomResume({ ...customResume, experience: newExp });
+                          }}
+                          className="flex items-center gap-1 text-[11px] sm:text-xs text-white dark:text-black bg-gray-900 dark:bg-white hover:bg-black dark:hover:bg-gray-100 px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg font-semibold transition-all shadow-xs cursor-pointer shrink-0 whitespace-nowrap self-start sm:self-auto"
+                        >
+                          <Plus size={12} className="shrink-0" />
+                          <span>Add Experience</span>
+                        </button>
+                      </div>
+
+                      <div className="space-y-3.5">
+                        {customResume.experience?.map((exp, expIdx) => (
+                          <div key={expIdx} className="p-3.5 sm:p-4 rounded-lg bg-gray-50 dark:bg-[#0c0e14] border border-gray-200 dark:border-white/10 space-y-3">
+                            <div className="flex items-center justify-between gap-2 pb-2 border-b border-gray-200 dark:border-white/[0.08]">
+                              <span className="text-xs font-bold text-gray-900 dark:text-white shrink-0">
+                                Position #{expIdx + 1}
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const newExp = [...customResume.experience];
+                                  newExp.splice(expIdx, 1);
+                                  setCustomResume({ ...customResume, experience: newExp });
+                                }}
+                                className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 px-2 py-0.5 rounded hover:bg-gray-200/50 dark:hover:bg-white/[0.06] transition-colors font-medium shrink-0 cursor-pointer"
+                                title="Delete entry"
+                              >
+                                <Trash2 size={12} className="shrink-0" />
+                                <span>Delete</span>
+                              </button>
+                            </div>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                              <div className="space-y-1">
+                                <span className="text-xs font-medium text-gray-600 dark:text-gray-400">Role Title</span>
+                                <input
+                                  type="text"
+                                  value={exp.role}
+                                  onChange={(e) => {
+                                    const newExp = [...customResume.experience];
+                                    newExp[expIdx].role = e.target.value;
+                                    setCustomResume({ ...customResume, experience: newExp });
+                                  }}
+                                  className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#131620] text-xs font-semibold text-gray-900 dark:text-white shadow-xs focus:border-gray-900 dark:focus:border-white/40 focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-white/10 focus:outline-none transition-all"
+                                />
+                              </div>
+                              <div className="space-y-1">
+                                <span className="text-xs font-medium text-gray-600 dark:text-gray-400">Organization & Period</span>
+                                <input
+                                  type="text"
+                                  value={exp.period}
+                                  onChange={(e) => {
+                                    const newExp = [...customResume.experience];
+                                    newExp[expIdx].period = e.target.value;
+                                    setCustomResume({ ...customResume, experience: newExp });
+                                  }}
+                                  className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#131620] text-xs font-medium text-gray-900 dark:text-white shadow-xs focus:border-gray-900 dark:focus:border-white/40 focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-white/10 focus:outline-none transition-all"
+                                />
+                              </div>
+                            </div>
+
+                            {/* Bullets List */}
+                            <div className="space-y-2 pt-1">
+                              <span className="text-xs font-medium text-gray-600 dark:text-gray-400 block">Accomplishment Bullets</span>
+                              {exp.bullets?.map((b, bIdx) => (
+                                <div key={bIdx} className="flex items-start gap-2">
+                                  <textarea
+                                    rows={2}
+                                    value={b}
+                                    onChange={(e) => {
+                                      const newExp = [...customResume.experience];
+                                      newExp[expIdx].bullets[bIdx] = e.target.value;
+                                      setCustomResume({ ...customResume, experience: newExp });
+                                    }}
+                                    className="flex-1 px-3 py-2 rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#131620] text-xs text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 shadow-xs focus:border-gray-900 dark:focus:border-white/40 focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-white/10 focus:outline-none transition-all resize-y min-h-[52px] leading-relaxed font-normal"
+                                  />
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      const newExp = [...customResume.experience];
+                                      newExp[expIdx].bullets.splice(bIdx, 1);
+                                      setCustomResume({ ...customResume, experience: newExp });
+                                    }}
+                                    className="p-1.5 text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 rounded hover:bg-gray-200/50 dark:hover:bg-white/[0.06] transition-colors cursor-pointer mt-1"
+                                    title="Remove bullet"
+                                  >
+                                    <Trash2 size={12} />
+                                  </button>
+                                </div>
+                              ))}
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const newExp = [...customResume.experience];
+                                  newExp[expIdx].bullets = [...(newExp[expIdx].bullets || []), "New achievement bullet point..."];
+                                  setCustomResume({ ...customResume, experience: newExp });
+                                }}
+                                className="flex items-center gap-1 text-xs text-gray-900 dark:text-white hover:text-black dark:hover:text-pAccent font-semibold cursor-pointer pt-0.5"
+                              >
+                                <Plus size={12} /> Add Achievement Bullet
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* 7. Projects Bullets */}
+                    <div className="bg-white dark:bg-[#131620] border border-gray-200 dark:border-white/[0.08] rounded-xl p-4 sm:p-5 shadow-xs space-y-3 transition-colors duration-200">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2.5 border-b border-gray-100 dark:border-white/[0.06]">
+                        <div className="flex items-center gap-2.5 flex-wrap min-w-0">
+                          <label className="text-[11px] sm:text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider flex items-center gap-1.5 min-w-0">
+                            <Code2 size={14} className="text-gray-700 dark:text-gray-300 shrink-0" />
+                            <span>Projects</span>
+                          </label>
+                          <div className="flex items-center gap-1.5 bg-gray-50 dark:bg-[#0c0e14] border border-gray-200 dark:border-white/10 rounded-lg px-2.5 py-1 focus-within:border-gray-900 dark:focus-within:border-white/40 focus-within:bg-white dark:focus-within:bg-[#0c0e14] focus-within:ring-2 focus-within:ring-gray-900/10 transition-all">
+                            <span className="text-[10.5px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider shrink-0">
+                              Section Title:
+                            </span>
+                            <input
+                              type="text"
+                              value={customResume.sectionTitles?.projects !== undefined ? customResume.sectionTitles.projects : getSectionTitle("projects")}
+                              onChange={(e) =>
+                                setCustomResume({
+                                  ...customResume,
+                                  sectionTitles: {
+                                    ...(customResume.sectionTitles || {}),
+                                    projects: e.target.value,
+                                  },
+                                })
+                              }
+                              placeholder="e.g. Featured Projects"
+                              className="w-44 sm:w-52 py-0.5 bg-transparent text-xs font-semibold text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 focus:outline-none"
+                            />
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const newProj = [
+                              ...(customResume.projects || []),
+                              {
+                                title: "New Project",
+                                tech: "React, Node.js, PostgreSQL",
+                                bullets: ["Engineered responsive full-stack platform with secure authentication."],
+                              },
+                            ];
+                            setCustomResume({ ...customResume, projects: newProj });
+                          }}
+                          className="flex items-center gap-1 text-[11px] sm:text-xs text-white dark:text-black bg-gray-900 dark:bg-white hover:bg-black dark:hover:bg-gray-100 px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg font-semibold transition-all shadow-xs cursor-pointer shrink-0 whitespace-nowrap self-start sm:self-auto"
+                        >
+                          <Plus size={12} className="shrink-0" />
+                          <span>Add Project</span>
+                        </button>
+                      </div>
+
+                      <div className="space-y-3.5">
+                        {customResume.projects?.map((proj, pIdx) => (
+                          <div key={pIdx} className="p-3.5 sm:p-4 rounded-lg bg-gray-50 dark:bg-[#0c0e14] border border-gray-200 dark:border-white/10 space-y-3">
+                            <div className="flex items-center justify-between gap-2 pb-2 border-b border-gray-200 dark:border-white/[0.08]">
+                              <span className="text-xs font-bold text-gray-900 dark:text-white shrink-0">
+                                Project #{pIdx + 1}
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const newProj = [...customResume.projects];
+                                  newProj.splice(pIdx, 1);
+                                  setCustomResume({ ...customResume, projects: newProj });
+                                }}
+                                className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 px-2 py-0.5 rounded hover:bg-gray-200/50 dark:hover:bg-white/[0.06] transition-colors font-medium shrink-0 cursor-pointer"
+                                title="Delete project"
+                              >
+                                <Trash2 size={12} className="shrink-0" />
+                                <span>Delete</span>
+                              </button>
+                            </div>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                              <div className="space-y-1">
+                                <span className="text-xs font-medium text-gray-600 dark:text-gray-400">Project Title</span>
+                                <input
+                                  type="text"
+                                  value={proj.title}
+                                  onChange={(e) => {
+                                    const newProj = [...customResume.projects];
+                                    newProj[pIdx].title = e.target.value;
+                                    setCustomResume({ ...customResume, projects: newProj });
+                                  }}
+                                  className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#131620] text-xs font-semibold text-gray-900 dark:text-white shadow-xs focus:border-gray-900 dark:focus:border-white/40 focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-white/10 focus:outline-none transition-all"
+                                />
+                              </div>
+                              <div className="space-y-1">
+                                <span className="text-xs font-medium text-gray-600 dark:text-gray-400">Tech Stack</span>
+                                <input
+                                  type="text"
+                                  value={proj.tech || ""}
+                                  onChange={(e) => {
+                                    const newProj = [...customResume.projects];
+                                    newProj[pIdx].tech = e.target.value;
+                                    setCustomResume({ ...customResume, projects: newProj });
+                                  }}
+                                  className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#131620] text-xs font-medium text-gray-900 dark:text-white shadow-xs focus:border-gray-900 dark:focus:border-white/40 focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-white/10 focus:outline-none transition-all"
+                                />
+                              </div>
+                            </div>
+
+                            {/* Project Bullets */}
+                            <div className="space-y-2 pt-1">
+                              <span className="text-xs font-medium text-gray-600 dark:text-gray-400 block">Key Highlights</span>
+                              {proj.bullets?.map((b, bIdx) => (
+                                <div key={bIdx} className="flex items-start gap-2">
+                                  <textarea
+                                    rows={2}
+                                    value={b}
+                                    onChange={(e) => {
+                                      const newProj = [...customResume.projects];
+                                      newProj[pIdx].bullets[bIdx] = e.target.value;
+                                      setCustomResume({ ...customResume, projects: newProj });
+                                    }}
+                                    className="flex-1 px-3 py-2 rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-[#131620] text-xs text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 shadow-xs focus:border-gray-900 dark:focus:border-white/40 focus:ring-2 focus:ring-gray-900/10 dark:focus:ring-white/10 focus:outline-none transition-all resize-y min-h-[52px] leading-relaxed font-normal"
+                                  />
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      const newProj = [...customResume.projects];
+                                      newProj[pIdx].bullets.splice(bIdx, 1);
+                                      setCustomResume({ ...customResume, projects: newProj });
+                                    }}
+                                    className="p-1.5 text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 rounded hover:bg-gray-200/50 dark:hover:bg-white/[0.06] transition-colors cursor-pointer mt-1"
+                                    title="Delete bullet"
+                                  >
+                                    <Trash2 size={13} />
+                                  </button>
+                                </div>
+                              ))}
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const newProj = [...customResume.projects];
+                                  if (!newProj[pIdx].bullets) newProj[pIdx].bullets = [];
+                                  newProj[pIdx].bullets.push("Engineered new feature with high performance...");
+                                  setCustomResume({ ...customResume, projects: newProj });
+                                }}
+                                className="flex items-center gap-1 text-xs text-gray-900 dark:text-white hover:text-black dark:hover:text-pAccent font-semibold cursor-pointer pt-0.5"
+                              >
+                                <Plus size={12} /> Add Highlight Bullet
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                  </div>
+
+                  {/* Solid Bottom Action Bar (Seals completely with zero background gap) */}
+                  <div className="shrink-0 px-4 sm:px-7 py-3 bg-white dark:bg-[#11131b] border-t border-gray-200 dark:border-white/[0.08] flex items-center justify-end z-10 shadow-[0_-4px_20px_rgba(0,0,0,0.04)]">
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab("preview")}
+                      className="flex items-center gap-2 px-5 sm:px-6 py-2.5 rounded-lg bg-gray-900 hover:bg-black dark:bg-white dark:hover:bg-gray-100 text-white dark:text-black font-semibold text-xs shadow-sm transition-all cursor-pointer"
+                    >
+                      <Eye size={13} />
+                      <span>View Generated Resume</span>
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                /* LIVE PREVIEW / PRINTABLE VIEW */
                 <div
                   data-lenis-prevent="true"
-                  className="flex-1 overflow-y-auto p-4 sm:p-7 space-y-6 text-gray-900 text-left font-jakarta"
+                  className="flex-1 overflow-y-auto bg-[#f9fafb] dark:bg-[#090b10] p-2.5 sm:p-5 flex justify-center items-start"
                   style={{
                     scrollbarColor: "rgba(0, 0, 0, 0.15) transparent",
                     scrollbarWidth: "thin",
                   }}
                 >
-                {/* Form Header & Action Buttons */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-gray-200">
-                  <div>
-                    <h4 className="text-sm sm:text-base font-bold text-gray-900 tracking-tight">
-                      Edit & Customize Resume
-                    </h4>
-                    <p className="text-xs text-gray-500 mt-0.5">
-                      Tailor your target role, summary, skills, and projects, or build from scratch.
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2 shrink-0 flex-wrap">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsAiModalOpen(true);
-                        setAiError("");
-                        setAiSuccess(false);
-                      }}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white text-xs font-semibold shadow-xs hover:shadow transition-all cursor-pointer"
-                      title="Auto-fill resume with Google Gemini AI from a prompt"
-                    >
-                      <Sparkles size={12} className="text-amber-300 animate-pulse" />
-                      <span>AI Auto-Fill</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleClearToScratch}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-50 hover:bg-red-100 border border-red-200 text-xs font-semibold text-red-700 shadow-xs transition-all cursor-pointer"
-                      title="Clear all fields and build from scratch"
-                    >
-                      <Eraser size={12} className="text-red-600" />
-                      <span>Start from Scratch</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleResetToDefault}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white hover:bg-gray-50 border border-gray-200 text-xs font-semibold text-gray-700 shadow-xs transition-all cursor-pointer"
-                      title="Reset to default resume"
-                    >
-                      <RotateCcw size={12} className="text-gray-500" />
-                      <span>Reset Defaults</span>
-                    </button>
-                  </div>
-                </div>
-
-                {/* 1. Personal & Contact Information */}
-                <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-5 shadow-xs space-y-4">
-                  <div className="flex items-center justify-between pb-2 border-b border-gray-100">
-                    <label className="text-xs font-bold text-gray-900 uppercase tracking-wide flex items-center gap-1.5">
-                      <User size={13} className="text-gray-700" /> Personal & Contact Info
-                    </label>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                    {/* Full Name */}
-                    <div className="space-y-1.5">
-                      <label className="block text-xs font-semibold text-gray-700 flex items-center gap-1">
-                        <User size={11} className="text-gray-500" /> Full Name
-                      </label>
-                      <input
-                        type="text"
-                        value={customResume.name || ""}
-                        onChange={(e) =>
-                          setCustomResume({ ...customResume, name: e.target.value })
-                        }
-                        placeholder="e.g. Hashim Malik"
-                        className="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 bg-white text-xs text-gray-900 placeholder:text-gray-400 shadow-xs focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 focus:outline-none transition-all font-medium"
-                      />
-                    </div>
-
-                    {/* Location */}
-                    <div className="space-y-1.5">
-                      <label className="block text-xs font-semibold text-gray-700 flex items-center gap-1">
-                        <MapPin size={11} className="text-gray-500" /> Location / City
-                      </label>
-                      <input
-                        type="text"
-                        value={customResume.location || ""}
-                        onChange={(e) =>
-                          setCustomResume({ ...customResume, location: e.target.value })
-                        }
-                        placeholder="e.g. Srinagar, Kashmir / Remote"
-                        className="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 bg-white text-xs text-gray-900 placeholder:text-gray-400 shadow-xs focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 focus:outline-none transition-all font-medium"
-                      />
-                    </div>
-
-                    {/* Email */}
-                    <div className="space-y-1.5">
-                      <label className="block text-xs font-semibold text-gray-700 flex items-center gap-1">
-                        <Mail size={11} className="text-gray-500" /> Email Address
-                      </label>
-                      <input
-                        type="email"
-                        value={customResume.email || ""}
-                        onChange={(e) =>
-                          setCustomResume({ ...customResume, email: e.target.value })
-                        }
-                        placeholder="e.g. you@example.com"
-                        className="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 bg-white text-xs text-gray-900 placeholder:text-gray-400 shadow-xs focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 focus:outline-none transition-all font-medium"
-                      />
-                    </div>
-
-                    {/* Phone */}
-                    <div className="space-y-1.5">
-                      <label className="block text-xs font-semibold text-gray-700 flex items-center gap-1">
-                        <Phone size={11} className="text-gray-500" /> Phone Number (Optional)
-                      </label>
-                      <input
-                        type="text"
-                        value={customResume.phone || ""}
-                        onChange={(e) =>
-                          setCustomResume({ ...customResume, phone: e.target.value })
-                        }
-                        placeholder="e.g. +91 90300 00000"
-                        className="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 bg-white text-xs text-gray-900 placeholder:text-gray-400 shadow-xs focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 focus:outline-none transition-all font-medium"
-                      />
-                    </div>
-
-                    {/* LinkedIn URL */}
-                    <div className="space-y-1.5">
-                      <label className="block text-xs font-semibold text-gray-700 flex items-center gap-1">
-                        <Linkedin size={11} className="text-gray-500" /> LinkedIn URL
-                      </label>
-                      <input
-                        type="text"
-                        value={customResume.linkedin || ""}
-                        onChange={(e) =>
-                          setCustomResume({ ...customResume, linkedin: e.target.value })
-                        }
-                        placeholder="e.g. linkedin.com/in/username"
-                        className="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 bg-white text-xs text-gray-900 placeholder:text-gray-400 shadow-xs focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 focus:outline-none transition-all font-medium"
-                      />
-                    </div>
-
-                    {/* GitHub URL */}
-                    <div className="space-y-1.5">
-                      <label className="block text-xs font-semibold text-gray-700 flex items-center gap-1">
-                        <Github size={11} className="text-gray-500" /> GitHub URL
-                      </label>
-                      <input
-                        type="text"
-                        value={customResume.github || ""}
-                        onChange={(e) =>
-                          setCustomResume({ ...customResume, github: e.target.value })
-                        }
-                        placeholder="e.g. github.com/username"
-                        className="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 bg-white text-xs text-gray-900 placeholder:text-gray-400 shadow-xs focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 focus:outline-none transition-all font-medium"
-                      />
-                    </div>
-
-                    {/* Portfolio / Website URL */}
-                    <div className="space-y-1.5 sm:col-span-2">
-                      <label className="block text-xs font-semibold text-gray-700 flex items-center gap-1">
-                        <Globe size={11} className="text-gray-500" /> Portfolio / Website Link (Optional)
-                      </label>
-                      <input
-                        type="text"
-                        value={customResume.website || ""}
-                        onChange={(e) =>
-                          setCustomResume({ ...customResume, website: e.target.value })
-                        }
-                        placeholder="e.g. yourportfolio.dev"
-                        className="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 bg-white text-xs text-gray-900 placeholder:text-gray-400 shadow-xs focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 focus:outline-none transition-all font-medium"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* 2. Target Role & Title */}
-                <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-5 shadow-xs space-y-2.5">
-                  <div className="flex items-center justify-between pb-2 border-b border-gray-100">
-                    <label className="text-[11px] sm:text-xs font-bold text-gray-900 uppercase tracking-wider flex items-center gap-1.5 min-w-0">
-                      <Target size={14} className="text-gray-700 shrink-0" />
-                      <span>Target Job Title / Role</span>
-                    </label>
-                  </div>
-                  <input
-                    type="text"
-                    value={customResume.targetRole || ""}
-                    onChange={(e) =>
-                      setCustomResume({ ...customResume, targetRole: e.target.value })
-                    }
-                    placeholder="e.g. Full Stack Developer, AI Engineer, Software Engineer"
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 bg-white text-xs text-gray-900 placeholder:text-gray-400 shadow-xs focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 focus:outline-none transition-all font-medium"
-                  />
-                </div>
-
-                {/* 3. Professional Summary */}
-                <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-5 shadow-xs space-y-3">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2.5 border-b border-gray-100">
-                    <label className="text-[11px] sm:text-xs font-bold text-gray-900 uppercase tracking-wider flex items-center gap-1.5 min-w-0">
-                      <FileText size={14} className="text-gray-700 shrink-0" />
-                      <span>Summary</span>
-                    </label>
-                    <div className="flex items-center gap-1.5 bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1 focus-within:border-gray-900 focus-within:bg-white focus-within:ring-2 focus-within:ring-gray-900/10 transition-all">
-                      <span className="text-[10.5px] font-semibold text-gray-500 uppercase tracking-wider shrink-0">
-                        Section Title:
-                      </span>
-                      <input
-                        type="text"
-                        value={customResume.sectionTitles?.summary !== undefined ? customResume.sectionTitles.summary : getSectionTitle("summary")}
-                        onChange={(e) =>
-                          setCustomResume({
-                            ...customResume,
-                            sectionTitles: {
-                              ...(customResume.sectionTitles || {}),
-                              summary: e.target.value,
-                            },
-                          })
-                        }
-                        placeholder="e.g. Professional Summary"
-                        className="w-44 sm:w-56 py-0.5 bg-transparent text-xs font-semibold text-gray-900 placeholder:text-gray-400 focus:outline-none"
-                      />
-                    </div>
-                  </div>
-                  <textarea
-                    rows={5}
-                    value={customResume.summary || ""}
-                    onChange={(e) =>
-                      setCustomResume({ ...customResume, summary: e.target.value })
-                    }
-                    placeholder="Brief overview of your engineering background, core strengths, and technical specializations..."
-                    className="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 bg-white text-xs text-gray-900 placeholder:text-gray-400 shadow-xs focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 focus:outline-none transition-all resize-y min-h-[110px] leading-relaxed font-normal"
-                  />
-                </div>
-
-                {/* 4. Education Customization */}
-                <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-5 shadow-xs space-y-3">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2.5 border-b border-gray-100">
-                    <div className="flex items-center gap-2.5 flex-wrap min-w-0">
-                      <label className="text-[11px] sm:text-xs font-bold text-gray-900 uppercase tracking-wider flex items-center gap-1.5 min-w-0">
-                        <GraduationCap size={14} className="text-gray-700 shrink-0" />
-                        <span>Education</span>
-                      </label>
-                      <div className="flex items-center gap-1.5 bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1 focus-within:border-gray-900 focus-within:bg-white focus-within:ring-2 focus-within:ring-gray-900/10 transition-all">
-                        <span className="text-[10.5px] font-semibold text-gray-500 uppercase tracking-wider shrink-0">
-                          Section Title:
-                        </span>
-                        <input
-                          type="text"
-                          value={customResume.sectionTitles?.education !== undefined ? customResume.sectionTitles.education : getSectionTitle("education")}
-                          onChange={(e) =>
-                            setCustomResume({
-                              ...customResume,
-                              sectionTitles: {
-                                ...(customResume.sectionTitles || {}),
-                                education: e.target.value,
-                              },
-                            })
-                          }
-                          placeholder="e.g. Education & Credentials"
-                          className="w-44 sm:w-52 py-0.5 bg-transparent text-xs font-semibold text-gray-900 placeholder:text-gray-400 focus:outline-none"
-                        />
-                      </div>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const newEdu = [
-                          ...(customResume.education || []),
-                          {
-                            degree: "Bachelor of Science in Computer Science",
-                            institution: "University / College Name",
-                            period: "2020 – 2024",
-                            grade: "CGPA: 8.5/10",
-                          },
-                        ];
-                        setCustomResume({ ...customResume, education: newEdu });
-                      }}
-                      className="flex items-center gap-1 text-[11px] sm:text-xs text-white bg-gray-900 hover:bg-black px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg font-semibold transition-all shadow-xs cursor-pointer shrink-0 whitespace-nowrap self-start sm:self-auto"
-                    >
-                      <Plus size={12} className="shrink-0" />
-                      <span>Add Education</span>
-                    </button>
-                  </div>
-
-                  <div className="space-y-3.5">
-                    {customResume.education?.map((edu, eIdx) => (
-                      <div key={eIdx} className="p-3.5 sm:p-4 rounded-lg bg-gray-50 border border-gray-200 space-y-3">
-                        <div className="flex items-center justify-between gap-2 pb-2 border-b border-gray-200">
-                          <span className="text-xs font-bold text-gray-900 shrink-0">
-                            Degree #{eIdx + 1}
-                          </span>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              const newEdu = [...customResume.education];
-                              newEdu.splice(eIdx, 1);
-                              setCustomResume({ ...customResume, education: newEdu });
-                            }}
-                            className="flex items-center gap-1 text-xs text-gray-500 hover:text-red-600 px-2 py-0.5 rounded hover:bg-gray-200/50 transition-colors font-medium shrink-0 cursor-pointer"
-                            title="Delete entry"
-                          >
-                            <Trash2 size={12} className="shrink-0" />
-                            <span>Delete</span>
-                          </button>
-                        </div>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                          <div className="space-y-1">
-                            <span className="text-xs font-medium text-gray-600">Degree / Major</span>
-                            <input
-                              type="text"
-                              value={edu.degree || ""}
-                              onChange={(e) => {
-                                const newEdu = [...customResume.education];
-                                newEdu[eIdx].degree = e.target.value;
-                                setCustomResume({ ...customResume, education: newEdu });
-                              }}
-                              placeholder="e.g. B.Tech / B.S. in Computer Science"
-                              className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-xs font-semibold text-gray-900 shadow-xs focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 focus:outline-none transition-all"
-                            />
-                          </div>
-                          <div className="space-y-1">
-                            <span className="text-xs font-medium text-gray-600">Institution & Location</span>
-                            <input
-                              type="text"
-                              value={edu.institution || ""}
-                              onChange={(e) => {
-                                const newEdu = [...customResume.education];
-                                newEdu[eIdx].institution = e.target.value;
-                                setCustomResume({ ...customResume, education: newEdu });
-                              }}
-                              placeholder="e.g. University of Engineering"
-                              className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-xs font-medium text-gray-900 shadow-xs focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 focus:outline-none transition-all"
-                            />
-                          </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                          <div className="space-y-1">
-                            <span className="text-xs font-medium text-gray-600">Period / Years</span>
-                            <input
-                              type="text"
-                              value={edu.period || edu.year || ""}
-                              onChange={(e) => {
-                                const newEdu = [...customResume.education];
-                                newEdu[eIdx].period = e.target.value;
-                                newEdu[eIdx].year = e.target.value;
-                                setCustomResume({ ...customResume, education: newEdu });
-                              }}
-                              placeholder="e.g. 2020 – 2024"
-                              className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-xs font-medium text-gray-900 shadow-xs focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 focus:outline-none transition-all"
-                            />
-                          </div>
-                          <div className="space-y-1">
-                            <span className="text-xs font-medium text-gray-600">Grade / Honors / Coursework (Optional)</span>
-                            <textarea
-                              rows={2}
-                              value={edu.grade || edu.details || ""}
-                              onChange={(e) => {
-                                const newEdu = [...customResume.education];
-                                newEdu[eIdx].grade = e.target.value;
-                                newEdu[eIdx].details = e.target.value;
-                                setCustomResume({ ...customResume, education: newEdu });
-                              }}
-                              placeholder="e.g. GPA: 3.8 / 4.0, Coursework in Algorithms & AI"
-                              className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-xs text-gray-900 placeholder:text-gray-400 shadow-xs focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 focus:outline-none transition-all resize-y min-h-[58px] leading-relaxed font-normal"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* 5. Technical Skills Categories */}
-                <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-5 shadow-xs space-y-3">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2.5 border-b border-gray-100">
-                    <div className="flex items-center gap-2.5 flex-wrap min-w-0">
-                      <label className="text-[11px] sm:text-xs font-bold text-gray-900 uppercase tracking-wider flex items-center gap-1.5 min-w-0">
-                        <Code2 size={14} className="text-gray-700 shrink-0" />
-                        <span>Technical Skills</span>
-                      </label>
-                      <div className="flex items-center gap-1.5 bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1 focus-within:border-gray-900 focus-within:bg-white focus-within:ring-2 focus-within:ring-gray-900/10 transition-all">
-                        <span className="text-[10.5px] font-semibold text-gray-500 uppercase tracking-wider shrink-0">
-                          Section Title:
-                        </span>
-                        <input
-                          type="text"
-                          value={customResume.sectionTitles?.skills !== undefined ? customResume.sectionTitles.skills : getSectionTitle("skills")}
-                          onChange={(e) =>
-                            setCustomResume({
-                              ...customResume,
-                              sectionTitles: {
-                                ...(customResume.sectionTitles || {}),
-                                skills: e.target.value,
-                              },
-                            })
-                          }
-                          placeholder="e.g. Technical Skills"
-                          className="w-44 sm:w-52 py-0.5 bg-transparent text-xs font-semibold text-gray-900 placeholder:text-gray-400 focus:outline-none"
-                        />
-                      </div>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const count = Object.keys(customResume.skillCategories || {}).length + 1;
-                        const newCatName = `Skill Category ${count}`;
-                        setCustomResume({
-                          ...customResume,
-                          skillCategories: {
-                            ...(customResume.skillCategories || {}),
-                            [newCatName]: "Tool 1, Tool 2, Framework 1",
-                          },
-                        });
-                      }}
-                      className="flex items-center gap-1 text-[11px] sm:text-xs text-white bg-gray-900 hover:bg-black px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg font-semibold transition-all shadow-xs cursor-pointer shrink-0 whitespace-nowrap self-start sm:self-auto"
-                    >
-                      <Plus size={12} className="shrink-0" />
-                      <span>Add Category</span>
-                    </button>
-                  </div>
-
-                  <div className="space-y-3">
-                    {customResume.skillCategories &&
-                      Object.entries(customResume.skillCategories).map(([category, items]) => (
-                        <div key={category} className="p-3.5 rounded-lg bg-gray-50 border border-gray-200 space-y-2">
-                          <div className="flex items-center justify-between gap-2">
-                            <input
-                              type="text"
-                              value={category}
-                              onChange={(e) => {
-                                const newName = e.target.value;
-                                const entries = Object.entries(customResume.skillCategories || {});
-                                const updated = {};
-                                entries.forEach(([k, v]) => {
-                                   if (k === category) updated[newName] = v;
-                                  else updated[k] = v;
-                                });
-                                setCustomResume({ ...customResume, skillCategories: updated });
-                              }}
-                              className="px-2.5 py-1 rounded-md bg-white border border-gray-300 focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 text-xs font-semibold text-gray-900 outline-none max-w-[220px] transition-all"
-                            />
-                            <button
-                              type="button"
-                              onClick={() => {
-                                const updated = { ...(customResume.skillCategories || {}) };
-                                delete updated[category];
-                                setCustomResume({ ...customResume, skillCategories: updated });
-                              }}
-                              className="flex items-center gap-1 text-xs text-gray-500 hover:text-red-600 px-2 py-0.5 rounded hover:bg-gray-200/50 transition-colors font-medium shrink-0 cursor-pointer"
-                              title="Delete category"
-                            >
-                              <Trash2 size={12} className="shrink-0" />
-                              <span>Delete</span>
-                            </button>
-                          </div>
-                          <textarea
-                            rows={2}
-                            value={items}
-                            onChange={(e) => {
-                              const updated = { ...customResume.skillCategories, [category]: e.target.value };
-                              setCustomResume({ ...customResume, skillCategories: updated });
-                            }}
-                            placeholder="e.g. React.js, Next.js, Node.js, TypeScript, Tailwind CSS, PostgreSQL"
-                            className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-xs text-gray-900 placeholder:text-gray-400 shadow-xs focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 focus:outline-none transition-all resize-y min-h-[46px] leading-relaxed font-normal"
-                          />
-                        </div>
-                      ))}
-                  </div>
-                </div>
-
-                {/* 6. Experience Bullets */}
-                <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-5 shadow-xs space-y-3">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2.5 border-b border-gray-100">
-                    <div className="flex items-center gap-2.5 flex-wrap min-w-0">
-                      <label className="text-[11px] sm:text-xs font-bold text-gray-900 uppercase tracking-wider flex items-center gap-1.5 min-w-0">
-                        <Briefcase size={14} className="text-gray-700 shrink-0" />
-                        <span>Experience</span>
-                      </label>
-                      <div className="flex items-center gap-1.5 bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1 focus-within:border-gray-900 focus-within:bg-white focus-within:ring-2 focus-within:ring-gray-900/10 transition-all">
-                        <span className="text-[10.5px] font-semibold text-gray-500 uppercase tracking-wider shrink-0">
-                          Section Title:
-                        </span>
-                        <input
-                          type="text"
-                          value={customResume.sectionTitles?.experience !== undefined ? customResume.sectionTitles.experience : getSectionTitle("experience")}
-                          onChange={(e) =>
-                            setCustomResume({
-                              ...customResume,
-                              sectionTitles: {
-                                ...(customResume.sectionTitles || {}),
-                                experience: e.target.value,
-                              },
-                            })
-                          }
-                          placeholder="e.g. Engineering Experience"
-                          className="w-44 sm:w-52 py-0.5 bg-transparent text-xs font-semibold text-gray-900 placeholder:text-gray-400 focus:outline-none"
-                        />
-                      </div>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const newExp = [
-                          ...(customResume.experience || []),
-                          {
-                            role: "Software Engineer",
-                            organization: "Tech Company",
-                            location: "Remote",
-                            period: "2024 – Present",
-                            bullets: ["Architected scalable web workflows and microservices with high test coverage."],
-                          },
-                        ];
-                        setCustomResume({ ...customResume, experience: newExp });
-                      }}
-                      className="flex items-center gap-1 text-[11px] sm:text-xs text-white bg-gray-900 hover:bg-black px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg font-semibold transition-all shadow-xs cursor-pointer shrink-0 whitespace-nowrap self-start sm:self-auto"
-                    >
-                      <Plus size={12} className="shrink-0" />
-                      <span>Add Experience</span>
-                    </button>
-                  </div>
-
-                  <div className="space-y-3.5">
-                    {customResume.experience?.map((exp, expIdx) => (
-                      <div key={expIdx} className="p-3.5 sm:p-4 rounded-lg bg-gray-50 border border-gray-200 space-y-3">
-                        <div className="flex items-center justify-between gap-2 pb-2 border-b border-gray-200">
-                          <span className="text-xs font-bold text-gray-900 shrink-0">
-                            Position #{expIdx + 1}
-                          </span>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              const newExp = [...customResume.experience];
-                              newExp.splice(expIdx, 1);
-                              setCustomResume({ ...customResume, experience: newExp });
-                            }}
-                            className="flex items-center gap-1 text-xs text-gray-500 hover:text-red-600 px-2 py-0.5 rounded hover:bg-gray-200/50 transition-colors font-medium shrink-0 cursor-pointer"
-                            title="Delete entry"
-                          >
-                            <Trash2 size={12} className="shrink-0" />
-                            <span>Delete</span>
-                          </button>
-                        </div>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                          <div className="space-y-1">
-                            <span className="text-xs font-medium text-gray-600">Role Title</span>
-                            <input
-                              type="text"
-                              value={exp.role}
-                              onChange={(e) => {
-                                const newExp = [...customResume.experience];
-                                newExp[expIdx].role = e.target.value;
-                                setCustomResume({ ...customResume, experience: newExp });
-                              }}
-                              className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-xs font-semibold text-gray-900 shadow-xs focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 focus:outline-none transition-all"
-                            />
-                          </div>
-                          <div className="space-y-1">
-                            <span className="text-xs font-medium text-gray-600">Organization & Period</span>
-                            <input
-                              type="text"
-                              value={exp.period}
-                              onChange={(e) => {
-                                const newExp = [...customResume.experience];
-                                newExp[expIdx].period = e.target.value;
-                                setCustomResume({ ...customResume, experience: newExp });
-                              }}
-                              className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-xs font-medium text-gray-900 shadow-xs focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 focus:outline-none transition-all"
-                            />
-                          </div>
-                        </div>
-
-                        {/* Bullets List */}
-                        <div className="space-y-2 pt-1">
-                          <span className="text-xs font-medium text-gray-600 block">Key Accomplishments</span>
-                          {exp.bullets?.map((bullet, bIdx) => (
-                            <div key={bIdx} className="flex items-start gap-2">
-                              <textarea
-                                rows={2}
-                                value={bullet}
-                                onChange={(e) => {
-                                  const newExp = [...customResume.experience];
-                                  newExp[expIdx].bullets[bIdx] = e.target.value;
-                                  setCustomResume({ ...customResume, experience: newExp });
-                                }}
-                                placeholder="Describe accomplishment or engineering contribution..."
-                                className="flex-1 px-3 py-2 rounded-lg border border-gray-300 bg-white text-xs text-gray-900 shadow-xs focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 focus:outline-none transition-all resize-y min-h-[48px] leading-relaxed font-normal"
-                              />
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  const newExp = [...customResume.experience];
-                                  newExp[expIdx].bullets.splice(bIdx, 1);
-                                  setCustomResume({ ...customResume, experience: newExp });
-                                }}
-                                className="p-1.5 mt-1 rounded text-gray-400 hover:text-red-600 hover:bg-gray-200/50 transition-colors"
-                                title="Delete bullet"
-                              >
-                                <Trash2 size={13} />
-                              </button>
-                            </div>
-                          ))}
-                          <button
-                            type="button"
-                            onClick={() => {
-                              const newExp = [...customResume.experience];
-                              newExp[expIdx].bullets.push("New accomplishment point...");
-                              setCustomResume({ ...customResume, experience: newExp });
-                            }}
-                            className="flex items-center gap-1 text-xs text-gray-900 hover:text-black font-semibold cursor-pointer pt-0.5"
-                          >
-                            <Plus size={12} /> Add Accomplishment Bullet
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* 7. Projects Customization */}
-                <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-5 shadow-xs space-y-3">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2.5 border-b border-gray-100">
-                    <div className="flex items-center gap-2.5 flex-wrap min-w-0">
-                      <label className="text-[11px] sm:text-xs font-bold text-gray-900 uppercase tracking-wider flex items-center gap-1.5 min-w-0">
-                        <Layout size={14} className="text-gray-700 shrink-0" />
-                        <span>Featured Projects</span>
-                      </label>
-                      <div className="flex items-center gap-1.5 bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1 focus-within:border-gray-900 focus-within:bg-white focus-within:ring-2 focus-within:ring-gray-900/10 transition-all">
-                        <span className="text-[10.5px] font-semibold text-gray-500 uppercase tracking-wider shrink-0">
-                          Section Title:
-                        </span>
-                        <input
-                          type="text"
-                          value={customResume.sectionTitles?.projects !== undefined ? customResume.sectionTitles.projects : getSectionTitle("projects")}
-                          onChange={(e) =>
-                            setCustomResume({
-                              ...customResume,
-                              sectionTitles: {
-                                ...(customResume.sectionTitles || {}),
-                                projects: e.target.value,
-                              },
-                            })
-                          }
-                          placeholder="e.g. Featured Projects"
-                          className="w-44 sm:w-52 py-0.5 bg-transparent text-xs font-semibold text-gray-900 placeholder:text-gray-400 focus:outline-none"
-                        />
-                      </div>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const newProj = [
-                          ...(customResume.projects || []),
-                          {
-                            title: "New Project",
-                            tech: "React, Node.js, PostgreSQL",
-                            bullets: ["Engineered responsive full-stack platform with secure authentication."],
-                          },
-                        ];
-                        setCustomResume({ ...customResume, projects: newProj });
-                      }}
-                      className="flex items-center gap-1 text-[11px] sm:text-xs text-white bg-gray-900 hover:bg-black px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg font-semibold transition-all shadow-xs cursor-pointer shrink-0 whitespace-nowrap self-start sm:self-auto"
-                    >
-                      <Plus size={12} className="shrink-0" />
-                      <span>Add Project</span>
-                    </button>
-                  </div>
-
-                  <div className="space-y-3.5">
-                    {customResume.projects?.map((proj, pIdx) => (
-                      <div key={pIdx} className="p-3.5 sm:p-4 rounded-lg bg-gray-50 border border-gray-200 space-y-3">
-                        <div className="flex items-center justify-between gap-2 pb-2 border-b border-gray-200">
-                          <span className="text-xs font-bold text-gray-900 shrink-0">
-                            Project #{pIdx + 1}
-                          </span>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              const newProj = [...customResume.projects];
-                              newProj.splice(pIdx, 1);
-                              setCustomResume({ ...customResume, projects: newProj });
-                            }}
-                            className="flex items-center gap-1 text-xs text-gray-500 hover:text-red-600 px-2 py-0.5 rounded hover:bg-gray-200/50 transition-colors font-medium shrink-0 cursor-pointer"
-                            title="Delete project"
-                          >
-                            <Trash2 size={12} className="shrink-0" />
-                            <span>Delete</span>
-                          </button>
-                        </div>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                          <div className="space-y-1">
-                            <span className="text-xs font-medium text-gray-600">Project Title</span>
-                            <input
-                              type="text"
-                              value={proj.title}
-                              onChange={(e) => {
-                                const newProj = [...customResume.projects];
-                                newProj[pIdx].title = e.target.value;
-                                setCustomResume({ ...customResume, projects: newProj });
-                              }}
-                              className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-xs font-semibold text-gray-900 shadow-xs focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 focus:outline-none transition-all"
-                            />
-                          </div>
-                          <div className="space-y-1">
-                            <span className="text-xs font-medium text-gray-600">Tech Stack</span>
-                            <input
-                              type="text"
-                              value={proj.tech || ""}
-                              onChange={(e) => {
-                                const newProj = [...customResume.projects];
-                                newProj[pIdx].tech = e.target.value;
-                                setCustomResume({ ...customResume, projects: newProj });
-                              }}
-                              className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-xs font-medium text-gray-900 shadow-xs focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 focus:outline-none transition-all"
-                            />
-                          </div>
-                        </div>
-
-                        {/* Project Bullets */}
-                        <div className="space-y-2 pt-1">
-                          <span className="text-xs font-medium text-gray-600 block">Key Highlights</span>
-                          {proj.bullets?.map((b, bIdx) => (
-                            <div key={bIdx} className="flex items-start gap-2">
-                              <textarea
-                                rows={2}
-                                value={b}
-                                onChange={(e) => {
-                                  const newProj = [...customResume.projects];
-                                  newProj[pIdx].bullets[bIdx] = e.target.value;
-                                  setCustomResume({ ...customResume, projects: newProj });
-                                }}
-                                placeholder="Describe project highlight or technical challenge solved..."
-                                className="flex-1 px-3 py-2 rounded-lg border border-gray-300 bg-white text-xs text-gray-900 shadow-xs focus:border-gray-900 focus:ring-2 focus:ring-gray-900/10 focus:outline-none transition-all resize-y min-h-[48px] leading-relaxed font-normal"
-                              />
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  const newProj = [...customResume.projects];
-                                  newProj[pIdx].bullets.splice(bIdx, 1);
-                                  setCustomResume({ ...customResume, projects: newProj });
-                                }}
-                                className="p-1.5 mt-1 rounded text-gray-400 hover:text-red-600 hover:bg-gray-200/50 transition-colors"
-                                title="Delete bullet"
-                              >
-                                <Trash2 size={13} />
-                              </button>
-                            </div>
-                          ))}
-                          <button
-                            type="button"
-                            onClick={() => {
-                              const newProj = [...customResume.projects];
-                              if (!newProj[pIdx].bullets) newProj[pIdx].bullets = [];
-                              newProj[pIdx].bullets.push("Engineered new feature with high performance...");
-                              setCustomResume({ ...customResume, projects: newProj });
-                            }}
-                            className="flex items-center gap-1 text-xs text-gray-900 hover:text-black font-semibold cursor-pointer pt-0.5"
-                          >
-                            <Plus size={12} /> Add Highlight Bullet
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                </div>
-
-                {/* Solid Bottom Action Bar (Seals completely with zero background gap) */}
-                <div className="shrink-0 px-4 sm:px-7 py-3 bg-white border-t border-gray-200 flex items-center justify-end z-10 shadow-[0_-4px_20px_rgba(0,0,0,0.04)]">
-                  <button
-                    type="button"
-                    onClick={() => setActiveTab("preview")}
-                    className="flex items-center gap-2 px-5 sm:px-6 py-2.5 rounded-lg bg-gray-900 hover:bg-black text-white font-semibold text-xs shadow-sm transition-all cursor-pointer"
+                  <div
+                    ref={printAreaRef}
+                    id="ats-resume-document"
+                    className={`w-full bg-white select-text text-left rounded-xl sm:rounded-2xl shadow-xs sm:shadow-md border border-gray-200/80 dark:border-white/10 ${
+                      activeStyle === "compact" ? "p-4 sm:p-6" : "p-5 sm:p-8 md:p-9"
+                    } text-xs sm:text-[12.5px] leading-relaxed text-[#111827]`}
+                    style={{
+                      fontFamily: getFontFamily(),
+                    }}
                   >
-                    <Eye size={13} />
-                    <span>View Generated Resume</span>
-                  </button>
-                </div>
-              </div>
-            ) : (
-              /* LIVE PREVIEW / PRINTABLE VIEW */
-              <div
-                ref={printAreaRef}
-                id="ats-resume-document"
-                data-lenis-prevent="true"
-                className={`flex-1 overflow-y-auto bg-white select-text text-left rounded-b-2xl sm:rounded-b-3xl ${activeStyle === "compact" ? "p-4 sm:p-6" : "p-5 sm:p-8 md:p-9"} text-xs sm:text-[12.5px] leading-relaxed text-[#111827]`}
-                style={{
-                  fontFamily: getFontFamily(),
-                  scrollbarColor: "rgba(0, 0, 0, 0.15) transparent",
-                  scrollbarWidth: "thin",
-                }}
-              >
                 {/* 1. Header Box */}
                 {activeStyle === "modern" ? (
                   <div className={`header-box p-3.5 sm:p-4 mb-3.5 border-b-2 ${mc.headerBorder} bg-gradient-to-r ${mc.headerGrad} rounded-xl`}>
@@ -2199,31 +2227,34 @@ export default function ResumeModal({ isOpen, onClose }) {
                       ];
                     })()}
                   </div>
-                )}
+                </div>
+              )}
           </motion.div>
 
           {/* Clean AI Resume Generator Dialog */}
           <AnimatePresence>
             {isAiModalOpen && (
-              <div className="fixed inset-0 z-[10000] flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs">
+              <div className="fixed inset-0 z-[10000] flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs font-jakarta">
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95, y: 12 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95, y: 12 }}
                   transition={{ duration: 0.2 }}
-                  className="w-full max-w-lg bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden flex flex-col max-h-[92vh]"
+                  className={`w-full max-w-lg bg-white dark:bg-[#131620] rounded-2xl shadow-2xl border border-gray-200 dark:border-white/10 overflow-hidden flex flex-col max-h-[92vh] transition-colors duration-200 ${
+                    isResumeDark ? "dark-scope" : "light-scope"
+                  }`}
                 >
                   {/* Modal Header */}
-                  <div className="px-4 sm:px-5 py-4 border-b border-gray-100 bg-gradient-to-r from-purple-50 via-indigo-50/50 to-blue-50 flex items-center justify-between">
+                  <div className="px-4 sm:px-5 py-4 border-b border-gray-100 dark:border-white/[0.06] bg-gradient-to-r from-purple-50 via-indigo-50/50 to-blue-50 dark:from-purple-950/30 dark:via-indigo-950/20 dark:to-blue-950/30 flex items-center justify-between">
                     <div className="flex items-center gap-2.5">
                       <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center text-white shadow-xs shrink-0">
                         <Sparkles size={16} />
                       </div>
                       <div>
-                        <h3 className="text-sm font-bold text-gray-900">
+                        <h3 className="text-sm font-bold text-gray-900 dark:text-white">
                           AI Resume Auto-Fill
                         </h3>
-                        <p className="text-[11px] text-gray-500 mt-0.5">
+                        <p className="text-[11px] text-gray-500 dark:text-gray-400 mt-0.5">
                           Instantly create your resume from a short prompt, job role, or notes.
                         </p>
                       </div>
@@ -2237,7 +2268,7 @@ export default function ResumeModal({ isOpen, onClose }) {
                         }
                       }}
                       disabled={isGeneratingAi}
-                      className="p-1.5 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-white/80 transition-colors cursor-pointer"
+                      className="p-1.5 rounded-lg text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-white/80 dark:hover:bg-white/[0.08] transition-colors cursor-pointer"
                     >
                       <X size={16} />
                     </button>
@@ -2247,7 +2278,7 @@ export default function ResumeModal({ isOpen, onClose }) {
                   <div className="p-4 sm:p-5 overflow-y-auto space-y-4 text-xs">
                     {/* 1. Quick Starter Presets */}
                     <div>
-                      <label className="block text-[11px] font-bold text-gray-700 uppercase tracking-wider mb-2">
+                      <label className="block text-[11px] font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-2">
                         Quick Starter Templates
                       </label>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -2260,12 +2291,12 @@ export default function ResumeModal({ isOpen, onClose }) {
                               setAiError("");
                             }}
                             disabled={isGeneratingAi}
-                            className="text-left p-2.5 rounded-xl border border-gray-200 hover:border-indigo-300 hover:bg-indigo-50/40 transition-all group cursor-pointer bg-white"
+                            className="text-left p-2.5 rounded-xl border border-gray-200 dark:border-white/10 hover:border-indigo-300 dark:hover:border-indigo-500/50 hover:bg-indigo-50/40 dark:hover:bg-indigo-950/30 transition-all group cursor-pointer bg-white dark:bg-[#0c0e14]"
                           >
-                            <span className="font-semibold text-gray-900 group-hover:text-indigo-700 text-xs block truncate">
+                            <span className="font-semibold text-gray-900 dark:text-white group-hover:text-indigo-700 dark:group-hover:text-indigo-300 text-xs block truncate">
                               {preset.title}
                             </span>
-                            <span className="text-[10.5px] text-gray-500 line-clamp-2 mt-0.5 leading-snug">
+                            <span className="text-[10.5px] text-gray-500 dark:text-gray-400 line-clamp-2 mt-0.5 leading-snug">
                               {preset.prompt}
                             </span>
                           </button>
@@ -2276,14 +2307,14 @@ export default function ResumeModal({ isOpen, onClose }) {
                     {/* 2. Prompt Textarea */}
                     <div className="space-y-1.5">
                       <div className="flex items-center justify-between">
-                        <label className="block text-[11px] font-bold text-gray-700 uppercase tracking-wider">
+                        <label className="block text-[11px] font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                           Your Background / Target Role / Raw Notes
                         </label>
                         {aiPrompt && (
                           <button
                             type="button"
                             onClick={() => setAiPrompt("")}
-                            className="text-[11px] text-gray-400 hover:text-gray-600 underline cursor-pointer"
+                            className="text-[11px] text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 underline cursor-pointer"
                           >
                             Clear
                           </button>
@@ -2298,29 +2329,29 @@ export default function ResumeModal({ isOpen, onClose }) {
                         }}
                         disabled={isGeneratingAi}
                         placeholder="e.g. Senior Frontend Engineer with 4 years of React, Next.js, and TypeScript. Built high-traffic e-commerce platforms, optimized Web Vitals, and led a team of 3 developers. Graduated with CS degree in 2020."
-                        className="w-full p-3.5 rounded-xl border border-gray-300 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/10 text-xs text-gray-900 placeholder:text-gray-400 resize-none font-medium leading-relaxed"
+                        className="w-full p-3.5 rounded-xl border border-gray-300 dark:border-white/10 bg-white dark:bg-[#0c0e14] focus:border-indigo-600 dark:focus:border-indigo-400 focus:ring-2 focus:ring-indigo-600/10 text-xs text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 resize-none font-medium leading-relaxed"
                       />
                     </div>
 
                     {/* Error Message */}
                     {aiError && (
-                      <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-start gap-2 animate-in fade-in">
-                        <X size={14} className="text-red-500 shrink-0 mt-0.5" />
+                      <div className="p-3 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 text-xs flex items-start gap-2 animate-in fade-in">
+                        <X size={14} className="text-red-500 dark:text-red-400 shrink-0 mt-0.5" />
                         <div className="flex-1 leading-snug">{aiError}</div>
                       </div>
                     )}
 
                     {/* Success Banner */}
                     {aiSuccess && (
-                      <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center gap-2 animate-in fade-in">
-                        <Check size={14} className="text-emerald-600 shrink-0" />
+                      <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 text-xs flex items-center gap-2 animate-in fade-in">
+                        <Check size={14} className="text-emerald-600 dark:text-emerald-400 shrink-0" />
                         <div className="font-semibold">✨ Resume generated successfully!</div>
                       </div>
                     )}
                   </div>
 
                   {/* Modal Footer */}
-                  <div className="px-4 sm:px-5 py-3.5 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
+                  <div className="px-4 sm:px-5 py-3.5 bg-gray-50 dark:bg-[#0c0e14] border-t border-gray-200 dark:border-white/[0.08] flex items-center justify-between transition-colors duration-200">
                     <button
                       type="button"
                       onClick={() => {
@@ -2328,7 +2359,7 @@ export default function ResumeModal({ isOpen, onClose }) {
                         setAiError("");
                       }}
                       disabled={isGeneratingAi}
-                      className="px-4 py-2 rounded-lg text-xs font-semibold text-gray-600 hover:text-gray-900 hover:bg-gray-200/60 transition-colors cursor-pointer"
+                      className="px-4 py-2 rounded-lg text-xs font-semibold text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200/60 dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
                     >
                       Cancel
                     </button>
@@ -2339,7 +2370,7 @@ export default function ResumeModal({ isOpen, onClose }) {
                       disabled={isGeneratingAi || !aiPrompt.trim()}
                       className={`flex items-center gap-2 px-5 py-2 rounded-lg text-xs font-semibold text-white transition-all cursor-pointer ${
                         isGeneratingAi || !aiPrompt.trim()
-                          ? "bg-gray-400 cursor-not-allowed opacity-75"
+                          ? "bg-gray-400 dark:bg-gray-600 cursor-not-allowed opacity-75"
                           : "bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 shadow-md hover:shadow-lg"
                       }`}
                     >

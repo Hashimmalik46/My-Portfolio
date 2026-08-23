@@ -213,34 +213,34 @@ export default function OutreachStudio() {
   ];
 
   return (
-    <div className="relative w-full max-w-4xl h-[680px] sm:h-[720px] max-h-[88dvh] mx-auto my-auto flex flex-col rounded-2xl sm:rounded-3xl bg-white border border-gray-200 overflow-hidden z-10 font-jakarta shadow-2xl selection:bg-black selection:text-white transform-gpu">
+    <div className="relative w-full max-w-4xl h-[680px] sm:h-[720px] max-h-[88dvh] mx-auto my-auto flex flex-col rounded-2xl sm:rounded-3xl bg-white dark:bg-[#11131b] border border-gray-200 dark:border-white/[0.08] overflow-hidden z-10 font-jakarta shadow-2xl selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black transform-gpu transition-colors duration-200">
       {/* 1. Header Toolbar */}
-      <div className="flex items-center justify-between px-2.5 sm:px-5 py-2 sm:py-3 border-b border-gray-200 bg-white shrink-0 gap-1.5 sm:gap-2">
+      <div className="flex items-center justify-between px-2.5 sm:px-5 py-2 sm:py-3 border-b border-gray-200 dark:border-white/[0.08] bg-white dark:bg-[#11131b] shrink-0 gap-1.5 sm:gap-2 transition-colors duration-200">
         <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
-          <div className="w-7 h-7 rounded-lg bg-gray-900 text-white flex items-center justify-center shadow-xs shrink-0">
+          <div className="w-7 h-7 rounded-lg bg-gray-900 dark:bg-white text-white dark:text-black flex items-center justify-center shadow-xs shrink-0">
             <Send size={13} />
           </div>
 
           {/* Desktop Title & Branding */}
           <div className="hidden md:flex items-center gap-2 font-jakarta">
-            <span className="text-xs font-bold text-gray-900 tracking-wide">
+            <span className="text-xs font-bold text-gray-900 dark:text-white tracking-wide">
               AI Outreach Studio
             </span>
-            <span className="text-gray-300">|</span>
-            <span className="text-[11px] text-gray-500 font-medium">
+            <span className="text-gray-300 dark:text-gray-700">|</span>
+            <span className="text-[11px] text-gray-500 dark:text-gray-400 font-medium">
               Emails, Cover Letters & DMs
             </span>
           </div>
 
           {/* Mobile View Toggle (Inputs vs Output) */}
-          <div className="flex md:hidden items-center bg-gray-100 p-0.5 rounded-lg border border-gray-200 shrink-0">
+          <div className="flex md:hidden items-center bg-gray-100 dark:bg-white/[0.06] p-0.5 rounded-lg border border-gray-200 dark:border-white/10 shrink-0">
             <button
               type="button"
               onClick={() => setViewMode("edit")}
               className={`flex items-center justify-center gap-1.5 px-2.5 py-1 rounded-md text-xs transition-all cursor-pointer ${
                 viewMode === "edit"
-                  ? "bg-white text-gray-900 font-semibold shadow-xs"
-                  : "text-gray-500 hover:text-gray-900 font-medium"
+                  ? "bg-white dark:bg-white/[0.14] text-gray-900 dark:text-white font-semibold shadow-xs"
+                  : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white font-medium"
               }`}
               title="Edit Inputs"
               aria-label="Edit Inputs"
@@ -253,8 +253,8 @@ export default function OutreachStudio() {
               onClick={() => setViewMode("preview")}
               className={`flex items-center justify-center gap-1.5 px-2.5 py-1 rounded-md text-xs transition-all cursor-pointer ${
                 viewMode === "preview"
-                  ? "bg-white text-gray-900 font-semibold shadow-xs"
-                  : "text-gray-500 hover:text-gray-900 font-medium"
+                  ? "bg-white dark:bg-white/[0.14] text-gray-900 dark:text-white font-semibold shadow-xs"
+                  : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white font-medium"
               }`}
               title="View Campaign"
               aria-label="View Campaign"
@@ -272,13 +272,13 @@ export default function OutreachStudio() {
             <button
               type="button"
               onClick={() => setIsPresetMenuOpen(!isPresetMenuOpen)}
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-200/70 border border-gray-200 text-xs font-semibold text-gray-800 transition-all cursor-pointer select-none shrink-0"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-200/70 dark:bg-white/[0.06] dark:hover:bg-white/[0.12] border border-gray-200 dark:border-white/10 text-xs font-semibold text-gray-800 dark:text-gray-200 transition-all cursor-pointer select-none shrink-0"
             >
-              <Layers size={13} className="text-gray-600 shrink-0" />
+              <Layers size={13} className="text-gray-600 dark:text-gray-300 shrink-0" />
               <span>Presets</span>
               <ChevronDown
                 size={12}
-                className={`text-gray-500 transition-transform duration-200 ${
+                className={`text-gray-500 dark:text-gray-400 transition-transform duration-200 ${
                   isPresetMenuOpen ? "rotate-180" : ""
                 }`}
               />
@@ -292,9 +292,9 @@ export default function OutreachStudio() {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 6, scale: 0.97 }}
                   transition={{ duration: 0.15 }}
-                  className="absolute right-0 top-full mt-1.5 w-64 sm:w-68 max-w-[88vw] p-1.5 rounded-xl bg-white border border-gray-200 shadow-xl z-50 space-y-1 font-jakarta origin-top-right"
+                  className="absolute right-0 top-full mt-1.5 w-64 sm:w-68 max-w-[88vw] p-1.5 rounded-xl bg-white dark:bg-[#161922] border border-gray-200 dark:border-white/10 shadow-xl z-50 space-y-1 font-jakarta origin-top-right"
                 >
-                  <div className="px-2.5 py-1 text-[10.5px] font-bold uppercase tracking-wider text-gray-500 font-jakarta">
+                  <div className="px-2.5 py-1 text-[10.5px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 font-jakarta">
                     Starter Templates
                   </div>
                   {OUTREACH_PRESETS.map((p, idx) => (
@@ -305,12 +305,12 @@ export default function OutreachStudio() {
                         e.stopPropagation();
                         handleApplyPreset(p);
                       }}
-                      className="w-full text-left p-2 rounded-lg hover:bg-gray-50 active:bg-gray-100 transition-colors flex flex-col gap-0.5 cursor-pointer group"
+                      className="w-full text-left p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-white/[0.06] active:bg-gray-100 dark:active:bg-white/[0.1] transition-colors flex flex-col gap-0.5 cursor-pointer group"
                     >
-                      <span className="text-xs font-semibold text-gray-900 group-hover:text-black">
+                      <span className="text-xs font-semibold text-gray-900 dark:text-white group-hover:text-black dark:group-hover:text-pAccent">
                         {p.title}
                       </span>
-                      <span className="text-[11px] text-gray-500 truncate">
+                      <span className="text-[11px] text-gray-500 dark:text-gray-400 truncate">
                         {p.role} • {p.company}
                       </span>
                     </button>
@@ -324,7 +324,7 @@ export default function OutreachStudio() {
           <button
             type="button"
             onClick={handleResetToDefault}
-            className="hidden sm:flex p-1.5 rounded-lg bg-gray-100 hover:bg-gray-200/70 text-gray-500 hover:text-gray-900 border border-gray-200 transition-colors cursor-pointer items-center justify-center shrink-0"
+            className="hidden sm:flex p-1.5 rounded-lg bg-gray-100 hover:bg-gray-200/70 dark:bg-white/[0.06] dark:hover:bg-white/[0.12] text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white border border-gray-200 dark:border-white/10 transition-colors cursor-pointer items-center justify-center shrink-0"
             title="Reset to default template"
             aria-label="Reset to default template"
           >
@@ -335,7 +335,7 @@ export default function OutreachStudio() {
           <button
             type="button"
             onClick={handleClearToScratch}
-            className="hidden sm:flex p-1.5 rounded-lg bg-gray-100 hover:bg-gray-200/70 text-gray-500 hover:text-red-600 border border-gray-200 transition-colors cursor-pointer items-center justify-center shrink-0"
+            className="hidden sm:flex p-1.5 rounded-lg bg-gray-100 hover:bg-gray-200/70 dark:bg-white/[0.06] dark:hover:bg-white/[0.12] text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 border border-gray-200 dark:border-white/10 transition-colors cursor-pointer items-center justify-center shrink-0"
             title="Clear form to scratch"
             aria-label="Clear form to scratch"
           >
@@ -348,31 +348,31 @@ export default function OutreachStudio() {
       <div className="flex-1 flex overflow-hidden">
         {/* Left Column: Form Settings (Shown on Desktop, or when viewMode === 'edit' on mobile) */}
         <div
-          className={`w-full md:w-[320px] lg:w-[350px] border-r border-gray-200 bg-gray-50/50 flex flex-col shrink-0 overflow-y-auto ${
+          className={`w-full md:w-[320px] lg:w-[350px] border-r border-gray-200 dark:border-white/[0.08] bg-gray-50/50 dark:bg-[#0c0e14] flex flex-col shrink-0 overflow-y-auto transition-colors duration-200 ${
             viewMode === "preview" ? "hidden md:flex" : "flex"
           }`}
         >
           <form onSubmit={handleGenerate} className="p-3.5 sm:p-4 space-y-3.5 text-xs">
             {/* Mobile Form Utility Header */}
-            <div className="flex sm:hidden items-center justify-between pb-2.5 border-b border-gray-200/80">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-gray-700">
+            <div className="flex sm:hidden items-center justify-between pb-2.5 border-b border-gray-200/80 dark:border-white/[0.08]">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300">
                 Campaign Inputs
               </span>
               <div className="flex items-center gap-2.5 text-[11px]">
                 <button
                   type="button"
                   onClick={handleResetToDefault}
-                  className="flex items-center gap-1 text-gray-500 hover:text-gray-900 cursor-pointer font-medium"
+                  className="flex items-center gap-1 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white cursor-pointer font-medium"
                   title="Reset to default template"
                 >
                   <RotateCcw size={11} />
                   <span>Reset</span>
                 </button>
-                <span className="text-gray-300">•</span>
+                <span className="text-gray-300 dark:text-gray-700">•</span>
                 <button
                   type="button"
                   onClick={handleClearToScratch}
-                  className="flex items-center gap-1 text-gray-500 hover:text-red-600 cursor-pointer font-medium"
+                  className="flex items-center gap-1 text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 cursor-pointer font-medium"
                   title="Clear form to scratch"
                 >
                   <Eraser size={11} />
@@ -384,7 +384,7 @@ export default function OutreachStudio() {
             {/* Target Role & Company */}
             <div className="space-y-2.5">
               <div>
-                <label className="block text-[11px] font-bold text-gray-700 uppercase tracking-wider mb-1">
+                <label className="block text-[11px] font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-1">
                   Target Company
                 </label>
                 <input
@@ -393,12 +393,12 @@ export default function OutreachStudio() {
                   value={formData.company}
                   onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                   placeholder="e.g. Stripe, Linear"
-                  className="w-full px-3 py-1.5 rounded-lg bg-white border border-gray-200 focus:border-gray-900 focus:ring-1 focus:ring-gray-900 text-xs text-gray-900 font-medium"
+                  className="w-full px-3 py-1.5 rounded-lg bg-white dark:bg-[#131620] border border-gray-200 dark:border-white/10 focus:border-gray-900 dark:focus:border-white/40 focus:ring-1 focus:ring-gray-900 dark:focus:ring-white/40 text-xs text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 font-medium"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-bold text-gray-700 uppercase tracking-wider mb-1">
+                <label className="block text-[11px] font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-1">
                   Target Role
                 </label>
                 <input
@@ -407,7 +407,7 @@ export default function OutreachStudio() {
                   value={formData.role}
                   onChange={(e) => setFormData({ ...formData, role: e.target.value })}
                   placeholder="e.g. Frontend Engineer"
-                  className="w-full px-3 py-1.5 rounded-lg bg-white border border-gray-200 focus:border-gray-900 focus:ring-1 focus:ring-gray-900 text-xs text-gray-900 font-medium"
+                  className="w-full px-3 py-1.5 rounded-lg bg-white dark:bg-[#131620] border border-gray-200 dark:border-white/10 focus:border-gray-900 dark:focus:border-white/40 focus:ring-1 focus:ring-gray-900 dark:focus:ring-white/40 text-xs text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 font-medium"
                 />
               </div>
             </div>
@@ -415,7 +415,7 @@ export default function OutreachStudio() {
             {/* Recipient Details */}
             <div className="grid grid-cols-2 gap-2 pt-1">
               <div>
-                <label className="block text-[11px] font-bold text-gray-700 uppercase tracking-wider mb-1">
+                <label className="block text-[11px] font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-1">
                   Recipient Name
                 </label>
                 <input
@@ -423,12 +423,12 @@ export default function OutreachStudio() {
                   value={formData.recipient}
                   onChange={(e) => setFormData({ ...formData, recipient: e.target.value })}
                   placeholder="e.g. Alex"
-                  className="w-full px-2.5 py-1.5 rounded-lg bg-white border border-gray-200 focus:border-gray-900 text-xs text-gray-900"
+                  className="w-full px-2.5 py-1.5 rounded-lg bg-white dark:bg-[#131620] border border-gray-200 dark:border-white/10 focus:border-gray-900 dark:focus:border-white/40 text-xs text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-bold text-gray-700 uppercase tracking-wider mb-1">
+                <label className="block text-[11px] font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-1">
                   Recipient Email
                 </label>
                 <input
@@ -436,7 +436,7 @@ export default function OutreachStudio() {
                   value={formData.recipientEmail}
                   onChange={(e) => setFormData({ ...formData, recipientEmail: e.target.value })}
                   placeholder="alex@co.com"
-                  className="w-full px-2.5 py-1.5 rounded-lg bg-white border border-gray-200 focus:border-gray-900 text-xs text-gray-900"
+                  className="w-full px-2.5 py-1.5 rounded-lg bg-white dark:bg-[#131620] border border-gray-200 dark:border-white/10 focus:border-gray-900 dark:focus:border-white/40 text-xs text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600"
                 />
               </div>
             </div>
@@ -444,39 +444,39 @@ export default function OutreachStudio() {
             {/* Tone & Target Selectors */}
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="block text-[11px] font-bold text-gray-700 uppercase tracking-wider mb-1">
+                <label className="block text-[11px] font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-1">
                   Recipient Type
                 </label>
                 <select
                   value={formData.targetType}
                   onChange={(e) => setFormData({ ...formData, targetType: e.target.value })}
-                  className="w-full p-1.5 rounded-lg bg-white border border-gray-200 focus:border-gray-900 text-xs font-medium text-gray-800"
+                  className="w-full p-1.5 rounded-lg bg-white dark:bg-[#131620] border border-gray-200 dark:border-white/10 focus:border-gray-900 dark:focus:border-white/40 text-xs font-medium text-gray-800 dark:text-gray-200"
                 >
-                  <option value="founder">Founder / CEO</option>
-                  <option value="eng_lead">Eng Lead / VP</option>
-                  <option value="recruiter">Recruiter / HR</option>
+                  <option value="founder" className="dark:bg-[#161922] dark:text-white">Founder / CEO</option>
+                  <option value="eng_lead" className="dark:bg-[#161922] dark:text-white">Eng Lead / VP</option>
+                  <option value="recruiter" className="dark:bg-[#161922] dark:text-white">Recruiter / HR</option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-[11px] font-bold text-gray-700 uppercase tracking-wider mb-1">
+                <label className="block text-[11px] font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-1">
                   Tone
                 </label>
                 <select
                   value={formData.tone}
                   onChange={(e) => setFormData({ ...formData, tone: e.target.value })}
-                  className="w-full p-1.5 rounded-lg bg-white border border-gray-200 focus:border-gray-900 text-xs font-medium text-gray-800"
+                  className="w-full p-1.5 rounded-lg bg-white dark:bg-[#131620] border border-gray-200 dark:border-white/10 focus:border-gray-900 dark:focus:border-white/40 text-xs font-medium text-gray-800 dark:text-gray-200"
                 >
-                  <option value="punchy">Direct / Punchy</option>
-                  <option value="startup">Product / Startup</option>
-                  <option value="formal">Formal</option>
+                  <option value="punchy" className="dark:bg-[#161922] dark:text-white">Direct / Punchy</option>
+                  <option value="startup" className="dark:bg-[#161922] dark:text-white">Product / Startup</option>
+                  <option value="formal" className="dark:bg-[#161922] dark:text-white">Formal</option>
                 </select>
               </div>
             </div>
 
             {/* Job Description Excerpt */}
             <div>
-              <label className="block text-[11px] font-bold text-gray-700 uppercase tracking-wider mb-1">
+              <label className="block text-[11px] font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-1">
                 Job Requirements / JD Excerpt
               </label>
               <textarea
@@ -484,13 +484,13 @@ export default function OutreachStudio() {
                 value={formData.jd}
                 onChange={(e) => setFormData({ ...formData, jd: e.target.value })}
                 placeholder="Paste key responsibilities or tech stack from the job post..."
-                className="w-full min-h-[68px] p-2 rounded-lg bg-white border border-gray-200 focus:border-gray-900 text-xs text-gray-900 placeholder:text-gray-400 resize-none leading-relaxed"
+                className="w-full min-h-[68px] p-2 rounded-lg bg-white dark:bg-[#131620] border border-gray-200 dark:border-white/10 focus:border-gray-900 dark:focus:border-white/40 text-xs text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 resize-none leading-relaxed"
               />
             </div>
 
             {/* Your Background Highlights */}
             <div>
-              <label className="block text-[11px] font-bold text-gray-700 uppercase tracking-wider mb-1">
+              <label className="block text-[11px] font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-1">
                 Your Background Highlights
               </label>
               <textarea
@@ -498,17 +498,17 @@ export default function OutreachStudio() {
                 value={formData.userBackground}
                 onChange={(e) => setFormData({ ...formData, userBackground: e.target.value })}
                 placeholder="Top achievements, key metrics, or relevant skills..."
-                className="w-full min-h-[68px] p-2 rounded-lg bg-white border border-gray-200 focus:border-gray-900 text-xs text-gray-900 placeholder:text-gray-400 resize-none leading-relaxed"
+                className="w-full min-h-[68px] p-2 rounded-lg bg-white dark:bg-[#131620] border border-gray-200 dark:border-white/10 focus:border-gray-900 dark:focus:border-white/40 text-xs text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 resize-none leading-relaxed"
               />
             </div>
 
             {errorMessage && (
-              <div className="p-2.5 rounded-lg bg-red-50 border border-red-200 text-red-700 text-[11px] font-medium flex items-center justify-between">
+              <div className="p-2.5 rounded-lg bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 text-[11px] font-medium flex items-center justify-between">
                 <span>{errorMessage}</span>
                 <button
                   type="button"
                   onClick={handleGenerate}
-                  className="font-bold underline hover:text-red-900 ml-2 cursor-pointer shrink-0"
+                  className="font-bold underline hover:text-red-900 dark:hover:text-red-200 ml-2 cursor-pointer shrink-0"
                 >
                   Try Again
                 </button>
@@ -519,16 +519,16 @@ export default function OutreachStudio() {
             <button
               type="submit"
               disabled={isGenerating || !formData.company.trim() || !formData.role.trim()}
-              className="w-full py-3 px-4 rounded-xl bg-gray-900 hover:bg-black active:scale-[0.99] text-white font-semibold text-xs transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-gray-900 disabled:active:scale-100"
+              className="w-full py-3 px-4 rounded-xl bg-gray-900 hover:bg-black dark:bg-white dark:hover:bg-gray-100 active:scale-[0.99] text-white dark:text-black font-semibold text-xs transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-gray-900 dark:disabled:hover:bg-white disabled:active:scale-100"
             >
               {isGenerating ? (
                 <>
-                  <Loader2 size={13} className="animate-spin text-white" />
+                  <Loader2 size={13} className="animate-spin text-white dark:text-black" />
                   <span>Generating Campaign...</span>
                 </>
               ) : (
                 <>
-                  <Sparkles size={13} className="text-amber-300 animate-pulse" />
+                  <Sparkles size={13} className="text-amber-300 dark:text-amber-500 animate-pulse" />
                   <span>Generate Outreach Campaign</span>
                 </>
               )}
@@ -538,12 +538,12 @@ export default function OutreachStudio() {
 
         {/* Right Column: Output Paper View (Shown on Desktop, or when viewMode === 'preview' on mobile) */}
         <div
-          className={`flex-1 bg-white flex flex-col justify-between overflow-hidden ${
+          className={`flex-1 bg-white dark:bg-[#11131b] flex flex-col justify-between overflow-hidden transition-colors duration-200 ${
             viewMode === "edit" ? "hidden md:flex" : "flex"
           }`}
         >
           {/* Format Switcher Tabs */}
-          <div className="border-b border-gray-200 px-2.5 sm:px-6 py-2 bg-white flex items-center justify-between gap-1.5 shrink-0">
+          <div className="border-b border-gray-200 dark:border-white/[0.08] px-2.5 sm:px-6 py-2 bg-white dark:bg-[#11131b] flex items-center justify-between gap-1.5 shrink-0 transition-colors duration-200">
             <div className="flex items-center gap-1 overflow-x-auto scrollbar-none max-w-full pb-0.5">
               {tabs.map((tab) => {
                 const Icon = tab.icon;
@@ -555,8 +555,8 @@ export default function OutreachStudio() {
                     onClick={() => setActiveTab(tab.id)}
                     className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap cursor-pointer shrink-0 ${
                       isActive
-                        ? "bg-gray-100 text-gray-900 border border-gray-200 shadow-2xs"
-                        : "text-gray-500 hover:text-gray-800 hover:bg-gray-50"
+                        ? "bg-gray-100 dark:bg-white/[0.12] text-gray-900 dark:text-white border border-gray-200 dark:border-white/10 shadow-2xs"
+                        : "text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/[0.04]"
                     }`}
                   >
                     <Icon size={13} />
@@ -568,22 +568,22 @@ export default function OutreachStudio() {
           </div>
 
           {/* Document Content Canvas */}
-          <div className="flex-1 p-3 sm:p-5 flex flex-col min-h-0 overflow-hidden space-y-3 bg-gray-50/40">
+          <div className="flex-1 p-3 sm:p-5 flex flex-col min-h-0 overflow-hidden space-y-3 bg-gray-50/40 dark:bg-[#090b10] transition-colors duration-200">
             {/* Subject Line Bar for Cold Email */}
             {activeTab === "coldEmail" && (
-              <div className="bg-white border border-gray-200 rounded-xl p-3 sm:p-3.5 shadow-2xs space-y-2 shrink-0">
+              <div className="bg-white dark:bg-[#131620] border border-gray-200 dark:border-white/[0.08] rounded-xl p-3 sm:p-3.5 shadow-2xs space-y-2 shrink-0 transition-colors duration-200">
                 <div className="flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-gray-700 font-jakarta">
-                    <Mail size={12} className="text-gray-500" />
+                  <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 font-jakarta">
+                    <Mail size={12} className="text-gray-500 dark:text-gray-400" />
                     <span>Subject Line</span>
                   </div>
                   <button
                     type="button"
                     onClick={() => copyToClipboard(customSubject, "subject")}
-                    className="text-[10.5px] font-semibold text-gray-500 hover:text-gray-900 flex items-center gap-1 cursor-pointer font-jakarta"
+                    className="text-[10.5px] font-semibold text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white flex items-center gap-1 cursor-pointer font-jakarta"
                   >
                     {copiedKey === "subject" ? (
-                      <span className="text-emerald-600 font-bold">Copied Subject!</span>
+                      <span className="text-emerald-600 dark:text-emerald-400 font-bold">Copied Subject!</span>
                     ) : (
                       <>
                         <Copy size={11} />
@@ -598,13 +598,13 @@ export default function OutreachStudio() {
                   value={customSubject}
                   onChange={(e) => setCustomSubject(e.target.value)}
                   placeholder="Email subject line..."
-                  className="w-full px-3 py-1.5 rounded-lg bg-gray-50 border border-gray-200 focus:border-gray-900 focus:bg-white text-xs font-medium text-gray-900 font-jakarta transition-all"
+                  className="w-full px-3 py-1.5 rounded-lg bg-gray-50 dark:bg-[#0c0e14] border border-gray-200 dark:border-white/10 focus:border-gray-900 dark:focus:border-white/40 focus:bg-white dark:focus:bg-[#0c0e14] text-xs font-medium text-gray-900 dark:text-white font-jakarta transition-all"
                 />
 
                 {/* AI Subject Angles */}
                 {outputData?.subjectLines && outputData.subjectLines.length > 0 && (
                   <div className="space-y-1.5 pt-0.5">
-                    <div className="flex items-center gap-1.5 text-[10.5px] font-semibold text-gray-600">
+                    <div className="flex items-center gap-1.5 text-[10.5px] font-semibold text-gray-600 dark:text-gray-400">
                       <Sparkles size={11} className="text-amber-500 shrink-0" />
                       <span>AI Subject Variations:</span>
                     </div>
@@ -616,8 +616,8 @@ export default function OutreachStudio() {
                           onClick={() => setCustomSubject(subj)}
                           className={`text-[10.5px] px-2.5 py-1 rounded-md border transition-all cursor-pointer truncate max-w-full ${
                             customSubject === subj
-                              ? "bg-gray-900 text-white border-gray-900 font-semibold shadow-2xs"
-                              : "bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100 hover:text-gray-900"
+                              ? "bg-gray-900 dark:bg-white text-white dark:text-black border-gray-900 dark:border-white font-semibold shadow-2xs"
+                              : "bg-gray-50 dark:bg-[#0c0e14] text-gray-600 dark:text-gray-300 border-gray-200 dark:border-white/10 hover:bg-gray-100 dark:hover:bg-white/[0.08] hover:text-gray-900 dark:hover:text-white"
                           }`}
                           title={`Select: "${subj}"`}
                         >
@@ -631,13 +631,13 @@ export default function OutreachStudio() {
             )}
 
             {/* Document Text Editor */}
-            <div className="flex-1 flex flex-col min-h-0 bg-white border border-gray-200 rounded-xl p-3 sm:p-4 shadow-2xs">
-              <div className="flex items-center justify-between gap-2 pb-2 mb-2 border-b border-gray-100 shrink-0">
-                <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-gray-700 font-jakarta">
-                  {activeTab === "coldEmail" && <FileText size={12} className="text-gray-500" />}
-                  {activeTab === "linkedinDm" && <MessageSquare size={12} className="text-gray-500" />}
-                  {activeTab === "coverLetter" && <FileText size={12} className="text-gray-500" />}
-                  {activeTab === "followUp" && <Clock size={12} className="text-gray-500" />}
+            <div className="flex-1 flex flex-col min-h-0 bg-white dark:bg-[#131620] border border-gray-200 dark:border-white/[0.08] rounded-xl p-3 sm:p-4 shadow-2xs transition-colors duration-200">
+              <div className="flex items-center justify-between gap-2 pb-2 mb-2 border-b border-gray-100 dark:border-white/[0.06] shrink-0">
+                <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 font-jakarta">
+                  {activeTab === "coldEmail" && <FileText size={12} className="text-gray-500 dark:text-gray-400" />}
+                  {activeTab === "linkedinDm" && <MessageSquare size={12} className="text-gray-500 dark:text-gray-400" />}
+                  {activeTab === "coverLetter" && <FileText size={12} className="text-gray-500 dark:text-gray-400" />}
+                  {activeTab === "followUp" && <Clock size={12} className="text-gray-500 dark:text-gray-400" />}
                   <span>
                     {activeTab === "coldEmail"
                       ? "Email Body"
@@ -649,7 +649,7 @@ export default function OutreachStudio() {
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-[10.5px] text-gray-400 font-medium font-jakarta">
+                  <span className="text-[10.5px] text-gray-400 dark:text-gray-500 font-medium font-jakarta">
                     Editable Text
                   </span>
                 </div>
@@ -661,7 +661,7 @@ export default function OutreachStudio() {
                     value={outputData?.coldEmail || ""}
                     onChange={(e) => setOutputData({ ...outputData, coldEmail: e.target.value })}
                     placeholder="Your generated cold email will appear here..."
-                    className="w-full flex-1 min-h-0 bg-transparent border-0 focus:ring-0 focus:outline-none text-xs sm:text-[13px] text-gray-900 font-jakarta leading-relaxed resize-none selection:bg-black selection:text-white"
+                    className="w-full flex-1 min-h-0 bg-transparent border-0 focus:ring-0 focus:outline-none text-xs sm:text-[13px] text-gray-900 dark:text-white font-jakarta leading-relaxed resize-none selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black"
                   />
                 )}
 
@@ -670,7 +670,7 @@ export default function OutreachStudio() {
                     value={outputData?.linkedinDm || ""}
                     onChange={(e) => setOutputData({ ...outputData, linkedinDm: e.target.value })}
                     placeholder="Your LinkedIn direct message will appear here..."
-                    className="w-full flex-1 min-h-0 bg-transparent border-0 focus:ring-0 focus:outline-none text-xs sm:text-[13px] text-gray-900 font-jakarta leading-relaxed resize-none selection:bg-black selection:text-white"
+                    className="w-full flex-1 min-h-0 bg-transparent border-0 focus:ring-0 focus:outline-none text-xs sm:text-[13px] text-gray-900 dark:text-white font-jakarta leading-relaxed resize-none selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black"
                   />
                 )}
 
@@ -679,7 +679,7 @@ export default function OutreachStudio() {
                     value={outputData?.coverLetter || ""}
                     onChange={(e) => setOutputData({ ...outputData, coverLetter: e.target.value })}
                     placeholder="Your formal cover letter will appear here..."
-                    className="w-full flex-1 min-h-0 bg-transparent border-0 focus:ring-0 focus:outline-none text-xs sm:text-[13px] text-gray-900 font-jakarta leading-relaxed resize-none selection:bg-black selection:text-white overflow-y-auto"
+                    className="w-full flex-1 min-h-0 bg-transparent border-0 focus:ring-0 focus:outline-none text-xs sm:text-[13px] text-gray-900 dark:text-white font-jakarta leading-relaxed resize-none selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black overflow-y-auto"
                   />
                 )}
 
@@ -688,7 +688,7 @@ export default function OutreachStudio() {
                     value={outputData?.followUp || ""}
                     onChange={(e) => setOutputData({ ...outputData, followUp: e.target.value })}
                     placeholder="Your polite follow-up nudge will appear here..."
-                    className="w-full flex-1 min-h-0 bg-transparent border-0 focus:ring-0 focus:outline-none text-xs sm:text-[13px] text-gray-900 font-jakarta leading-relaxed resize-none selection:bg-black selection:text-white"
+                    className="w-full flex-1 min-h-0 bg-transparent border-0 focus:ring-0 focus:outline-none text-xs sm:text-[13px] text-gray-900 dark:text-white font-jakarta leading-relaxed resize-none selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black"
                   />
                 )}
               </div>
@@ -696,8 +696,8 @@ export default function OutreachStudio() {
           </div>
 
           {/* Bottom Action Footer */}
-          <div className="px-3 sm:px-6 py-2.5 sm:py-3 border-t border-gray-200 bg-gray-50 flex items-center justify-between gap-2 shrink-0">
-            <div className="text-[11.5px] text-gray-500 font-medium font-jakarta flex items-center gap-1.5">
+          <div className="px-3 sm:px-6 py-2.5 sm:py-3 border-t border-gray-200 dark:border-white/[0.08] bg-gray-50 dark:bg-[#0c0e14] flex items-center justify-between gap-2 shrink-0 transition-colors duration-200">
+            <div className="text-[11.5px] text-gray-500 dark:text-gray-400 font-medium font-jakarta flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
               <span>
                 {activeTab === "coldEmail"
@@ -724,12 +724,12 @@ export default function OutreachStudio() {
                       : outputData?.followUp;
                   copyToClipboard(textToCopy, activeTab);
                 }}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-gray-300 hover:border-gray-400 text-xs font-semibold text-gray-800 shadow-2xs transition-all cursor-pointer shrink-0"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white dark:bg-white/[0.08] border border-gray-300 dark:border-white/15 hover:border-gray-400 dark:hover:border-white/30 text-xs font-semibold text-gray-800 dark:text-gray-200 shadow-2xs transition-all cursor-pointer shrink-0"
               >
                 {copiedKey === activeTab ? (
                   <>
-                    <Check size={13} className="text-emerald-600" />
-                    <span className="text-emerald-700">Copied!</span>
+                    <Check size={13} className="text-emerald-600 dark:text-emerald-400" />
+                    <span className="text-emerald-700 dark:text-emerald-300">Copied!</span>
                   </>
                 ) : (
                   <>
@@ -742,7 +742,7 @@ export default function OutreachStudio() {
               {(activeTab === "coldEmail" || activeTab === "followUp") && (
                 <a
                   href={mailtoLink}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-900 hover:bg-black text-xs font-semibold text-white shadow-2xs transition-all cursor-pointer shrink-0"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-900 hover:bg-black dark:bg-white dark:hover:bg-gray-100 text-xs font-semibold text-white dark:text-black shadow-2xs transition-all cursor-pointer shrink-0"
                 >
                   <Send size={13} />
                   <span>Mail</span>

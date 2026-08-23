@@ -677,12 +677,16 @@ STRICT INSTRUCTIONS:
   // 12. WORKSTATION / DIGITAL STUDIO
   // ==========================================
   workstation: {
+    eyebrow: "DIGITAL STUDIO",
+    title: "Workstation",
+    subtitle:
+      "Curated standalone software and career acceleration utilities engineered by Hashim Malik.",
     status: "All systems operational",
     isOnline: true,
     tools: [
       {
         id: "resume-builder",
-        name: "ATS Resume Builder",
+        name: "ATS Resume Studio",
         description:
           "High-precision ATS resume studio with AI auto-fill generation, 4 curated templates, and instant 1-page PDF export.",
         tags: ["ATS Compliant", "AI Auto-Fill", "Clean PDF", "Interactive Editor"],
@@ -691,7 +695,7 @@ STRICT INSTRUCTIONS:
       },
       {
         id: "outreach-generator",
-        name: "AI Outreach & Cover Letter Studio",
+        name: "Outreach Studio",
         description:
           "Generate high-converting cold emails, recruiter direct messages, and tailored narrative cover letters with 1-click mail links.",
         tags: ["Cold Emails", "LinkedIn DMs", "Cover Letters", "Follow-Up Sequences"],
@@ -700,7 +704,7 @@ STRICT INSTRUCTIONS:
       },
       {
         id: "media-converter",
-        name: "Image & PDF Document Studio",
+        name: "Image & PDF Studio",
         description:
           "Instant image compression, multi-format conversion (JPEG/WebP/PNG), images-to-PDF compiler, PDF merger, and page extractor.",
         tags: ["Image Compressor", "JPEG / WebP / PNG", "Images to PDF", "PDF Merger", "Split PDF"],
@@ -709,7 +713,7 @@ STRICT INSTRUCTIONS:
       },
       {
         id: "qr-studio",
-        name: "Smart QR Code & Link Studio",
+        name: "Smart QR Studio",
         description:
           "Generate custom high-resolution QR codes for websites, Wi-Fi networks, contact vCards, and payments with Vector SVG & PNG export.",
         tags: ["Custom Colors", "Wi-Fi QR", "vCard Contacts", "Vector SVG", "High-Res PNG"],

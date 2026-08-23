@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { portfolioData } from "../data/portfolioData";
 import { askHashimAI } from "../data/hashimAI";
+import ThemeToggle from "./ThemeToggle";
 
 /**
  * Clean Light Glass AI Chatbot Component
@@ -27,6 +28,23 @@ export default function HeroChatbot() {
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [copiedId, setCopiedId] = useState(null);
+  const [isChatbotDark, setIsChatbotDark] = useState(() => {
+    try {
+      const saved = localStorage.getItem("portfolio_chatbot_theme");
+      if (saved !== null) return saved === "dark";
+    } catch (e) {}
+    return false; // Independent default theme for chatbot
+  });
+
+  const toggleChatbotTheme = () => {
+    setIsChatbotDark((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem("portfolio_chatbot_theme", next ? "dark" : "light");
+      } catch (e) {}
+      return next;
+    });
+  };
   const [messages, setMessages] = useState([
     {
       id: "welcome",
@@ -194,7 +212,7 @@ export default function HeroChatbot() {
             href={linkUrl}
             target={linkUrl.startsWith("mailto:") ? "_self" : "_blank"}
             rel="noreferrer"
-            className="text-blue-700 hover:text-blue-900 font-semibold underline underline-offset-2 inline-flex items-center gap-0.5 ml-0.5 mr-0.5"
+            className="text-blue-700 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 font-semibold underline underline-offset-2 inline-flex items-center gap-0.5 ml-0.5 mr-0.5"
           >
             {linkText}
             {!linkUrl.startsWith("mailto:") && <ExternalLink size={10} />}
@@ -202,13 +220,13 @@ export default function HeroChatbot() {
         );
       } else if (match[4]) {
         parts.push(
-          <strong key={match.index} className="text-zinc-950 font-bold">
+          <strong key={match.index} className="text-zinc-950 dark:text-white font-bold">
             {match[5]}
           </strong>
         );
       } else if (match[6]) {
         parts.push(
-          <em key={match.index} className="text-zinc-800 italic font-medium">
+          <em key={match.index} className="text-zinc-800 dark:text-gray-300 italic font-medium">
             {match[7]}
           </em>
         );
@@ -216,7 +234,7 @@ export default function HeroChatbot() {
         parts.push(
           <code
             key={match.index}
-            className="bg-black/10 text-zinc-950 font-mono font-semibold text-[11px] px-1.5 py-0.5 rounded border border-black/15 mx-0.5"
+            className="bg-black/10 dark:bg-white/10 text-zinc-950 dark:text-white font-mono font-semibold text-[11px] px-1.5 py-0.5 rounded border border-black/15 dark:border-white/15 mx-0.5"
           >
             {match[9]}
           </code>
@@ -250,7 +268,7 @@ export default function HeroChatbot() {
         return (
           <h4
             key={lineIdx}
-            className="text-xs sm:text-[13px] font-bold text-zinc-950 mt-2.5 mb-1 text-left flex items-center gap-1.5"
+            className="text-xs sm:text-[13px] font-bold text-zinc-950 dark:text-white mt-2.5 mb-1 text-left flex items-center gap-1.5"
           >
             {formatInlineText(trimmed.replace(/^###\s+/, ""))}
           </h4>
@@ -260,7 +278,7 @@ export default function HeroChatbot() {
         return (
           <h3
             key={lineIdx}
-            className="text-xs sm:text-sm font-bold text-zinc-950 mt-3 mb-1.5 text-left flex items-center gap-1.5"
+            className="text-xs sm:text-sm font-bold text-zinc-950 dark:text-white mt-3 mb-1.5 text-left flex items-center gap-1.5"
           >
             {formatInlineText(trimmed.replace(/^##\s+/, ""))}
           </h3>
@@ -270,7 +288,7 @@ export default function HeroChatbot() {
         return (
           <h2
             key={lineIdx}
-            className="text-sm sm:text-base font-bold text-zinc-950 mt-3 mb-1.5 text-left flex items-center gap-1.5"
+            className="text-sm sm:text-base font-bold text-zinc-950 dark:text-white mt-3 mb-1.5 text-left flex items-center gap-1.5"
           >
             {formatInlineText(trimmed.replace(/^#\s+/, ""))}
           </h2>
@@ -285,8 +303,8 @@ export default function HeroChatbot() {
             key={lineIdx}
             className="flex items-start gap-2 text-left pl-1 my-0.5 leading-relaxed"
           >
-            <span className="text-zinc-900 font-bold text-xs mt-0.5 shrink-0 select-none">•</span>
-            <div className="flex-1 text-left text-zinc-900 font-medium">
+            <span className="text-zinc-900 dark:text-gray-200 font-bold text-xs mt-0.5 shrink-0 select-none">•</span>
+            <div className="flex-1 text-left text-zinc-900 dark:text-gray-200 font-medium">
               {formatInlineText(bulletMatch[1])}
             </div>
           </div>
@@ -301,10 +319,10 @@ export default function HeroChatbot() {
             key={lineIdx}
             className="flex items-start gap-2 text-left pl-1 my-0.5 leading-relaxed"
           >
-            <span className="text-zinc-900 font-bold text-[11px] mt-0.5 shrink-0 select-none">
+            <span className="text-zinc-900 dark:text-gray-200 font-bold text-[11px] mt-0.5 shrink-0 select-none">
               {numberMatch[1]}.
             </span>
-            <div className="flex-1 text-left text-zinc-900 font-medium">
+            <div className="flex-1 text-left text-zinc-900 dark:text-gray-200 font-medium">
               {formatInlineText(numberMatch[2])}
             </div>
           </div>
@@ -313,7 +331,7 @@ export default function HeroChatbot() {
 
       // Regular text line
       return (
-        <p key={lineIdx} className="text-left leading-relaxed text-zinc-900 font-medium my-0.5">
+        <p key={lineIdx} className="text-left leading-relaxed text-zinc-900 dark:text-gray-200 font-medium my-0.5">
           {formatInlineText(line)}
         </p>
       );
@@ -414,37 +432,40 @@ export default function HeroChatbot() {
                   className="absolute inset-0 bg-black/65 backdrop-blur-sm"
                 />
 
-                {/* Modal Card (C1 Warm Ivory Theme) */}
+                {/* Modal Card */}
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95, y: 12 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.96, y: 8 }}
                   transition={{ type: "spring", stiffness: 420, damping: 30 }}
-                  className="relative w-full max-w-lg h-[540px] max-h-[85dvh] flex flex-col rounded-2xl sm:rounded-3xl bg-[#f8f7f3] border border-black/15 overflow-hidden z-10 font-jakarta shadow-[0_25px_70px_rgba(0,0,0,0.55)]"
+                  className={`relative w-full max-w-lg h-[540px] max-h-[85dvh] flex flex-col rounded-2xl sm:rounded-3xl bg-[#f8f7f3] dark:bg-[#11131b] border border-black/15 dark:border-white/10 overflow-hidden z-10 font-jakarta shadow-[0_25px_70px_rgba(0,0,0,0.55)] ${
+                    isChatbotDark ? "dark-scope" : "light-scope"
+                  }`}
                 >
-                  {/* Header in C1 */}
-                  <div className="flex items-center justify-between px-4 sm:px-5 py-3.5 border-b border-black/10 bg-[#f8f7f3] shrink-0">
+                  {/* Header */}
+                  <div className="flex items-center justify-between px-4 sm:px-5 py-3.5 border-b border-black/10 dark:border-white/10 bg-[#f8f7f3] dark:bg-[#11131b] shrink-0">
                     <div className="flex items-center gap-2.5">
-                      <div className="w-7 h-7 rounded-lg bg-secondary text-white flex items-center justify-center shadow-sm">
+                      <div className="w-7 h-7 rounded-lg bg-secondary dark:bg-white text-white dark:text-black flex items-center justify-center shadow-sm shrink-0">
                         <Bot size={15} />
                       </div>
                       <div className="flex items-center gap-2">
-                        <h3 className="text-xs sm:text-sm font-bold text-zinc-950 tracking-wide">
+                        <h3 className="text-xs sm:text-sm font-bold text-zinc-950 dark:text-white tracking-wide">
                           {chatbot.botName}
                         </h3>
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-black/[0.06] border border-black/10 text-[10px] font-semibold text-zinc-700 select-none">
-                          <Sparkles size={9} className="text-zinc-600" />
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-black/[0.06] dark:bg-white/[0.08] border border-black/10 dark:border-white/15 text-[10px] font-semibold text-zinc-700 dark:text-gray-300 select-none">
+                          <Sparkles size={9} className="text-zinc-600 dark:text-amber-300" />
                           Portfolio Assistant
                         </span>
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex items-center gap-1.5 sm:gap-2">
+                      <ThemeToggle isDark={isChatbotDark} onToggle={toggleChatbotTheme} size="sm" />
                       <button
                         type="button"
                         onClick={handleClearChat}
                         title="Reset Conversation"
-                        className="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-950 hover:bg-black/5 transition-colors cursor-pointer"
+                        className="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-950 hover:bg-black/5 dark:text-gray-400 dark:hover:text-white dark:hover:bg-white/10 transition-colors cursor-pointer"
                       >
                         <RotateCcw size={14} />
                       </button>
@@ -452,17 +473,17 @@ export default function HeroChatbot() {
                         type="button"
                         onClick={() => setIsOpen(false)}
                         title="Close (Esc)"
-                        className="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-950 hover:bg-black/5 transition-colors cursor-pointer"
+                        className="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-950 hover:bg-black/5 dark:text-gray-400 dark:hover:text-white dark:hover:bg-white/10 transition-colors cursor-pointer"
                       >
                         <X size={16} />
                       </button>
                     </div>
                   </div>
 
-                  {/* Messages Area in C1 */}
+                  {/* Messages Area */}
                   <div
                     data-lenis-prevent="true"
-                    className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-3.5 text-xs sm:text-[13px] bg-[#f8f7f3]"
+                    className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-3.5 text-xs sm:text-[13px] bg-[#f8f7f3] dark:bg-[#0c0e14]"
                   >
                     {messages.map((msg, idx) => {
                       const isBot = msg.sender === "bot";
@@ -475,24 +496,24 @@ export default function HeroChatbot() {
                         >
                           {isBot ? (
                             <div className="flex items-start gap-2.5 max-w-[95%]">
-                              <div className="w-6 h-6 rounded-md bg-secondary text-white flex items-center justify-center shrink-0 mt-0.5 shadow-xs">
+                              <div className="w-6 h-6 rounded-md bg-secondary dark:bg-white text-white dark:text-black flex items-center justify-center shrink-0 mt-0.5 shadow-xs">
                                 <Bot size={13} />
                               </div>
-                              <div className="flex-1 bg-white border border-black/10 rounded-2xl rounded-tl-sm p-3.5 sm:p-4 text-zinc-900 shadow-[0_2px_8px_rgba(0,0,0,0.04)] text-left">
+                              <div className="flex-1 bg-white dark:bg-[#161922] border border-black/10 dark:border-white/10 rounded-2xl rounded-tl-sm p-3.5 sm:p-4 text-zinc-900 dark:text-gray-200 shadow-[0_2px_8px_rgba(0,0,0,0.04)] text-left">
                                 <div className="space-y-1 text-left">
                                   {renderMessageContent(msg.text)}
                                 </div>
-                                <div className="flex items-center justify-between mt-2.5 pt-2 border-t border-black/5 text-[10px] text-zinc-500 font-medium">
+                                <div className="flex items-center justify-between mt-2.5 pt-2 border-t border-black/5 dark:border-white/10 text-[10px] text-zinc-500 dark:text-gray-400 font-medium">
                                   <span>{msg.timestamp}</span>
                                   <button
                                     type="button"
                                     onClick={() => handleCopyText(msg.text, msg.id)}
-                                    className="flex items-center gap-1 text-zinc-500 hover:text-black font-semibold transition-colors cursor-pointer"
+                                    className="flex items-center gap-1 text-zinc-500 dark:text-gray-400 hover:text-black dark:hover:text-white font-semibold transition-colors cursor-pointer"
                                   >
                                     {copiedId === msg.id ? (
                                       <>
-                                        <Check size={11} className="text-emerald-700" />
-                                        <span className="text-emerald-700 font-semibold">Copied</span>
+                                        <Check size={11} className="text-emerald-700 dark:text-emerald-400" />
+                                        <span className="text-emerald-700 dark:text-emerald-400 font-semibold">Copied</span>
                                       </>
                                     ) : (
                                       <>
@@ -505,9 +526,9 @@ export default function HeroChatbot() {
                               </div>
                             </div>
                           ) : (
-                            <div className="max-w-[85%] bg-secondary text-white rounded-2xl rounded-tr-xs px-3.5 py-2.5 shadow-sm font-medium text-left">
-                              <p className="leading-relaxed text-left text-white">{msg.text}</p>
-                              <span className="text-[9px] text-zinc-400 block text-right mt-1 font-medium">
+                            <div className="max-w-[85%] bg-white dark:bg-white text-zinc-950 dark:text-zinc-950 border border-black/10 dark:border-white/20 rounded-2xl rounded-tr-xs px-3.5 py-2.5 shadow-[0_2px_8px_rgba(0,0,0,0.04)] font-medium text-left">
+                              <p className="leading-relaxed text-left text-zinc-950 dark:text-zinc-950 font-medium">{msg.text}</p>
+                              <span className="text-[9px] text-zinc-400 dark:text-zinc-500 block text-right mt-1 font-medium">
                                 {msg.timestamp}
                               </span>
                             </div>
@@ -519,12 +540,12 @@ export default function HeroChatbot() {
                     {/* Horizontal Smooth-Scroll Carousel (Only on initial state) */}
                     {isInitialState && (
                       <div className="pt-2 space-y-2">
-                        <div className="flex items-center justify-between px-1 text-[11px] font-bold text-zinc-800 tracking-wide">
+                        <div className="flex items-center justify-between px-1 text-[11px] font-bold text-zinc-800 dark:text-gray-200 tracking-wide">
                           <div className="flex items-center gap-1.5">
-                            <Sparkles size={11} className="text-zinc-900" />
-                            <span className="font-bold text-zinc-900">Suggested Topics</span>
+                            <Sparkles size={11} className="text-zinc-900 dark:text-amber-300" />
+                            <span className="font-bold text-zinc-900 dark:text-white">Suggested Topics</span>
                           </div>
-                          <span className="text-[10px] text-zinc-500 font-medium select-none">Scroll / swipe →</span>
+                          <span className="text-[10px] text-zinc-500 dark:text-gray-400 font-medium select-none">Scroll / swipe →</span>
                         </div>
 
                         {/* Carousel Scroll Track with wheel horizontal scroll support */}
@@ -544,15 +565,15 @@ export default function HeroChatbot() {
                                   whileHover={{ y: -1.5, scale: 1.02 }}
                                   whileTap={{ scale: 0.96 }}
                                   onClick={() => handleSendMessage(prompt.query)}
-                                  className="group relative flex items-center gap-2 px-3.5 py-2 rounded-full bg-white hover:bg-secondary hover:text-white border border-black/15 transition-all duration-200 cursor-pointer shadow-[0_1px_3px_rgba(0,0,0,0.05)] shrink-0 select-none text-left snap-start"
+                                  className="group relative flex items-center gap-2 px-3.5 py-2 rounded-full bg-white dark:bg-[#161922] hover:bg-secondary dark:hover:bg-pAccent hover:text-white dark:hover:text-black border border-black/15 dark:border-white/10 transition-all duration-200 cursor-pointer shadow-[0_1px_3px_rgba(0,0,0,0.05)] shrink-0 select-none text-left snap-start"
                                 >
                                   {/* Icon badge */}
-                                  <div className="w-5 h-5 rounded-full bg-black/5 flex items-center justify-center text-zinc-800 group-hover:bg-white/20 group-hover:text-white transition-all shrink-0">
+                                  <div className="w-5 h-5 rounded-full bg-black/5 dark:bg-white/10 flex items-center justify-center text-zinc-800 dark:text-gray-200 group-hover:bg-white/20 group-hover:text-white dark:group-hover:text-black transition-all shrink-0">
                                     <Icon size={11} />
                                   </div>
 
                                   {/* Label */}
-                                  <span className="text-xs font-semibold text-zinc-900 group-hover:text-white transition-colors whitespace-nowrap">
+                                  <span className="text-xs font-semibold text-zinc-900 dark:text-gray-200 group-hover:text-white dark:group-hover:text-black transition-colors whitespace-nowrap">
                                     {prompt.title}
                                   </span>
 
@@ -572,17 +593,17 @@ export default function HeroChatbot() {
                     {/* Typing Indicator */}
                     {isTyping && (
                       <div className="flex items-start gap-2.5 max-w-[95%]">
-                        <div className="w-6 h-6 rounded-md bg-secondary text-white flex items-center justify-center shrink-0 mt-0.5">
+                        <div className="w-6 h-6 rounded-md bg-secondary dark:bg-white text-white dark:text-black flex items-center justify-center shrink-0 mt-0.5">
                           <Bot size={13} />
                         </div>
-                        <div className="bg-white border border-black/10 rounded-2xl rounded-tl-sm px-3.5 py-2.5 flex items-center gap-1 text-zinc-600 text-xs shadow-xs">
-                          <span className="w-1.5 h-1.5 rounded-full bg-zinc-600 animate-bounce" />
+                        <div className="bg-white dark:bg-[#161922] border border-black/10 dark:border-white/10 rounded-2xl rounded-tl-sm px-3.5 py-2.5 flex items-center gap-1 text-zinc-600 dark:text-gray-300 text-xs shadow-xs">
+                          <span className="w-1.5 h-1.5 rounded-full bg-zinc-600 dark:bg-gray-300 animate-bounce" />
                           <span
-                            className="w-1.5 h-1.5 rounded-full bg-zinc-600 animate-bounce"
+                            className="w-1.5 h-1.5 rounded-full bg-zinc-600 dark:bg-gray-300 animate-bounce"
                             style={{ animationDelay: "0.15s" }}
                           />
                           <span
-                            className="w-1.5 h-1.5 rounded-full bg-zinc-600 animate-bounce"
+                            className="w-1.5 h-1.5 rounded-full bg-zinc-600 dark:bg-gray-300 animate-bounce"
                             style={{ animationDelay: "0.3s" }}
                           />
                         </div>
@@ -592,8 +613,8 @@ export default function HeroChatbot() {
                     <div ref={chatEndRef} />
                   </div>
 
-                  {/* Clean Input Area in C1 */}
-                  <div className="p-3 sm:p-3.5 border-t border-black/10 bg-[#f8f7f3] shrink-0">
+                  {/* Clean Input Area */}
+                  <div className="p-3 sm:p-3.5 border-t border-black/10 dark:border-white/10 bg-[#f8f7f3] dark:bg-[#11131b] shrink-0">
                     <form
                       onSubmit={(e) => {
                         e.preventDefault();
@@ -607,12 +628,12 @@ export default function HeroChatbot() {
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
                         placeholder={chatbot.inputPlaceholder}
-                        className="w-full bg-white hover:bg-white focus:bg-white text-zinc-950 placeholder-zinc-500 font-medium text-base sm:text-xs md:text-[13px] rounded-full pl-4 pr-11 py-2.5 sm:py-3 border border-black/15 focus:border-zinc-950 focus:shadow-[0_0_0_2px_rgba(17,24,39,0.1)] focus:outline-none transition-all"
+                        className="w-full bg-white dark:bg-[#161922] hover:bg-white dark:hover:bg-[#161922] focus:bg-white dark:focus:bg-[#161922] text-zinc-950 dark:text-white placeholder-zinc-500 dark:placeholder-gray-500 font-medium text-base sm:text-xs md:text-[13px] rounded-full pl-4 pr-11 py-2.5 sm:py-3 border border-black/15 dark:border-white/10 focus:border-zinc-950 dark:focus:border-white/30 focus:shadow-[0_0_0_2px_rgba(17,24,39,0.1)] focus:outline-none transition-all"
                       />
                       <button
                         type="submit"
                         disabled={!inputValue.trim() || isTyping}
-                        className="absolute right-1.5 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-secondary text-white hover:bg-black hover:scale-105 disabled:opacity-30 disabled:hover:scale-100 disabled:bg-zinc-300 disabled:text-zinc-500 flex items-center justify-center transition-all cursor-pointer shrink-0 z-10 shadow-sm font-semibold"
+                        className="absolute right-1.5 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-secondary dark:bg-white text-white dark:text-black hover:bg-black dark:hover:bg-gray-200 hover:scale-105 disabled:opacity-30 disabled:hover:scale-100 disabled:bg-zinc-300 dark:disabled:bg-gray-800 disabled:text-zinc-500 dark:disabled:text-gray-600 flex items-center justify-center transition-all cursor-pointer shrink-0 z-10 shadow-sm font-semibold"
                       >
                         <Send size={12} />
                       </button>
