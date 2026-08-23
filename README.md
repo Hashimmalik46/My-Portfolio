@@ -1,17 +1,11 @@
-<table>
-  <tr>
-    <td width="110" align="center" valign="middle">
-      <img src="./public/gallery/favicon.webp" alt="Hash Logo" width="88" height="88" />
-    </td>
-    <td valign="middle">
-      <h1 style="margin: 0;">Hashim Malik</h1>
-      <p style="margin: 4px 0 0 0;">
-        <b>Developer Portfolio & Standalone Workstation</b><br />
-        A high-performance, immersive personal portfolio and developer workstation engineered with <b>React 19</b>, <b>Vite</b>, <b>TailwindCSS 4</b>, and <b>Motion</b>.
-      </p>
-    </td>
-  </tr>
-</table>
+# Hashim Malik — Developer Portfolio & Workstation
+
+> An immersive personal portfolio and standalone developer workstation engineered with **React 19**, **Vite**, **TailwindCSS 4**, and **Motion**.
+
+[![Live Portfolio](https://img.shields.io/badge/Live%20Demo-hashimmalik.in-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://hashimmalik.in)
+[![React 19](https://img.shields.io/badge/React-19.0-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
+[![Tailwind CSS 4](https://img.shields.io/badge/Tailwind-4.0-0B1120?style=for-the-badge&logo=tailwindcss&logoColor=06B6D4)](https://tailwindcss.com/)
+[![Vite](https://img.shields.io/badge/Vite-7.0-1E1E20?style=for-the-badge&logo=vite&logoColor=FFD62E)](https://vitejs.dev/)
 
 ---
 

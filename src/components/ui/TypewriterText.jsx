@@ -1,26 +1,29 @@
-import { useState, useEffect, useRef } from "react";
-import { useInView } from "motion/react";
+import { useState, useEffect } from "react";
 
 /**
  * TypewriterText Component
- * Types out once when scrolled into view.
- * Uses a zero-shift invisible ghost layout spacer so elements below NEVER shift or jump.
+ * Types out once when isLoading is false.
+ * Renders in-flow so that CSS text gradients (bg-clip-text) and drop-shadows
+ * paint correctly with 100% visibility across all browsers.
  */
 export default function TypewriterText({
   text = "",
-  speed = 28,
+  speed = 58,
   delay = 200,
+  isLoading = false,
   className = "",
-  cursorClassName = "text-pAccent",
+  cursorClassName = "",
+  showCursor = true,
 }) {
-  const containerRef = useRef(null);
-  const isInView = useInView(containerRef, { once: true, margin: "-40px 0px" });
-
   const [displayedLength, setDisplayedLength] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
 
   useEffect(() => {
-    if (!isInView || !text) return;
+    if (isLoading || !text) {
+      setDisplayedLength(0);
+      setIsFinished(false);
+      return;
+    }
 
     let interval;
     let currentCount = 0;
@@ -40,25 +43,19 @@ export default function TypewriterText({
       clearTimeout(startTimer);
       if (interval) clearInterval(interval);
     };
-  }, [isInView, text, speed, delay]);
+  }, [isLoading, text, speed, delay]);
+
+  const visibleText = text.slice(0, displayedLength);
 
   return (
-    <span ref={containerRef} className={`relative inline-block w-full ${className}`}>
-      {/* 1. Ghost text spacer: instantly locks the full multi-line height & width */}
-      <span className="invisible select-none pointer-events-none block" aria-hidden="true">
-        {text}
-      </span>
-
-      {/* 2. Actively typed overlay */}
-      <span className="absolute inset-0 block text-inherit">
-        <span>{text.slice(0, displayedLength)}</span>
-        {!isFinished && (
-          <span
-            className={`inline-block ml-0.5 w-[2px] h-[0.9em] bg-current align-middle animate-pulse ${cursorClassName}`}
-            aria-hidden="true"
-          />
-        )}
-      </span>
+    <span className={`inline-block whitespace-nowrap ${className}`}>
+      <span>{visibleText}</span>
+      {showCursor && !isFinished && (
+        <span
+          className={`inline-block ml-1 w-[3px] sm:w-[4px] h-[0.8em] bg-white align-baseline animate-pulse ${cursorClassName}`}
+          aria-hidden="true"
+        />
+      )}
     </span>
   );
 }
