@@ -108,7 +108,7 @@ export default function HeroChatbot() {
       }
 
       try {
-        const response = await askHashimAI(textToSend);
+        const response = await askHashimAI(textToSend, messages);
         const botMsg = {
           id: (Date.now() + 1).toString(),
           sender: "bot",
@@ -137,7 +137,7 @@ export default function HeroChatbot() {
         setIsTyping(false);
       }
     },
-    [inputValue, isTyping, isOpen]
+    [inputValue, isTyping, isOpen, messages]
   );
 
   // Global custom event listener to open chatbot from anywhere (e.g. Navbar Tools menu)

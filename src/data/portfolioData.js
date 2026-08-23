@@ -594,6 +594,13 @@ STRICT INSTRUCTIONS:
   // ==========================================
   resume: {
     targetRole: "Full Stack Developer & AI Explorer",
+    sectionTitles: {
+      summary: "Professional Summary",
+      skills: "Technical Skills",
+      experience: "Engineering Experience",
+      projects: "Featured Projects",
+      education: "Education & Credentials",
+    },
     summary:
       "Passionate Computer Science undergraduate and developer with strong expertise in full-stack web architectures (MERN Stack), RESTful APIs, and AI/ML integrations (Computer Vision, Neural Networks, and Autonomous Agents). Proven track record of designing, building, and shipping 10+ production-ready web and automated platforms with an end-to-end build mindset and attention to detail.",
     education: [

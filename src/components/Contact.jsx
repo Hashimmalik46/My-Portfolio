@@ -1,6 +1,7 @@
 import { useForm, ValidationError } from "@formspree/react";
 import { useEffect, useState } from "react";
 import { Send, CheckCircle2, Sparkles, Copy, Check } from "lucide-react";
+import TypewriterText from "./ui/TypewriterText";
 import { BorderBeam } from "./ui/border-beam";
 import { MdEmail } from "react-icons/md";
 import { IoLocationSharp } from "react-icons/io5";
@@ -55,7 +56,7 @@ function Contact() {
           </h2>
 
           <p className="font-cormorant italic text-2xl sm:text-3xl text-secondary/85 font-light leading-relaxed">
-            {contact.subheading}
+            <TypewriterText text={contact.subheading} cursorClassName="text-secondary" />
           </p>
 
           <p className="font-jakarta text-sm sm:text-base text-secondary/70 leading-relaxed max-w-lg">

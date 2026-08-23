@@ -4,6 +4,7 @@ import {
   FileText,
   Copy,
   Check,
+  Zap,
 } from "lucide-react";
 import {
   motion,
@@ -134,7 +135,7 @@ function DynamicGlassContainer({
   );
 }
 
-function Navbar({ isLoading = false }) {
+function Navbar({ isLoading = false, onNavigate }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -394,6 +395,49 @@ function Navbar({ isLoading = false }) {
                     }}
                     className="absolute right-0 top-full mt-2.5 flex flex-col gap-1.5 z-50 select-none items-end origin-top-right transform-gpu"
                   >
+                    {/* Item 0: Developer Tools Hub */}
+                    <motion.button
+                      type="button"
+                      onClick={() => {
+                        setIsToolsOpen(false);
+                        if (onNavigate) onNavigate("/tools");
+                        else window.location.href = "/tools";
+                      }}
+                      variants={{
+                        hidden: { opacity: 0, y: -12, scale: 0.88, filter: "blur(4px)" },
+                        visible: {
+                          opacity: 1,
+                          y: 0,
+                          scale: 1,
+                          filter: "blur(0px)",
+                          transition: {
+                            type: "spring",
+                            stiffness: 400,
+                            damping: 24,
+                            mass: 0.5,
+                          },
+                        },
+                        exit: {
+                          opacity: 0,
+                          y: -8,
+                          scale: 0.9,
+                          filter: "blur(2px)",
+                          transition: { duration: 0.12, ease: "easeOut" },
+                        },
+                      }}
+                      whileHover={{ scale: 1.04, x: -2 }}
+                      whileTap={{ scale: 0.95 }}
+                      aria-label="Developer Tools Hub"
+                      className="group flex items-center gap-2.5 pl-2.5 pr-3.5 py-1.5 rounded-full bg-[#12141c]/90 hover:bg-[#181a24]/95 backdrop-blur-2xl backdrop-saturate-[180%] border border-white/25 hover:border-white/40 shadow-[0_8px_24px_rgba(0,0,0,0.45),inset_0_1px_1px_0_rgba(255,255,255,0.4)] text-white cursor-pointer whitespace-nowrap transition-colors duration-150"
+                    >
+                      <div className="w-5 h-5 rounded-full bg-indigo-500/20 flex items-center justify-center text-indigo-400 shrink-0">
+                        <Zap className="w-3 h-3 text-indigo-400" />
+                      </div>
+                      <span className="text-xs font-medium text-white/90 group-hover:text-white font-jakarta">
+                        All Tools
+                      </span>
+                    </motion.button>
+
                     {/* Item 1: Resume Pill */}
                     <motion.button
                       type="button"

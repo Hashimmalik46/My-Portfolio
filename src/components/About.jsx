@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Sparkles, ArrowUpRight, Briefcase, UserRound } from "lucide-react";
+import TypewriterText from "./ui/TypewriterText";
 import {
   motion,
   useMotionValue,
@@ -237,7 +238,7 @@ function About() {
           )}
 
           <p className="font-cormorant italic text-2xl sm:text-3xl text-secondary/85 font-light leading-relaxed">
-            {about.subheading}
+            <TypewriterText text={about.subheading} cursorClassName="text-secondary" />
           </p>
 
           <p className="font-jakarta text-sm sm:text-base text-secondary/70 leading-relaxed">

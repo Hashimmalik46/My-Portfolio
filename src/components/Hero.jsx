@@ -26,59 +26,57 @@ import HeroChatbot from "./HeroChatbot";
 function TypewriterText({
   text,
   isLoading,
-  speed = 55,
+  speed = 30,
   delay = 0,
   showCursor = true,
   cursorClassName = "w-[2.5px] sm:w-[4px] md:w-[6px] h-[0.72em]",
 }) {
-  const [displayedText, setDisplayedText] = useState("");
+  const [displayedLength, setDisplayedLength] = useState(0);
   const [isDone, setIsDone] = useState(false);
 
   useEffect(() => {
-    if (isLoading) {
-      setDisplayedText("");
+    if (isLoading || !text) {
+      setDisplayedLength(0);
       setIsDone(false);
       return;
     }
 
-    let timeoutId;
-    let currentIndex = 0;
+    let interval;
+    let currentIdx = 0;
 
-    const startTyping = () => {
-      const typeNextChar = () => {
-        if (currentIndex < text.length) {
-          currentIndex++;
-          setDisplayedText(text.slice(0, currentIndex));
-          timeoutId = setTimeout(typeNextChar, speed + (Math.random() * 20 - 10));
-        } else {
+    const startTimer = setTimeout(() => {
+      interval = setInterval(() => {
+        currentIdx++;
+        setDisplayedLength(currentIdx);
+        if (currentIdx >= text.length) {
+          clearInterval(interval);
           setIsDone(true);
         }
-      };
-      typeNextChar();
-    };
-
-    const initialDelayId = setTimeout(startTyping, delay);
+      }, speed);
+    }, delay);
 
     return () => {
-      clearTimeout(initialDelayId);
-      clearTimeout(timeoutId);
+      clearTimeout(startTimer);
+      if (interval) clearInterval(interval);
     };
   }, [text, isLoading, speed, delay]);
 
   return (
-    <span className="inline-flex items-baseline min-h-[1.1em]">
-      <span>{displayedText || "\u00A0"}</span>
-      {showCursor && (
-        <motion.span
-          animate={{ opacity: isDone ? [1, 0] : [1, 0, 1] }}
-          transition={{
-            repeat: isDone ? 5 : Infinity,
-            duration: 0.75,
-            ease: "easeInOut",
-          }}
-          className={`inline-block ${cursorClassName} bg-white ml-1.5 sm:ml-2.5 rounded-full shadow-[0_0_14px_rgba(255,255,255,0.9)] self-center`}
-        />
-      )}
+    <span className="relative inline-block">
+      {/* Ghost spacer to lock height and width with zero layout shift */}
+      <span className="invisible select-none pointer-events-none block" aria-hidden="true">
+        {text}
+      </span>
+
+      {/* Actively typed text */}
+      <span className="absolute inset-0 flex items-baseline">
+        <span>{text.slice(0, displayedLength)}</span>
+        {showCursor && !isDone && (
+          <span
+            className={`inline-block ${cursorClassName} bg-white ml-1.5 sm:ml-2.5 rounded-full shadow-[0_0_14px_rgba(255,255,255,0.9)] self-center animate-pulse`}
+          />
+        )}
+      </span>
     </span>
   );
 }
@@ -641,7 +639,7 @@ function SimpleFloatingAudioButton({ audioPlayer }) {
   const { isPlaying, toggleSound } = audioPlayer;
 
   return (
-    <div className="xl:hidden absolute top-[0px] sm:top-[68px] right-3 sm:right-12 z-30 pointer-events-auto select-none font-jakarta flex justify-end">
+    <div className="xl:hidden absolute top-20 sm:top-[76px] right-3.5 sm:right-12 z-30 pointer-events-auto select-none font-jakarta flex justify-end">
       <motion.button
         type="button"
         onClick={toggleSound}
@@ -742,7 +740,20 @@ function AppleGlassButton({
 
 function Hero({ isLoading = false }) {
   const { hero } = portfolioData;
-  const isSimpleAudio = hero?.audioWidgetType === "simple";
+
+  const [audioMode, setAudioMode] = useState(() => {
+    return localStorage.getItem("portfolio_audio_mode") || hero?.audioWidgetType || "simple";
+  });
+
+  useEffect(() => {
+    const handleModeChange = () => {
+      setAudioMode(localStorage.getItem("portfolio_audio_mode") || hero?.audioWidgetType || "simple");
+    };
+    window.addEventListener("portfolio_audio_mode_changed", handleModeChange);
+    return () => window.removeEventListener("portfolio_audio_mode_changed", handleModeChange);
+  }, [hero?.audioWidgetType]);
+
+  const isSimpleAudio = audioMode === "simple";
 
   // When in simple mode, use dedicated ambientAudio; when in player mode, use multi-track playlist
   const activeTracks = isSimpleAudio
@@ -767,7 +778,7 @@ function Hero({ isLoading = false }) {
       opacity: 1,
       transition: {
         staggerChildren: 0.08,
-        delayChildren: 0,
+        delayChildren: 0.55,
       },
     },
   };
@@ -821,32 +832,50 @@ function Hero({ isLoading = false }) {
 
       {/* 1. Main Editorial Headline (Top-Left on Desktop, Centered on Mobile/Tablet/iPad) */}
       <div className="flex flex-col items-center xl:items-start text-center xl:text-left">
-        <motion.div
-          variants={itemVariants}
-          className="relative flex flex-col items-center xl:items-start leading-[0.9] tracking-tight"
-        >
-          <span className="font-cormorant italic font-normal text-2xl sm:text-4xl md:text-5xl lg:text-6xl text-white/90 drop-shadow-[0_4px_16px_rgba(0,0,0,0.6)] text-center xl:text-left">
-            <TypewriterText
-              text={hero.greeting}
-              isLoading={isLoading}
-              speed={60}
-              delay={200}
-              showCursor={false}
-            />
-          </span>
+        <div className="relative flex flex-col items-center xl:items-start leading-[0.9] tracking-tight">
+          <motion.span
+            initial={{ opacity: 0, y: 8, filter: "blur(4px)" }}
+            animate={
+              isLoading
+                ? { opacity: 0, y: 8, filter: "blur(4px)" }
+                : { opacity: 1, y: 0, filter: "blur(0px)" }
+            }
+            transition={{
+              duration: 0.35,
+              delay: 0,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+            className="font-cormorant italic font-normal text-2xl sm:text-4xl md:text-5xl lg:text-6xl text-white/90 drop-shadow-[0_4px_16px_rgba(0,0,0,0.6)] text-center xl:text-left inline-block"
+          >
+            {hero.greeting}
+          </motion.span>
           <span className="font-clashM text-3xl sm:text-5xl md:text-7xl lg:text-8xl mt-1.5 sm:mt-3 whitespace-nowrap text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-white/70 drop-shadow-[0_8px_24px_rgba(0,0,0,0.8)] text-center xl:text-left">
             <TypewriterText
               text={hero.name}
               isLoading={isLoading}
-              speed={80}
-              delay={700}
+              speed={58}
+              delay={200}
               showCursor={true}
             />
           </span>
-        </motion.div>
+        </div>
 
         {/* Mobile & Tablet & iPad Pro Tagline, CTAs & Chat Bar (Grouped directly below headline) */}
-        <div className="flex xl:hidden flex-col items-center text-center max-w-xl mx-auto mt-4 sm:mt-7">
+        <motion.div
+          variants={{
+            hidden: { opacity: 0 },
+            visible: {
+              opacity: 1,
+              transition: {
+                staggerChildren: 0.14,
+                delayChildren: 0.55,
+              },
+            },
+          }}
+          initial="hidden"
+          animate={!isLoading ? "visible" : "hidden"}
+          className="flex xl:hidden flex-col items-center text-center max-w-xl mx-auto mt-4 sm:mt-7"
+        >
           <motion.p
             variants={itemVariants}
             className="font-jakarta text-sm sm:text-base font-light text-white/80 tracking-wide text-center"
@@ -879,10 +908,13 @@ function Hero({ isLoading = false }) {
           </motion.div>
 
           {/* AI Chat Bar directly in upper mobile/tablet block */}
-          <div className="mt-8 sm:mt-10 w-full max-w-[280px] sm:max-w-[300px] mx-auto z-30 pointer-events-auto">
+          <motion.div
+            variants={itemVariants}
+            className="mt-8 sm:mt-10 w-full max-w-[280px] sm:max-w-[300px] mx-auto z-30 pointer-events-auto"
+          >
             <HeroChatbot />
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
 
       {/* 2. Desktop-Only Bottom-Left Editorial Card */}
@@ -909,7 +941,21 @@ function Hero({ isLoading = false }) {
       )}
 
       {/* 3. Desktop-Only Right-Aligned Tagline & CTA Action Block */}
-      <div className="hidden xl:flex flex-col items-end self-end text-right max-w-md xl:max-w-lg ml-auto mb-16 xl:mb-20 z-20">
+      <motion.div
+        variants={{
+          hidden: { opacity: 0 },
+          visible: {
+            opacity: 1,
+            transition: {
+              staggerChildren: 0.14,
+              delayChildren: 0.55,
+            },
+          },
+        }}
+        initial="hidden"
+        animate={!isLoading ? "visible" : "hidden"}
+        className="hidden xl:flex flex-col items-end self-end text-right max-w-md xl:max-w-lg ml-auto mb-16 xl:mb-20 z-20"
+      >
         {/* Subtitle & Tagline */}
         <motion.p
           variants={itemVariants}
@@ -945,12 +991,15 @@ function Hero({ isLoading = false }) {
             variant="secondary"
           />
         </motion.div>
-      </div>
+      </motion.div>
 
       {/* 4. Desktop-Only Absolute Center AI Chat Bar */}
-      <div className="hidden xl:block xl:absolute xl:bottom-14 2xl:bottom-16 xl:left-1/2 xl:-translate-x-1/2 w-full max-w-[280px] sm:max-w-[300px] mx-auto px-4 z-30 pointer-events-auto">
+      <motion.div
+        variants={itemVariants}
+        className="hidden xl:block xl:absolute xl:bottom-14 2xl:bottom-16 xl:left-1/2 xl:-translate-x-1/2 w-full max-w-[280px] sm:max-w-[300px] mx-auto px-4 z-30 pointer-events-auto"
+      >
         <HeroChatbot />
-      </div>
+      </motion.div>
     </motion.div>
   );
 }

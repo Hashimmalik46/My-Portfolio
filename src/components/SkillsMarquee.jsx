@@ -21,7 +21,7 @@ function SkillsMarquee() {
         <span className="font-longsile text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white tracking-wide">
           Skills
         </span>
-        <span className="w-1.5 h-1.5 rounded-full bg-pAccent animate-pulse" />
+        <Code2 className="w-4 h-4 sm:w-5 sm:h-5 text-pAccent shrink-0 animate-pulse" strokeWidth={2.2} />
       </div>
 
       {/* Infinite Scrolling Track Area */}

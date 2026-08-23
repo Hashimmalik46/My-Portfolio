@@ -2,6 +2,7 @@ import React, { useState, lazy, Suspense, useCallback } from "react";
 import { ArrowUpRight, Code2 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { portfolioData } from "../data/portfolioData";
+import TypewriterText from "./ui/TypewriterText";
 
 const ProjectModal = lazy(() => import("./ProjectModal"));
 
@@ -216,7 +217,7 @@ function Projects() {
           </h2>
 
           <p className="font-cormorant italic text-2xl sm:text-3xl text-white/85 font-light max-w-xl">
-            {projectsSection.subheading}
+            <TypewriterText text={projectsSection.subheading} cursorClassName="text-pAccent" />
           </p>
         </motion.div>
 
