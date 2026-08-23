@@ -3,17 +3,18 @@ import { useInView } from "motion/react";
 
 /**
  * TypewriterText Component
- * Types out characters smoothly when isLoading is false or scrolled into view.
- * Renders in-flow with 100% visibility across all mobile and desktop browsers.
+ * Types out characters smoothly when scrolled into view.
+ * Renders in-flow with natural multi-line text wrapping across all mobile, tablet, and desktop screens.
  */
 export default function TypewriterText({
   text = "",
-  speed = 58,
+  speed = 36,
   delay = 200,
   isLoading = false,
   className = "",
   cursorClassName = "",
   showCursor = true,
+  nowrap = false,
 }) {
   const containerRef = useRef(null);
   const isInView = useInView(containerRef, { once: true, margin: "-20px 0px" });
@@ -53,12 +54,12 @@ export default function TypewriterText({
   return (
     <span
       ref={containerRef}
-      className={`inline-block whitespace-nowrap text-inherit ${className}`}
+      className={`inline text-inherit break-words ${nowrap ? "whitespace-nowrap" : "whitespace-normal"} ${className}`}
     >
       <span>{visibleText}</span>
       {showCursor && !isFinished && (
         <span
-          className={`inline-block ml-1 w-[3px] sm:w-[4px] h-[0.8em] bg-white align-baseline animate-pulse ${cursorClassName}`}
+          className={`inline-block ml-0.5 w-[2px] sm:w-[3px] h-[0.8em] bg-current align-baseline animate-pulse ${cursorClassName}`}
           aria-hidden="true"
         />
       )}
