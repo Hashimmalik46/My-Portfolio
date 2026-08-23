@@ -1,8 +1,12 @@
-# Hashim Malik — Developer Portfolio & Workstation
+<p align="center">
+  <img src="./public/gallery/favicon.webp" alt="Hash Logo" width="96" height="96" />
+</p>
 
-A high-performance, immersive personal portfolio and standalone developer workstation engineered with **React 19**, **Vite**, **TailwindCSS**, and **Motion**.
+<h3 align="center">Hashim Malik — Developer Portfolio & Standalone Workstation</h3>
 
-![Portfolio Overview](public/favicon.svg)
+<p align="center">
+  A high-performance, immersive personal portfolio and standalone developer workstation engineered with <b>React 19</b>, <b>Vite</b>, <b>TailwindCSS 4</b>, and <b>Motion</b>.
+</p>
 
 ---
 
