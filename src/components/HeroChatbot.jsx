@@ -98,38 +98,6 @@ export default function HeroChatbot() {
     }
   }, [isOpen]);
 
-  // Dynamic visualViewport tracker for iOS Safari virtual keyboard resizing
-  const [viewportStyle, setViewportStyle] = useState({});
-
-  useEffect(() => {
-    if (!isOpen || typeof window === "undefined") return;
-
-    const updateViewport = () => {
-      const vv = window.visualViewport;
-      if (vv) {
-        setViewportStyle({
-          height: `${vv.height}px`,
-          top: `${vv.offsetTop}px`,
-          maxCardHeight: `${Math.min(Math.max(vv.height - 16, 260), 540)}px`,
-        });
-      }
-    };
-
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener("resize", updateViewport);
-      window.visualViewport.addEventListener("scroll", updateViewport);
-      updateViewport();
-    }
-
-    return () => {
-      if (window.visualViewport) {
-        window.visualViewport.removeEventListener("resize", updateViewport);
-        window.visualViewport.removeEventListener("scroll", updateViewport);
-      }
-      setViewportStyle({});
-    };
-  }, [isOpen]);
-
   // Keyboard shortcut listener (Escape to close, Cmd+K / Ctrl+K to toggle)
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -465,17 +433,7 @@ export default function HeroChatbot() {
         createPortal(
           <AnimatePresence>
             {isOpen && (
-              <div
-                style={
-                  viewportStyle.height
-                    ? {
-                        height: viewportStyle.height,
-                        top: viewportStyle.top,
-                      }
-                    : undefined
-                }
-                className="fixed inset-x-0 inset-y-0 z-[9999] flex items-center justify-center p-2 sm:p-4 md:p-6 pointer-events-auto font-jakarta"
-              >
+              <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 md:p-6 pointer-events-auto font-jakarta">
                 {/* Backdrop */}
                 <motion.div
                   initial={{ opacity: 0 }}
@@ -491,12 +449,7 @@ export default function HeroChatbot() {
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.96, y: 8 }}
                   transition={{ type: "spring", stiffness: 420, damping: 30 }}
-                  style={
-                    viewportStyle.maxCardHeight
-                      ? { maxHeight: viewportStyle.maxCardHeight }
-                      : undefined
-                  }
-                  className={`relative w-full max-w-lg h-[82dvh] sm:h-[540px] max-h-[88dvh] sm:max-h-[85dvh] flex flex-col rounded-2xl sm:rounded-3xl bg-[#f8f7f3] dark:bg-[#11131b] border border-black/15 dark:border-white/10 overflow-hidden z-10 font-jakarta shadow-[0_25px_70px_rgba(0,0,0,0.55)] ${
+                  className={`relative w-full max-w-lg h-[540px] max-h-[85dvh] flex flex-col rounded-2xl sm:rounded-3xl bg-[#f8f7f3] dark:bg-[#11131b] border border-black/15 dark:border-white/10 overflow-hidden z-10 font-jakarta shadow-[0_25px_70px_rgba(0,0,0,0.55)] ${
                     isChatbotDark ? "dark-scope" : "light-scope"
                   }`}
                 >
@@ -565,13 +518,13 @@ export default function HeroChatbot() {
                                   <span>{msg.timestamp}</span>
                                   <button
                                     type="button"
-                                    onClick={() => handleCopyMessage(msg.text, msg.id)}
-                                    className="flex items-center gap-1 hover:text-zinc-950 dark:hover:text-white transition-colors cursor-pointer"
+                                    onClick={() => handleCopyText(msg.text, msg.id)}
+                                    className="flex items-center gap-1 text-zinc-500 dark:text-gray-400 hover:text-black dark:hover:text-white font-semibold transition-colors cursor-pointer"
                                   >
                                     {copiedId === msg.id ? (
                                       <>
-                                        <Check size={11} className="text-emerald-500" />
-                                        <span className="text-emerald-500">Copied</span>
+                                        <Check size={11} className="text-emerald-700 dark:text-emerald-400" />
+                                        <span className="text-emerald-700 dark:text-emerald-400 font-semibold">Copied</span>
                                       </>
                                     ) : (
                                       <>
@@ -584,13 +537,11 @@ export default function HeroChatbot() {
                               </div>
                             </div>
                           ) : (
-                            <div className="flex items-start gap-2 max-w-[85%]">
-                              <div className="bg-white dark:bg-white text-zinc-950 dark:text-zinc-950 rounded-2xl rounded-tr-sm px-4 py-2.5 shadow-[0_2px_8px_rgba(0,0,0,0.06)] border border-black/10 dark:border-black/15 text-left font-medium">
-                                <p className="leading-relaxed whitespace-pre-wrap">{msg.text}</p>
-                                <span className="block text-[9px] text-zinc-600 dark:text-zinc-600 mt-1 text-right">
-                                  {msg.timestamp}
-                                </span>
-                              </div>
+                            <div className="max-w-[85%] bg-white dark:bg-white text-zinc-950 dark:text-zinc-950 border border-black/10 dark:border-white/20 rounded-2xl rounded-tr-xs px-3.5 py-2.5 shadow-[0_2px_8px_rgba(0,0,0,0.04)] font-medium text-left">
+                              <p className="leading-relaxed text-left text-zinc-950 dark:text-zinc-950 font-medium">{msg.text}</p>
+                              <span className="text-[9px] text-zinc-400 dark:text-zinc-500 block text-right mt-1 font-medium">
+                                {msg.timestamp}
+                              </span>
                             </div>
                           )}
                         </div>
@@ -687,16 +638,8 @@ export default function HeroChatbot() {
                         type="text"
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
-                        onFocus={() => {
-                          if (typeof window !== "undefined") {
-                            setTimeout(() => {
-                              window.scrollTo(0, 0);
-                              document.body.scrollTop = 0;
-                            }, 50);
-                          }
-                        }}
                         placeholder={chatbot.inputPlaceholder}
-                        className="w-full bg-white dark:bg-[#161922] hover:bg-white dark:hover:bg-[#161922] focus:bg-white dark:focus:bg-[#161922] text-zinc-950 dark:text-white placeholder-zinc-500 dark:placeholder-gray-500 font-medium text-[16px] sm:text-xs md:text-[13px] rounded-full pl-4 pr-11 py-2.5 sm:py-3 border border-black/15 dark:border-white/10 focus:border-zinc-950 dark:focus:border-white/30 focus:shadow-[0_0_0_2px_rgba(17,24,39,0.1)] focus:outline-none transition-all"
+                        className="w-full bg-white dark:bg-[#161922] hover:bg-white dark:hover:bg-[#161922] focus:bg-white dark:focus:bg-[#161922] text-zinc-950 dark:text-white placeholder-zinc-500 dark:placeholder-gray-500 font-medium text-base sm:text-xs md:text-[13px] rounded-full pl-4 pr-11 py-2.5 sm:py-3 border border-black/15 dark:border-white/10 focus:border-zinc-950 dark:focus:border-white/30 focus:shadow-[0_0_0_2px_rgba(17,24,39,0.1)] focus:outline-none transition-all"
                       />
                       <button
                         type="submit"
