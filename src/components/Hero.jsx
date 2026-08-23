@@ -849,7 +849,7 @@ function Hero({ isLoading = false }) {
           >
             {hero.greeting}
           </motion.span>
-          <span className="font-clashM text-3xl sm:text-5xl md:text-7xl lg:text-8xl mt-1.5 sm:mt-3 whitespace-nowrap text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-white/70 drop-shadow-[0_8px_24px_rgba(0,0,0,0.8)] text-center xl:text-left">
+          <span className="font-clashM text-3xl sm:text-5xl md:text-7xl lg:text-8xl mt-1.5 sm:mt-3 whitespace-nowrap text-white drop-shadow-[0_8px_24px_rgba(0,0,0,0.8)] text-center xl:text-left">
             <TypewriterText
               text={hero.name}
               isLoading={isLoading}

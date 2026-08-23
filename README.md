@@ -1,11 +1,40 @@
-# Hashim Malik — Developer Portfolio & Workstation
+<div align="center">
 
-> An immersive personal portfolio and standalone developer workstation engineered with **React 19**, **Vite**, **TailwindCSS 4**, and **Motion**.
+  <img src="./public/gallery/favicon.webp" alt="Hash Logo" width="88" height="88" />
 
-[![Live Portfolio](https://img.shields.io/badge/Live%20Demo-hashimmalik.in-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://hashimmalik.in)
-[![React 19](https://img.shields.io/badge/React-19.0-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
-[![Tailwind CSS 4](https://img.shields.io/badge/Tailwind-4.0-0B1120?style=for-the-badge&logo=tailwindcss&logoColor=06B6D4)](https://tailwindcss.com/)
-[![Vite](https://img.shields.io/badge/Vite-7.0-1E1E20?style=for-the-badge&logo=vite&logoColor=FFD62E)](https://vitejs.dev/)
+  # Hashim Malik
+  ### Developer Portfolio & Standalone Workstation
+
+  An immersive personal portfolio, interactive AI assistant, and career acceleration workstation engineered with **React 19**, **Vite**, **Tailwind CSS 4**, and **Motion**.
+
+  <p align="center">
+    <a href="https://hashimmalik.in" target="_blank" rel="noopener noreferrer">
+      <img src="https://img.shields.io/badge/Live%20Demo-hashimmalik.in-000000?style=for-the-badge&logo=vercel&logoColor=white" alt="Live Demo" />
+    </a>
+    <a href="https://react.dev/" target="_blank" rel="noopener noreferrer">
+      <img src="https://img.shields.io/badge/React-19.0-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React 19" />
+    </a>
+    <a href="https://tailwindcss.com/" target="_blank" rel="noopener noreferrer">
+      <img src="https://img.shields.io/badge/Tailwind-4.0-0B1120?style=for-the-badge&logo=tailwindcss&logoColor=06B6D4" alt="Tailwind 4" />
+    </a>
+    <a href="https://vitejs.dev/" target="_blank" rel="noopener noreferrer">
+      <img src="https://img.shields.io/badge/Vite-7.0-1E1E20?style=for-the-badge&logo=vite&logoColor=FFD62E" alt="Vite 7" />
+    </a>
+    <a href="https://aistudio.google.com/" target="_blank" rel="noopener noreferrer">
+      <img src="https://img.shields.io/badge/Google%20Gemini-3.6%20Flash-4285F4?style=for-the-badge&logo=google&logoColor=white" alt="Google Gemini" />
+    </a>
+  </p>
+
+  <p align="center">
+    <a href="#-features">Features</a> •
+    <a href="#-workstation-suite-tools">Workstation Suite</a> •
+    <a href="#-tech-stack">Tech Stack</a> •
+    <a href="#-quick-start">Quick Start</a> •
+    <a href="#-project-architecture">Architecture</a> •
+    <a href="#-author">Author</a>
+  </p>
+
+</div>
 
 ---
 
@@ -117,11 +146,11 @@ src/
 ## 👤 Author
 
 **Hashim Malik**
-- Website: [hashimmalik.in](https://hashimmalik.in)
-- GitHub: [@Hashimmalik46](https://github.com/Hashimmalik46)
-- LinkedIn: [linkedin.com/in/hashim-malik-a868102b0](https://www.linkedin.com/in/hashim-malik-a868102b0/)
-- Instagram: [@i_hash46](https://instagram.com/i_hash46)
-- X / Twitter: [@hashimm447](https://x.com/hashimm447)
+- Website: <a href="https://hashimmalik.in" target="_blank" rel="noopener noreferrer">hashimmalik.in</a>
+- GitHub: <a href="https://github.com/Hashimmalik46" target="_blank" rel="noopener noreferrer">@Hashimmalik46</a>
+- LinkedIn: <a href="https://www.linkedin.com/in/hashim-malik-a868102b0/" target="_blank" rel="noopener noreferrer">linkedin.com/in/hashim-malik-a868102b0</a>
+- Instagram: <a href="https://instagram.com/i_hash46" target="_blank" rel="noopener noreferrer">@i_hash46</a>
+- X / Twitter: <a href="https://x.com/hashimm447" target="_blank" rel="noopener noreferrer">@hashimm447</a>
 
 ---
 
@@ -130,4 +159,3 @@ src/
 © 2026 **Hashim Malik**. All rights reserved.
 
 The source code, designs, and assets in this repository are for personal portfolio and demonstration purposes. Unauthorized copying or redistribution of this project or its branding is prohibited without prior permission.
-

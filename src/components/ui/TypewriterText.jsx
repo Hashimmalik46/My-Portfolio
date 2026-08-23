@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useInView } from "motion/react";
 
 /**
  * TypewriterText Component
- * Types out once when isLoading is false.
- * Renders in-flow so that CSS text gradients (bg-clip-text) and drop-shadows
- * paint correctly with 100% visibility across all browsers.
+ * Types out characters smoothly when isLoading is false or scrolled into view.
+ * Renders in-flow with 100% visibility across all mobile and desktop browsers.
  */
 export default function TypewriterText({
   text = "",
@@ -15,11 +15,14 @@ export default function TypewriterText({
   cursorClassName = "",
   showCursor = true,
 }) {
+  const containerRef = useRef(null);
+  const isInView = useInView(containerRef, { once: true, margin: "-20px 0px" });
+
   const [displayedLength, setDisplayedLength] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
 
   useEffect(() => {
-    if (isLoading || !text) {
+    if (isLoading || !isInView || !text) {
       setDisplayedLength(0);
       setIsFinished(false);
       return;
@@ -43,12 +46,15 @@ export default function TypewriterText({
       clearTimeout(startTimer);
       if (interval) clearInterval(interval);
     };
-  }, [isLoading, text, speed, delay]);
+  }, [isLoading, isInView, text, speed, delay]);
 
   const visibleText = text.slice(0, displayedLength);
 
   return (
-    <span className={`inline-block whitespace-nowrap ${className}`}>
+    <span
+      ref={containerRef}
+      className={`inline-block whitespace-nowrap text-inherit ${className}`}
+    >
       <span>{visibleText}</span>
       {showCursor && !isFinished && (
         <span
