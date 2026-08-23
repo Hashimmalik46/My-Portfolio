@@ -36,7 +36,7 @@ export const portfolioData = {
   // ==========================================
   personal: {
   name: "Hashim Malik",
-  shortName: "Hash",
+  shortName: "Hashim",
   role: "Developer, AI Explorer & Creative",
   title: "I build, experiment, and figure things out.",
   email: "hashimzahoor2003@gmail.com",
