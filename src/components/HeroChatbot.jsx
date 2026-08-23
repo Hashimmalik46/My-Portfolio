@@ -77,12 +77,23 @@ export default function HeroChatbot() {
     }
   }, [messages, isTyping, isOpen]);
 
-  // Pause Lenis smooth scrolling when modal is open
+  // Lock background body scroll and pause Lenis smooth scrolling when modal is open
   useEffect(() => {
     if (isOpen) {
       window.lenis?.stop();
+      const originalOverflow = document.body.style.overflow;
+      const originalPaddingRight = document.body.style.paddingRight;
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+
+      if (scrollbarWidth > 0) {
+        document.body.style.paddingRight = `${scrollbarWidth}px`;
+      }
+      document.body.style.overflow = "hidden";
+
       return () => {
         window.lenis?.start();
+        document.body.style.overflow = originalOverflow;
+        document.body.style.paddingRight = originalPaddingRight;
       };
     }
   }, [isOpen]);
@@ -422,7 +433,7 @@ export default function HeroChatbot() {
         createPortal(
           <AnimatePresence>
             {isOpen && (
-              <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 md:p-6 pointer-events-auto font-jakarta">
+              <div className="fixed inset-0 z-[9999] flex items-center justify-center p-2 sm:p-4 md:p-6 pointer-events-auto font-jakarta">
                 {/* Backdrop */}
                 <motion.div
                   initial={{ opacity: 0 }}
@@ -438,7 +449,7 @@ export default function HeroChatbot() {
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.96, y: 8 }}
                   transition={{ type: "spring", stiffness: 420, damping: 30 }}
-                  className={`relative w-full max-w-lg h-[540px] max-h-[85dvh] flex flex-col rounded-2xl sm:rounded-3xl bg-[#f8f7f3] dark:bg-[#11131b] border border-black/15 dark:border-white/10 overflow-hidden z-10 font-jakarta shadow-[0_25px_70px_rgba(0,0,0,0.55)] ${
+                  className={`relative w-full max-w-lg h-[82dvh] sm:h-[540px] max-h-[88dvh] sm:max-h-[85dvh] flex flex-col rounded-2xl sm:rounded-3xl bg-[#f8f7f3] dark:bg-[#11131b] border border-black/15 dark:border-white/10 overflow-hidden z-10 font-jakarta shadow-[0_25px_70px_rgba(0,0,0,0.55)] ${
                     isChatbotDark ? "dark-scope" : "light-scope"
                   }`}
                 >
@@ -628,7 +639,7 @@ export default function HeroChatbot() {
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
                         placeholder={chatbot.inputPlaceholder}
-                        className="w-full bg-white dark:bg-[#161922] hover:bg-white dark:hover:bg-[#161922] focus:bg-white dark:focus:bg-[#161922] text-zinc-950 dark:text-white placeholder-zinc-500 dark:placeholder-gray-500 font-medium text-base sm:text-xs md:text-[13px] rounded-full pl-4 pr-11 py-2.5 sm:py-3 border border-black/15 dark:border-white/10 focus:border-zinc-950 dark:focus:border-white/30 focus:shadow-[0_0_0_2px_rgba(17,24,39,0.1)] focus:outline-none transition-all"
+                        className="w-full bg-white dark:bg-[#161922] hover:bg-white dark:hover:bg-[#161922] focus:bg-white dark:focus:bg-[#161922] text-zinc-950 dark:text-white placeholder-zinc-500 dark:placeholder-gray-500 font-medium text-[16px] sm:text-xs md:text-[13px] rounded-full pl-4 pr-11 py-2.5 sm:py-3 border border-black/15 dark:border-white/10 focus:border-zinc-950 dark:focus:border-white/30 focus:shadow-[0_0_0_2px_rgba(17,24,39,0.1)] focus:outline-none transition-all"
                       />
                       <button
                         type="submit"

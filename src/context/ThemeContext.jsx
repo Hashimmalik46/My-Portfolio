@@ -1,8 +1,8 @@
 import { createContext, useContext, useEffect, useState, useMemo } from "react";
 
 const ThemeContext = createContext({
-  theme: "dark",
-  isDark: true,
+  theme: "light",
+  isDark: false,
   toggleTheme: () => {},
   setTheme: () => {},
 });
@@ -16,10 +16,10 @@ export function ThemeProvider({ children }) {
       if (saved === "light" || saved === "dark") {
         return saved;
       }
-      // Default to dark theme if no preference stored
-      return "dark";
+      // Default to light theme if no preference stored
+      return "light";
     } catch (e) {
-      return "dark";
+      return "light";
     }
   });
 
