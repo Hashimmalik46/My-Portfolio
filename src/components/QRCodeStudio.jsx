@@ -15,6 +15,7 @@ import {
   Eye,
   Sliders,
   Sparkles,
+  Share2,
 } from "lucide-react";
 
 // Predefined stylish color themes
@@ -163,28 +164,142 @@ export default function QRCodeStudio() {
     exportRes,
   ]);
 
-  // Export handlers
-  const handleDownloadPng = () => {
+// Device detection for iOS (iPhone, iPad, iPod, iPadOS Safari)
+const isIOSDevice = () => {
+  if (typeof window === "undefined" || typeof navigator === "undefined") return false;
+  return (
+    /iPad|iPhone|iPod/.test(navigator.userAgent || "") ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)
+  );
+};
+
+// Export handlers
+  const handleDownloadPng = async () => {
     if (!dataUrl) return;
-    const a = document.createElement("a");
-    a.href = dataUrl;
-    a.download = `qrcode_${activeType}_${Date.now()}.png`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    const filename = `qrcode_${activeType}_${Date.now()}.png`;
+
+    try {
+      // Convert data URL to Blob for clean processing across all browsers
+      const res = await fetch(dataUrl);
+      const blob = await res.blob();
+
+      // 1. On iOS / Mobile devices where Web Share API with files is supported,
+      // invoke native Share Sheet so iOS users can tap "Save Image" (Photos) or "Save to Files"
+      if (isIOSDevice() && navigator.canShare && typeof File !== "undefined") {
+        const file = new File([blob], filename, { type: "image/png" });
+        if (navigator.canShare({ files: [file] })) {
+          try {
+            await navigator.share({
+              files: [file],
+              title: "QR Code",
+              text: "Smart QR Code Generator",
+            });
+            return;
+          } catch (shareErr) {
+            if (shareErr.name === "AbortError") {
+              // User dismissed the iOS share sheet intentionally
+              return;
+            }
+            console.warn("iOS Share API failed, falling back to direct download:", shareErr);
+          }
+        }
+      }
+
+      // 2. Standard Blob ObjectURL download (Works on Android, macOS Safari, Chrome, Edge, Firefox)
+      const blobUrl = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = blobUrl;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 30000);
+    } catch (err) {
+      console.error("PNG download error:", err);
+      // Fallback: direct data URL anchor
+      const a = document.createElement("a");
+      a.href = dataUrl;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
   };
 
-  const handleDownloadSvg = () => {
+  const handleDownloadSvg = async () => {
     if (!svgString) return;
-    const blob = new Blob([svgString], { type: "image/svg+xml" });
-    const href = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = href;
-    a.download = `qrcode_${activeType}_${Date.now()}.svg`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    setTimeout(() => URL.revokeObjectURL(href), 30000);
+    const filename = `qrcode_${activeType}_${Date.now()}.svg`;
+    const blob = new Blob([svgString], { type: "image/svg+xml;charset=utf-8" });
+
+    try {
+      // 1. On iOS, share sheet allows saving SVG directly to Files / iCloud Drive
+      if (isIOSDevice() && navigator.canShare && typeof File !== "undefined") {
+        const file = new File([blob], filename, { type: "image/svg+xml" });
+        if (navigator.canShare({ files: [file] })) {
+          try {
+            await navigator.share({
+              files: [file],
+              title: "QR Code (Vector SVG)",
+              text: "Smart QR Code Generator (Vector SVG)",
+            });
+            return;
+          } catch (shareErr) {
+            if (shareErr.name === "AbortError") return;
+            console.warn("iOS SVG share failed, falling back to download:", shareErr);
+          }
+        }
+      }
+
+      // 2. Standard Blob ObjectURL download
+      const blobUrl = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = blobUrl;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 30000);
+    } catch (err) {
+      console.error("SVG download error:", err);
+    }
+  };
+
+  const handleShareQr = async () => {
+    if (!dataUrl) return;
+    const filename = `qrcode_${activeType}_${Date.now()}.png`;
+
+    try {
+      const res = await fetch(dataUrl);
+      const blob = await res.blob();
+
+      if (navigator.canShare && typeof File !== "undefined") {
+        const file = new File([blob], filename, { type: "image/png" });
+        if (navigator.canShare({ files: [file] })) {
+          await navigator.share({
+            files: [file],
+            title: "QR Code",
+            text: `QR Code: ${getPayloadString()}`,
+          });
+          return;
+        }
+      }
+
+      // Fallback text/link sharing if file sharing is not supported
+      if (navigator.share) {
+        await navigator.share({
+          title: "QR Code",
+          text: getPayloadString(),
+          url: activeType === "url" && urlValue ? urlValue : undefined,
+        });
+      } else {
+        // If navigator.share is completely unsupported, copy image instead
+        handleCopyImage();
+      }
+    } catch (err) {
+      if (err.name !== "AbortError") {
+        console.error("Share error:", err);
+      }
+    }
   };
 
   const handleCopyImage = async () => {
@@ -661,7 +776,9 @@ export default function QRCodeStudio() {
                 <img
                   src={dataUrl}
                   alt="Generated QR Code"
-                  className="w-full h-full object-contain rounded-lg"
+                  className="w-full h-full object-contain rounded-lg select-auto pointer-events-auto cursor-pointer"
+                  style={{ WebkitTouchCallout: "default" }}
+                  title="Live QR Code (Tap and hold on iOS to Save to Photos)"
                 />
               ) : (
                 <div className="flex flex-col items-center justify-center text-gray-300 dark:text-gray-600">
@@ -670,14 +787,16 @@ export default function QRCodeStudio() {
               )}
             </div>
 
-            {/* Payload summary snippet */}
-            <div className="w-full pt-3 mt-2 border-t border-gray-100 dark:border-white/[0.06] flex items-center justify-between text-[11px] text-gray-500 dark:text-gray-400">
-              <span className="font-mono text-[10.5px] truncate max-w-[190px] text-left">
-                {getPayloadString()}
-              </span>
-              <span className="text-[10.5px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
-                <Check size={11} /> Ready
-              </span>
+            {/* Payload summary snippet & mobile hint */}
+            <div className="w-full pt-3 mt-2 border-t border-gray-100 dark:border-white/[0.06] space-y-1">
+              <div className="flex items-center justify-between text-[11px] text-gray-500 dark:text-gray-400">
+                <span className="font-mono text-[10.5px] truncate max-w-[190px] text-left">
+                  {getPayloadString()}
+                </span>
+                <span className="text-[10.5px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
+                  <Check size={11} /> Ready
+                </span>
+              </div>
             </div>
           </div>
 
@@ -703,23 +822,34 @@ export default function QRCodeStudio() {
               </button>
             </div>
 
-            <button
-              type="button"
-              onClick={handleCopyImage}
-              className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl bg-gray-100 hover:bg-gray-200 dark:bg-white/[0.06] dark:hover:bg-white/[0.12] text-gray-700 dark:text-gray-200 text-xs font-semibold transition-all cursor-pointer"
-            >
-              {isCopied ? (
-                <>
-                  <Check size={13} className="text-emerald-600 dark:text-emerald-400" />
-                  <span className="text-emerald-700 dark:text-emerald-300 font-bold">Copied to Clipboard!</span>
-                </>
-              ) : (
-                <>
-                  <Copy size={13} />
-                  <span>Copy Image to Clipboard</span>
-                </>
-              )}
-            </button>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={handleCopyImage}
+                className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl bg-gray-100 hover:bg-gray-200 dark:bg-white/[0.06] dark:hover:bg-white/[0.12] text-gray-700 dark:text-gray-200 text-xs font-semibold transition-all cursor-pointer"
+              >
+                {isCopied ? (
+                  <>
+                    <Check size={13} className="text-emerald-600 dark:text-emerald-400 shrink-0" />
+                    <span className="text-emerald-700 dark:text-emerald-300 font-bold truncate">Copied!</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy size={13} className="shrink-0" />
+                    <span className="truncate">Copy Image</span>
+                  </>
+                )}
+              </button>
+
+              <button
+                type="button"
+                onClick={handleShareQr}
+                className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl bg-gray-100 hover:bg-gray-200 dark:bg-white/[0.06] dark:hover:bg-white/[0.12] text-gray-700 dark:text-gray-200 text-xs font-semibold transition-all cursor-pointer"
+              >
+                <Share2 size={13} className="shrink-0" />
+                <span className="truncate">Share QR</span>
+              </button>
+            </div>
           </div>
         </div>
 
