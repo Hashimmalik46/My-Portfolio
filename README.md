@@ -5,34 +5,19 @@
   # Hashim Malik
   ### Developer Portfolio & Digital Workstation Studio
 
-  An immersive personal portfolio, interactive AI career assistant, and high-performance digital workstation engineered with **React 19**, **Vite**, **Tailwind CSS 4**, and **Motion**.
+  An immersive personal portfolio, interactive AI career assistant, and high-performance digital workstation engineered with React 19, Vite, Tailwind CSS 4, and Motion.
 
   <p align="center">
     <a href="https://hashimmalik.in" target="_blank" rel="noopener noreferrer">
-      <img src="https://img.shields.io/badge/Live_Platform-hashimmalik.in-000000?style=for-the-badge&logo=vercel&logoColor=white" alt="Live Demo" />
+      <img src="https://img.shields.io/badge/status-live-34D399?style=flat&labelColor=374151" alt="Status" />
     </a>
-    <a href="https://react.dev/" target="_blank" rel="noopener noreferrer">
-      <img src="https://img.shields.io/badge/React_19-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React 19" />
+    <img src="https://img.shields.io/badge/version-v2.1.0-F97316?style=flat&labelColor=374151" alt="Version" />
+    <a href="https://github.com/Hashimmalik46/My-Portfolio/stargazers" target="_blank" rel="noopener noreferrer">
+      <img src="https://img.shields.io/github/stars/Hashimmalik46/My-Portfolio?style=flat&label=stars&color=0284C7&labelColor=374151" alt="Stars" />
     </a>
-    <a href="https://tailwindcss.com/" target="_blank" rel="noopener noreferrer">
-      <img src="https://img.shields.io/badge/Tailwind_CSS_v4-0B1120?style=for-the-badge&logo=tailwindcss&logoColor=38BDF8" alt="Tailwind 4" />
+    <a href="#license">
+      <img src="https://img.shields.io/badge/license-Custom-EC4899?style=flat&labelColor=374151" alt="License" />
     </a>
-    <a href="https://vitejs.dev/" target="_blank" rel="noopener noreferrer">
-      <img src="https://img.shields.io/badge/Vite_v7.3-1E1B4B?style=for-the-badge&logo=vite&logoColor=FFD62E" alt="Vite 7" />
-    </a>
-    <a href="https://motion.dev/" target="_blank" rel="noopener noreferrer">
-      <img src="https://img.shields.io/badge/Motion-0055FF?style=for-the-badge&logo=framer&logoColor=white" alt="Motion" />
-    </a>
-  </p>
-
-  <p align="center">
-    <a href="https://aistudio.google.com/" target="_blank" rel="noopener noreferrer">
-      <img src="https://img.shields.io/badge/AI_Engine-Gemini_3.6_Flash-1E293B?style=for-the-badge&logo=google&logoColor=4285F4" alt="Google Gemini" />
-    </a>
-    <a href="https://docx.js.org/" target="_blank" rel="noopener noreferrer">
-      <img src="https://img.shields.io/badge/Export_Engine-.DOCX_%7C_.PDF-1E293B?style=for-the-badge&logo=microsoftword&logoColor=2B579A" alt="Word & PDF Export" />
-    </a>
-    <img src="https://img.shields.io/badge/Architecture-100%25_Client--Side-064E3B?style=for-the-badge&logo=speedtest&logoColor=10B981" alt="Client-Side" />
   </p>
 
   <p align="center">
