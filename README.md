@@ -5,7 +5,7 @@
   # Hashim Malik
   ### Developer Portfolio & Digital Workstation Studio
 
-  An immersive personal portfolio, interactive AI career assistant, and high-performance digital workstation engineered with React 19, Vite, Tailwind CSS 4, and Motion.
+  An immersive personal portfolio, interactive AI career assistant, and high-performance digital workstation engineered with React 19, Vite, Tailwind CSS 4, Motion, and client-side processing engines.
 
   <p align="center">
     <a href="https://hashimmalik.in" target="_blank" rel="noopener noreferrer">
@@ -18,6 +18,9 @@
     <a href="#license">
       <img src="https://img.shields.io/badge/license-Custom-EC4899?style=flat&labelColor=374151" alt="License" />
     </a>
+    <img src="https://img.shields.io/badge/React-19.2-61DAFB?style=flat&labelColor=374151" alt="React 19" />
+    <img src="https://img.shields.io/badge/Tailwind-v4.0-38B2AC?style=flat&labelColor=374151" alt="Tailwind 4" />
+    <img src="https://img.shields.io/badge/AI-Gemini%20Flash-8B5CF6?style=flat&labelColor=374151" alt="Gemini AI" />
   </p>
 
   <p align="center">
@@ -48,6 +51,7 @@
 
 <a id="workstation-suite"></a>
 ## 🛠️ Workstation Suite (`/tools`)
+
 Curated standalone career acceleration and developer utilities engineered to run **100% in-browser** with zero server latency, dark/light theme support, and automatic session persistence:
 
 - **📄 ATS Resume Builder (`/tools/resume-builder` & Modal)**:
@@ -84,14 +88,42 @@ Curated standalone career acceleration and developer utilities engineered to run
 <a id="tech-stack"></a>
 ## 💻 Tech Stack
 
-- **Framework**: [React 19](https://react.dev/) + [Vite](https://vitejs.dev/)
-- **Styling**: [TailwindCSS 4](https://tailwindcss.com/) with Scoped CSS Theme Variants
-- **Animations**: [Motion](https://motion.dev/) (Framer Motion)
-- **Smooth Scroll**: [Lenis](https://github.com/darkroomengineering/lenis)
-- **Icons**: [Lucide React](https://lucide.dev/), [React Icons](https://react-icons.github.io/react-icons/)
-- **Document & PDF Engines**: `docx`, `pdf-lib`, `jspdf`, `html2canvas`
-- **QR Engine**: `qrcode`
-- **AI Providers**: Google Gemini (3.6 Flash / 3.5 Flash / Flash Latest), xAI Grok, OpenAI, DeepSeek
+<div align="center">
+
+### Core Framework & Build
+<p align="center">
+  <img src="https://img.shields.io/badge/React_19-20232A?style=flat&logo=react&logoColor=61DAFB&labelColor=374151" alt="React 19" />
+  <img src="https://img.shields.io/badge/Vite_8-646CFF?style=flat&logo=vite&logoColor=white&labelColor=374151" alt="Vite 8" />
+  <img src="https://img.shields.io/badge/React_Router_7-CA4245?style=flat&logo=react-router&logoColor=white&labelColor=374151" alt="React Router" />
+  <img src="https://img.shields.io/badge/Context_API-0284C7?style=flat&logo=react&logoColor=white&labelColor=374151" alt="Context API" />
+</p>
+
+### Styling, Themes & Animations
+<p align="center">
+  <img src="https://img.shields.io/badge/Tailwind_CSS_4-38B2AC?style=flat&logo=tailwind-css&logoColor=white&labelColor=374151" alt="TailwindCSS 4" />
+  <img src="https://img.shields.io/badge/Motion_Framer-0055FF?style=flat&logo=framer&logoColor=white&labelColor=374151" alt="Motion" />
+  <img src="https://img.shields.io/badge/Lenis_Smooth_Scroll-111827?style=flat&logo=scroll&logoColor=white&labelColor=374151" alt="Lenis Scroll" />
+  <img src="https://img.shields.io/badge/Lucide_Icons-F43F5E?style=flat&logo=lucide&logoColor=white&labelColor=374151" alt="Lucide Icons" />
+  <img src="https://img.shields.io/badge/Web_Audio_API-E11D48?style=flat&logo=soundcharts&logoColor=white&labelColor=374151" alt="Web Audio API" />
+</p>
+
+### Document & Media Processing
+<p align="center">
+  <img src="https://img.shields.io/badge/Docx_Generation-2B579A?style=flat&logo=microsoft-word&logoColor=white&labelColor=374151" alt="DOCX Engine" />
+  <img src="https://img.shields.io/badge/PDF_Lib_&_jsPDF-EC4899?style=flat&logo=adobe-acrobat-reader&logoColor=white&labelColor=374151" alt="PDF Engines" />
+  <img src="https://img.shields.io/badge/HTML5_Canvas_Engine-E34F26?style=flat&logo=html5&logoColor=white&labelColor=374151" alt="Canvas Compressor" />
+  <img src="https://img.shields.io/badge/QR_Code_Generator-10B981?style=flat&logo=qr-code&logoColor=white&labelColor=374151" alt="QR Code" />
+</p>
+
+### AI Providers & Models
+<p align="center">
+  <img src="https://img.shields.io/badge/Google_Gemini-8E75FF?style=flat&logo=google&logoColor=white&labelColor=374151" alt="Gemini AI" />
+  <img src="https://img.shields.io/badge/xAI_Grok-000000?style=flat&logo=x&logoColor=white&labelColor=374151" alt="xAI Grok" />
+  <img src="https://img.shields.io/badge/OpenAI_GPT-412991?style=flat&logo=openai&logoColor=white&labelColor=374151" alt="OpenAI" />
+  <img src="https://img.shields.io/badge/DeepSeek-0284C7?style=flat&logo=deepseek&logoColor=white&labelColor=374151" alt="DeepSeek" />
+</p>
+
+</div>
 
 ---
 
@@ -137,36 +169,36 @@ npm run build
 
 ```
 src/
-├── components/          # Reusable UI & standalone workstation tool components
-│   ├── StandaloneResumeBuilder.jsx # Standalone ATS Resume Studio
-│   ├── OutreachStudio.jsx          # AI Cold Outreach & Cover Letter Studio
-│   ├── OmniMediaStudio.jsx         # Image Compressor & PDF Document Studio
-│   ├── QRCodeStudio.jsx            # Smart QR Code & Link Studio
-│   ├── ResumeModal.jsx             # Portfolio embedded resume modal with theme slider
-│   ├── HeroChatbot.jsx             # AI Career Assistant with isolated theme switcher
-│   ├── ThemeToggle.jsx             # Spring physics pill slider toggle
-│   ├── Hero.jsx                    # Hero header with ambient audio engine
-│   ├── Projects.jsx                # Project showcase section
-│   ├── Skills.jsx                  # Interactive skill pills & metrics
+├── components/
+│   ├── StandaloneResumeBuilder.jsx
+│   ├── OutreachStudio.jsx
+│   ├── OmniMediaStudio.jsx
+│   ├── QRCodeStudio.jsx
+│   ├── ResumeModal.jsx
+│   ├── HeroChatbot.jsx
+│   ├── ThemeToggle.jsx
+│   ├── Hero.jsx
+│   ├── Projects.jsx
+│   ├── Skills.jsx
 │   └── ...
-├── pages/               # Top-level route pages (React Router DOM)
-│   ├── HomePage.jsx                # Portfolio landing page (/)
-│   ├── ToolsHub.jsx                # Workstation hub (/tools)
-│   ├── ResumeBuilderPage.jsx       # ATS Resume studio (/tools/resume-builder)
-│   ├── OutreachStudioPage.jsx      # Outreach studio (/tools/outreach-generator)
-│   ├── OmniMediaStudioPage.jsx     # Image & PDF studio (/tools/media-converter)
-│   └── QRCodeStudioPage.jsx        # Smart QR Code studio (/tools/qr-studio)
-├── context/             # React Context providers
-│   └── ThemeContext.jsx            # Dark/Light theme state & system sync provider
-├── services/            # Client-side processing & AI generation engines
-│   ├── aiResume.js                 # Universal resume generation service
-│   ├── aiOutreach.js               # Universal outreach & cover letter service
-│   └── imageProcessor.js           # Client-side Canvas image & PDF-lib engine
-├── utils/               # Document and media export utilities
-│   └── docxResumeExport.js         # ATS Microsoft Word (.docx) document generator
-├── data/                # Portfolio configuration, projects, and bio data
+├── pages/
+│   ├── HomePage.jsx
+│   ├── ToolsHub.jsx
+│   ├── ResumeBuilderPage.jsx
+│   ├── OutreachStudioPage.jsx
+│   ├── OmniMediaStudioPage.jsx
+│   └── QRCodeStudioPage.jsx
+├── context/
+│   └── ThemeContext.jsx
+├── services/
+│   ├── aiResume.js
+│   ├── aiOutreach.js
+│   └── imageProcessor.js
+├── utils/
+│   └── docxResumeExport.js
+├── data/
 │   └── portfolioData.js
-└── App.jsx              # Main router & Lenis smooth scroll provider
+└── App.jsx
 ```
 
 ---
