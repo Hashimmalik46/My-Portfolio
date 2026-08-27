@@ -354,17 +354,15 @@ function Footer() {
             . All rights reserved.
           </div>
 
-          {/* Magnetic Back to Top Button */}
-          <motion.button
+          {/* Back to Top Text Link */}
+          <button
+            type="button"
             onClick={scrollToTop}
-            whileHover={{ scale: 1.05, y: -2 }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 400, damping: 18 }}
-            className="group flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.05] hover:bg-white/[0.12] backdrop-blur-xl border border-white/10 hover:border-pAccent/40 shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.2)] text-xs font-medium text-white/70 hover:text-white transition-all duration-300 cursor-pointer"
+            className="group flex items-center gap-1.5 text-xs font-medium text-white/60 hover:text-pAccent transition-colors duration-200 cursor-pointer select-none"
           >
             <span>Back to Top</span>
-            <ArrowUp className="w-3.5 h-3.5 text-pAccent group-hover:-translate-y-0.5 transition-transform" />
-          </motion.button>
+            <ArrowUp className="w-3.5 h-3.5 text-white/50 group-hover:text-pAccent group-hover:-translate-y-0.5 transition-all duration-200" />
+          </button>
         </div>
       </div>
     </motion.footer>
