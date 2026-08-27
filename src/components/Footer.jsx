@@ -183,16 +183,16 @@ function Footer() {
     >
 
       {/* ========================================================================= */}
-      {/* 1. TOP SECTION: GIANT STROKED 'HASHIM' (HIDDEN ON PHONE LAYOUT) */}
+      {/* 1. TOP SECTION: GIANT STROKED 'HASHIM' (HIDDEN ON PHONE & TABLET/IPAD LAYOUTS) */}
       {/* ========================================================================= */}
-      <div className="w-full relative hidden md:block">
+      <div className="w-full relative hidden xl:block">
         <BigInteractiveName name={personal?.shortName || "Hashim"} />
       </div>
 
       {/* ========================================================================= */}
       {/* 2. MIDDLE SECTION: MULTI-COLUMN STRUCTURE */}
       {/* ========================================================================= */}
-      <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-14 pt-20 sm:pt-24 md:pt-8 pb-12 sm:pb-16">
+      <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-14 pt-20 sm:pt-24 md:pt-24 lg:pt-24 xl:pt-8 pb-12 sm:pb-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8">
           {/* ------------------------------------------------------------- */}
           {/* COLUMN 1: Hash Logo & Social Profiles */}
@@ -306,7 +306,7 @@ function Footer() {
                   to="/tools"
                   className="inline-flex items-center gap-1 text-xs font-medium text-white/60 hover:text-white transition-colors duration-200"
                 >
-                  <span>View All Tools</span>
+                  <span>Workstation</span>
                   <ArrowUpRight className="w-3.5 h-3.5" />
                 </Link>
               </li>
