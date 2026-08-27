@@ -5,28 +5,22 @@ import {
   BrainCircuit,
   Code2,
   FolderGit2,
-  Sparkles,
   House,
   UserRound,
   Send,
   FileText,
-  Download,
   QrCode,
-  Github,
-  Linkedin,
   Mail,
 } from "lucide-react";
 import { FaLinkedinIn, FaInstagram, FaXTwitter, FaGithub } from "react-icons/fa6";
-import { MdEmail } from "react-icons/md";
-import { IoLocationSharp } from "react-icons/io5";
 
 /**
  * =============================================================================
  *                      PORTFOLIO CONFIGURATION & DATA
  * =============================================================================
- * Update all portfolio details in this single file.
- * All sections (Hero, About, Projects, Skills, Contact, Footer, Navbar)
- * pull their content directly from here.
+ * Single Source of Truth for all portfolio details and content.
+ * All sections (Hero, About, Projects, Skills, Contact, Footer, Navbar, Workstation)
+ * pull their content and settings directly from here.
  * =============================================================================
  */
 
@@ -35,15 +29,16 @@ export const portfolioData = {
   // 1. GENERAL & PERSONAL INFORMATION
   // ==========================================
   personal: {
-  name: "Hashim Malik",
-  shortName: "Hashim",
-  role: "Developer, AI Explorer & Creative",
-  title: "I build, experiment, and figure things out.",
-  email: "hashimzahoor2003@gmail.com",
-  location: "Srinagar, Kashmir",
-  resume: "/resume.pdf",
-  copyrightYear: new Date().getFullYear(),
-},
+    name: "Hashim Malik",
+    shortName: "Hashim",
+    role: "Developer, AI Explorer & Creative",
+    title: "I build, experiment, and figure things out.",
+    email: "hashimzahoor2003@gmail.com",
+    location: "Srinagar, Kashmir",
+    focus: "Building Across Full-Stack, AI & UI/UX",
+    resume: "/resume.pdf",
+    copyrightYear: new Date().getFullYear(),
+  },
 
   // ==========================================
   // 2. SOCIAL PROFILES & EXTERNAL LINKS
@@ -116,10 +111,10 @@ export const portfolioData = {
     // "simple" = minimalist ambient audio sound toggle / mute button
     // "player" = full-fledged vinyl music player with playlist & track navigation
     audioWidgetType: "simple",
-    //Simple
+    // Simple Ambient Mode
     ambientAudioLabel: "Ambient Audio",
     ambientAudio: "/audio/ambient_4.mp3",
-    //Player
+    // Player Mode Vinyl Tracks
     playlist: [
       { id: 1, title: "Resonance", src: "/audio/ambient_1.mp3" },
       { id: 2, title: "Snowfall", src: "/audio/ambient_2.mp3" },
@@ -128,27 +123,26 @@ export const portfolioData = {
     scrollText: "Scroll",
   },
 
- // ==========================================
-// 6. SKILLS MARQUEE
-// ==========================================
-
-skills: [
-  "React.js",
-  "Node.js",
-  "Express.js",
-  "MongoDB",
-  "JavaScript",
-  "Python",
-  "Java",
-  "Computer Vision",
-  "Deep Learning",
-  "Machine Learning",
-  "REST APIs",
-  "Tailwind CSS",
-  "UI/UX Design",
-  "Supabase",
-  "Git & GitHub",
-],
+  // ==========================================
+  // 6. SKILLS MARQUEE
+  // ==========================================
+  skills: [
+    "React.js",
+    "Node.js",
+    "Express.js",
+    "MongoDB",
+    "JavaScript",
+    "Python",
+    "Java",
+    "Computer Vision",
+    "Deep Learning",
+    "Machine Learning",
+    "REST APIs",
+    "Tailwind CSS",
+    "UI/UX Design",
+    "Supabase",
+    "Git & GitHub",
+  ],
 
   // ==========================================
   // 7. ABOUT SECTION
@@ -199,17 +193,17 @@ skills: [
       },
     ],
     timeline: [
-       {
+      {
         id: "edu-1",
         year: "2023 – Present",
         role: "B.Tech in Computer Science & Engineering",
         organization: "Islamic University of Science & Technology, Pulwama",
         badge: "Education",
         description:
-          "Deep focus on Data Structures & Algorithms, Object-Oriented System Design, Database Management Systems, Machine Learning pipelines, Computer architecture and Computer networks",
+          "Deep focus on Data Structures & Algorithms, Object-Oriented System Design, Database Management Systems, Machine Learning pipelines, Computer architecture and Computer networks.",
         tags: ["DSA", "Computer Vision", "Machine Learning", "System Design"],
       },
-       {
+      {
         id: "exp-1",
         year: "2024 – Present",
         role: "UI/UX & Product Designer",
@@ -229,7 +223,6 @@ skills: [
           "Architecting end-to-end full stack web platforms, real-time doctor-patient clinic portals (Zooncare, Dandwoat), autonomous lead generation AI agents, and IoT student safety tracking systems.",
         tags: ["React", "Node.js", "Python", "Supabase", "Flask", "AI Agents"],
       },
-     
     ],
   },
 
@@ -674,13 +667,13 @@ STRICT INSTRUCTIONS:
   },
 
   // ==========================================
-  // 12. WORKSTATION / DIGITAL STUDIO
+  // 13. WORKSTATION / DIGITAL STUDIO
   // ==========================================
   workstation: {
     eyebrow: "DIGITAL STUDIO",
     title: "Workstation",
     subtitle:
-      "Curated standalone software and career acceleration utilities engineered by Hashim Malik.",
+      "A curated suite of practical tools and AI-powered utilities for work, creativity, and everyday tasks.",
     status: "All systems operational",
     isOnline: true,
     tools: [

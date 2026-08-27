@@ -333,7 +333,7 @@ function Footer() {
                 <span>{personal?.location || "Srinagar, Kashmir"}</span>
               </li>
               <li className="text-white/60 pt-0.5">
-                <span>Building Across Full-Stack, AI & UI/UX</span>
+                <span>{personal?.focus || "Building Across Full-Stack, AI & UI/UX"}</span>
               </li>
             </ul>
           </div>

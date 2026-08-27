@@ -17,18 +17,14 @@ function SeamlessBackgroundVideo({ isLoading = false }) {
   const [activeVideo, setActiveVideo] = useState(1);
   const isTransitioning = useRef(false);
   const isVisibleRef = useRef(true);
-  const isTouchRef = useRef(
-    typeof window !== "undefined" &&
-      (window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 768)
-  );
 
   const { hero } = portfolioData;
   const videoSrc = hero?.backgroundVideo || {
-    webm: "/gallery/bg_video_2.webm",
-    mp4: "/gallery/bg_video_2.MP4",
+    webm: "/gallery/bg_video_3.webm",
+    mp4: "/gallery/bg_video_3.MP4",
   };
 
-  // IntersectionObserver: auto-pause video decoding when off-screen to preserve 60-120fps scrolling
+  // IntersectionObserver: auto-pause video decoding when off-screen to preserve performance
   useEffect(() => {
     const el = containerRef.current;
     if (!el || !("IntersectionObserver" in window)) return;
@@ -54,76 +50,68 @@ function SeamlessBackgroundVideo({ isLoading = false }) {
     return () => observer.disconnect();
   }, [activeVideo]);
 
-  // Playback lifecycle & seamless loop
+  // Continuous frame loop for precise, stutter-free 1.0s crossfade
   useEffect(() => {
     const v1 = video1Ref.current;
     const v2 = video2Ref.current;
-    if (!v1) return;
+    if (!v1 || !v2) return;
 
-    // Touch/mobile devices use lightweight native loop on single video
-    if (isTouchRef.current) {
-      v1.loop = true;
-      if (isVisibleRef.current) v1.play().catch(() => {});
-      return;
+    if (activeVideo === 1) {
+      v1.play().catch(() => {});
+    } else {
+      v2.play().catch(() => {});
     }
 
-    if (!v2) return;
-    if (isVisibleRef.current) v1.play().catch(() => {});
+    let rafId;
+    const CROSSFADE_TIME = 1.0; // 1.0s smooth dissolve
 
-    const crossfadeDuration = 0.8;
+    const checkLoop = () => {
+      if (isVisibleRef.current) {
+        const currentVid = activeVideo === 1 ? v1 : v2;
+        const nextVid = activeVideo === 1 ? v2 : v1;
 
-    const handleTimeUpdate1 = () => {
-      if (!v1.duration || !isVisibleRef.current) return;
-      if (v1.currentTime >= v1.duration - crossfadeDuration && !isTransitioning.current) {
-        isTransitioning.current = true;
-        v2.currentTime = 0;
-        v2.play()
-          .then(() => {
-            setActiveVideo(2);
-            setTimeout(() => {
+        if (
+          currentVid.duration &&
+          currentVid.currentTime >= currentVid.duration - CROSSFADE_TIME &&
+          !isTransitioning.current
+        ) {
+          isTransitioning.current = true;
+          nextVid.currentTime = 0;
+          nextVid
+            .play()
+            .then(() => {
+              setActiveVideo(activeVideo === 1 ? 2 : 1);
+              setTimeout(() => {
+                isTransitioning.current = false;
+              }, CROSSFADE_TIME * 1000);
+            })
+            .catch(() => {
               isTransitioning.current = false;
-            }, crossfadeDuration * 1000);
-          })
-          .catch(() => {});
+            });
+        }
       }
+
+      rafId = requestAnimationFrame(checkLoop);
     };
 
-    const handleTimeUpdate2 = () => {
-      if (!v2.duration || !isVisibleRef.current) return;
-      if (v2.currentTime >= v2.duration - crossfadeDuration && !isTransitioning.current) {
-        isTransitioning.current = true;
-        v1.currentTime = 0;
-        v1.play()
-          .then(() => {
-            setActiveVideo(1);
-            setTimeout(() => {
-              isTransitioning.current = false;
-            }, crossfadeDuration * 1000);
-          })
-          .catch(() => {});
-      }
-    };
-
-    v1.addEventListener("timeupdate", handleTimeUpdate1);
-    v2.addEventListener("timeupdate", handleTimeUpdate2);
+    rafId = requestAnimationFrame(checkLoop);
 
     return () => {
-      v1.removeEventListener("timeupdate", handleTimeUpdate1);
-      v2.removeEventListener("timeupdate", handleTimeUpdate2);
+      if (rafId) cancelAnimationFrame(rafId);
     };
-  }, [isLoading]);
+  }, [activeVideo, isLoading]);
 
   return (
     <div
       ref={containerRef}
-      className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0 transform-gpu"
+      className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0 transform-gpu bg-black"
     >
       <video
         ref={video1Ref}
         muted
         playsInline
         preload="auto"
-        className={`absolute inset-0 w-full h-full object-cover object-[25%_center] sm:object-[26%_center] md:object-[28%_center] lg:object-[32%_center] xl:object-center scale-[1.05] transition-opacity duration-700 ease-in-out ${
+        className={`absolute inset-0 w-full h-full object-cover object-[25%_center] sm:object-[26%_center] md:object-[28%_center] lg:object-[32%_center] xl:object-center scale-[1.05] transition-opacity duration-1000 ease-in-out ${
           activeVideo === 1 ? "opacity-100" : "opacity-0"
         }`}
       >
@@ -131,18 +119,14 @@ function SeamlessBackgroundVideo({ isLoading = false }) {
         <source src={videoSrc.mp4} type="video/mp4" />
       </video>
 
-      {/* Dual crossfade video decoder only instantiated on non-touch desktop */}
+      {/* Dual crossfade video instance */}
       <video
         ref={video2Ref}
         muted
         playsInline
-        preload={isTouchRef.current ? "none" : "auto"}
-        className={`absolute inset-0 w-full h-full object-cover object-[25%_center] sm:object-[26%_center] md:object-[28%_center] lg:object-[32%_center] xl:object-center scale-[1.05] transition-opacity duration-700 ease-in-out ${
-          isTouchRef.current
-            ? "hidden"
-            : activeVideo === 2
-            ? "opacity-100"
-            : "opacity-0"
+        preload="auto"
+        className={`absolute inset-0 w-full h-full object-cover object-[25%_center] sm:object-[26%_center] md:object-[28%_center] lg:object-[32%_center] xl:object-center scale-[1.05] transition-opacity duration-1000 ease-in-out ${
+          activeVideo === 2 ? "opacity-100" : "opacity-0"
         }`}
       >
         <source src={videoSrc.webm} type="video/webm" />

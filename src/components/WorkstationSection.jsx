@@ -1,8 +1,11 @@
 import { ArrowUpRight, Wrench } from "lucide-react";
 import { Link } from "react-router-dom";
 import TypewriterText from "./ui/TypewriterText";
+import { portfolioData } from "../data/portfolioData";
 
 export default function WorkstationSection() {
+  const { workstation } = portfolioData;
+
   return (
     <div
       id="Workstation"
@@ -12,7 +15,7 @@ export default function WorkstationSection() {
       <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6 flex-1 min-w-0">
         <div className="flex items-center gap-2.5 shrink-0">
           <span className="font-longsile text-2xl sm:text-3xl md:text-4xl text-white tracking-wide">
-            Workstation
+            {workstation?.title || "Workstation"}
           </span>
           <Wrench className="w-4 h-4 sm:w-5 sm:h-5 text-pAccent shrink-0 animate-pulse" strokeWidth={2.2} />
         </div>
@@ -20,7 +23,13 @@ export default function WorkstationSection() {
         <span className="hidden sm:inline w-px h-5 bg-white/20 shrink-0" />
 
         <p className="font-cormorant italic text-lg sm:text-xl md:text-2xl text-white/80 font-light leading-snug">
-          <TypewriterText text="A curated suite of practical tools and AI-powered utilities for work, creativity, and everyday tasks." cursorClassName="text-pAccent" />
+          <TypewriterText
+            text={
+              workstation?.subtitle ||
+              "A curated suite of practical tools and AI-powered utilities for work, creativity, and everyday tasks."
+            }
+            cursorClassName="text-pAccent"
+          />
         </p>
       </div>
 
