@@ -9,7 +9,6 @@ import Projects from "../components/Projects";
 import WorkstationSection from "../components/WorkstationSection";
 import Footer from "../components/Footer";
 import SkillsMarquee from "../components/SkillsMarquee";
-import CursorFollower from "../components/CursorFollower";
 
 function SeamlessBackgroundVideo({ isLoading = false }) {
   const containerRef = useRef(null);
@@ -160,9 +159,6 @@ export default function HomePage({ isLoading = false, onNavigate }) {
 
   return (
     <main className="relative w-full bg-black text-white selection:bg-pAccent selection:text-secondary">
-      {/* Spring Physics Lime Cursor Follower */}
-      <CursorFollower />
-
       {/* Global Scroll Progress Bar */}
       <ScrollProgress />
 

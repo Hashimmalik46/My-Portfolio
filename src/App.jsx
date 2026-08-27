@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { BrowserRouter, Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import Lenis from "lenis";
 import "lenis/dist/lenis.css";
@@ -15,7 +15,10 @@ import { ThemeProvider } from "./context/ThemeContext";
 function ScrollToTop() {
   const { pathname } = useLocation();
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "instant" });
+    // Only scroll to top when entering tool subpages; preserve homepage scroll on return
+    if (pathname !== "/" && pathname !== "") {
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
   }, [pathname]);
   return null;
 }
@@ -102,23 +105,64 @@ function PortfolioView({ isLoading, setIsLoading }) {
   );
 }
 
-function App() {
-  const [isLoading, setIsLoading] = useState(true);
+function AppContent() {
+  const location = useLocation();
+  const [isLoading, setIsLoading] = useState(() => {
+    // If loaded on a tool route directly, don't show the initial cloud preloader
+    if (typeof window !== "undefined" && window.location.pathname !== "/" && window.location.pathname !== "") {
+      return false;
+    }
+    return true;
+  });
+
+  const isHome = location.pathname === "/" || location.pathname === "";
+  const lastScrollY = useRef(0);
+
+  // Capture scroll position before leaving homepage
+  useEffect(() => {
+    const handleCaptureScroll = (e) => {
+      const anchor = e.target.closest("a[href]");
+      if (anchor) {
+        const href = anchor.getAttribute("href");
+        if (href && !href.startsWith("#") && href !== "/") {
+          lastScrollY.current = window.scrollY;
+        }
+      }
+    };
+    window.addEventListener("click", handleCaptureScroll, { capture: true });
+    return () => window.removeEventListener("click", handleCaptureScroll, { capture: true });
+  }, []);
+
+  // Manage Lenis & scroll restoration when switching between Home and Tools
+  useEffect(() => {
+    if (!isHome) {
+      window.lenis?.stop();
+    } else {
+      window.lenis?.start();
+      if (lastScrollY.current > 0) {
+        requestAnimationFrame(() => {
+          if (window.lenis) {
+            window.lenis.scrollTo(lastScrollY.current, { immediate: true });
+          } else {
+            window.scrollTo({ top: lastScrollY.current, behavior: "instant" });
+          }
+        });
+      }
+    }
+  }, [isHome]);
 
   return (
-    <ThemeProvider>
-      <BrowserRouter>
-        <ScrollToTop />
+    <>
+      <ScrollToTop />
+
+      {/* Persistent PortfolioView: keeps DOM, videos, scroll, and all animations persistent without reloading */}
+      <div style={{ display: isHome ? "block" : "none" }}>
+        <PortfolioView isLoading={isLoading} setIsLoading={setIsLoading} />
+      </div>
+
+      {/* Tool & Workstation Sub-Routes */}
+      {!isHome && (
         <Routes>
-          <Route
-            path="/"
-            element={
-              <PortfolioView
-                isLoading={isLoading}
-                setIsLoading={setIsLoading}
-              />
-            }
-          />
           {/* Workstation Directory */}
           <Route path="/tools" element={<ToolsHub />} />
 
@@ -147,14 +191,19 @@ function App() {
           {/* Fallback to Home */}
           <Route
             path="*"
-            element={
-              <PortfolioView
-                isLoading={isLoading}
-                setIsLoading={setIsLoading}
-              />
-            }
+            element={<ToolsHub />}
           />
         </Routes>
+      )}
+    </>
+  );
+}
+
+function App() {
+  return (
+    <ThemeProvider>
+      <BrowserRouter>
+        <AppContent />
       </BrowserRouter>
     </ThemeProvider>
   );
