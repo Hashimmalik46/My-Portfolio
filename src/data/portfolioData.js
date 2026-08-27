@@ -238,7 +238,7 @@ skills: [
   // ==========================================
   projectsSection: {
     badgeNumber: "02",
-    badgeLabel: "Selected Works",
+    badgeLabel: "Portfolio",
     heading: "Selected Projects",
     subheading:
       "A showcase of full-stack engineering, AI implementations, and production web platforms.",

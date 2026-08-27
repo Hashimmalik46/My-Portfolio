@@ -1,6 +1,6 @@
 import { useForm, ValidationError } from "@formspree/react";
 import { useEffect, useState } from "react";
-import { Send, CheckCircle2, Sparkles, Copy, Check } from "lucide-react";
+import { Send, CheckCircle2, Mail, MessageSquare, Copy, Check } from "lucide-react";
 import TypewriterText from "./ui/TypewriterText";
 import { BorderBeam } from "./ui/border-beam";
 import { MdEmail } from "react-icons/md";
@@ -180,7 +180,7 @@ function Contact() {
                 Send a Direct Message
               </span>
               <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center shadow-sm">
-                <Sparkles className="w-4 h-4 text-pAccent animate-pulse" />
+                <Mail className="w-4 h-4 text-pAccent" />
               </div>
             </div>
 

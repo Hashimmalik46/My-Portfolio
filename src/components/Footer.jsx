@@ -32,9 +32,9 @@ function BigInteractiveName({ name = "Hashim" }) {
   const mouseX = useMotionValue(-1000);
   const mouseY = useMotionValue(-1000);
 
-  // Ultra-smooth, relaxed springs for luxurious slow liquid movement
-  const smoothX = useSpring(mouseX, { stiffness: 45, damping: 20, mass: 1.5 });
-  const smoothY = useSpring(mouseY, { stiffness: 45, damping: 20, mass: 1.5 });
+  // Fast, responsive spring physics following cursor movement across letters in real-time
+  const smoothX = useSpring(mouseX, { stiffness: 600, damping: 40, mass: 0.1 });
+  const smoothY = useSpring(mouseY, { stiffness: 600, damping: 40, mass: 0.1 });
 
   // Tighter, focused radial mask template (180px radius) following cursor smoothly
   const maskImage = useMotionTemplate`radial-gradient(circle 180px at ${smoothX}px ${smoothY}px, black 0%, rgba(0,0,0,0.8) 50%, transparent 100%)`;
@@ -77,11 +77,11 @@ function BigInteractiveName({ name = "Hashim" }) {
           {name}
         </h1>
 
-        {/* 2. Top Spotlight Layer: Ultra-Slow, Cinematic 2.8s Fill/Unfill Transitions */}
+        {/* 2. Top Spotlight Layer: Slow Gradual Opacity Increase with Fast Cursor Tracking */}
         <motion.div
           animate={{ opacity: isHovered ? 1 : 0 }}
           initial={{ opacity: 0 }}
-          transition={{ duration: 2.8, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 1.8, ease: "easeInOut" }}
           className="absolute inset-0 pointer-events-none flex items-center justify-center text-center w-full"
           style={{
             maskImage: maskImage,
@@ -333,7 +333,7 @@ function Footer() {
                 <span>{personal?.location || "Srinagar, Kashmir"}</span>
               </li>
               <li className="text-white/60 pt-0.5">
-                <span>Open for: Full-Stack & AI Roles</span>
+                <span>Building Across Full-Stack, AI & UI/UX</span>
               </li>
             </ul>
           </div>

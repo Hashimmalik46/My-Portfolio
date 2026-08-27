@@ -23,11 +23,19 @@ function ScrollToTop() {
   return null;
 }
 
-function PortfolioView({ isLoading, setIsLoading }) {
+function PortfolioView({ isLoading, setIsLoading, isHome }) {
   const navigate = useNavigate();
 
-  // Smooth scroll (Lenis) initialized only on main portfolio on desktop
+  // Smooth scroll (Lenis) active ONLY on homepage desktop
   useEffect(() => {
+    if (!isHome) {
+      if (window.lenis) {
+        window.lenis.destroy();
+        window.lenis = null;
+      }
+      return;
+    }
+
     const isTouch =
       "ontouchstart" in window ||
       navigator.maxTouchPoints > 0 ||
@@ -79,7 +87,7 @@ function PortfolioView({ isLoading, setIsLoading }) {
       lenis.destroy();
       window.lenis = null;
     };
-  }, []);
+  }, [isHome]);
 
   // Synchronize Lenis state with preloader
   useEffect(() => {
@@ -91,7 +99,7 @@ function PortfolioView({ isLoading, setIsLoading }) {
       }, 400);
       return () => clearTimeout(timer);
     }
-  }, [isLoading]);
+  }, [isLoading, isHome]);
 
   return (
     <>
@@ -133,21 +141,16 @@ function AppContent() {
     return () => window.removeEventListener("click", handleCaptureScroll, { capture: true });
   }, []);
 
-  // Manage Lenis & scroll restoration when switching between Home and Tools
+  // Restore scroll position when returning to Home
   useEffect(() => {
-    if (!isHome) {
-      window.lenis?.stop();
-    } else {
-      window.lenis?.start();
-      if (lastScrollY.current > 0) {
-        requestAnimationFrame(() => {
-          if (window.lenis) {
-            window.lenis.scrollTo(lastScrollY.current, { immediate: true });
-          } else {
-            window.scrollTo({ top: lastScrollY.current, behavior: "instant" });
-          }
-        });
-      }
+    if (isHome && lastScrollY.current > 0) {
+      requestAnimationFrame(() => {
+        if (window.lenis) {
+          window.lenis.scrollTo(lastScrollY.current, { immediate: true });
+        } else {
+          window.scrollTo({ top: lastScrollY.current, behavior: "instant" });
+        }
+      });
     }
   }, [isHome]);
 
@@ -157,7 +160,7 @@ function AppContent() {
 
       {/* Persistent PortfolioView: keeps DOM, videos, scroll, and all animations persistent without reloading */}
       <div style={{ display: isHome ? "block" : "none" }}>
-        <PortfolioView isLoading={isLoading} setIsLoading={setIsLoading} />
+        <PortfolioView isLoading={isLoading} setIsLoading={setIsLoading} isHome={isHome} />
       </div>
 
       {/* Tool & Workstation Sub-Routes */}

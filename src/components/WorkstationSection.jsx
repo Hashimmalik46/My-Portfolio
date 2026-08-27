@@ -20,7 +20,7 @@ export default function WorkstationSection() {
         <span className="hidden sm:inline w-px h-5 bg-white/20 shrink-0" />
 
         <p className="font-cormorant italic text-lg sm:text-xl md:text-2xl text-white/80 font-light leading-snug">
-          <TypewriterText text="Curated standalone career tools & AI utilities engineered for developers." cursorClassName="text-pAccent" />
+          <TypewriterText text="A curated suite of practical tools and AI-powered utilities for work, creativity, and everyday tasks." cursorClassName="text-pAccent" />
         </p>
       </div>
 
