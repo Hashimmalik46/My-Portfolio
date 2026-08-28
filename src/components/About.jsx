@@ -408,12 +408,9 @@ function About() {
                           {item.role}
                         </span>
 
-                        {/* Year Badge with Live Pulse Indicator for Present entries */}
-                        <span className="inline-flex items-center gap-1.5 text-[10px] sm:text-[11px] font-jakarta font-semibold px-2 sm:px-2.5 py-0.5 rounded-full bg-secondary/[0.08] text-secondary/80 border border-secondary/15 group-hover:border-secondary/30 tracking-wide transition-colors shrink-0">
-                          {item.year.includes("Present") && (
-                            <span className="w-1.5 h-1.5 rounded-full bg-pAccent animate-pulse shrink-0" />
-                          )}
-                          <span>{item.year}</span>
+                        {/* Minimal Date Pill */}
+                        <span className="inline-flex items-center text-[10px] sm:text-[11px] font-jakarta font-medium px-2.5 py-0.5 rounded-full bg-secondary/[0.04] text-secondary/60 border border-secondary/[0.08] tracking-normal transition-colors group-hover:text-secondary/80 group-hover:border-secondary/20 shrink-0">
+                          {item.year}
                         </span>
                       </div>
 
