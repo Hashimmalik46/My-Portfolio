@@ -20,8 +20,8 @@ function SeamlessBackgroundVideo({ isLoading = false }) {
 
   const { hero } = portfolioData;
   const videoSrc = hero?.backgroundVideo || {
-    webm: "/gallery/bg_video_3.webm",
     mp4: "/gallery/bg_video_3.mp4",
+    webm: "/gallery/bg_video_3.webm",
   };
 
   // IntersectionObserver: auto-pause video decoding when off-screen to preserve performance
@@ -35,7 +35,7 @@ function SeamlessBackgroundVideo({ isLoading = false }) {
         const v1 = video1Ref.current;
         const v2 = video2Ref.current;
 
-        if (entry.isIntersecting) {
+        if (entry.isIntersecting && !isLoading) {
           if (activeVideo === 1) {
             if (v1) {
               v1.muted = true;
@@ -47,7 +47,7 @@ function SeamlessBackgroundVideo({ isLoading = false }) {
               v2.play().catch(() => {});
             }
           }
-        } else {
+        } else if (!entry.isIntersecting) {
           v1?.pause();
           v2?.pause();
         }
@@ -57,7 +57,7 @@ function SeamlessBackgroundVideo({ isLoading = false }) {
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, [activeVideo]);
+  }, [activeVideo, isLoading]);
 
   // Continuous frame loop for precise, stutter-free 1.0s crossfade
   useEffect(() => {
@@ -65,21 +65,30 @@ function SeamlessBackgroundVideo({ isLoading = false }) {
     const v2 = video2Ref.current;
     if (!v1 || !v2) return;
 
-    if (activeVideo === 1) {
-      v1.muted = true;
-      v1.play().catch(() => {});
-    } else {
-      v2.muted = true;
-      v2.play().catch(() => {});
+    // Start playing as soon as preloader finishes (isLoading becomes false)
+    if (!isLoading && isVisibleRef.current) {
+      if (activeVideo === 1) {
+        v1.muted = true;
+        v1.play().catch(() => {});
+      } else {
+        v2.muted = true;
+        v2.play().catch(() => {});
+      }
     }
 
     let rafId;
     const CROSSFADE_TIME = 1.0; // 1.0s smooth dissolve
 
     const checkLoop = () => {
-      if (isVisibleRef.current) {
+      if (isVisibleRef.current && !isLoading) {
         const currentVid = activeVideo === 1 ? v1 : v2;
         const nextVid = activeVideo === 1 ? v2 : v1;
+
+        // Auto-resume if video paused on mobile
+        if (currentVid && currentVid.paused && currentVid.readyState >= 2) {
+          currentVid.muted = true;
+          currentVid.play().catch(() => {});
+        }
 
         if (
           currentVid.duration &&
@@ -93,7 +102,7 @@ function SeamlessBackgroundVideo({ isLoading = false }) {
           nextVid
             .play()
             .then(() => {
-              setActiveVideo(activeVideo === 1 ? 2 : 1);
+              setActiveVideo((prev) => (prev === 1 ? 2 : 1));
               setTimeout(() => {
                 isTransitioning.current = false;
               }, CROSSFADE_TIME * 1000);
@@ -149,8 +158,8 @@ function SeamlessBackgroundVideo({ isLoading = false }) {
           activeVideo === 1 ? "opacity-100" : "opacity-0"
         }`}
       >
-        <source src={videoSrc.webm} type="video/webm" />
         <source src={videoSrc.mp4} type="video/mp4" />
+        <source src={videoSrc.webm} type="video/webm" />
       </video>
 
       {/* Dual crossfade video instance */}
@@ -163,8 +172,8 @@ function SeamlessBackgroundVideo({ isLoading = false }) {
           activeVideo === 2 ? "opacity-100" : "opacity-0"
         }`}
       >
-        <source src={videoSrc.webm} type="video/webm" />
         <source src={videoSrc.mp4} type="video/mp4" />
+        <source src={videoSrc.webm} type="video/webm" />
       </video>
     </div>
   );

@@ -60,7 +60,10 @@ export const portfolioData = {
     topTag: "PORTFOLIO",
     scrollPrompt: "SCROLL",
     durationSeconds: 6,
-    videoSrc: "/gallery/clouds.webm",
+    videoSrc: {
+      mp4: "/gallery/clouds.mp4",
+      webm: "/gallery/clouds.webm",
+    },
   },
 
   // ==========================================
@@ -83,8 +86,8 @@ export const portfolioData = {
     greeting: "Hi, I'm",
     name: "Hashim Malik",
     backgroundVideo: {
+      mp4: "/gallery/bg_video_3.mp4",
       webm: "/gallery/bg_video_3.webm",
-      mp4: "/gallery/bg_video_3.MP4",
     },
     tagline: {
       prefix: "A software and design enthusiast blending",
