@@ -140,11 +140,14 @@ export default function Projects() {
                         </span>
                       </div>
 
-                      {/* Project Title: Scroll-linked word-by-word illumination */}
+                      {/* Project Title: Static on phones, ScrollFade on tablet/desktop */}
+                      <h3 className="sm:hidden font-clashM text-xl text-white tracking-tight leading-snug">
+                        {project.title}
+                      </h3>
                       <ScrollFadeText
                         as="h3"
                         text={project.title}
-                        className="font-clashM text-xl sm:text-2xl md:text-3xl lg:text-[2.65rem] text-white tracking-tight leading-snug sm:leading-[1.12]"
+                        className="hidden sm:flex font-clashM text-xl sm:text-2xl md:text-3xl lg:text-[2.65rem] text-white tracking-tight leading-snug sm:leading-[1.12]"
                         activeColor="text-white"
                       />
 

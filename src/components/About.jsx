@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Sparkles, ArrowUpRight, Briefcase, UserRound } from "lucide-react";
+import { ArrowUpRight, Briefcase, UserRound } from "lucide-react";
 import ArchitecturalBackground from "./ui/ArchitecturalBackground";
 import ScrollFadeText from "./ui/ScrollFadeText";
 import {
@@ -8,7 +8,6 @@ import {
   useSpring,
   useTransform,
   useScroll,
-  AnimatePresence,
 } from "motion/react";
 import { portfolioData } from "../data/portfolioData";
 
@@ -83,49 +82,24 @@ function ScrollTimelineDot({ isFirst, idx, progress }) {
   );
 }
 
-
-
 function AboutImageCard({ imageSrc, imageCaption, imageTag }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-      className="relative w-full aspect-[4/3] sm:aspect-[16/10] md:aspect-[4/3] rounded-3xl overflow-hidden bg-white/40 border border-secondary/10 shadow-[0_20px_50px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04)] group select-none isolate sm:hover:-translate-y-1 transition-all duration-300"
-    >
-      {/* 1. Zoom Image Reveal on Scroll */}
-      <motion.img
+    <div className="relative w-full aspect-[4/3] sm:aspect-[16/10] md:aspect-[4/3] rounded-3xl overflow-hidden bg-white border border-secondary/10 shadow-[0_20px_50px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04)] group select-none isolate sm:hover:-translate-y-1 transition-all duration-300">
+      {/* 1. Base Portrait Image */}
+      <img
         src={imageSrc}
         alt={imageCaption || "Hashim Malik"}
         loading="lazy"
         decoding="async"
-        initial={{ scale: 1.08 }}
-        whileInView={{ scale: 1 }}
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
         className="w-full h-full object-cover object-center sm:group-hover:scale-105 transition-transform duration-700 ease-out"
       />
 
-      {/* 2. Luxury Curtain Wipe Shutter with Glowing Lime Accent Edge */}
-      <motion.div
-        initial={{ scaleY: 1 }}
-        whileInView={{ scaleY: 0 }}
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration: 0.85, ease: [0.77, 0, 0.175, 1], delay: 0.05 }}
-        style={{ originY: 0 }}
-        className="absolute inset-0 z-30 bg-[#0d0e15] pointer-events-none overflow-hidden"
-      >
-        {/* Glowing Lime Leading Tracer Line */}
-        <div className="absolute bottom-0 inset-x-0 h-[2.5px] bg-pAccent shadow-[0_0_14px_#a8da22]" />
-      </motion.div>
-
-      {/* 3. Subtle Bottom-Only Scrim for Watermark Legibility */}
+      {/* 2. Subtle Bottom-Only Scrim for Watermark Legibility */}
       {imageCaption && (
         <div className="absolute bottom-0 inset-x-0 h-20 bg-gradient-to-t from-black/45 via-black/15 to-transparent pointer-events-none z-10" />
       )}
 
-      {/* 4. Top-Right Glass Badge */}
+      {/* 3. Top-Right Glass Badge */}
       {imageTag && (
         <div className="absolute top-3 sm:top-3.5 right-3 sm:right-3.5 z-20 pointer-events-none">
           <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-black/60 backdrop-blur-xl border border-white/20 text-white/95 shadow-lg">
@@ -137,7 +111,7 @@ function AboutImageCard({ imageSrc, imageCaption, imageTag }) {
         </div>
       )}
 
-      {/* 5. Bottom-Left Editorial Signature Watermark */}
+      {/* 4. Bottom-Left Editorial Signature Watermark */}
       {imageCaption && (
         <div className="absolute bottom-3.5 sm:bottom-4 left-3.5 sm:left-4 z-20 pointer-events-none">
           <div className="flex items-center gap-2">
@@ -148,7 +122,29 @@ function AboutImageCard({ imageSrc, imageCaption, imageTag }) {
           </div>
         </div>
       )}
-    </motion.div>
+    </div>
+  );
+}
+
+function PaperGrainOverlay() {
+  return (
+    <div
+      aria-hidden="true"
+      className="absolute inset-0 pointer-events-none rounded-[inherit] overflow-hidden opacity-[0.04] mix-blend-multiply z-0"
+    >
+      <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+        <filter id="paper-noise-pattern">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.75"
+            numOctaves="3"
+            stitchTiles="stitch"
+          />
+          <feColorMatrix type="saturate" values="0" />
+        </filter>
+        <rect width="100%" height="100%" filter="url(#paper-noise-pattern)" />
+      </svg>
+    </div>
   );
 }
 
@@ -183,13 +179,7 @@ function About() {
 
       <div className="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-12 gap-10 items-start relative z-10">
         {/* Left Column: Heading, Bio & Metrics */}
-        <motion.div
-          initial={{ opacity: 0, x: -30 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="lg:col-span-5 flex flex-col gap-6 lg:sticky lg:top-28"
-        >
+        <div className="lg:col-span-5 flex flex-col gap-6 lg:sticky lg:top-28">
           {/* Editorial Eyebrow */}
           <div className="flex items-center gap-3">
             <span className="font-clashM text-xs px-2.5 py-0.5 rounded-full bg-secondary text-pAccent tracking-[0.2em] uppercase font-bold shadow-sm">
@@ -206,7 +196,7 @@ function About() {
             {about.heading}
           </h2>
 
-          {/* Portrait Photo Card with Progressive Blur-Up & Loading Shimmer */}
+          {/* Portrait Photo Card */}
           {(about.image || about.avatar) && (
             <AboutImageCard
               imageSrc={about.image || about.avatar}
@@ -225,58 +215,59 @@ function About() {
             {about.bio}
           </p>
 
+          {/* Hand-Drawn Scribble Divider */}
+          <div className="w-full py-1 overflow-hidden select-none pointer-events-none">
+            <svg
+              viewBox="0 0 360 12"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-full h-3 text-secondary/25"
+              preserveAspectRatio="none"
+            >
+              <path
+                d="M 2 6 C 22 1.5, 42 10.5, 65 5.5 C 88 1, 110 11, 135 6 C 160 1.5, 182 10.5, 205 5.5 C 228 1, 250 11, 275 6 C 300 1.5, 322 10.5, 345 5.5 C 352 3.5, 356 8, 358 6"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </div>
+
           {/* Metrics */}
-          <div className="grid grid-cols-3 gap-3 pt-6 border-t border-secondary/15">
+          <div className="grid grid-cols-3 gap-3 pt-1">
             {about.stats.map((s, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.2 + idx * 0.1 }}
-                className="flex flex-col"
-              >
+              <div key={idx} className="flex flex-col">
                 <span className="font-clash text-xl sm:text-2xl font-bold text-secondary tracking-tight">
                   <CounterUp value={s.value} />
                 </span>
                 <span className="font-jakarta text-[9px] sm:text-[10px] text-secondary/55 uppercase tracking-wider mt-0.5 font-medium">
                   {s.label}
                 </span>
-              </motion.div>
+              </div>
             ))}
           </div>
+        </div>
 
-        </motion.div>
-
-        {/* Right Column: Porcelain Bento Grid */}
+        {/* Right Column: Tactile Paper Bento Grid */}
         <div className="lg:col-span-7 flex flex-col gap-5">
-
-          {/* 2x2 Specialized Domain Cards with Staggered Parallax Float */}
+          {/* 2x2 Specialized Domain Paper Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {about.domainCards.map((item, idx) => {
               const IconComp = item.icon;
 
               return (
-                <motion.div
+                <div
                   key={idx}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.15 }}
-                  transition={{
-                    duration: 0.6,
-                    delay: idx * 0.06,
-                    ease: [0.16, 1, 0.3, 1],
-                  }}
-                  className="group relative bg-white border border-secondary/10 hover:border-secondary/25 rounded-2xl p-5 flex flex-col justify-between shadow-[0_10px_30px_rgba(0,0,0,0.04),0_1px_2px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.08)] sm:hover:-translate-y-1 transition-all duration-300"
+                  className="group relative bg-[#FAF8F5] border border-secondary/12 hover:border-secondary/25 rounded-2xl p-5 flex flex-col justify-between shadow-[0_12px_32px_rgba(28,25,23,0.05),0_1px_3px_rgba(28,25,23,0.03),inset_0_1px_0_rgba(255,255,255,0.95)] hover:shadow-[0_20px_45px_rgba(28,25,23,0.08)] sm:hover:-translate-y-1 transition-all duration-300 overflow-hidden"
                 >
-                  <div>
-                    <motion.div
-                      whileHover={{ rotate: 8, scale: 1.1 }}
-                      transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                      className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center mb-3.5 shadow-sm"
-                    >
+                  {/* Paper Fiber Texture Layer */}
+                  <PaperGrainOverlay />
+
+                  <div className="relative z-10">
+                    <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center mb-3.5 shadow-sm">
                       <IconComp className="w-5 h-5 text-pAccent" />
-                    </motion.div>
+                    </div>
                     <h3 className="font-clash text-base md:text-lg font-medium text-secondary mb-1.5 group-hover:text-black transition-colors">
                       {item.title}
                     </h3>
@@ -285,103 +276,98 @@ function About() {
                     </p>
                   </div>
 
-                  <div className="flex items-center gap-1 mt-5 text-[11px] uppercase tracking-wider text-secondary/60 group-hover:text-secondary transition-colors font-medium">
+                  <div className="relative z-10 flex items-center gap-1 mt-5 text-[11px] uppercase tracking-wider text-secondary/60 group-hover:text-secondary transition-colors font-medium">
                     <span>{item.tag || "Domain"}</span>
                     <ArrowUpRight className="w-3.5 h-3.5 text-pAccent group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                   </div>
-                </motion.div>
+                </div>
               );
             })}
           </div>
 
-          {/* Career & Academic Timeline */}
+          {/* Career & Academic Timeline (Tactile Parchment Card) */}
           {about.timeline && about.timeline.length > 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.15 }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="relative bg-white border border-secondary/10 hover:border-secondary/20 rounded-2xl sm:rounded-3xl p-5 sm:p-7 md:p-8 shadow-[0_20px_50px_rgba(0,0,0,0.06),0_1px_3px_rgba(0,0,0,0.04)] transition-all duration-300"
-            >
-              <div className="flex items-center justify-between gap-3 mb-6 pb-4 border-b border-secondary/10">
-                <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
-                  <div className="w-8 h-8 rounded-xl bg-secondary flex items-center justify-center shadow-sm shrink-0">
-                    <Briefcase className="w-4 h-4 text-pAccent" />
+            <div className="relative bg-[#FAF8F5] border border-secondary/12 hover:border-secondary/22 rounded-2xl sm:rounded-3xl p-5 sm:p-7 md:p-8 shadow-[0_20px_50px_rgba(28,25,23,0.06),0_1px_3px_rgba(28,25,23,0.04),inset_0_1px_0_rgba(255,255,255,0.95)] transition-all duration-300 overflow-hidden">
+              {/* Paper Fiber Texture Layer */}
+              <PaperGrainOverlay />
+
+              <div className="relative z-10">
+                <div className="flex items-center justify-between gap-3 mb-6 pb-4 border-b border-secondary/10">
+                  <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                    <div className="w-8 h-8 rounded-xl bg-secondary flex items-center justify-center shadow-sm shrink-0">
+                      <Briefcase className="w-4 h-4 text-pAccent" />
+                    </div>
+                    <h3 className="font-clash text-base sm:text-lg md:text-xl font-bold text-secondary tracking-tight truncate">
+                      Journey & Milestones
+                    </h3>
                   </div>
-                  <h3 className="font-clash text-base sm:text-lg md:text-xl font-bold text-secondary tracking-tight truncate">
-                    Journey & Milestones
-                  </h3>
-                </div>
-                <span className="hidden xs:inline-flex items-center text-[10px] sm:text-[11px] font-jakarta tracking-[0.15em] uppercase text-secondary/50 font-semibold px-2.5 py-1 rounded-lg bg-secondary/[0.04] border border-secondary/10 shrink-0">
-                  Experience & Education
-                </span>
-              </div>
-
-              <div
-                ref={timelineRef}
-                className="relative ml-1.5 sm:ml-3 pl-4 sm:pl-6 space-y-4 sm:space-y-5"
-              >
-                {/* Vertical Timeline Track (Scroll-Driven Growth) */}
-                <div className="absolute left-0 top-3 bottom-3 w-[2px] bg-secondary/15 rounded-full overflow-hidden">
-                  {/* Scroll-Driven Dynamic Lime Beam */}
-                  <motion.div
-                    style={{
-                      scaleY: smoothScaleY,
-                      originY: 0,
-                    }}
-                    className="w-full h-full bg-gradient-to-b from-pAccent via-[#a8da22] to-pAccent shadow-[0_0_8px_#a8da22]"
-                  />
+                  <span className="hidden xs:inline-flex items-center text-[10px] sm:text-[11px] font-jakarta tracking-[0.15em] uppercase text-secondary/50 font-semibold px-2.5 py-1 rounded-lg bg-secondary/[0.04] border border-secondary/10 shrink-0">
+                    Experience & Education
+                  </span>
                 </div>
 
-                {about.timeline.map((item, idx) => {
-                  const isFirst = idx === 0;
-
-                  return (
+                <div
+                  ref={timelineRef}
+                  className="relative ml-1.5 sm:ml-3 pl-4 sm:pl-6 space-y-4 sm:space-y-5"
+                >
+                  {/* Vertical Timeline Track (Scroll-Driven Growth) */}
+                  <div className="absolute left-0 top-3 bottom-3 w-[2px] bg-secondary/15 rounded-full overflow-hidden">
+                    {/* Scroll-Driven Dynamic Lime Beam */}
                     <motion.div
-                      key={item.id || idx}
-                      initial={{ opacity: 0, x: -15 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.5, delay: idx * 0.12 }}
-                      className="relative group"
-                    >
-                      {/* Timeline Node Dot (Scroll-linked illumination) */}
-                      <div className="absolute -left-4 sm:-left-6 top-4 -translate-x-1/2 z-10 flex items-center justify-center pointer-events-none">
-                        <ScrollTimelineDot
-                          isFirst={isFirst}
-                          idx={idx}
-                          progress={scrollYProgress}
-                          total={about.timeline.length}
-                        />
-                      </div>
+                      style={{
+                        scaleY: smoothScaleY,
+                        originY: 0,
+                      }}
+                      className="w-full h-full bg-gradient-to-b from-pAccent via-[#a8da22] to-pAccent shadow-[0_0_8px_#a8da22]"
+                    />
+                  </div>
 
-                      {/* Milestone Card */}
-                      <div className="rounded-2xl p-4 sm:p-5 bg-c1/40 hover:bg-c1/75 border border-secondary/8 hover:border-secondary/20 transition-all duration-300 shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
-                        {/* Top Header Row: Role & Year Pill */}
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-3 mb-2">
-                          <h4 className="font-clash text-base sm:text-lg font-semibold text-secondary group-hover:text-black transition-colors leading-snug">
-                            {item.role}
-                          </h4>
-                          <span className="self-start sm:self-auto inline-flex items-center text-[10px] sm:text-[11px] font-jakarta font-semibold px-2.5 py-0.5 rounded-full bg-secondary/8 text-secondary/80 border border-secondary/10 tracking-normal shrink-0">
-                            {item.year}
-                          </span>
+                  {about.timeline.map((item, idx) => {
+                    const isFirst = idx === 0;
+
+                    return (
+                      <div
+                        key={item.id || idx}
+                        className="relative group"
+                      >
+                        {/* Timeline Node Dot (Scroll-linked illumination) */}
+                        <div className="absolute -left-4 sm:-left-6 top-4 -translate-x-1/2 z-10 flex items-center justify-center pointer-events-none">
+                          <ScrollTimelineDot
+                            isFirst={isFirst}
+                            idx={idx}
+                            progress={scrollYProgress}
+                            total={about.timeline.length}
+                          />
                         </div>
 
-                        {/* Organization Subtitle */}
-                        <div className="text-xs sm:text-[13px] font-medium font-jakarta text-secondary/70 mb-2.5">
-                          {item.organization}
-                        </div>
+                        {/* Milestone Card with Inset Paper Tone */}
+                        <div className="relative rounded-2xl p-4 sm:p-5 bg-[#F4F0E8]/70 hover:bg-[#F4F0E8] border border-secondary/8 hover:border-secondary/18 transition-all duration-300 shadow-[0_2px_8px_rgba(28,25,23,0.02),inset_0_1px_0_rgba(255,255,255,0.8)] overflow-hidden">
+                          {/* Top Header Row: Role & Year Pill */}
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-3 mb-2">
+                            <h4 className="font-clash text-base sm:text-lg font-semibold text-secondary group-hover:text-black transition-colors leading-snug">
+                              {item.role}
+                            </h4>
+                            <span className="self-start sm:self-auto inline-flex items-center text-[10px] sm:text-[11px] font-jakarta font-semibold px-2.5 py-0.5 rounded-full bg-secondary/8 text-secondary/80 border border-secondary/10 tracking-normal shrink-0">
+                              {item.year}
+                            </span>
+                          </div>
 
-                        {/* Description: Clean readable body copy */}
-                        <p className="text-xs sm:text-[13px] text-secondary/65 font-jakarta leading-relaxed font-normal">
-                          {item.description}
-                        </p>
+                          {/* Organization Subtitle */}
+                          <div className="text-xs sm:text-[13px] font-medium font-jakarta text-secondary/70 mb-2.5">
+                            {item.organization}
+                          </div>
+
+                          {/* Description: Clean readable body copy */}
+                          <p className="text-xs sm:text-[13px] text-secondary/65 font-jakarta leading-relaxed font-normal">
+                            {item.description}
+                          </p>
+                        </div>
                       </div>
-                    </motion.div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
-            </motion.div>
+            </div>
           )}
         </div>
       </div>
