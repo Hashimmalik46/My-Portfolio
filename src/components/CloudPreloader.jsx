@@ -29,13 +29,7 @@ export default function CloudPreloader({ onStartReveal }) {
   const topTag = preloader?.topTag || "PORTFOLIO";
   const scrollPrompt = preloader?.scrollPrompt || "SCROLL";
   const durationSeconds = preloader?.durationSeconds ?? 6;
-  const videoSources =
-    typeof preloader?.videoSrc === "object"
-      ? preloader.videoSrc
-      : {
-          mp4: "/gallery/clouds.mp4",
-          webm: typeof preloader?.videoSrc === "string" ? preloader.videoSrc : "/gallery/clouds.webm",
-        };
+  const videoSrc = preloader?.videoSrc || "/gallery/clouds.webm";
 
   const handleTrigger = useCallback(() => {
     if (hasTriggeredRef.current) return;
@@ -44,15 +38,6 @@ export default function CloudPreloader({ onStartReveal }) {
 
     // Keep scroll position firmly at top
     window.scrollTo({ top: 0, behavior: "instant" });
-
-    // Directly trigger hero background video playback inside the user's touch gesture
-    try {
-      const heroVideos = document.querySelectorAll("#Home video");
-      heroVideos.forEach((vid) => {
-        vid.muted = true;
-        vid.play().catch(() => {});
-      });
-    } catch (_) {}
 
     // Notify parent immediately for synchronized reveal
     if (onStartReveal) onStartReveal();
@@ -72,10 +57,6 @@ export default function CloudPreloader({ onStartReveal }) {
   useEffect(() => {
     const video = videoRef.current;
     if (video) {
-      video.muted = true;
-      video.defaultMuted = true;
-      video.playsInline = true;
-      video.load();
       video.play().catch(() => {});
       if (video.readyState >= 2) {
         setIsVideoReady(true);
@@ -104,7 +85,7 @@ export default function CloudPreloader({ onStartReveal }) {
     const pixelBlockSize = 2.2;
 
     const render = () => {
-      if (video && (video.readyState >= 1 || video.currentTime > 0)) {
+      if (video.readyState >= 2) {
         setIsVideoReady(true);
         const vw = video.videoWidth || 1280;
         const vh = video.videoHeight || 720;
@@ -117,9 +98,7 @@ export default function CloudPreloader({ onStartReveal }) {
         }
 
         ctx.imageSmoothingEnabled = false;
-        try {
-          ctx.drawImage(video, 0, 0, targetW, targetH);
-        } catch (_) {}
+        ctx.drawImage(video, 0, 0, targetW, targetH);
       }
       animId = requestAnimationFrame(render);
     };
@@ -198,6 +177,7 @@ export default function CloudPreloader({ onStartReveal }) {
       {/* Video element (Active in DOM for decoder playback) */}
       <video
         ref={videoRef}
+        src={videoSrc}
         autoPlay
         loop
         muted
@@ -207,10 +187,7 @@ export default function CloudPreloader({ onStartReveal }) {
         onCanPlay={() => setIsVideoReady(true)}
         onEnded={handleTrigger}
         className="absolute inset-0 w-full h-full object-cover object-center scale-[1.02] pointer-events-none opacity-0"
-      >
-        <source src={videoSources.mp4} type="video/mp4" />
-        <source src={videoSources.webm} type="video/webm" />
-      </video>
+      />
 
       {/* Real-time Subtle Pixelated Render Canvas */}
       <canvas

@@ -59,10 +59,8 @@ export const portfolioData = {
     subtitle: "Welcome to HashVerse",
     topTag: "PORTFOLIO",
     scrollPrompt: "SCROLL",
-    videoSrc: {
-      mp4: "/gallery/clouds.mp4",
-      webm: "/gallery/clouds.webm",
-    },
+    durationSeconds: 6,
+    videoSrc: "/gallery/clouds.webm",
   },
 
   // ==========================================
@@ -86,7 +84,7 @@ export const portfolioData = {
     name: "Hashim Malik",
     backgroundVideo: {
       webm: "/gallery/bg_video_3.webm",
-      mp4: "/gallery/bg_video_3.mp4",
+      mp4: "/gallery/bg_video_3.MP4",
     },
     tagline: {
       prefix: "A software and design enthusiast blending",
