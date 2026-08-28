@@ -29,8 +29,7 @@ export default function CloudPreloader({ onStartReveal }) {
   const topTag = preloader?.topTag || "PORTFOLIO";
   const scrollPrompt = preloader?.scrollPrompt || "SCROLL";
   const durationSeconds = preloader?.durationSeconds ?? 6;
-  const rawVideoSrc = preloader?.videoSrc || "/gallery/clouds.webm";
-  const videoSrc = typeof rawVideoSrc === "string" ? rawVideoSrc : (rawVideoSrc?.mp4 || rawVideoSrc?.webm);
+  const videoSrc = preloader?.videoSrc || "/gallery/clouds.webm";
 
   const handleTrigger = useCallback(() => {
     if (hasTriggeredRef.current) return;
