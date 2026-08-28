@@ -18,7 +18,7 @@ export default function ScrollFadeText({
   text,
   className = "",
   activeColor = "text-secondary",
-  offset = ["start 92%", "start 55%"],
+  offset = ["start 96%", "start 68%"],
 }) {
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
@@ -34,8 +34,8 @@ export default function ScrollFadeText({
       className={`flex flex-wrap gap-x-2 gap-y-1 ${className}`}
     >
       {words.map((word, i) => {
-        const start = i / words.length;
-        const end = Math.min(1, start + 1.2 / words.length);
+        const start = (i / words.length) * 0.75;
+        const end = Math.min(1, start + 0.3);
         return (
           <ScrollFadeWord
             key={i}

@@ -6,8 +6,8 @@ import React from "react";
  * Features:
  * - Subtle architectural grid pattern with micro-crosshair intersections
  * - Smooth ambient radial glows tailored for light or dark backgrounds
- * - Faint gradient-faded outline typography watermark (crystal sharp, zero blur)
- * - Controlled density of glowing lime-green intersection nodes (minimal vs extended)
+ * - Faint gradient-faded outline typography watermark
+ * - Ultra-subtle, non-distracting ambient pinpoint dots at selected intersections
  */
 export default function ArchitecturalBackground({
   theme = "light", // 'light' | 'dark'
@@ -17,6 +17,11 @@ export default function ArchitecturalBackground({
 }) {
   const isDark = theme === "dark";
   const isExtended = density === "extended";
+
+  // Breathing pinpoint dot capped at max 80% brightness
+  const dotClass = isDark
+    ? "w-1.5 h-1.5 rounded-full bg-[#a8da22]/75 shadow-[0_0_4px_rgba(168,218,34,0.35)] opacity-80 animate-pulse"
+    : "w-1.5 h-1.5 rounded-full bg-[#a8da22]/75 shadow-[0_0_4px_rgba(168,218,34,0.25)] opacity-80 animate-pulse";
 
   return (
     <div
@@ -115,68 +120,53 @@ export default function ArchitecturalBackground({
         {watermarkText}
       </div>
 
-      {/* 4. Minimal Glowing Lime-Green Points (Always present in all sections) */}
+      {/* 4. Minimal Soft Pinpoint Dots (Subtle ambient presence) */}
       {/* Node 1: Top-Left Region */}
       <div className="absolute top-[160px] left-[80px] sm:left-[160px] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
-        <span className="w-1.5 h-1.5 rounded-full bg-pAccent border border-white/40 shadow-[0_0_8px_#a8da22,0_0_14px_rgba(168,218,34,0.55)]" />
+        <span className={dotClass} />
       </div>
 
       {/* Node 2: Top-Right Region */}
       <div className="absolute top-[240px] right-[80px] sm:right-[160px] translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
-        <span className="w-1.5 h-1.5 rounded-full bg-pAccent border border-white/40 shadow-[0_0_8px_#a8da22,0_0_14px_rgba(168,218,34,0.55)] animate-pulse" />
+        <span className={dotClass} />
       </div>
 
       {/* Node 3: Bottom-Right Region */}
       <div className="absolute bottom-[240px] right-[80px] sm:right-[240px] translate-x-1/2 translate-y-1/2 flex items-center justify-center">
-        <span className="w-1.5 h-1.5 rounded-full bg-pAccent border border-white/40 shadow-[0_0_8px_#a8da22,0_0_14px_rgba(168,218,34,0.5)]" />
+        <span className={dotClass} />
       </div>
 
       {/* Node 4: Bottom-Left Region */}
       <div className="absolute bottom-[160px] left-[80px] sm:left-[160px] -translate-x-1/2 translate-y-1/2 hidden sm:flex items-center justify-center">
-        <span className="w-1.5 h-1.5 rounded-full bg-pAccent border border-white/40 shadow-[0_0_8px_#a8da22,0_0_14px_rgba(168,218,34,0.45)] animate-pulse" />
+        <span className={dotClass} />
       </div>
 
       {/* 5. Extended Density Nodes (Only enabled when density="extended", e.g. for Projects) */}
       {isExtended && (
         <>
-          {/* Node 5: Upper Mid-Left (480px from top) */}
+          {/* Node 5: Upper Mid-Left */}
           <div className="absolute top-[480px] left-[80px] sm:left-[240px] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
-            <span className="w-1.5 h-1.5 rounded-full bg-pAccent border border-white/40 shadow-[0_0_8px_#a8da22,0_0_14px_rgba(168,218,34,0.45)]" />
+            <span className={dotClass} />
           </div>
 
-          {/* Node 6: Upper Mid-Right (560px from top) */}
+          {/* Node 6: Upper Mid-Right */}
           <div className="absolute top-[560px] right-[80px] sm:right-[240px] translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
-            <span className="w-1.5 h-1.5 rounded-full bg-pAccent border border-white/40 shadow-[0_0_8px_#a8da22,0_0_14px_rgba(168,218,34,0.55)] animate-pulse" />
+            <span className={dotClass} />
           </div>
 
-          {/* Node 7: 25% Scroll Margin Left */}
-          <div className="absolute top-[25%] left-[60px] sm:left-[120px] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
-            <span className="w-1.5 h-1.5 rounded-full bg-pAccent border border-white/40 shadow-[0_0_8px_#a8da22,0_0_14px_rgba(168,218,34,0.5)]" />
+          {/* Node 7: 35% Scroll Margin Right */}
+          <div className="absolute top-[35%] right-[60px] sm:right-[140px] translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
+            <span className={dotClass} />
           </div>
 
-          {/* Node 8: 38% Scroll Margin Right */}
-          <div className="absolute top-[38%] right-[60px] sm:right-[140px] translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
-            <span className="w-1.5 h-1.5 rounded-full bg-pAccent border border-white/40 shadow-[0_0_8px_#a8da22,0_0_14px_rgba(168,218,34,0.55)] animate-pulse" />
+          {/* Node 8: 55% Mid-Section Left */}
+          <div className="absolute top-[55%] left-[80px] sm:left-[180px] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
+            <span className={dotClass} />
           </div>
 
-          {/* Node 9: 50% Mid-Section Left */}
-          <div className="absolute top-[50%] left-[80px] sm:left-[180px] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
-            <span className="w-1.5 h-1.5 rounded-full bg-pAccent border border-white/40 shadow-[0_0_8px_#a8da22,0_0_14px_rgba(168,218,34,0.5)]" />
-          </div>
-
-          {/* Node 10: 62% Lower Mid-Section Right */}
-          <div className="absolute top-[62%] right-[80px] sm:right-[200px] translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
-            <span className="w-1.5 h-1.5 rounded-full bg-pAccent border border-white/40 shadow-[0_0_8px_#a8da22,0_0_14px_rgba(168,218,34,0.55)] animate-pulse" />
-          </div>
-
-          {/* Node 11: 75% Lower Section Left */}
-          <div className="absolute top-[75%] left-[60px] sm:left-[140px] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
-            <span className="w-1.5 h-1.5 rounded-full bg-pAccent border border-white/40 shadow-[0_0_8px_#a8da22,0_0_14px_rgba(168,218,34,0.5)]" />
-          </div>
-
-          {/* Node 12: 85% Near-Bottom Right */}
-          <div className="absolute top-[85%] right-[60px] sm:right-[160px] translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
-            <span className="w-1.5 h-1.5 rounded-full bg-pAccent border border-white/40 shadow-[0_0_8px_#a8da22,0_0_14px_rgba(168,218,34,0.55)] animate-pulse" />
+          {/* Node 9: 75% Lower Section Right */}
+          <div className="absolute top-[75%] right-[80px] sm:right-[200px] translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
+            <span className={dotClass} />
           </div>
         </>
       )}

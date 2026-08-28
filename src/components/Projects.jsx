@@ -9,11 +9,11 @@ function ProjectImageWipe({ src, alt, link }) {
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start 92%", "start 40%"],
+    offset: ["start 88%", "start 45%"],
   });
 
   // Scroll-controlled downward curtain wipe
-  const curtainY = useTransform(scrollYProgress, [0, 1], ["0%", "102%"]);
+  const curtainY = useTransform(scrollYProgress, [0, 1], ["0%", "105%"]);
 
   return (
     <a
@@ -38,7 +38,7 @@ function ProjectImageWipe({ src, alt, link }) {
       {/* Scroll-Driven Wipe Down Curtain with Signature Lime Trailing Edge */}
       <motion.div
         style={{ y: curtainY }}
-        className="absolute inset-0 bg-[#090a0f] pointer-events-none z-20 border-b-2 border-pAccent/70 shadow-[0_4px_16px_rgba(168,218,34,0.4)] will-change-transform"
+        className="absolute inset-0 bg-[#090a0f] pointer-events-none z-20 border-b-2 border-pAccent/80 shadow-[0_4px_16px_rgba(168,218,34,0.45)] will-change-transform"
       />
     </a>
   );
