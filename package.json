@@ -12,8 +12,6 @@
   "dependencies": {
     "@fontsource-variable/geist": "^5.2.8",
     "@formspree/react": "^3.0.0",
-    "@imgly/background-removal": "^1.7.0",
-    "@imgly/background-removal-data": "^1.4.5",
     "@tailwindcss/vite": "^4.2.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
