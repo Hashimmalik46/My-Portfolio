@@ -46,15 +46,17 @@ function ProjectImageCard({ src, alt, link }) {
   );
 }
 
-function ProjectCardContent({ project, index }) {
+function ProjectCardContent({ project, index, scrollProgress }) {
+  // Image settles first as the card enters the viewport
+  const imageY = useTransform(scrollProgress, [0, 0.55], [24, 0]);
+  const imageScale = useTransform(scrollProgress, [0, 0.55], [0.96, 1]);
+
+  // Content entrance with prominent, visible delay window (0.28 -> 0.95)
+  const contentY = useTransform(scrollProgress, [0, 0.28, 0.95], [52, 52, 0]);
+  const contentOpacity = useTransform(scrollProgress, [0, 0.28, 0.78], [0, 0, 1]);
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.15 }}
-      transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
-      className="w-full relative"
-    >
+    <div className="w-full relative">
       {/* Top-Right Minimal White Project Number */}
       <div className="absolute top-0 right-1 sm:top-0 sm:right-2 lg:top-0 lg:right-2 z-30 pointer-events-none select-none">
         <span className="font-jakarta text-xs sm:text-sm md:text-base font-semibold text-white/60 tracking-[0.25em]">
@@ -64,8 +66,11 @@ function ProjectCardContent({ project, index }) {
 
       {/* Card Content Grid */}
       <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-start relative z-10">
-        {/* Left Side: Category, Title, Description, Tech Stack & Links */}
-        <div className="lg:col-span-6 flex flex-col justify-start gap-4 sm:gap-5 order-2 lg:order-1 px-0.5 sm:px-0">
+        {/* Left Side: Category, Title, Description, Tech Stack & Links (Scroll-Linked Upward Motion) */}
+        <motion.div
+          style={{ y: contentY, opacity: contentOpacity }}
+          className="lg:col-span-6 flex flex-col justify-start gap-4 sm:gap-5 order-2 lg:order-1 px-0.5 sm:px-0 will-change-transform"
+        >
           {/* Top Content Block */}
           <div className="flex flex-col gap-3 sm:gap-4.5">
             {/* Category */}
@@ -163,31 +168,41 @@ function ProjectCardContent({ project, index }) {
               </a>
             )}
           </div>
-        </div>
+        </motion.div>
 
-        {/* Right Side: Project Image Preview */}
-        <div className="lg:col-span-6 w-full flex items-center justify-center lg:justify-end order-1 lg:order-2 mt-6 sm:mt-7 lg:mt-8 xl:mt-10 mb-2 sm:mb-4 lg:mb-0">
+        {/* Right Side: Project Image Preview (Scroll-Linked Settle & Upward Motion) */}
+        <motion.div
+          style={{ y: imageY, scale: imageScale }}
+          className="lg:col-span-6 w-full flex items-center justify-center lg:justify-end order-1 lg:order-2 mt-6 sm:mt-7 lg:mt-8 xl:mt-10 mb-2 sm:mb-4 lg:mb-0 will-change-transform"
+        >
           <ProjectImageCard
             src={project.img}
             alt={project.title}
             link={project.link}
           />
-        </div>
+        </motion.div>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
 function ProjectCardItem({ project, index }) {
+  const cardRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: cardRef,
+    offset: ["start 98%", "start 38%"],
+  });
+
   return (
     <div
+      ref={cardRef}
       className="sticky top-12 sm:top-16 lg:top-20 w-full flex items-center justify-center py-4 sm:py-6 px-4 sm:px-6 md:px-10 lg:px-14"
       style={{
         zIndex: index + 10,
       }}
     >
       <div className="relative w-full max-w-6xl bg-[#0D0E15] rounded-2xl sm:rounded-3xl lg:rounded-[2.5rem] border border-white/[0.12] shadow-[0_25px_60px_rgba(0,0,0,0.85)] p-5 sm:p-8 md:p-10 lg:p-12 overflow-hidden">
-        <ProjectCardContent project={project} index={index} />
+        <ProjectCardContent project={project} index={index} scrollProgress={scrollYProgress} />
       </div>
     </div>
   );
