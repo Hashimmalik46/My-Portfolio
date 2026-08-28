@@ -6,75 +6,50 @@ import ArchitecturalBackground from "./ui/ArchitecturalBackground";
 import ScrollFadeText from "./ui/ScrollFadeText";
 
 function ProjectImageCard({ src, alt, link }) {
-  const containerRef = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start 90%", "start 48%"],
-  });
-
-  // Scroll-controlled downward curtain wipe
-  const curtainY = useTransform(scrollYProgress, [0, 1], ["0%", "105%"]);
-  const imageScale = useTransform(scrollYProgress, [0, 1], [1.08, 1]);
-
   return (
     <a
-      ref={containerRef}
       href={link && link !== "#" ? link : undefined}
       target={link && link !== "#" ? "_blank" : undefined}
       rel="noreferrer"
       aria-label={`Visit ${alt} live website`}
-      className={`group relative block w-full max-w-lg lg:max-w-xl aspect-[16/10] sm:aspect-[4/3] lg:aspect-[4/3] overflow-hidden rounded-lg border border-white/10 hover:border-white/25 shadow-[0_20px_50px_rgba(0,0,0,0.7)] transition-all duration-500 bg-[#0c0d12] ${
+      className={`group relative block w-full aspect-[16/10] overflow-hidden rounded-xl sm:rounded-2xl border border-white/10 hover:border-white/25 shadow-[0_20px_50px_rgba(0,0,0,0.7)] transition-all duration-500 bg-[#0c0d12] ${
         link && link !== "#" ? "cursor-pointer" : ""
       }`}
     >
-      {/* Scroll-Linked Project Image Settle */}
-      <motion.img
+      {/* Project Image */}
+      <img
         src={src}
         alt={alt}
         loading="lazy"
         decoding="async"
-        style={{ scale: imageScale }}
         className="w-full h-full object-cover transition-transform duration-700 ease-out sm:group-hover:scale-[1.03]"
-      />
-
-      {/* Tablet/Desktop Only: Scroll-Driven Wipe Down Curtain */}
-      <motion.div
-        style={{ y: curtainY }}
-        className="hidden sm:block absolute inset-0 bg-[#090a0f] pointer-events-none z-20 border-b-2 border-pAccent shadow-[0_4px_16px_rgba(168,218,34,0.65)] will-change-transform"
       />
     </a>
   );
 }
 
 function ProjectCardContent({ project, index, scrollProgress }) {
-  // Image settles first with increased upward travel
-  const imageY = useTransform(scrollProgress, [0, 0.55], [48, 0]);
-  const imageScale = useTransform(scrollProgress, [0, 0.55], [0.95, 1]);
-
-  // Content entrance with increased upward displacement and deliberate delay window
-  const contentY = useTransform(scrollProgress, [0, 0.28, 0.95], [96, 96, 0]);
-  const contentOpacity = useTransform(scrollProgress, [0, 0.28, 0.78], [0, 0, 1]);
+  // Content & Image entrance with smooth upward displacement and opacity fade
+  const contentY = useTransform(scrollProgress, [0, 0.25, 0.9], [56, 56, 0]);
+  const contentOpacity = useTransform(scrollProgress, [0, 0.22, 0.75], [0, 0, 1]);
 
   return (
     <div className="w-full relative">
-      {/* Top-Right Minimal White Project Number */}
-      <div className="absolute top-0 right-1 sm:top-0 sm:right-2 lg:top-0 lg:right-2 z-30 pointer-events-none select-none">
-        <span className="font-jakarta text-xs sm:text-sm md:text-base font-semibold text-white/60 tracking-[0.25em]">
-          0{index + 1}
-        </span>
-      </div>
-
       {/* Card Content Grid */}
-      <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 lg:gap-12 items-start relative z-10">
+      <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 lg:gap-8 xl:gap-10 items-center relative z-10">
         {/* Left Side: Category, Title, Description, Tech Stack & Links (Scroll-Linked Upward Motion) */}
         <motion.div
           style={{ y: contentY, opacity: contentOpacity }}
-          className="lg:col-span-6 flex flex-col justify-start gap-3 sm:gap-5 order-2 lg:order-1 px-0.5 sm:px-0 will-change-transform"
+          className="lg:col-span-6 flex flex-col justify-start gap-3 sm:gap-4 order-2 lg:order-1 px-0.5 sm:px-0 will-change-transform"
         >
           {/* Top Content Block */}
-          <div className="flex flex-col gap-2.5 sm:gap-4.5">
-            {/* Category */}
-            <div className="flex items-center justify-between w-full">
+          <div className="flex flex-col gap-2 sm:gap-3.5">
+            {/* Number + Category Eyebrow */}
+            <div className="flex items-center gap-2.5 sm:gap-3">
+              <span className="font-jakarta text-xs sm:text-sm font-semibold text-white/60 tracking-[0.25em]">
+                0{index + 1}
+              </span>
+              <span className="w-5 sm:w-6 h-px bg-white/20" />
               <span className="font-jakarta text-[11px] sm:text-xs uppercase tracking-[0.22em] text-white/50 font-medium">
                 {project.category}
               </span>
@@ -135,7 +110,7 @@ function ProjectCardContent({ project, index, scrollProgress }) {
           </div>
 
           {/* Action Row: Visit Website + Source Code */}
-          <div className="flex items-center justify-between sm:justify-start gap-5 sm:gap-6 pt-1.5 sm:pt-3.5">
+          <div className="flex items-center justify-between sm:justify-start gap-5 sm:gap-6 pt-1.5 sm:pt-3">
             {project.link && project.link !== "#" && (
               <a
                 href={project.link}
@@ -164,10 +139,10 @@ function ProjectCardContent({ project, index, scrollProgress }) {
           </div>
         </motion.div>
 
-        {/* Right Side: Project Image Preview (Scroll-Linked Settle & Upward Motion) */}
+        {/* Right Side: Project Image Preview (Matching Content Motion) */}
         <motion.div
-          style={{ y: imageY, scale: imageScale }}
-          className="lg:col-span-6 w-full flex items-center justify-center lg:justify-end order-1 lg:order-2 mt-1 sm:mt-7 lg:mt-8 xl:mt-10 mb-0 sm:mb-4 lg:mb-0 will-change-transform"
+          style={{ y: contentY, opacity: contentOpacity }}
+          className="lg:col-span-6 w-full flex items-center justify-center lg:justify-end order-1 lg:order-2 mt-0 mb-3 sm:mb-4 lg:mb-0 will-change-transform"
         >
           <ProjectImageCard
             src={project.img}
@@ -190,12 +165,12 @@ function ProjectCardItem({ project, index }) {
   return (
     <div
       ref={cardRef}
-      className="sticky top-5 sm:top-16 lg:top-20 w-full flex items-center justify-center py-3 sm:py-6 px-3.5 sm:px-6 md:px-10 lg:px-14"
+      className="sticky top-5 sm:top-16 lg:top-20 w-full flex items-center justify-center py-3 sm:py-5 px-3 sm:px-4 md:px-6 lg:px-8"
       style={{
         zIndex: index + 10,
       }}
     >
-      <div className="relative w-full max-w-6xl bg-[#0D0E15] rounded-2xl sm:rounded-3xl lg:rounded-[2.5rem] border border-white/[0.12] shadow-[0_25px_60px_rgba(0,0,0,0.85)] p-5 sm:p-8 md:p-10 lg:p-12 overflow-hidden">
+      <div className="relative w-full max-w-6xl bg-[#0D0E15] rounded-2xl sm:rounded-3xl lg:rounded-[2.5rem] border border-white/[0.12] shadow-[0_25px_60px_rgba(0,0,0,0.85)] p-4 sm:p-6 lg:p-8 xl:p-9 overflow-hidden">
         <ProjectCardContent project={project} index={index} scrollProgress={scrollYProgress} />
       </div>
     </div>
