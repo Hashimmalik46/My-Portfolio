@@ -88,32 +88,31 @@ function ScrollTimelineDot({ isFirst, idx, progress }) {
 function AboutImageCard({ imageSrc, imageCaption, imageTag }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 24 }}
+      initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.25 }}
-      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-      whileHover={{ y: -4, transition: { duration: 0.25, ease: "easeOut" } }}
-      className="relative w-full aspect-[4/3] sm:aspect-[16/10] md:aspect-[4/3] rounded-3xl overflow-hidden bg-white/40 backdrop-blur-xl border border-secondary/10 shadow-[0_20px_50px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04)] group select-none isolate transform-gpu"
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+      className="relative w-full aspect-[4/3] sm:aspect-[16/10] md:aspect-[4/3] rounded-3xl overflow-hidden bg-white/40 border border-secondary/10 shadow-[0_20px_50px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04)] group select-none isolate sm:hover:-translate-y-1 transition-all duration-300"
     >
-      {/* 1. Cinematic Zoom & Unblur Image Reveal on Scroll */}
+      {/* 1. Zoom Image Reveal on Scroll */}
       <motion.img
         src={imageSrc}
         alt={imageCaption || "Hashim Malik"}
         loading="lazy"
         decoding="async"
-        initial={{ scale: 1.15, filter: "blur(8px)" }}
-        whileInView={{ scale: 1, filter: "blur(0px)" }}
-        viewport={{ once: true, amount: 0.25 }}
-        transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-        className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out transform-gpu"
+        initial={{ scale: 1.08 }}
+        whileInView={{ scale: 1 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+        className="w-full h-full object-cover object-center sm:group-hover:scale-105 transition-transform duration-700 ease-out"
       />
 
       {/* 2. Luxury Curtain Wipe Shutter with Glowing Lime Accent Edge */}
       <motion.div
         initial={{ scaleY: 1 }}
         whileInView={{ scaleY: 0 }}
-        viewport={{ once: true, amount: 0.25 }}
-        transition={{ duration: 0.95, ease: [0.77, 0, 0.175, 1], delay: 0.05 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.85, ease: [0.77, 0, 0.175, 1], delay: 0.05 }}
         style={{ originY: 0 }}
         className="absolute inset-0 z-30 bg-[#0d0e15] pointer-events-none overflow-hidden"
       >
@@ -121,62 +120,32 @@ function AboutImageCard({ imageSrc, imageCaption, imageTag }) {
         <div className="absolute bottom-0 inset-x-0 h-[2.5px] bg-pAccent shadow-[0_0_14px_#a8da22]" />
       </motion.div>
 
-      {/* 3. Luminous Specular Flare Light Sweep on Scroll */}
-      <motion.div
-        initial={{ x: "-130%", opacity: 0.7 }}
-        whileInView={{ x: "230%", opacity: 0 }}
-        viewport={{ once: true, amount: 0.25 }}
-        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
-        className="absolute inset-0 w-3/4 bg-gradient-to-r from-transparent via-white/60 to-transparent skew-x-[-25deg] pointer-events-none z-20"
-      />
-
-      {/* 4. Subtle Bottom-Only Scrim for Watermark Legibility */}
+      {/* 3. Subtle Bottom-Only Scrim for Watermark Legibility */}
       {imageCaption && (
         <div className="absolute bottom-0 inset-x-0 h-20 bg-gradient-to-t from-black/45 via-black/15 to-transparent pointer-events-none z-10" />
       )}
 
-      {/* 5. Top-Right Glass Badge (Spring Pop-In on Scroll) */}
+      {/* 4. Top-Right Glass Badge */}
       {imageTag && (
         <div className="absolute top-3 sm:top-3.5 right-3 sm:right-3.5 z-20 pointer-events-none">
-          <motion.div
-            initial={{ opacity: 0, y: -10, scale: 0.9 }}
-            whileInView={{ opacity: 1, y: 0, scale: 1 }}
-            viewport={{ once: true, amount: 0.25 }}
-            transition={{
-              type: "spring",
-              stiffness: 420,
-              damping: 24,
-              delay: 0.45,
-            }}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-black/60 backdrop-blur-xl border border-white/20 text-white/95 shadow-lg"
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-pAccent animate-pulse shadow-[0_0_8px_#a8da22]" />
+          <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-black/60 backdrop-blur-xl border border-white/20 text-white/95 shadow-lg">
+            <span className="w-1.5 h-1.5 rounded-full bg-pAccent shadow-[0_0_8px_#a8da22]" />
             <span className="text-[10px] font-jakarta font-semibold tracking-[0.12em] uppercase">
               {imageTag}
             </span>
-          </motion.div>
+          </div>
         </div>
       )}
 
-      {/* 6. Bottom-Left Editorial Signature Watermark (Slide & Fade in on Scroll) */}
+      {/* 5. Bottom-Left Editorial Signature Watermark */}
       {imageCaption && (
         <div className="absolute bottom-3.5 sm:bottom-4 left-3.5 sm:left-4 z-20 pointer-events-none">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.25 }}
-            transition={{
-              duration: 0.5,
-              ease: [0.16, 1, 0.3, 1],
-              delay: 0.5,
-            }}
-            className="flex items-center gap-2"
-          >
+          <div className="flex items-center gap-2">
             <UserRound className="w-3.5 h-3.5 text-pAccent shrink-0 drop-shadow-[0_0_8px_rgba(168,218,34,0.9)]" />
             <span className="font-clash text-xs sm:text-sm font-semibold tracking-wide text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
               {imageCaption}
             </span>
-          </motion.div>
+          </div>
         </div>
       )}
     </motion.div>
@@ -290,20 +259,15 @@ function About() {
               return (
                 <motion.div
                   key={idx}
-                  initial={{ opacity: 0, y: 30 }}
+                  initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.15 }}
                   transition={{
-                    duration: 0.7,
-                    delay: idx * 0.08,
+                    duration: 0.6,
+                    delay: idx * 0.06,
                     ease: [0.16, 1, 0.3, 1],
                   }}
-                  whileHover={{
-                    y: -5,
-                    scale: 1.015,
-                    transition: { duration: 0.25, ease: "easeOut" },
-                  }}
-                  className="group relative bg-white border border-secondary/10 hover:border-secondary/25 rounded-2xl p-5 flex flex-col justify-between shadow-[0_10px_30px_rgba(0,0,0,0.04),0_1px_2px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.08)] transition-all duration-300"
+                  className="group relative bg-white border border-secondary/10 hover:border-secondary/25 rounded-2xl p-5 flex flex-col justify-between shadow-[0_10px_30px_rgba(0,0,0,0.04),0_1px_2px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.08)] sm:hover:-translate-y-1 transition-all duration-300"
                 >
                   <div>
                     <motion.div

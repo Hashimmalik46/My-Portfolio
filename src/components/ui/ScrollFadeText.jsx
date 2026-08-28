@@ -1,8 +1,8 @@
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
 
 function ScrollFadeWord({ word, progress, range, activeColor = "text-secondary" }) {
-  const opacity = useTransform(progress, range, [0.3, 1]);
+  const opacity = useTransform(progress, range, [0.22, 1]);
   return (
     <motion.span
       style={{ opacity }}
@@ -18,9 +18,20 @@ export default function ScrollFadeText({
   text,
   className = "",
   activeColor = "text-secondary",
-  offset = ["start 96%", "start 68%"],
+  offset = ["start 90%", "start 50%"],
 }) {
   const containerRef = useRef(null);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const checkIsDesktop = () => {
+      setIsDesktop(window.innerWidth >= 1024);
+    };
+    checkIsDesktop();
+    window.addEventListener("resize", checkIsDesktop);
+    return () => window.removeEventListener("resize", checkIsDesktop);
+  }, []);
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset,
@@ -28,14 +39,23 @@ export default function ScrollFadeText({
 
   const words = text ? text.split(" ") : [];
 
+  // Disabled on phones and tablets: render crisp 100% visible static text
+  if (!isDesktop) {
+    return (
+      <Component className={`flex flex-wrap gap-x-2 gap-y-1 ${className} ${activeColor}`}>
+        {text}
+      </Component>
+    );
+  }
+
   return (
     <Component
       ref={containerRef}
       className={`flex flex-wrap gap-x-2 gap-y-1 ${className}`}
     >
       {words.map((word, i) => {
-        const start = (i / words.length) * 0.75;
-        const end = Math.min(1, start + 0.3);
+        const start = i / Math.max(words.length, 1);
+        const end = Math.min(1, start + (1.2 / Math.max(words.length, 1)));
         return (
           <ScrollFadeWord
             key={i}

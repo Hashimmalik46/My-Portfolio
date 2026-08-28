@@ -18,10 +18,10 @@ export default function ArchitecturalBackground({
   const isDark = theme === "dark";
   const isExtended = density === "extended";
 
-  // Breathing pinpoint dot capped at max 80% brightness
+  // Breathing pinpoint dot capped at max 70% brightness
   const dotClass = isDark
-    ? "w-1.5 h-1.5 rounded-full bg-[#a8da22]/75 shadow-[0_0_4px_rgba(168,218,34,0.35)] opacity-80 animate-pulse"
-    : "w-1.5 h-1.5 rounded-full bg-[#a8da22]/75 shadow-[0_0_4px_rgba(168,218,34,0.25)] opacity-80 animate-pulse";
+    ? "w-1.5 h-1.5 rounded-full bg-[#a8da22]/65 shadow-[0_0_3px_rgba(168,218,34,0.25)] opacity-70 animate-pulse"
+    : "w-1.5 h-1.5 rounded-full bg-[#a8da22]/65 shadow-[0_0_3px_rgba(168,218,34,0.2)] opacity-70 animate-pulse";
 
   return (
     <div

@@ -35,10 +35,10 @@ function ProjectImageWipe({ src, alt, link }) {
         className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.035]"
       />
 
-      {/* Scroll-Driven Wipe Down Curtain with Signature Lime Trailing Edge */}
+      {/* Scroll-Driven Wipe Down Curtain (Desktop only; hidden on mobile & tablets) */}
       <motion.div
         style={{ y: curtainY }}
-        className="absolute inset-0 bg-[#090a0f] pointer-events-none z-20 border-b-2 border-pAccent/80 shadow-[0_4px_16px_rgba(168,218,34,0.45)] will-change-transform"
+        className="hidden lg:block absolute inset-0 bg-[#090a0f] pointer-events-none z-20 border-b-2 border-pAccent/80 shadow-[0_4px_16px_rgba(168,218,34,0.45)] will-change-transform"
       />
     </a>
   );
@@ -146,7 +146,6 @@ export default function Projects() {
                         text={project.title}
                         className="font-clashM text-xl sm:text-2xl md:text-3xl lg:text-[2.65rem] text-white tracking-tight leading-snug sm:leading-[1.12]"
                         activeColor="text-white"
-                        offset={["start 92%", "start 45%"]}
                       />
 
                       {/* Description: Minimal & Professional Plus Jakarta Sans */}
