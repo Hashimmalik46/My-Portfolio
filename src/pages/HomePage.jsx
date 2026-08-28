@@ -24,7 +24,7 @@ function SeamlessBackgroundVideo({ isLoading = false }) {
     mp4: "/gallery/bg_video_3.MP4",
   };
 
-  // IntersectionObserver: auto-pause video decoding when off-screen to preserve performance
+  // IntersectionObserver: auto-pause video decoding when off-screen or while preloader is active
   useEffect(() => {
     const el = containerRef.current;
     if (!el || !("IntersectionObserver" in window)) return;
@@ -34,6 +34,12 @@ function SeamlessBackgroundVideo({ isLoading = false }) {
         isVisibleRef.current = entry.isIntersecting;
         const v1 = video1Ref.current;
         const v2 = video2Ref.current;
+
+        if (isLoading) {
+          v1?.pause();
+          v2?.pause();
+          return;
+        }
 
         if (entry.isIntersecting) {
           if (activeVideo === 1) v1?.play().catch(() => {});
@@ -48,25 +54,38 @@ function SeamlessBackgroundVideo({ isLoading = false }) {
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, [activeVideo]);
+  }, [activeVideo, isLoading]);
 
-  // Continuous frame loop for precise, stutter-free 1.0s crossfade
+  // Synchronize playback with preloader state: holds video paused at 0:00 until preloader finishes
   useEffect(() => {
     const v1 = video1Ref.current;
     const v2 = video2Ref.current;
     if (!v1 || !v2) return;
 
-    if (activeVideo === 1) {
-      v1.play().catch(() => {});
-    } else {
-      v2.play().catch(() => {});
+    if (isLoading) {
+      v1.pause();
+      v2.pause();
+      v1.currentTime = 0;
+      v2.currentTime = 0;
+      return;
+    }
+
+    // When preloader finishes (isLoading becomes false), start active video from beginning
+    if (isVisibleRef.current) {
+      if (activeVideo === 1) {
+        v1.currentTime = 0;
+        v1.play().catch(() => {});
+      } else {
+        v2.currentTime = 0;
+        v2.play().catch(() => {});
+      }
     }
 
     let rafId;
     const CROSSFADE_TIME = 1.0; // 1.0s smooth dissolve
 
     const checkLoop = () => {
-      if (isVisibleRef.current) {
+      if (isVisibleRef.current && !isLoading) {
         const currentVid = activeVideo === 1 ? v1 : v2;
         const nextVid = activeVideo === 1 ? v2 : v1;
 
