@@ -23,6 +23,8 @@ import {
   Eye,
   CheckCircle2,
   Grid,
+  Move,
+  RotateCcw,
 } from "lucide-react";
 import {
   loadImageFromFile,
@@ -290,6 +292,68 @@ export default function OmniMediaStudio() {
       console.error("Failed to load resizer image:", err);
     }
   };
+
+  // Interactive Drag-to-Pan & Scroll-to-Zoom handlers for Framed Preview
+  const [isDraggingPhoto, setIsDraggingPhoto] = useState(false);
+  const dragStartRef = useRef({ x: 0, y: 0, panX: 0, panY: 0 });
+  const isDraggingRef = useRef(false);
+
+  const handlePointerDown = (e) => {
+    if (!resizerFile) return;
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    } catch (_) {}
+    isDraggingRef.current = true;
+    setIsDraggingPhoto(true);
+    dragStartRef.current = {
+      x: e.clientX,
+      y: e.clientY,
+      panX: resizerPanX,
+      panY: resizerPanY,
+    };
+  };
+
+  const handlePointerMove = (e) => {
+    if (!isDraggingRef.current) return;
+    const dx = e.clientX - dragStartRef.current.x;
+    const dy = e.clientY - dragStartRef.current.y;
+    // Map screen pixel movement into pan percentage [-50, 50]
+    const sensitivity = 0.35;
+    const newPanX = Math.max(-50, Math.min(50, Math.round(dragStartRef.current.panX + dx * sensitivity)));
+    const newPanY = Math.max(-50, Math.min(50, Math.round(dragStartRef.current.panY + dy * sensitivity)));
+    setResizerPanX(newPanX);
+    setResizerPanY(newPanY);
+  };
+
+  const handlePointerUp = (e) => {
+    if (isDraggingRef.current) {
+      try {
+        e.currentTarget.releasePointerCapture(e.pointerId);
+      } catch (_) {}
+      isDraggingRef.current = false;
+      setIsDraggingPhoto(false);
+    }
+  };
+
+  const resizerPreviewContainerRef = useRef(null);
+
+  // Attach native non-passive wheel event listener to prevent window scrolling during zoom
+  useEffect(() => {
+    const el = resizerPreviewContainerRef.current;
+    if (!el) return;
+
+    const handleWheel = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const step = e.deltaY < 0 ? 0.05 : -0.05;
+      setResizerZoom((prev) => Math.max(1, Math.min(2.5, Number((prev + step).toFixed(2)))));
+    };
+
+    el.addEventListener("wheel", handleWheel, { passive: false });
+    return () => {
+      el.removeEventListener("wheel", handleWheel);
+    };
+  }, [resizerFile, resizerResult]);
 
   const handleDownloadResizedSingle = () => {
     if (!resizerResult || !resizerFile) return;
@@ -1171,23 +1235,20 @@ export default function OmniMediaStudio() {
                 </div>
               )}
 
-              {/* Adjustments: Zoom, Pan, Guide Overlay */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-1 text-xs">
+              {/* Adjustments: Zoom, Pan X, Pan Y, Guide Overlay */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 pt-1 text-xs">
+                {/* Face Zoom */}
                 <div className="space-y-1">
                   <div className="flex items-center justify-between">
                     <label className="text-[11px] font-bold text-gray-600 dark:text-gray-400">
-                      Face Zoom: {resizerZoom.toFixed(1)}x
+                      Face Zoom: {resizerZoom.toFixed(2)}x
                     </label>
                     <button
                       type="button"
-                      onClick={() => {
-                        setResizerZoom(1);
-                        setResizerPanX(0);
-                        setResizerPanY(0);
-                      }}
+                      onClick={() => setResizerZoom(1)}
                       className="text-[10px] text-gray-400 hover:text-black dark:hover:text-white cursor-pointer"
                     >
-                      Reset
+                      Reset (1x)
                     </button>
                   </div>
                   <input
@@ -1201,23 +1262,69 @@ export default function OmniMediaStudio() {
                   />
                 </div>
 
+                {/* Horizontal Pan X */}
                 <div className="space-y-1">
                   <div className="flex items-center justify-between">
                     <label className="text-[11px] font-bold text-gray-600 dark:text-gray-400">
-                      Vertical Position (Pan Y)
+                      Horizontal (Pan X): {resizerPanX > 0 ? `+${resizerPanX}` : resizerPanX}%
                     </label>
+                    <button
+                      type="button"
+                      onClick={() => setResizerPanX(0)}
+                      className="text-[10px] text-gray-400 hover:text-black dark:hover:text-white cursor-pointer"
+                    >
+                      Center
+                    </button>
                   </div>
                   <input
                     type="range"
-                    min="-40"
-                    max="40"
+                    min="-50"
+                    max="50"
+                    value={resizerPanX}
+                    onChange={(e) => setResizerPanX(Number(e.target.value))}
+                    className="w-full accent-black dark:accent-white cursor-pointer"
+                  />
+                </div>
+
+                {/* Vertical Pan Y */}
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between">
+                    <label className="text-[11px] font-bold text-gray-600 dark:text-gray-400">
+                      Vertical (Pan Y): {resizerPanY > 0 ? `+${resizerPanY}` : resizerPanY}%
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => setResizerPanY(0)}
+                      className="text-[10px] text-gray-400 hover:text-black dark:hover:text-white cursor-pointer"
+                    >
+                      Center
+                    </button>
+                  </div>
+                  <input
+                    type="range"
+                    min="-50"
+                    max="50"
                     value={resizerPanY}
                     onChange={(e) => setResizerPanY(Number(e.target.value))}
                     className="w-full accent-black dark:accent-white cursor-pointer"
                   />
                 </div>
 
-                <div className="flex items-center justify-between sm:justify-end gap-3 pt-3">
+                {/* Reset & Biometric Guide */}
+                <div className="flex items-center justify-between sm:justify-end gap-2 pt-1 sm:pt-3.5">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setResizerZoom(1);
+                      setResizerPanX(0);
+                      setResizerPanY(0);
+                    }}
+                    className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-gray-200 dark:border-white/10 text-gray-500 hover:text-gray-900 dark:hover:text-white text-xs font-semibold cursor-pointer transition-colors"
+                    title="Reset Zoom & Alignment to center"
+                  >
+                    <RotateCcw size={11} />
+                    <span>Reset</span>
+                  </button>
                   <button
                     type="button"
                     onClick={() => setShowPassportGuide(!showPassportGuide)}
@@ -1228,7 +1335,7 @@ export default function OmniMediaStudio() {
                     }`}
                   >
                     <Eye size={12} />
-                    <span>{showPassportGuide ? "Biometric Guide: ON" : "Biometric Guide: OFF"}</span>
+                    <span>{showPassportGuide ? "Guide: ON" : "Guide: OFF"}</span>
                   </button>
                 </div>
               </div>
@@ -1248,16 +1355,33 @@ export default function OmniMediaStudio() {
                       </span>
                     )}
                   </div>
+                  <div className="flex items-center gap-1 text-[11px] text-gray-400 font-medium hidden sm:flex">
+                    <Move size={11} className="text-emerald-500" />
+                    <span>Drag preview to pan (X/Y) • Scroll to zoom</span>
+                  </div>
                 </div>
 
-                {/* Canvas Container with Biometric Guide Overlay */}
-                <div className="flex-1 min-h-[200px] max-h-[300px] rounded-xl bg-gray-100 dark:bg-[#0c0e14] border border-gray-200 dark:border-white/10 flex items-center justify-center p-3 overflow-hidden relative">
+                {/* Canvas Container with Biometric Guide Overlay & Drag/Wheel support */}
+                <div
+                  ref={resizerPreviewContainerRef}
+                  onPointerDown={handlePointerDown}
+                  onPointerMove={handlePointerMove}
+                  onPointerUp={handlePointerUp}
+                  onPointerCancel={handlePointerUp}
+                  className={`flex-1 min-h-[220px] max-h-[320px] rounded-xl bg-gray-100 dark:bg-[#0c0e14] border border-gray-200 dark:border-white/10 flex items-center justify-center p-3 overflow-hidden relative select-none touch-none overscroll-contain transition-shadow ${
+                    isDraggingPhoto
+                      ? "cursor-grabbing ring-2 ring-emerald-500/50 shadow-inner"
+                      : "cursor-grab hover:border-gray-300 dark:hover:border-white/20"
+                  }`}
+                  title="Click & drag to reposition photo • Scroll to zoom"
+                >
                   {resizerResult ? (
-                    <div className="relative max-h-full max-w-full flex items-center justify-center shadow-lg rounded-md overflow-hidden">
+                    <div className="relative max-h-full max-w-full flex items-center justify-center shadow-lg rounded-md overflow-hidden pointer-events-none select-none">
                       <img
                         src={resizerResult.dataUrl}
                         alt="Passport Framed Preview"
-                        className="max-h-[260px] object-contain rounded-md"
+                        className="max-h-[260px] object-contain rounded-md pointer-events-none select-none"
+                        draggable={false}
                       />
 
                       {/* Biometric Oval Guide Overlay for Passport Face Framing */}
