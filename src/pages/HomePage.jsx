@@ -24,36 +24,7 @@ function SeamlessBackgroundVideo({ isLoading = false }) {
     mp4: "/gallery/bg_video_3.mp4",
   };
 
-  // Helper to ensure DOM properties are strictly applied for iOS Safari WebKit Autoplay policies
-  const setupVideoElement = (el) => {
-    if (!el) return;
-    el.muted = true;
-    el.defaultMuted = true;
-    el.playsInline = true;
-    el.setAttribute("playsinline", "");
-    el.setAttribute("webkit-playsinline", "true");
-    el.setAttribute("x5-playsinline", "true");
-  };
-
-  // Attempt playback with error handling & silent catch
-  const playVideo = (el) => {
-    if (!el) return;
-    setupVideoElement(el);
-    const promise = el.play();
-    if (promise !== undefined) {
-      promise.catch(() => {
-        // Ignored: will retry on first user interaction or when observer triggers
-      });
-    }
-  };
-
-  // Configure initial video element properties on mount
-  useEffect(() => {
-    setupVideoElement(video1Ref.current);
-    setupVideoElement(video2Ref.current);
-  }, []);
-
-  // IntersectionObserver: auto-pause video decoding when off-screen to preserve performance & battery
+  // IntersectionObserver: auto-pause video decoding when off-screen to preserve performance
   useEffect(() => {
     const el = containerRef.current;
     if (!el || !("IntersectionObserver" in window)) return;
@@ -64,10 +35,19 @@ function SeamlessBackgroundVideo({ isLoading = false }) {
         const v1 = video1Ref.current;
         const v2 = video2Ref.current;
 
-        if (entry.isIntersecting && !isLoading) {
-          if (activeVideo === 1) playVideo(v1);
-          else playVideo(v2);
-        } else if (!entry.isIntersecting) {
+        if (entry.isIntersecting) {
+          if (activeVideo === 1) {
+            if (v1) {
+              v1.muted = true;
+              v1.play().catch(() => {});
+            }
+          } else {
+            if (v2) {
+              v2.muted = true;
+              v2.play().catch(() => {});
+            }
+          }
+        } else {
           v1?.pause();
           v2?.pause();
         }
@@ -77,32 +57,29 @@ function SeamlessBackgroundVideo({ isLoading = false }) {
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, [activeVideo, isLoading]);
+  }, [activeVideo]);
 
-  // Main playback & crossfade controller
+  // Continuous frame loop for precise, stutter-free 1.0s crossfade
   useEffect(() => {
     const v1 = video1Ref.current;
     const v2 = video2Ref.current;
     if (!v1 || !v2) return;
 
-    // Only start playing once preloader is done and section is visible
-    if (!isLoading && isVisibleRef.current) {
-      if (activeVideo === 1) playVideo(v1);
-      else playVideo(v2);
+    if (activeVideo === 1) {
+      v1.muted = true;
+      v1.play().catch(() => {});
+    } else {
+      v2.muted = true;
+      v2.play().catch(() => {});
     }
 
     let rafId;
     const CROSSFADE_TIME = 1.0; // 1.0s smooth dissolve
 
     const checkLoop = () => {
-      if (isVisibleRef.current && !isLoading) {
+      if (isVisibleRef.current) {
         const currentVid = activeVideo === 1 ? v1 : v2;
         const nextVid = activeVideo === 1 ? v2 : v1;
-
-        // Auto-recovery: if current video is unexpectedly paused on mobile (e.g. low-power mode or tab focus), resume it
-        if (currentVid && currentVid.paused && currentVid.readyState >= 2) {
-          playVideo(currentVid);
-        }
 
         if (
           currentVid.duration &&
@@ -112,11 +89,11 @@ function SeamlessBackgroundVideo({ isLoading = false }) {
         ) {
           isTransitioning.current = true;
           nextVid.currentTime = 0;
-          setupVideoElement(nextVid);
+          nextVid.muted = true;
           nextVid
             .play()
             .then(() => {
-              setActiveVideo((prev) => (prev === 1 ? 2 : 1));
+              setActiveVideo(activeVideo === 1 ? 2 : 1);
               setTimeout(() => {
                 isTransitioning.current = false;
               }, CROSSFADE_TIME * 1000);
@@ -137,51 +114,26 @@ function SeamlessBackgroundVideo({ isLoading = false }) {
     };
   }, [activeVideo, isLoading]);
 
-  // iOS Safari / Mobile Unlock: First user touch, scroll, or click guarantees video start if iOS blocked initial autoplay
+  // One-time gesture listener on mobile to unlock video playback seamlessly without play button
   useEffect(() => {
-    if (isLoading) return;
-
-    const handleFirstInteraction = () => {
-      const currentVid = activeVideo === 1 ? video1Ref.current : video2Ref.current;
-      if (currentVid && currentVid.paused && isVisibleRef.current) {
-        playVideo(currentVid);
+    const unlockOnTouch = () => {
+      const v1 = video1Ref.current;
+      const v2 = video2Ref.current;
+      const target = activeVideo === 1 ? v1 : v2;
+      if (target && target.paused) {
+        target.muted = true;
+        target.play().catch(() => {});
       }
     };
 
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === "visible" && isVisibleRef.current && !isLoading) {
-        const currentVid = activeVideo === 1 ? video1Ref.current : video2Ref.current;
-        if (currentVid && currentVid.paused) {
-          playVideo(currentVid);
-        }
-      }
-    };
-
-    window.addEventListener("touchstart", handleFirstInteraction, { passive: true, once: true });
-    window.addEventListener("touchend", handleFirstInteraction, { passive: true, once: true });
-    window.addEventListener("click", handleFirstInteraction, { passive: true, once: true });
-    window.addEventListener("scroll", handleFirstInteraction, { passive: true, once: true });
-    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("touchstart", unlockOnTouch, { passive: true, once: true });
+    window.addEventListener("click", unlockOnTouch, { passive: true, once: true });
 
     return () => {
-      window.removeEventListener("touchstart", handleFirstInteraction);
-      window.removeEventListener("touchend", handleFirstInteraction);
-      window.removeEventListener("click", handleFirstInteraction);
-      window.removeEventListener("scroll", handleFirstInteraction);
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("touchstart", unlockOnTouch);
+      window.removeEventListener("click", unlockOnTouch);
     };
-  }, [isLoading, activeVideo]);
-
-  const handleEnded = (instanceNum) => {
-    if (activeVideo === instanceNum && !isTransitioning.current) {
-      const nextVid = instanceNum === 1 ? video2Ref.current : video1Ref.current;
-      if (nextVid) {
-        nextVid.currentTime = 0;
-        playVideo(nextVid);
-        setActiveVideo(instanceNum === 1 ? 2 : 1);
-      }
-    }
-  };
+  }, [activeVideo]);
 
   return (
     <div
@@ -190,37 +142,29 @@ function SeamlessBackgroundVideo({ isLoading = false }) {
     >
       <video
         ref={video1Ref}
-        autoPlay
         muted
         playsInline
-        webkit-playsinline="true"
-        x5-playsinline="true"
         preload="auto"
-        onEnded={() => handleEnded(1)}
         className={`absolute inset-0 w-full h-full object-cover object-[25%_center] sm:object-[26%_center] md:object-[28%_center] lg:object-[32%_center] xl:object-center scale-[1.05] transition-opacity duration-1000 ease-in-out ${
           activeVideo === 1 ? "opacity-100" : "opacity-0"
         }`}
       >
-        <source src={videoSrc.mp4} type="video/mp4" />
         <source src={videoSrc.webm} type="video/webm" />
+        <source src={videoSrc.mp4} type="video/mp4" />
       </video>
 
       {/* Dual crossfade video instance */}
       <video
         ref={video2Ref}
-        autoPlay
         muted
         playsInline
-        webkit-playsinline="true"
-        x5-playsinline="true"
         preload="auto"
-        onEnded={() => handleEnded(2)}
         className={`absolute inset-0 w-full h-full object-cover object-[25%_center] sm:object-[26%_center] md:object-[28%_center] lg:object-[32%_center] xl:object-center scale-[1.05] transition-opacity duration-1000 ease-in-out ${
           activeVideo === 2 ? "opacity-100" : "opacity-0"
         }`}
       >
-        <source src={videoSrc.mp4} type="video/mp4" />
         <source src={videoSrc.webm} type="video/webm" />
+        <source src={videoSrc.mp4} type="video/mp4" />
       </video>
     </div>
   );

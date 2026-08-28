@@ -39,6 +39,15 @@ export default function CloudPreloader({ onStartReveal }) {
     // Keep scroll position firmly at top
     window.scrollTo({ top: 0, behavior: "instant" });
 
+    // Directly trigger hero background video playback inside the user's touch gesture
+    try {
+      const heroVideos = document.querySelectorAll("#Home video");
+      heroVideos.forEach((vid) => {
+        vid.muted = true;
+        vid.play().catch(() => {});
+      });
+    } catch (_) {}
+
     // Notify parent immediately for synchronized reveal
     if (onStartReveal) onStartReveal();
   }, [onStartReveal]);
@@ -60,9 +69,6 @@ export default function CloudPreloader({ onStartReveal }) {
       video.muted = true;
       video.defaultMuted = true;
       video.playsInline = true;
-      video.setAttribute("playsinline", "");
-      video.setAttribute("webkit-playsinline", "true");
-      video.setAttribute("x5-playsinline", "true");
       video.play().catch(() => {});
       if (video.readyState >= 2) {
         setIsVideoReady(true);
@@ -188,8 +194,6 @@ export default function CloudPreloader({ onStartReveal }) {
         loop
         muted
         playsInline
-        webkit-playsinline="true"
-        x5-playsinline="true"
         preload="auto"
         onLoadedData={() => setIsVideoReady(true)}
         onCanPlay={() => setIsVideoReady(true)}
