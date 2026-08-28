@@ -414,9 +414,9 @@ export const portfolioData = {
   chatbot: {
     botName: "HashAI",
     speechBubbleText: "Chat with HashAI",
-    inputPlaceholder: "Ask me anything or chat about Hashim...",
-    welcomeMessage: "Hey there! 👋 I'm **HashAI**, Hashim's interactive portfolio co-pilot. Whether you want to chat about tech, explore his full-stack & AI projects, or check out his background, I'm here to help. What's on your mind?",
-    clearMessage: "Feel free to ask anything about Hashim's full-stack & AI builds, his tech stack, or just chat tech. What's on your mind?",
+    inputPlaceholder: "Ask HashAI about Hashim, his projects, or tech...",
+    welcomeMessage: "Hey! 👋 I’m **HashAI** — Hashim’s little corner of the portfolio that actually talks back. Explore his projects, dig into his tech stack, or just chat about development and AI. What are you curious about?",
+    clearMessage: "Fresh start? Ask me about Hashim, his projects, tech stack, or anything related to his work. What would you like to explore?",
     starterPrompts: [
       {
         icon: Code2,
