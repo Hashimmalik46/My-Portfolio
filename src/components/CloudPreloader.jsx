@@ -29,10 +29,7 @@ export default function CloudPreloader({ onStartReveal }) {
   const topTag = preloader?.topTag || "PORTFOLIO";
   const scrollPrompt = preloader?.scrollPrompt || "SCROLL";
   const durationSeconds = preloader?.durationSeconds ?? 6;
-  const videoSrc =
-    typeof preloader?.videoSrc === "object"
-      ? preloader.videoSrc.mp4
-      : preloader?.videoSrc || "/gallery/clouds.mp4";
+  const videoSrc = preloader?.videoSrc || "/gallery/clouds.webm";
 
   const handleTrigger = useCallback(() => {
     if (hasTriggeredRef.current) return;
@@ -41,15 +38,6 @@ export default function CloudPreloader({ onStartReveal }) {
 
     // Keep scroll position firmly at top
     window.scrollTo({ top: 0, behavior: "instant" });
-
-    // Directly trigger hero background video on user interaction
-    try {
-      const heroVideos = document.querySelectorAll("#Home video");
-      heroVideos.forEach((vid) => {
-        vid.muted = true;
-        vid.play().catch(() => {});
-      });
-    } catch (_) {}
 
     // Notify parent immediately for synchronized reveal
     if (onStartReveal) onStartReveal();
@@ -65,27 +53,25 @@ export default function CloudPreloader({ onStartReveal }) {
     return () => clearTimeout(timer);
   }, [isVideoReady, handleTrigger, durationSeconds]);
 
-  // Ensure Video plays immediately on mount
+  // Ensure Video plays immediately on mount & fallback safety timer
   useEffect(() => {
     const video = videoRef.current;
     if (video) {
-      video.muted = true;
-      video.defaultMuted = true;
-      video.playsInline = true;
       video.play().catch(() => {});
       if (video.readyState >= 2) {
         setIsVideoReady(true);
       }
     }
 
+    // Safety fallback so UI always emerges gracefully even on slow connections
     const fallbackTimer = setTimeout(() => {
       setIsVideoReady(true);
-    }, 400);
+    }, 500);
 
     return () => clearTimeout(fallbackTimer);
   }, []);
 
-  // Real-time Pixelation Render Loop
+  // Real-time Subtle Pixelation Render Loop (automatically halts on exit to free GPU/CPU)
   useEffect(() => {
     if (isExiting) return;
     const video = videoRef.current;
@@ -94,10 +80,12 @@ export default function CloudPreloader({ onStartReveal }) {
 
     const ctx = canvas.getContext("2d", { alpha: true });
     let animId;
+
+    // Subtle, fine pixel resolution: 2.2px gives an ultra-delicate digital texture
     const pixelBlockSize = 2.2;
 
     const render = () => {
-      if (video && (video.readyState >= 1 || video.currentTime > 0)) {
+      if (video.readyState >= 2) {
         setIsVideoReady(true);
         const vw = video.videoWidth || 1280;
         const vh = video.videoHeight || 720;
@@ -110,9 +98,7 @@ export default function CloudPreloader({ onStartReveal }) {
         }
 
         ctx.imageSmoothingEnabled = false;
-        try {
-          ctx.drawImage(video, 0, 0, targetW, targetH);
-        } catch (_) {}
+        ctx.drawImage(video, 0, 0, targetW, targetH);
       }
       animId = requestAnimationFrame(render);
     };
@@ -188,7 +174,7 @@ export default function CloudPreloader({ onStartReveal }) {
       onClick={handleTrigger}
       className="fixed inset-0 z-[100] flex flex-col justify-between items-center py-12 sm:py-16 px-6 bg-black cursor-pointer overflow-hidden touch-none select-none pointer-events-auto"
     >
-      {/* Video element (Active in DOM for decoder playback, hidden to prevent iOS native controls overlay) */}
+      {/* Video element (Active in DOM for decoder playback) */}
       <video
         ref={videoRef}
         src={videoSrc}
