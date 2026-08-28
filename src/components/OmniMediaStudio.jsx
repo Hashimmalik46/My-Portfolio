@@ -873,14 +873,14 @@ export default function OmniMediaStudio() {
                   ) : null}
                 </div>
 
-                <div className="flex items-center justify-between pt-1">
+                <div className="flex items-center justify-between pt-1 gap-2">
                   <button
                     type="button"
                     onClick={() => {
                       setCompressorFile(null);
                       setCompressResult(null);
                     }}
-                    className="text-xs text-red-600 dark:text-red-400 font-semibold cursor-pointer"
+                    className="text-xs text-red-600 dark:text-red-400 font-semibold cursor-pointer shrink-0"
                   >
                     Clear Photo
                   </button>
@@ -894,10 +894,13 @@ export default function OmniMediaStudio() {
                         `${compressorFile.name}_compressed.jpg`
                       );
                     }}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-xs cursor-pointer"
+                    className="inline-flex items-center justify-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-xs cursor-pointer shrink-0"
                   >
-                    <Download size={13} />
-                    <span>Download Compressed ({compressResult ? formatBytes(compressResult.size) : "..."})</span>
+                    <Download size={13} className="shrink-0" />
+                    <span>
+                      Download <span className="hidden sm:inline">Compressed</span>{" "}
+                      <span className="font-mono opacity-90">({compressResult ? formatBytes(compressResult.size) : "..."})</span>
+                    </span>
                   </button>
                 </div>
               </div>
@@ -1435,17 +1438,17 @@ export default function OmniMediaStudio() {
                       title="Print 6-8 photos on a single 4x6 photo paper"
                     >
                       <Printer size={13} />
-                      <span>Printable 4x6" Sheet</span>
+                      <span>Printable 4x6"<span className="hidden sm:inline"> Sheet</span></span>
                     </button>
 
                     {/* Single Photo Download */}
                     <button
                       type="button"
                       onClick={handleDownloadResizedSingle}
-                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-xs cursor-pointer"
+                      className="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-xs cursor-pointer"
                     >
                       <Download size={13} />
-                      <span>Download Single Photo</span>
+                      <span>Download <span className="hidden sm:inline">Single</span> Photo</span>
                     </button>
                   </div>
                 </div>
