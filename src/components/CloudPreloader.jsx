@@ -19,6 +19,7 @@ export default function CloudPreloader({ onStartReveal }) {
   const [isVideoReady, setIsVideoReady] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
   const videoRef = useRef(null);
+  const canvasRef = useRef(null);
   const touchStartY = useRef(null);
   const hasTriggeredRef = useRef(false);
 
@@ -28,13 +29,10 @@ export default function CloudPreloader({ onStartReveal }) {
   const topTag = preloader?.topTag || "PORTFOLIO";
   const scrollPrompt = preloader?.scrollPrompt || "SCROLL";
   const durationSeconds = preloader?.durationSeconds ?? 6;
-  const videoSources =
+  const videoSrc =
     typeof preloader?.videoSrc === "object"
-      ? preloader.videoSrc
-      : {
-          mp4: "/gallery/clouds.mp4",
-          webm: typeof preloader?.videoSrc === "string" ? preloader.videoSrc : "/gallery/clouds.webm",
-        };
+      ? preloader.videoSrc.mp4
+      : preloader?.videoSrc || "/gallery/clouds.mp4";
 
   const handleTrigger = useCallback(() => {
     if (hasTriggeredRef.current) return;
@@ -43,6 +41,15 @@ export default function CloudPreloader({ onStartReveal }) {
 
     // Keep scroll position firmly at top
     window.scrollTo({ top: 0, behavior: "instant" });
+
+    // Directly trigger hero background video on user interaction
+    try {
+      const heroVideos = document.querySelectorAll("#Home video");
+      heroVideos.forEach((vid) => {
+        vid.muted = true;
+        vid.play().catch(() => {});
+      });
+    } catch (_) {}
 
     // Notify parent immediately for synchronized reveal
     if (onStartReveal) onStartReveal();
@@ -66,9 +73,56 @@ export default function CloudPreloader({ onStartReveal }) {
       video.defaultMuted = true;
       video.playsInline = true;
       video.play().catch(() => {});
+      if (video.readyState >= 2) {
+        setIsVideoReady(true);
+      }
     }
-    setIsVideoReady(true);
+
+    const fallbackTimer = setTimeout(() => {
+      setIsVideoReady(true);
+    }, 400);
+
+    return () => clearTimeout(fallbackTimer);
   }, []);
+
+  // Real-time Pixelation Render Loop
+  useEffect(() => {
+    if (isExiting) return;
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+    if (!video || !canvas) return;
+
+    const ctx = canvas.getContext("2d", { alpha: true });
+    let animId;
+    const pixelBlockSize = 2.2;
+
+    const render = () => {
+      if (video && (video.readyState >= 1 || video.currentTime > 0)) {
+        setIsVideoReady(true);
+        const vw = video.videoWidth || 1280;
+        const vh = video.videoHeight || 720;
+        const targetW = Math.max(Math.floor(vw / pixelBlockSize), 120);
+        const targetH = Math.max(Math.floor(vh / pixelBlockSize), 68);
+
+        if (canvas.width !== targetW || canvas.height !== targetH) {
+          canvas.width = targetW;
+          canvas.height = targetH;
+        }
+
+        ctx.imageSmoothingEnabled = false;
+        try {
+          ctx.drawImage(video, 0, 0, targetW, targetH);
+        } catch (_) {}
+      }
+      animId = requestAnimationFrame(render);
+    };
+
+    animId = requestAnimationFrame(render);
+
+    return () => {
+      cancelAnimationFrame(animId);
+    };
+  }, [isExiting]);
 
   useEffect(() => {
     // Intercept scroll/touch gestures
@@ -134,17 +188,30 @@ export default function CloudPreloader({ onStartReveal }) {
       onClick={handleTrigger}
       className="fixed inset-0 z-[100] flex flex-col justify-between items-center py-12 sm:py-16 px-6 bg-black cursor-pointer overflow-hidden touch-none select-none pointer-events-auto"
     >
-      {/* Video element (Active in DOM for decoder playback) */}
+      {/* Video element (Active in DOM for decoder playback, hidden to prevent iOS native controls overlay) */}
       <video
         ref={videoRef}
-        src={videoSources.mp4}
+        src={videoSrc}
         autoPlay
         loop
         muted
         playsInline
         preload="auto"
+        onLoadedData={() => setIsVideoReady(true)}
+        onCanPlay={() => setIsVideoReady(true)}
         onEnded={handleTrigger}
-        className="absolute inset-0 w-full h-full object-cover object-center scale-[1.02] pointer-events-none"
+        className="absolute inset-0 w-full h-full object-cover object-center scale-[1.02] pointer-events-none opacity-0"
+      />
+
+      {/* Real-time Subtle Pixelated Render Canvas */}
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 w-full h-full object-cover object-center scale-[1.03] pointer-events-none transition-opacity duration-700 ease-out"
+        style={{
+          imageRendering: "pixelated",
+          filter: "contrast(1.04) brightness(0.96)",
+          opacity: isVideoReady ? 1 : 0,
+        }}
       />
 
       {/* Subtle Micro Dither Mesh */}
