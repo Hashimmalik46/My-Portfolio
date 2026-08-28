@@ -47,12 +47,12 @@ function ProjectImageCard({ src, alt, link }) {
 }
 
 function ProjectCardContent({ project, index, scrollProgress }) {
-  // Image settles first as the card enters the viewport
-  const imageY = useTransform(scrollProgress, [0, 0.55], [24, 0]);
-  const imageScale = useTransform(scrollProgress, [0, 0.55], [0.96, 1]);
+  // Image settles first with increased upward travel
+  const imageY = useTransform(scrollProgress, [0, 0.55], [48, 0]);
+  const imageScale = useTransform(scrollProgress, [0, 0.55], [0.95, 1]);
 
-  // Content entrance with prominent, visible delay window (0.28 -> 0.95)
-  const contentY = useTransform(scrollProgress, [0, 0.28, 0.95], [52, 52, 0]);
+  // Content entrance with increased upward displacement and deliberate delay window
+  const contentY = useTransform(scrollProgress, [0, 0.28, 0.95], [96, 96, 0]);
   const contentOpacity = useTransform(scrollProgress, [0, 0.28, 0.78], [0, 0, 1]);
 
   return (
