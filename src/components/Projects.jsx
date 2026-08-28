@@ -23,7 +23,7 @@ function ProjectImageCard({ src, alt, link }) {
       target={link && link !== "#" ? "_blank" : undefined}
       rel="noreferrer"
       aria-label={`Visit ${alt} live website`}
-      className={`group relative block w-full max-w-lg lg:max-w-xl aspect-[4/3] sm:aspect-[4/3] lg:aspect-[4/3] overflow-hidden rounded-md sm:rounded-lg border border-white/10 hover:border-white/25 shadow-[0_20px_50px_rgba(0,0,0,0.7)] transition-all duration-500 bg-[#0c0d12] ${
+      className={`group relative block w-full max-w-lg lg:max-w-xl aspect-[16/10] sm:aspect-[4/3] lg:aspect-[4/3] overflow-hidden rounded-lg border border-white/10 hover:border-white/25 shadow-[0_20px_50px_rgba(0,0,0,0.7)] transition-all duration-500 bg-[#0c0d12] ${
         link && link !== "#" ? "cursor-pointer" : ""
       }`}
     >
@@ -65,23 +65,23 @@ function ProjectCardContent({ project, index, scrollProgress }) {
       </div>
 
       {/* Card Content Grid */}
-      <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-start relative z-10">
+      <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 lg:gap-12 items-start relative z-10">
         {/* Left Side: Category, Title, Description, Tech Stack & Links (Scroll-Linked Upward Motion) */}
         <motion.div
           style={{ y: contentY, opacity: contentOpacity }}
-          className="lg:col-span-6 flex flex-col justify-start gap-4 sm:gap-5 order-2 lg:order-1 px-0.5 sm:px-0 will-change-transform"
+          className="lg:col-span-6 flex flex-col justify-start gap-3 sm:gap-5 order-2 lg:order-1 px-0.5 sm:px-0 will-change-transform"
         >
           {/* Top Content Block */}
-          <div className="flex flex-col gap-3 sm:gap-4.5">
+          <div className="flex flex-col gap-2.5 sm:gap-4.5">
             {/* Category */}
             <div className="flex items-center justify-between w-full">
-              <span className="font-jakarta text-[11px] sm:text-xs uppercase tracking-[0.25em] text-white/50 font-medium">
+              <span className="font-jakarta text-[11px] sm:text-xs uppercase tracking-[0.22em] text-white/50 font-medium">
                 {project.category}
               </span>
             </div>
 
             {/* Project Title: Static on phones, ScrollFade on tablet/desktop */}
-            <h3 className="sm:hidden font-clashM text-xl text-white tracking-tight leading-snug">
+            <h3 className="sm:hidden font-clashM text-[19px] text-white tracking-tight leading-snug">
               {project.title}
             </h3>
             <ScrollFadeText
@@ -93,13 +93,13 @@ function ProjectCardContent({ project, index, scrollProgress }) {
 
             {/* Description */}
             <div className="flex flex-col gap-2 sm:gap-2.5">
-              <p className="font-jakarta text-sm sm:text-[15px] md:text-base text-white/80 font-normal leading-relaxed">
+              <p className="font-jakarta text-[13px] sm:text-[15px] md:text-base text-white/80 font-normal leading-relaxed line-clamp-2 sm:line-clamp-none">
                 {project.short_desc}
               </p>
 
-              {/* Highlights */}
+              {/* Highlights (Tablet/Desktop) */}
               {project.highlights && project.highlights.length > 0 && (
-                <div className="flex flex-col gap-1.5 pt-1">
+                <div className="hidden sm:flex flex-col gap-1.5 pt-1">
                   {project.highlights.map((item, hIdx) => (
                     <div
                       key={hIdx}
@@ -114,48 +114,28 @@ function ProjectCardContent({ project, index, scrollProgress }) {
             </div>
           </div>
 
-          {/* Tech Stack & External Action Block */}
-          <div className="flex flex-col gap-3 pt-2 sm:pt-3">
-            {/* Tech Stack Tags Grid */}
-            <div className="flex flex-wrap items-center gap-2">
-              {project.tags?.map((tag) => (
-                <div
-                  key={tag.id || tag.tag}
-                  className="flex items-center gap-1.5 text-xs sm:text-[13px] font-jakarta text-white/80 bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-white/25 px-2.5 sm:px-3 py-1 rounded-md sm:rounded-lg transition-colors shadow-sm"
-                >
-                  {tag.img && (
-                    <img
-                      src={tag.img}
-                      alt={tag.tag}
-                      className="w-3.5 h-3.5 object-contain shrink-0"
-                      loading="lazy"
-                    />
-                  )}
-                  <span className="font-medium">{tag.tag}</span>
-                </div>
-              ))}
-            </div>
-
-            {/* GitHub Link */}
-            {project.github && project.github !== "#" && (
-              <div className="pt-1">
-                <a
-                  href={project.github}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label="Source Code on GitHub"
-                  title="Source Code on GitHub"
-                  className="group/gh inline-flex items-center gap-2 text-white/50 hover:text-white transition-colors duration-200 cursor-pointer text-xs font-jakarta"
-                >
-                  <Github size={15} strokeWidth={2} className="text-white/60 group-hover/gh:text-pAccent transition-colors" />
-                  <span className="font-medium tracking-wide">Source Code</span>
-                </a>
+          {/* Tech Stack Tags Grid */}
+          <div className="flex flex-wrap items-center gap-2 pt-0.5 sm:pt-1">
+            {project.tags?.map((tag) => (
+              <div
+                key={tag.id || tag.tag}
+                className="flex items-center gap-1.5 text-xs sm:text-[13px] font-jakarta text-white/80 bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-white/25 px-2.5 py-1 sm:px-3 sm:py-1 rounded-md sm:rounded-lg transition-colors shadow-sm"
+              >
+                {tag.img && (
+                  <img
+                    src={tag.img}
+                    alt={tag.tag}
+                    className="w-3.5 h-3.5 object-contain shrink-0"
+                    loading="lazy"
+                  />
+                )}
+                <span className="font-medium">{tag.tag}</span>
               </div>
-            )}
+            ))}
           </div>
 
-          {/* Bottom Action: Visit Website Link */}
-          <div className="flex items-center gap-5 sm:gap-6 pt-2 sm:pt-3.5">
+          {/* Action Row: Visit Website + Source Code */}
+          <div className="flex items-center justify-between sm:justify-start gap-5 sm:gap-6 pt-1.5 sm:pt-3.5">
             {project.link && project.link !== "#" && (
               <a
                 href={project.link}
@@ -164,7 +144,21 @@ function ProjectCardContent({ project, index, scrollProgress }) {
                 className="group/demo inline-flex items-center gap-2 text-white hover:text-pAccent font-jakarta font-medium text-xs sm:text-sm md:text-base uppercase tracking-[0.1em] transition-colors duration-200 cursor-pointer"
               >
                 <span>Visit Website</span>
-                <ArrowUpRight size={17} strokeWidth={2.2} className="transition-transform duration-200 group-hover/demo:translate-x-0.5 group-hover/demo:-translate-y-0.5 text-white/80 group-hover/demo:text-pAccent sm:w-5 sm:h-5" />
+                <ArrowUpRight size={16} strokeWidth={2.2} className="transition-transform duration-200 group-hover/demo:translate-x-0.5 group-hover/demo:-translate-y-0.5 text-white/80 group-hover/demo:text-pAccent sm:w-5 sm:h-5" />
+              </a>
+            )}
+
+            {project.github && project.github !== "#" && (
+              <a
+                href={project.github}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Source Code on GitHub"
+                title="Source Code on GitHub"
+                className="group/gh inline-flex items-center gap-1.5 text-white/50 hover:text-white transition-colors duration-200 cursor-pointer text-xs font-jakarta"
+              >
+                <Github size={15} strokeWidth={2} className="text-white/60 group-hover/gh:text-pAccent transition-colors" />
+                <span className="font-medium tracking-wide">Source</span>
               </a>
             )}
           </div>
@@ -173,7 +167,7 @@ function ProjectCardContent({ project, index, scrollProgress }) {
         {/* Right Side: Project Image Preview (Scroll-Linked Settle & Upward Motion) */}
         <motion.div
           style={{ y: imageY, scale: imageScale }}
-          className="lg:col-span-6 w-full flex items-center justify-center lg:justify-end order-1 lg:order-2 mt-6 sm:mt-7 lg:mt-8 xl:mt-10 mb-2 sm:mb-4 lg:mb-0 will-change-transform"
+          className="lg:col-span-6 w-full flex items-center justify-center lg:justify-end order-1 lg:order-2 mt-1 sm:mt-7 lg:mt-8 xl:mt-10 mb-0 sm:mb-4 lg:mb-0 will-change-transform"
         >
           <ProjectImageCard
             src={project.img}
@@ -196,7 +190,7 @@ function ProjectCardItem({ project, index }) {
   return (
     <div
       ref={cardRef}
-      className="sticky top-12 sm:top-16 lg:top-20 w-full flex items-center justify-center py-4 sm:py-6 px-4 sm:px-6 md:px-10 lg:px-14"
+      className="sticky top-5 sm:top-16 lg:top-20 w-full flex items-center justify-center py-3 sm:py-6 px-3.5 sm:px-6 md:px-10 lg:px-14"
       style={{
         zIndex: index + 10,
       }}
