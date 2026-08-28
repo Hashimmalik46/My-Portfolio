@@ -29,8 +29,21 @@ function ProjectImageCard({ src, alt, link }) {
 }
 
 function ProjectCardContent({ project, index, scrollProgress }) {
-  // Content & Image entrance with smooth upward displacement and opacity fade
-  const contentY = useTransform(scrollProgress, [0, 0.25, 0.9], [56, 56, 0]);
+  const [isMobile, setIsMobile] = React.useState(() =>
+    typeof window !== "undefined" ? window.innerWidth < 640 : false
+  );
+
+  React.useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+    window.addEventListener("resize", handleResize, { passive: true });
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Content & Image entrance: Subtle 16px shift on mobile phones, 48px on tablet/desktop
+  const startY = isMobile ? 16 : 48;
+  const contentY = useTransform(scrollProgress, [0, 0.25, 0.9], [startY, startY, 0]);
   const contentOpacity = useTransform(scrollProgress, [0, 0.22, 0.75], [0, 0, 1]);
 
   return (
