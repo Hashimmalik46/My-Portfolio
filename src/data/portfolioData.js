@@ -84,7 +84,7 @@ export const portfolioData = {
     name: "Hashim Malik",
     backgroundVideo: {
       webm: "/gallery/bg_video_3.webm",
-      mp4: "/gallery/bg_video_3.MP4",
+      mp4: "/gallery/bg_video_3.mp4",
     },
     tagline: {
       prefix: "A software and design enthusiast blending",

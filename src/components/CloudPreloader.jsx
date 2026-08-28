@@ -57,6 +57,12 @@ export default function CloudPreloader({ onStartReveal }) {
   useEffect(() => {
     const video = videoRef.current;
     if (video) {
+      video.muted = true;
+      video.defaultMuted = true;
+      video.playsInline = true;
+      video.setAttribute("playsinline", "");
+      video.setAttribute("webkit-playsinline", "true");
+      video.setAttribute("x5-playsinline", "true");
       video.play().catch(() => {});
       if (video.readyState >= 2) {
         setIsVideoReady(true);
@@ -182,6 +188,8 @@ export default function CloudPreloader({ onStartReveal }) {
         loop
         muted
         playsInline
+        webkit-playsinline="true"
+        x5-playsinline="true"
         preload="auto"
         onLoadedData={() => setIsVideoReady(true)}
         onCanPlay={() => setIsVideoReady(true)}
