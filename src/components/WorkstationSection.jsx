@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { ArrowUpRight } from "lucide-react";
+import { Wrench, ArrowUpRight } from "lucide-react";
 import { motion, useScroll, useTransform } from "motion/react";
 import { Link } from "react-router-dom";
 
@@ -42,9 +42,9 @@ export default function WorkstationSection() {
             >
               {i % 2 === 0 ? "Tools" : "Workstation"}
             </span>
-            <ArrowUpRight
+            <Wrench
               className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 shrink-0 text-white/40"
-              strokeWidth={2.2}
+              strokeWidth={2}
             />
           </div>
         ))}

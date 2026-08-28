@@ -35,6 +35,7 @@ export const portfolioData = {
     title: "I build, experiment, and figure things out.",
     email: "hashimzahoor2003@gmail.com",
     location: "Srinagar, Kashmir",
+    education: "B.Tech in Computer Science & Engineering, Islamic University of Science & Technology (IUST)",
     focus: "Building Across Full-Stack, AI & UI/UX",
     resume: "/resume.pdf",
     copyrightYear: new Date().getFullYear(),
@@ -197,31 +198,25 @@ export const portfolioData = {
         id: "edu-1",
         year: "2023 – Present",
         role: "B.Tech in Computer Science & Engineering",
-        organization: "Islamic University of Science & Technology, Pulwama",
-        badge: "Education",
+        organization: "Islamic University of Science & Technology (IUST), Awantipora",
         description:
           "Deep focus on Data Structures & Algorithms, Object-Oriented System Design, Database Management Systems, Machine Learning pipelines, Computer architecture and Computer networks.",
-        tags: ["DSA", "Computer Vision", "Machine Learning", "System Design"],
       },
       {
         id: "exp-1",
         year: "2024 – Present",
         role: "UI/UX & Product Designer",
         organization: "Freelance & Design Systems",
-        badge: "Design",
         description:
           "Crafting intuitive user journeys, high-fidelity interfaces, and responsive design systems with a focus on minimalist aesthetics, typography hierarchy, and fluid micro-interactions.",
-        tags: ["Figma", "UI/UX", "Design Systems", "Prototyping", "Wireframing"],
       },
       {
         id: "exp-2",
         year: "2025 – Present",
         role: "Full Stack & AI Developer",
         organization: "Independent & Freelance Engineering",
-        badge: "Experience",
         description:
           "Architecting end-to-end full stack web platforms, real-time doctor-patient clinic portals (Zooncare, Dandwoat), autonomous lead generation AI agents, and IoT student safety tracking systems.",
-        tags: ["React", "Node.js", "Python", "Supabase", "Flask", "AI Agents"],
       },
     ],
   },
@@ -235,111 +230,14 @@ export const portfolioData = {
     heading: "Selected Projects",
     subheading:
       "A showcase of full-stack engineering, AI implementations, and production web platforms.",
-    // Atmospheric Floating Background Canvases
-    floatingImages: [
-      {
-        id: "float-1",
-        src: "/gallery/CC.webp",
-        alt: "Campus Connect",
-        positionClass: "top-[8%] sm:top-[4%] -left-20 sm:left-[1%] lg:left-[3%]",
-        sizeClass: "w-[280px] sm:w-[380px] lg:w-[440px]",
-        rotation: -8,
-        blurClass: "blur-[3px] sm:blur-[5px]",
-        opacityClass: "opacity-25 sm:opacity-30",
-        tintGradient: "from-black/85 via-black/30 to-pAccent/15",
-        duration: 9,
-        delay: 0,
-      },
-      {
-        id: "float-2",
-        src: "/gallery/intellisentry.webp",
-        alt: "IntelliSentry",
-        positionClass: "top-[19%] sm:top-[16%] -right-20 sm:right-[1%] lg:right-[2%]",
-        sizeClass: "w-[270px] sm:w-[370px] lg:w-[430px]",
-        rotation: 8.5,
-        blurClass: "blur-[3px] sm:blur-[5px]",
-        opacityClass: "opacity-20 sm:opacity-25",
-        tintGradient: "from-black/85 via-black/30 to-cyan-400/15",
-        duration: 10,
-        delay: 1,
-      },
-      {
-        id: "float-3",
-        src: "/gallery/Zooncare.webp",
-        alt: "Zooncare",
-        positionClass: "top-[32%] sm:top-[30%] -left-24 sm:left-[0%] lg:left-[1%]",
-        sizeClass: "w-[290px] sm:w-[390px] lg:w-[450px]",
-        rotation: -7,
-        blurClass: "blur-[4px] sm:blur-[6px]",
-        opacityClass: "opacity-20 sm:opacity-25",
-        tintGradient: "from-black/85 via-black/30 to-pAccent/15",
-        duration: 11,
-        delay: 2,
-      },
-      {
-        id: "float-4",
-        src: "/gallery/dandwoat.webp",
-        alt: "Dandwoat",
-        positionClass: "top-[44%] sm:top-[45%] -right-24 sm:right-[0%] lg:right-[2%]",
-        sizeClass: "w-[280px] sm:w-[390px] lg:w-[450px]",
-        rotation: 7.5,
-        blurClass: "blur-[3px] sm:blur-[5px]",
-        opacityClass: "opacity-20 sm:opacity-25",
-        tintGradient: "from-black/85 via-black/30 to-emerald-400/15",
-        duration: 9.5,
-        delay: 1.2,
-      },
-      {
-        id: "float-5",
-        src: "/gallery/SS.webp",
-        alt: "Arabic with Dr Sajad",
-        positionClass: "top-[58%] sm:top-[59%] -left-20 sm:left-[1%] lg:left-[2%]",
-        sizeClass: "w-[290px] sm:w-[400px] lg:w-[460px]",
-        rotation: -8.5,
-        blurClass: "blur-[3px] sm:blur-[5px]",
-        opacityClass: "opacity-20 sm:opacity-25",
-        tintGradient: "from-black/85 via-black/30 to-purple-400/15",
-        duration: 9.5,
-        delay: 1.5,
-      },
-      {
-        id: "float-6",
-        src: "/gallery/CC.webp",
-        alt: "Agentic AI",
-        positionClass: "top-[70%] sm:top-[72%] -right-20 sm:right-[1%] lg:right-[3%]",
-        sizeClass: "w-[270px] sm:w-[380px] lg:w-[440px]",
-        rotation: 7,
-        blurClass: "blur-[3px] sm:blur-[5px]",
-        opacityClass: "opacity-20 sm:opacity-25",
-        tintGradient: "from-black/85 via-black/30 to-blue-400/15",
-        duration: 10,
-        delay: 0.8,
-      },
-      {
-        id: "float-7",
-        src: "/gallery/bus.webp",
-        alt: "School Bus Tracker",
-        positionClass: "top-[83%] sm:top-[84%] -left-20 sm:left-[1%] lg:left-[3%]",
-        sizeClass: "w-[270px] sm:w-[370px] lg:w-[430px]",
-        rotation: -7.5,
-        blurClass: "blur-[4px] sm:blur-[6px]",
-        opacityClass: "opacity-20 sm:opacity-25",
-        tintGradient: "from-black/85 via-black/30 to-pAccent/15",
-        duration: 10.5,
-        delay: 0.5,
-      },
-    ],
     projects: [
       {
         id: "zooncare",
         title: "Role Based Clinic Management System",
         img: "/gallery/Zooncare.webp",
-        img2: "/gallery/Zooncare.webp",
         category: "Full Stack",
         short_desc:
           "Full-stack clinical management platform built with role-based access architecture, secure doctor-patient records, and real-time scheduling.",
-        full_desc:
-          "Zooncare is a comprehensive, production-grade medical management system engineered to streamline daily outpatient workflows. It enforces granular role-based access control (RBAC) separating Doctors, Receptionists, and Patients, complete with real-time appointment booking, consultation history, and prescription generation.",
         highlights: [
           "Granular Role-Based Access Control (Admin, Doctor, Receptionist, Patient)",
           "Real-time appointment conflict resolution and slot management",
@@ -357,12 +255,9 @@ export const portfolioData = {
         id: "dandwoat",
         title: "Dandwoat Dental Clinic",
         img: "/gallery/dandwoat.webp",
-        img2: "/gallery/dandwoat.webp",
         category: "Web Platform",
         short_desc:
           "Comprehensive dental healthcare portal featuring online appointment bookings, treatment guides, and patient inquiry workflows.",
-        full_desc:
-          "A modern, patient-first web application designed for a premier dental healthcare clinic. Features interactive cosmetic dentistry showcases, an automated online appointment booking pipeline, patient inquiry management, and optimized SEO performance.",
         highlights: [
           "Automated patient appointment routing and WhatsApp notification integration",
           "High-converting aesthetic UI with procedure guides and pricing estimates",
@@ -380,12 +275,9 @@ export const portfolioData = {
         id: "intellisentry",
         title: "IntelliSentry Hostel Management System",
         img: "/gallery/intellisentry.webp",
-        img2: "/gallery/intellisentry.webp",
         category: "Full Stack",
         short_desc:
           "Smart hostel administration platform handling automated check-ins, student records, and room allocations with custom backend logic.",
-        full_desc:
-          "IntelliSentry automates traditional campus hostel operations. Built with React and Supabase, it provides warden dashboards, real-time student in/out entry logging, automated room occupancy analytics, and fine management with instant ledger updates.",
         highlights: [
           "Real-time student movement tracking with timestamp verification",
           "Automated room allocation matrices and vacancy heatmaps",
@@ -403,12 +295,9 @@ export const portfolioData = {
         id: "campus-connect",
         title: "Campus Connect",
         img: "/gallery/CC.webp",
-        img2: "/gallery/CC.webp",
         category: "Social Platform",
         short_desc:
           "Closed academic social network enabling campus-wide student communication, event feeds, and peer collaborations.",
-        full_desc:
-          "An exclusive social and networking platform engineered for university campuses. Enables verified students to share academic updates, discover campus events, participate in subject discussions, and form study groups with instant feeds.",
         highlights: [
           "Campus-verified domain authentication and user profile curation",
           "Real-time event discovery feeds and peer interaction posts",
@@ -426,12 +315,9 @@ export const portfolioData = {
         id: "arabic-sajad",
         title: "Arabic with Dr Sajad",
         img: "/gallery/SS.webp",
-        img2: "/gallery/SS.webp",
         category: "EdTech",
         short_desc:
           "Content-driven publishing and educational platform with integrated video course delivery, membership tiers, and payments.",
-        full_desc:
-          "An end-to-end e-learning and language education portal tailored for comprehensive Arabic instruction. Integrates secure video module delivery, student progress dashboards, downloadable curriculum resources, and automated subscription access.",
         highlights: [
           "Secure structured video course delivery with chapter timestamps",
           "Tiered subscription paywall and automated student onboarding",
@@ -448,12 +334,9 @@ export const portfolioData = {
         id: "agentic-ai",
         title: "Agentic AI for Lead Generation",
         img: "/gallery/agentic.webp",
-        img2: "/gallery/agentic.webp",
         category: "AI & Automation",
         short_desc:
           "Autonomous agent-driven workflow designed to extract, qualify, and route high-intent leads using machine intelligence and API pipelines.",
-        full_desc:
-          "An autonomous multi-agent pipeline designed to automate outbound sales research. The system leverages LLM agents with tool calling to scrape prospective leads, verify domain emails, score lead intent via custom heuristics, and compose personalized outreach drafts.",
         highlights: [
           "Autonomous multi-agent orchestration with specialized research & qualification agents",
           "Intent scoring heuristic engine analyzing company signals and funding data",
@@ -471,12 +354,9 @@ export const portfolioData = {
         id: "school-bus",
         title: "Safe School Bus Tracker",
         img: "/gallery/bus.webp",
-        img2: "/gallery/bus.webp",
         category: "Real-Time Tracking",
         short_desc:
           "Real-time school transport and child tracking application with instant route updates and synchronized parent alerts.",
-        full_desc:
-          "A mission-critical real-time IoT tracking web application for student transit. Connects vehicle telemetry and GPS streams with Supabase Realtime subscriptions to render live bus trajectories on maps and trigger proactive arrival notifications for parents.",
         highlights: [
           "Sub-second GPS coordinate sync powered by Supabase Realtime channels",
           "Dynamic ETA calculation with geofence proximity alerts",

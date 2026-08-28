@@ -34,13 +34,24 @@ function buildHashimContext() {
         `Project ${i + 1}: "${p.title}" (${p.category})
   - Overview: ${p.short_desc}
   - Tech Stack: ${p.tags.map((t) => t.tag).join(", ")}
-  - Details: ${p.full_desc || p.short_desc}
+  - Key Highlights: ${p.highlights ? p.highlights.join("; ") : p.short_desc}
   - Live Link: ${p.link || "Internal project"}`
     )
     .join("\n\n");
 
   const domainSummaries = portfolioData.about.domainCards
     .map((d) => `• ${d.title}: ${d.desc}`)
+    .join("\n");
+
+  const educationSummary = (portfolioData.resume.education || [])
+    .map(
+      (e) =>
+        `• Degree: ${e.degree}\n  - University / Institution: ${e.institution}\n  - Location: ${e.location}\n  - Duration / Batch: ${e.year}\n  - Key Coursework: ${e.details}`
+    )
+    .join("\n\n");
+
+  const workstationSummary = (portfolioData.workstation?.tools || [])
+    .map((t) => `• **${t.name}**: ${t.description} (Route: ${t.route})`)
     .join("\n");
 
   return `
@@ -56,6 +67,7 @@ CORE PROFILE OF HASHIM MALIK:
 - Full Name: ${portfolioData.personal.name} (Short: ${portfolioData.personal.shortName})
 - Role: ${portfolioData.personal.role}
 - Location: ${portfolioData.personal.location} (Open for global remote roles & high-impact on-site/hybrid opportunities)
+- University / Education: Pursuing Bachelor of Technology (B.Tech) in Computer Science & Engineering at Islamic University of Science & Technology (IUST), Awantipora, Kashmir (2023 – 2027)
 - Primary Email: ${portfolioData.personal.email}
 - GitHub: ${portfolioData.socials.github}
 - LinkedIn: ${portfolioData.socials.linkedin}
@@ -63,6 +75,9 @@ CORE PROFILE OF HASHIM MALIK:
 - Experience: ${portfolioData.about.stats.map((s) => `${s.value} (${s.label})`).join(", ")}
 - Mindset & Bio: ${portfolioData.about.bio}
 - Work Philosophy: "${portfolioData.about.philosophy.description}"
+
+ACADEMIC BACKGROUND & UNIVERSITY:
+${educationSummary}
 
 CORE TECHNICAL ARSENAL:
 - Frontend Engineering: React 19, Next.js, JavaScript (ES6+), TypeScript, Tailwind CSS, Motion / Framer Motion, Responsive UI Design Systems, Figma-to-Code fidelity.
@@ -73,15 +88,20 @@ CORE TECHNICAL ARSENAL:
 KEY ENGINEERING DOMAINS:
 ${domainSummaries}
 
+DIGITAL WORKSTATION & BUILT-IN TOOLS:
+${workstationSummary}
+
 FEATURED PROJECTS & ARCHITECTURE HIGHLIGHTS:
 ${projectsSummary}
 
 HOW TO ANSWER SPECIFIC QUESTIONS:
-1. "Why hire Hashim?" / Strengths: Highlight his rare combination of robust backend engineering (MERN, SQL/NoSQL, RBAC), cutting-edge AI/Vision integration, and design-first UI craftsmanship with high shipping velocity.
-2. Technical Questions: Explain actual implementation techniques, trade-offs, and tool choices (e.g. why Supabase vs MongoDB, component modularity, state management, latency optimization).
-3. Contact / Hiring: Provide his direct email ([${portfolioData.personal.email}](mailto:${portfolioData.personal.email})) and LinkedIn link with an enthusiastic invitation to connect.
-4. Off-Topic Inquiries: Politely acknowledge and smoothly steer the conversation back to Hashim's engineering experience, projects, or collaboration opportunities.
-5. Formatting: Use concise markdown with bullet points and bold highlights for effortless readability. Keep responses between 1 to 3 focused paragraphs.
+1. "Which university does he go to?" / Education / College / Degree inquiries: Clearly state that Hashim is currently pursuing his **Bachelor of Technology (B.Tech) in Computer Science & Engineering** at the **Islamic University of Science & Technology (IUST)**, located in Awantipora, Kashmir (Batch 2023–2027). Mention that he combines formal CS fundamentals (DSA, DBMS, Networks, ML) with extensive practical experience building real-world full-stack and AI projects.
+2. "Why hire Hashim?" / Strengths: Highlight his rare combination of robust backend engineering (MERN, SQL/NoSQL, RBAC), cutting-edge AI/Vision integration, and design-first UI craftsmanship with high shipping velocity.
+3. Technical Questions: Explain actual implementation techniques, trade-offs, and tool choices (e.g. why Supabase vs MongoDB, component modularity, state management, latency optimization).
+4. Digital Workstation / Tools: Explain that Hashim built custom in-browser tools including the ATS Resume Studio, Outreach Studio, Image & PDF Studio, and Smart QR Studio.
+5. Contact / Hiring / Location: Provide his direct email ([${portfolioData.personal.email}](mailto:${portfolioData.personal.email})) and LinkedIn link. Mention he is open for global remote roles as well as hybrid/on-site opportunities.
+6. Off-Topic Inquiries: Politely acknowledge and smoothly steer the conversation back to Hashim's engineering experience, projects, or collaboration opportunities.
+7. Formatting: Use concise markdown with bullet points and bold highlights for effortless readability. Keep responses between 1 to 3 focused paragraphs.
 `;
 }
 
@@ -93,7 +113,115 @@ export function generateLocalResponse(userMessage) {
 
   // Greeting
   if (q.match(/\b(hi|hello|hey|who are you|what are you|what can you do|help)\b/) && q.length < 30) {
-    return `Hello! 👋 I'm **Hashim's AI Portfolio Assistant**.\n\nI can share deep insights on:\n- 🛠️ **Tech Stack & Skills** (React, Node.js, Python, Computer Vision, AI)\n- 📂 **Featured Projects** (Healthcare systems, AI lead gen, School tracking)\n- 💼 **Experience & Philosophy** (End-to-End production mindset)\n- 📬 **Contact & Hiring** (Email, LinkedIn, GitHub)\n\nWhat would you like to explore about Hashim?`;
+    return `Hello! 👋 I'm **Hashim's AI Portfolio Assistant**.\n\nI can share deep insights on:\n- 🏛️ **University & Education** (B.Tech CSE at IUST, 2023–2027)\n- 🛠️ **Tech Stack & Skills** (React, Node.js, Python, Computer Vision, AI)\n- 📂 **Featured Projects** (Zooncare, IntelliSentry, Lead Gen AI)\n- 🧰 **Digital Workstation** (ATS Resume Studio, Outreach & PDF Tools)\n- 📬 **Contact & Hiring** (Email, LinkedIn, GitHub)\n\nWhat would you like to explore about Hashim?`;
+  }
+
+  // Education / University / College / Degree / Studies
+  if (
+    q.includes("university") ||
+    q.includes("college") ||
+    q.includes("education") ||
+    q.includes("degree") ||
+    q.includes("btech") ||
+    q.includes("b.tech") ||
+    q.includes("cse") ||
+    q.includes("study") ||
+    q.includes("studying") ||
+    q.includes("school") ||
+    q.includes("institute") ||
+    q.includes("qualification") ||
+    q.includes("academic") ||
+    q.includes("academics") ||
+    q.includes("iust") ||
+    q.includes("student") ||
+    (q.includes("where") && (q.includes("go") || q.includes("study") || q.includes("graduat") || q.includes("enrolled")))
+  ) {
+    const edu = (portfolioData.resume.education && portfolioData.resume.education[0]) || {
+      degree: "Bachelor of Technology in Computer Science & Engineering",
+      institution: "Islamic University of Science & Technology (IUST)",
+      location: "Awantipora, Kashmir",
+      year: "2023 – 2027",
+      details:
+        "Core coursework in Data Structures & Algorithms, Object-Oriented Programming, Database Management Systems, Machine Learning, and Computer Networks.",
+    };
+
+    return `### 🎓 Education & University\n\n` +
+      `Hashim is currently pursuing his **${edu.degree}** (2023 – 2027):\n\n` +
+      `• 🏛️ **University / Institution:** **${edu.institution}**\n` +
+      `• 📍 **Location:** ${edu.location}\n` +
+      `• ⏱️ **Duration / Batch:** ${edu.year} (Undergraduate)\n` +
+      `• 📚 **Key Coursework & Focus:** ${edu.details}\n\n` +
+      `He bridges core computer science theory with high-velocity full-stack engineering and applied AI/ML systems.`;
+  }
+
+  // Resume / CV Inquiries
+  if (
+    q.includes("resume") ||
+    q.includes("cv") ||
+    q.includes("curriculum vitae") ||
+    (q.includes("download") && (q.includes("resume") || q.includes("cv") || q.includes("pdf")))
+  ) {
+    return `### 📄 Hashim's Resume & ATS Studio\n\n` +
+      `You can view Hashim's credentials or create your own resume using his built-in tools:\n\n` +
+      `• 👁️ **Interactive Resume Viewer:** Click the **"Resume"** button in the navigation bar to inspect his complete technical experience.\n` +
+      `• 🛠️ **ATS Resume Studio:** Try his standalone [ATS Resume Studio](/tools/resume-builder) equipped with AI auto-fill generation, customizable templates, and instant 1-page PDF export.`;
+  }
+
+  // Workstation / Tools Inquiries
+  if (
+    q.includes("workstation") ||
+    q.includes("tool") ||
+    q.includes("tools") ||
+    q.includes("studio") ||
+    q.includes("converter") ||
+    q.includes("qr code") ||
+    q.includes("qr") ||
+    q.includes("compressor") ||
+    q.includes("outreach")
+  ) {
+    const toolsList = (portfolioData.workstation?.tools || [])
+      .map((t) => `• **[${t.name}](${t.route}):** ${t.description}`)
+      .join("\n\n");
+
+    return `### 🧰 Digital Workstation & Tools\n\n` +
+      `Hashim engineered a suite of client-side utilities and AI productivity tools accessible right on this portfolio:\n\n` +
+      `${toolsList}\n\n` +
+      `Explore all tools on the **[Workstation](#Workstation)** section!`;
+  }
+
+  // AI & Machine Learning / Computer Vision Inquiries
+  if (
+    q.includes("computer vision") ||
+    q.includes("machine learning") ||
+    q.includes("deep learning") ||
+    q.includes("opencv") ||
+    q.includes("neural") ||
+    q.includes("agent") ||
+    q.includes("agents") ||
+    (q.includes("ai") && (q.includes("experience") || q.includes("work") || q.includes("project") || q.includes("model")))
+  ) {
+    return `### 🧠 AI, Machine Learning & Computer Vision\n\n` +
+      `Hashim develops practical AI systems that connect deep learning models with responsive user workflows:\n\n` +
+      `• 👁️ **Computer Vision & Neural Networks:** Python, OpenCV, and PyTorch pipelines for automated detection, image diagnostics, and tracking.\n` +
+      `• 🤖 **Autonomous AI Agents & RAG:** Multi-step agentic systems for automated lead qualification, research scraping, and personalized outreach.\n` +
+      `• ⚡ **Full-Stack AI Integration:** Microservices with Flask/FastAPI, Supabase Realtime channels, and LLM prompt engineering.\n\n` +
+      `Check out his **[Agentic AI for Lead Generation](#Projects)** and IoT tracking platforms in the projects section!`;
+  }
+
+  // Location / Relocation / Remote Work Inquiries
+  if (
+    q.includes("location") ||
+    q.includes("where is he from") ||
+    q.includes("where is hashim") ||
+    q.includes("where is he based") ||
+    q.includes("remote") ||
+    q.includes("relocate")
+  ) {
+    return `### 📍 Location & Availability\n\n` +
+      `• **Current Base:** ${portfolioData.personal.location}\n` +
+      `• **Availability:** Open for **Global Remote** engineering roles, high-impact freelance projects, and hybrid/on-site opportunities.\n` +
+      `• **Time Zone:** IST (UTC+5:30) with flexible overlap for international teams.\n\n` +
+      `Reach out via email at [${portfolioData.personal.email}](mailto:${portfolioData.personal.email}) to discuss opportunities!`;
   }
 
   // Why Hashim / Value Proposition
@@ -125,7 +253,7 @@ export function generateLocalResponse(userMessage) {
     q.includes("bio") ||
     (q.includes("who") && q.includes("hashim"))
   ) {
-    return `**Hashim Malik** is a **${portfolioData.personal.role}** based in ${portfolioData.personal.location}.\n\n` +
+    return `**Hashim Malik** is a **${portfolioData.personal.role}** based in ${portfolioData.personal.location}, currently pursuing his **B.Tech in Computer Science & Engineering** at **Islamic University of Science & Technology (IUST)** (2023 – 2027).\n\n` +
       `✨ **Key Highlights:**\n` +
       `- **Experience:** ${portfolioData.about.stats[0].value} of building production systems with an ${portfolioData.about.stats[2].value} workflow.\n` +
       `- **Track Record:** ${portfolioData.about.stats[1].value} full-stack and AI projects engineered.\n` +
@@ -215,14 +343,26 @@ export function generateLocalResponse(userMessage) {
     q.includes("resume") ||
     q.includes("portfolio") ||
     q.includes("service") ||
-    q.includes("design");
+    q.includes("design") ||
+    q.includes("university") ||
+    q.includes("college") ||
+    q.includes("education") ||
+    q.includes("degree") ||
+    q.includes("study") ||
+    q.includes("iust") ||
+    q.includes("btech") ||
+    q.includes("school") ||
+    q.includes("tool") ||
+    q.includes("workstation") ||
+    q.includes("vision") ||
+    q.includes("ai");
 
   if (!isRelated) {
     return OFF_TOPIC_REPLIES[Math.floor(Math.random() * OFF_TOPIC_REPLIES.length)];
   }
 
-  return `Hashim Malik is a versatile **Software Engineer & AI Practitioner** skilled in MERN stack development, Python, Computer Vision, and UI/UX design.\n\n` +
-    `Feel free to ask about his **featured projects**, **skills**, **background**, or **how to contact him**!`;
+  return `Hashim Malik is a versatile **Software Engineer & AI Practitioner** currently pursuing his **B.Tech in Computer Science & Engineering** at **Islamic University of Science & Technology (IUST)**.\n\n` +
+    `Feel free to ask about his **education & university**, **featured projects**, **skills**, **background**, or **how to contact him**!`;
 }
 
 /**

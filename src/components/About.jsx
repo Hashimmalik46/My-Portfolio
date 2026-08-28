@@ -404,37 +404,25 @@ function About() {
                       </div>
 
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between items-start gap-1 sm:gap-2 mb-1">
-                        <span className="font-clash text-sm sm:text-base md:text-lg font-semibold text-secondary group-hover:text-black transition-colors leading-snug">
+                        <span className="font-clash text-base sm:text-lg font-semibold text-secondary group-hover:text-black transition-colors leading-snug">
                           {item.role}
                         </span>
 
                         {/* Minimal Date Pill */}
-                        <span className="inline-flex items-center text-[10px] sm:text-[11px] font-jakarta font-medium px-2.5 py-0.5 rounded-full bg-secondary/[0.04] text-secondary/60 border border-secondary/[0.08] tracking-normal transition-colors group-hover:text-secondary/80 group-hover:border-secondary/20 shrink-0">
+                        <span className="inline-flex items-center text-[10px] sm:text-[11px] font-jakarta font-semibold px-2.5 py-0.5 rounded-full bg-secondary/[0.05] text-secondary/70 border border-secondary/10 tracking-normal transition-colors group-hover:text-secondary/90 group-hover:border-secondary/25 shrink-0">
                           {item.year}
                         </span>
                       </div>
 
-                      <div className="text-[11px] sm:text-xs md:text-sm font-medium text-secondary/70 font-jakarta mb-1.5">
+                      {/* Organization: Clear sub-header */}
+                      <div className="text-xs sm:text-[13px] font-semibold font-jakarta text-secondary/85 mb-2">
                         {item.organization}
                       </div>
 
-                      <p className="text-xs sm:text-sm text-secondary/80 font-jakarta leading-relaxed mb-2.5">
+                      {/* Description: Clean readable body copy */}
+                      <p className="text-xs sm:text-[13px] text-secondary/60 font-jakarta leading-relaxed font-normal">
                         {item.description}
                       </p>
-
-                      {/* Skill / Domain Tags */}
-                      {item.tags && (
-                        <div className="flex flex-wrap gap-1 sm:gap-1.5">
-                          {item.tags.map((t, tIdx) => (
-                            <span
-                              key={tIdx}
-                              className="text-[9.5px] sm:text-[10px] font-semibold font-jakarta px-2 sm:px-2.5 py-0.5 rounded-md bg-secondary/[0.06] hover:bg-secondary/[0.12] text-secondary/85 border border-secondary/10 transition-colors"
-                            >
-                              {t}
-                            </span>
-                          ))}
-                        </div>
-                      )}
                     </motion.div>
                   );
                 })}
