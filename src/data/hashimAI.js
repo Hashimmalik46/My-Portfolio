@@ -278,7 +278,7 @@ export function generateLocalResponse(userMessage) {
     return `### 🛠️ Technical Arsenal\n\n` +
       `**Core Skills & Tools:**\n${skillsList}\n\n` +
       `**Key Engineering Domains:**\n${domains}\n\n` +
-      `💡 *Philosophy:* "${portfolioData.about.philosophy.description}"`;
+      `💡 *Philosophy:* "${portfolioData.hero.philosophyCard?.text || portfolioData.personal.title}"`;
   }
 
   // Contact & Hiring
