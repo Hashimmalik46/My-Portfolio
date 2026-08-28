@@ -699,8 +699,8 @@ STRICT INSTRUCTIONS:
         id: "media-converter",
         name: "Image & PDF Studio",
         description:
-          "Instant image compression, multi-format conversion (JPEG/WebP/PNG), images-to-PDF compiler, PDF merger, and page extractor.",
-        tags: ["Image Compressor", "JPEG / WebP / PNG", "Images to PDF", "PDF Merger", "Split PDF"],
+          "Zero-upload suite: PDF to Images, Passport & Photo Resizer, Image Compressor, Format Converter, Images to PDF, and PDF Merger.",
+        tags: ["PDF to Images", "Passport Resizer", "Compressor", "Format Converter", "PDF Merge & Split"],
         route: "/tools/media-converter",
         icon: FileText,
       },
