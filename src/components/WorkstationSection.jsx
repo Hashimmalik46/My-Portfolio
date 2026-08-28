@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { ArrowUpRight } from "lucide-react";
-import { motion, useScroll, useSpring, useTransform } from "motion/react";
+import { motion, useScroll, useTransform } from "motion/react";
 import { Link } from "react-router-dom";
 
 export default function WorkstationSection() {
@@ -12,15 +12,9 @@ export default function WorkstationSection() {
     offset: ["start end", "end start"],
   });
 
-  // Fluid spring smoothing for mobile touch & momentum scroll
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 85,
-    damping: 26,
-    restDelta: 0.001,
-  });
-
-  // Smooth scroll movement
-  const x1 = useTransform(smoothProgress, [0, 1], ["5%", "-35%"]);
+  // Dual Row Scroll Parallax: Row 1 moves Right to Left, Row 2 moves Left to Right
+  const x1 = useTransform(scrollYProgress, [0, 1], ["5%", "-35%"]);
+  const x2 = useTransform(scrollYProgress, [0, 1], ["-35%", "5%"]);
 
   return (
     <div
@@ -49,9 +43,7 @@ export default function WorkstationSection() {
               {i % 2 === 0 ? "Workstation" : "Tools"}
             </span>
             <ArrowUpRight
-              className={`w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 shrink-0 transition-colors duration-200 ${
-                i % 2 !== 0 ? "text-pAccent" : "text-white/40"
-              }`}
+              className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 shrink-0 text-white/40"
               strokeWidth={2.2}
             />
           </div>

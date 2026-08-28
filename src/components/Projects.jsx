@@ -172,7 +172,7 @@ export default function Projects() {
                     transition={{ duration: 0.75, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
                     className="lg:col-span-6 w-full flex items-center justify-center lg:justify-end order-1 lg:order-2 mt-6 sm:mt-7 lg:mt-8 xl:mt-10 mb-2 sm:mb-4 lg:mb-0"
                   >
-                    <div className="group relative w-full max-w-lg lg:max-w-xl aspect-[4/3] sm:aspect-[4/3] lg:aspect-[4/3] overflow-hidden rounded-lg sm:rounded-xl border border-white/10 hover:border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.7)] transition-all duration-500">
+                    <div className="group relative w-full max-w-lg lg:max-w-xl aspect-[4/3] sm:aspect-[4/3] lg:aspect-[4/3] overflow-hidden rounded-md sm:rounded-lg border border-white/10 hover:border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.7)] transition-all duration-500">
                       <img
                         src={project.img}
                         alt={project.title}
