@@ -41,6 +41,7 @@ import {
   convertPdfToImages,
   downloadAllPagesAsZip,
 } from "../services/imageProcessor";
+import { triggerFileDownload } from "../services/mediaDownloader";
 
 export default function OmniMediaStudio() {
   // Main Suite Switcher: 'image' | 'pdf'
@@ -358,12 +359,10 @@ export default function OmniMediaStudio() {
   const handleDownloadResizedSingle = () => {
     if (!resizerResult || !resizerFile) return;
     const ext = resizerFormat === "image/png" ? "png" : resizerFormat === "image/webp" ? "webp" : "jpg";
-    const a = document.createElement("a");
-    a.href = resizerResult.dataUrl;
-    a.download = `${resizerFile.name}_${selectedPresetId}.${ext}`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    triggerFileDownload(
+      resizerResult.blob || resizerResult.dataUrl,
+      `${resizerFile.name}_${selectedPresetId}.${ext}`
+    );
   };
 
   const handleDownloadPrintSheet = async (sheetFormat = "4x6") => {
@@ -441,12 +440,10 @@ export default function OmniMediaStudio() {
   };
 
   const handleDownloadSinglePdfPage = (page) => {
-    const a = document.createElement("a");
-    a.href = page.dataUrl;
-    a.download = `${pdfToImgFile?.name?.replace(/\.[^/.]+$/, "") || "document"}_page_${page.pageNum}.${page.ext}`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    triggerFileDownload(
+      page.blob || page.dataUrl,
+      `${pdfToImgFile?.name?.replace(/\.[^/.]+$/, "") || "document"}_page_${page.pageNum}.${page.ext}`
+    );
   };
 
   // =========================================================================
@@ -888,14 +885,20 @@ export default function OmniMediaStudio() {
                     Clear Photo
                   </button>
 
-                  <a
-                    href={compressResult?.dataUrl}
-                    download={`${compressorFile.name}_compressed.jpg`}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (!compressResult || !compressorFile) return;
+                      triggerFileDownload(
+                        compressResult.blob || compressResult.dataUrl,
+                        `${compressorFile.name}_compressed.jpg`
+                      );
+                    }}
                     className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-xs cursor-pointer"
                   >
                     <Download size={13} />
                     <span>Download Compressed ({compressResult ? formatBytes(compressResult.size) : "..."})</span>
-                  </a>
+                  </button>
                 </div>
               </div>
             ) : (
@@ -1038,14 +1041,19 @@ export default function OmniMediaStudio() {
                         </div>
 
                         {convertedItem ? (
-                          <a
-                            href={convertedItem.dataUrl}
-                            download={convertedItem.outputName}
+                          <button
+                            type="button"
+                            onClick={() => {
+                              triggerFileDownload(
+                                convertedItem.blob || convertedItem.dataUrl,
+                                convertedItem.outputName
+                              );
+                            }}
                             className="inline-flex items-center gap-1 px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold cursor-pointer"
                           >
                             <Download size={11} />
                             <span>Download {convertedItem.ext.toUpperCase()} ({formatBytes(convertedItem.size)})</span>
-                          </a>
+                          </button>
                         ) : (
                           <button
                             type="button"

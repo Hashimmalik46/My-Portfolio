@@ -12,6 +12,7 @@ import {
   ExternalHyperlink,
   ShadingType,
 } from "docx";
+import { triggerFileDownload } from "../services/mediaDownloader";
 
 const FONT_MAPPING = {
   sans: "Calibri",
@@ -752,15 +753,5 @@ export async function downloadResumeDocx(resume, options = {}) {
     .replace(/[^a-zA-Z0-9_-]/g, "_");
   const fileName = `${rawName || "Resume"}_ATS_Resume.docx`;
 
-  const url = URL.createObjectURL(blob);
-  const anchor = document.createElement("a");
-  anchor.href = url;
-  anchor.download = fileName;
-  document.body.appendChild(anchor);
-  anchor.click();
-  document.body.removeChild(anchor);
-
-  setTimeout(() => {
-    URL.revokeObjectURL(url);
-  }, 1000);
+  await triggerFileDownload(blob, fileName);
 }

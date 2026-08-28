@@ -685,7 +685,8 @@ export const compileImagesToPdf = async (imagesList, options = {}) => {
     doc.addImage(item.dataUrl, "JPEG", posX, posY, finalWidth, finalHeight, undefined, "FAST");
   });
 
-  doc.save(filename.endsWith(".pdf") ? filename : `${filename}.pdf`);
+  const pdfBlob = doc.output("blob");
+  triggerFileDownload(pdfBlob, filename.endsWith(".pdf") ? filename : `${filename}.pdf`);
   return true;
 };
 

@@ -14,9 +14,9 @@ import {
   Edit3,
   Eye,
   Sliders,
-  Sparkles,
   Share2,
 } from "lucide-react";
+import { triggerFileDownload } from "../services/mediaDownloader";
 
 // Predefined stylish color themes
 const COLOR_PRESETS = [
@@ -173,95 +173,18 @@ const isIOSDevice = () => {
   );
 };
 
-// Export handlers
+  // Export handlers
   const handleDownloadPng = async () => {
     if (!dataUrl) return;
     const filename = `qrcode_${activeType}_${Date.now()}.png`;
-
-    try {
-      // Convert data URL to Blob for clean processing across all browsers
-      const res = await fetch(dataUrl);
-      const blob = await res.blob();
-
-      // 1. On iOS / Mobile devices where Web Share API with files is supported,
-      // invoke native Share Sheet so iOS users can tap "Save Image" (Photos) or "Save to Files"
-      if (isIOSDevice() && navigator.canShare && typeof File !== "undefined") {
-        const file = new File([blob], filename, { type: "image/png" });
-        if (navigator.canShare({ files: [file] })) {
-          try {
-            await navigator.share({
-              files: [file],
-              title: "QR Code",
-              text: "Smart QR Code Generator",
-            });
-            return;
-          } catch (shareErr) {
-            if (shareErr.name === "AbortError") {
-              // User dismissed the iOS share sheet intentionally
-              return;
-            }
-            console.warn("iOS Share API failed, falling back to direct download:", shareErr);
-          }
-        }
-      }
-
-      // 2. Standard Blob ObjectURL download (Works on Android, macOS Safari, Chrome, Edge, Firefox)
-      const blobUrl = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = blobUrl;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      setTimeout(() => URL.revokeObjectURL(blobUrl), 30000);
-    } catch (err) {
-      console.error("PNG download error:", err);
-      // Fallback: direct data URL anchor
-      const a = document.createElement("a");
-      a.href = dataUrl;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    }
+    await triggerFileDownload(dataUrl, filename);
   };
 
   const handleDownloadSvg = async () => {
     if (!svgString) return;
     const filename = `qrcode_${activeType}_${Date.now()}.svg`;
     const blob = new Blob([svgString], { type: "image/svg+xml;charset=utf-8" });
-
-    try {
-      // 1. On iOS, share sheet allows saving SVG directly to Files / iCloud Drive
-      if (isIOSDevice() && navigator.canShare && typeof File !== "undefined") {
-        const file = new File([blob], filename, { type: "image/svg+xml" });
-        if (navigator.canShare({ files: [file] })) {
-          try {
-            await navigator.share({
-              files: [file],
-              title: "QR Code (Vector SVG)",
-              text: "Smart QR Code Generator (Vector SVG)",
-            });
-            return;
-          } catch (shareErr) {
-            if (shareErr.name === "AbortError") return;
-            console.warn("iOS SVG share failed, falling back to download:", shareErr);
-          }
-        }
-      }
-
-      // 2. Standard Blob ObjectURL download
-      const blobUrl = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = blobUrl;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      setTimeout(() => URL.revokeObjectURL(blobUrl), 30000);
-    } catch (err) {
-      console.error("SVG download error:", err);
-    }
+    await triggerFileDownload(blob, filename);
   };
 
   const handleShareQr = async () => {

@@ -221,27 +221,123 @@ export const fetchMediaDownload = async (url, options = {}) => {
 };
 
 /**
- * Triggers a direct browser file download for a given Blob or URL
+ * Detects if current environment is iOS (iPhone, iPad, iPod)
  */
-export const triggerFileDownload = (urlOrBlob, filename = "download") => {
-  if (urlOrBlob instanceof Blob) {
-    const href = URL.createObjectURL(urlOrBlob);
+export const isIOS = () => {
+  if (typeof navigator === "undefined") return false;
+  return (
+    /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)
+  );
+};
+
+/**
+ * Converts a data: URI to a Blob object
+ */
+export const dataUrlToBlob = (dataUrl) => {
+  if (!dataUrl || typeof dataUrl !== "string") return null;
+  try {
+    const parts = dataUrl.split(",");
+    const mime = parts[0].match(/:(.*?);/)?.[1] || "image/jpeg";
+    const bstr = atob(parts[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new Blob([u8arr], { type: mime });
+  } catch (err) {
+    console.error("dataUrlToBlob conversion failed:", err);
+    return null;
+  }
+};
+
+/**
+ * Universal browser file downloader with 100% iPhone/iOS Safari support.
+ * - On iOS / iPhone: Uses native Web Share API (enabling "Save Image" / "Save to Files" / AirDrop).
+ * - Falls back to high-compatibility Blob URL download and tab opening if needed.
+ */
+export const triggerFileDownload = async (urlOrBlob, filename = "download") => {
+  if (!urlOrBlob) return;
+
+  try {
+    let blob = null;
+    let mimeType = "application/octet-stream";
+
+    // 1. Resolve to Blob
+    if (urlOrBlob instanceof Blob) {
+      blob = urlOrBlob;
+      mimeType = blob.type || mimeType;
+    } else if (typeof urlOrBlob === "string") {
+      if (urlOrBlob.startsWith("data:")) {
+        blob = dataUrlToBlob(urlOrBlob);
+        mimeType = blob?.type || mimeType;
+      } else if (urlOrBlob.startsWith("blob:")) {
+        try {
+          const resp = await fetch(urlOrBlob);
+          blob = await resp.blob();
+          mimeType = blob?.type || mimeType;
+        } catch (_) {}
+      }
+    }
+
+    const ios = isIOS();
+
+    // 2. iOS / iPhone Native Web Share API (Save to Photos, Save to Files, AirDrop)
+    if (ios && blob && typeof navigator !== "undefined" && navigator.share && typeof File !== "undefined") {
+      try {
+        const file = new File([blob], filename, { type: mimeType });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          await navigator.share({
+            files: [file],
+            title: filename,
+          });
+          return;
+        }
+      } catch (shareErr) {
+        // User dismissed the iOS Share Sheet intentionally
+        if (shareErr.name === "AbortError") {
+          return;
+        }
+        console.warn("iOS Share API fallback to direct download:", shareErr);
+      }
+    }
+
+    // 3. Blob ObjectURL Download
+    if (blob) {
+      const blobUrl = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = blobUrl;
+      a.download = filename;
+      a.style.display = "none";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+
+      // On iOS Safari, if anchor download was ignored by WebKit, open in a new tab so user can tap & hold to save
+      if (ios) {
+        setTimeout(() => {
+          window.open(blobUrl, "_blank");
+        }, 150);
+      }
+
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
+      return;
+    }
+
+    // 4. Remote URL Download
     const a = document.createElement("a");
-    a.href = href;
+    a.href = urlOrBlob;
     a.download = filename;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    setTimeout(() => URL.revokeObjectURL(href), 30000);
-    return;
+  } catch (err) {
+    console.error("File download error:", err);
+    if (typeof urlOrBlob === "string") {
+      window.open(urlOrBlob, "_blank");
+    }
   }
-
-  const a = document.createElement("a");
-  a.href = urlOrBlob;
-  a.download = filename;
-  a.target = "_blank";
-  a.rel = "noopener noreferrer";
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
 };
