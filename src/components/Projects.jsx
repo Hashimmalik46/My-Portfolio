@@ -5,14 +5,14 @@ import { portfolioData } from "../data/portfolioData";
 import ArchitecturalBackground from "./ui/ArchitecturalBackground";
 import ScrollFadeText from "./ui/ScrollFadeText";
 
-function ProjectImageWipe({ src, alt, link }) {
+function ProjectImageCard({ src, alt, link }) {
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start 88%", "start 45%"],
   });
 
-  // Scroll-controlled downward curtain wipe
+  // Desktop-only scroll-driven downward curtain wipe
   const curtainY = useTransform(scrollYProgress, [0, 1], ["0%", "105%"]);
 
   return (
@@ -32,13 +32,13 @@ function ProjectImageWipe({ src, alt, link }) {
         alt={alt}
         loading="lazy"
         decoding="async"
-        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.035]"
+        className="w-full h-full object-cover transition-transform duration-700 ease-out sm:group-hover:scale-[1.03]"
       />
 
-      {/* Scroll-Driven Wipe Down Curtain with Signature Lime Trailing Edge */}
+      {/* Desktop Only: Scroll-Driven Wipe Down Curtain */}
       <motion.div
         style={{ y: curtainY }}
-        className="absolute inset-0 bg-[#090a0f] pointer-events-none z-20 border-b-2 border-pAccent/80 shadow-[0_4px_16px_rgba(168,218,34,0.45)] will-change-transform"
+        className="hidden lg:block absolute inset-0 bg-[#090a0f] pointer-events-none z-20 border-b-2 border-pAccent/80 shadow-[0_4px_16px_rgba(168,218,34,0.45)] will-change-transform"
       />
     </a>
   );
@@ -63,13 +63,7 @@ export default function Projects() {
 
       {/* Centered Editorial Section Header */}
       <div className="w-full flex flex-col items-center justify-center pt-20 sm:pt-24 md:pt-28 pb-14 sm:pb-20 md:pb-24 px-4 sm:px-6 md:px-16 text-center relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="flex flex-col items-center text-center gap-4 max-w-3xl mx-auto"
-        >
+        <div className="flex flex-col items-center text-center gap-4 max-w-3xl mx-auto">
           {/* Editorial Eyebrow */}
           <div className="flex items-center justify-center gap-3">
             <span className="font-clashM text-xs px-2.5 py-0.5 rounded-full bg-white/[0.08] text-pAccent border border-pAccent/30 tracking-[0.2em] uppercase font-bold shadow-[0_0_12px_rgba(168,218,34,0.2)]">
@@ -92,10 +86,10 @@ export default function Projects() {
             className="font-cormorant italic text-2xl sm:text-3xl text-white/90 font-light max-w-xl justify-center text-center"
             activeColor="text-white"
           />
-        </motion.div>
+        </div>
       </div>
 
-      {/* Floating Sticky Overlapping Cards with Surrounding Space */}
+      {/* Floating Sticky Overlapping Cards */}
       <div className="relative w-full pb-20 sm:pb-28 md:pb-36 flex flex-col items-center">
         {projects.map((project, index) => {
           return (
@@ -106,8 +100,8 @@ export default function Projects() {
                 zIndex: index + 10,
               }}
             >
-              {/* Floating Glass Card Body */}
-              <div className="relative w-full max-w-6xl bg-[#090a0f]/85 backdrop-blur-2xl rounded-2xl sm:rounded-3xl lg:rounded-[2.5rem] border border-white/[0.12] shadow-[0_25px_60px_rgba(0,0,0,0.85)] p-5 sm:p-8 md:p-10 lg:p-12 overflow-hidden transition-all">
+              {/* Solid Obsidian High-DPI Card Body (zero GPU blur lag) */}
+              <div className="relative w-full max-w-6xl bg-[#0D0E15] rounded-2xl sm:rounded-3xl lg:rounded-[2.5rem] border border-white/[0.12] shadow-[0_25px_60px_rgba(0,0,0,0.85)] p-5 sm:p-8 md:p-10 lg:p-12 overflow-hidden transition-all">
                 {/* Top-Right Minimal White Project Number */}
                 <div className="absolute top-4 right-5 sm:top-7 sm:right-8 lg:top-8 lg:right-11 z-30 pointer-events-none select-none">
                   <span className="font-jakarta text-xs sm:text-sm md:text-base font-semibold text-white/60 tracking-[0.25em]">
@@ -115,25 +109,13 @@ export default function Projects() {
                   </span>
                 </div>
 
-                {/* Subtle ambient lighting backdrop inside card */}
-                <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                  <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-[450px] h-[450px] rounded-full bg-[radial-gradient(circle_at_center,rgba(168,218,34,0.035)_0%,transparent_70%)] blur-2xl" />
-                  <div className="absolute bottom-6 left-6 w-[350px] h-[350px] rounded-full bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.02)_0%,transparent_70%)] blur-2xl" />
-                </div>
-
                 {/* Card Content Grid */}
                 <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-start relative z-10">
-                  {/* Left Side: Category, Title, Description, Tech Stack & Visit Website Link */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: false, amount: 0.25 }}
-                    transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
-                    className="lg:col-span-6 flex flex-col justify-start gap-4 sm:gap-5 order-2 lg:order-1 px-0.5 sm:px-0"
-                  >
+                  {/* Left Side: Category, Title, Description, Tech Stack & Links */}
+                  <div className="lg:col-span-6 flex flex-col justify-start gap-4 sm:gap-5 order-2 lg:order-1 px-0.5 sm:px-0">
                     {/* Top Content Block */}
                     <div className="flex flex-col gap-3 sm:gap-4.5">
-                      {/* Top Row: Category Text */}
+                      {/* Category */}
                       <div className="flex items-center justify-between w-full">
                         <span className="font-jakarta text-[11px] sm:text-xs uppercase tracking-[0.25em] text-white/50 font-medium">
                           {project.category}
@@ -151,13 +133,13 @@ export default function Projects() {
                         activeColor="text-white"
                       />
 
-                      {/* Description: Minimal & Professional Plus Jakarta Sans */}
+                      {/* Description */}
                       <div className="flex flex-col gap-2 sm:gap-2.5">
                         <p className="font-jakarta text-sm sm:text-[15px] md:text-base text-white/80 font-normal leading-relaxed">
                           {project.short_desc}
                         </p>
 
-                        {/* Project Highlights: Bulleted Insights */}
+                        {/* Highlights */}
                         {project.highlights && project.highlights.length > 0 && (
                           <div className="flex flex-col gap-1.5 pt-1">
                             {project.highlights.map((item, hIdx) => (
@@ -228,22 +210,16 @@ export default function Projects() {
                         </a>
                       )}
                     </div>
-                  </motion.div>
+                  </div>
 
-                  {/* Right Side: Taller Project Image Frame with Scroll-Controlled Wipe Reveal */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 24 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.15 }}
-                    transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                    className="lg:col-span-6 w-full flex items-center justify-center lg:justify-end order-1 lg:order-2 mt-6 sm:mt-7 lg:mt-8 xl:mt-10 mb-2 sm:mb-4 lg:mb-0"
-                  >
-                    <ProjectImageWipe
+                  {/* Right Side: Project Image Preview */}
+                  <div className="lg:col-span-6 w-full flex items-center justify-center lg:justify-end order-1 lg:order-2 mt-6 sm:mt-7 lg:mt-8 xl:mt-10 mb-2 sm:mb-4 lg:mb-0">
+                    <ProjectImageCard
                       src={project.img}
                       alt={project.title}
                       link={project.link}
                     />
-                  </motion.div>
+                  </div>
                 </div>
               </div>
             </div>
