@@ -2,21 +2,21 @@ import { useRef, useEffect, useState, useCallback } from "react";
 import { motion } from "motion/react";
 import { ChevronDown } from "lucide-react";
 import { portfolioData } from "../data/portfolioData";
+import GlitchRollingText from "./ui/GlitchRollingText";
+import StaggerGlitchText from "./ui/StaggerGlitchText";
 
 /**
  * CloudPreloader Component
  * 
  * Minimalist cinematic cloud preloader with subtle pixelation:
- * - Waits for video frame buffer readiness before fading in text & UI,
- *   eliminating any blank-background text flash on live deployments.
- * - Pulls all text, subtitles, durations, and video sources from portfolioData.js.
- * - Plays seamless cloud video with customizable duration.
- * - Subtle, delicate pixelated texture.
- * - Minimalist Longsile typography for name and subtitle.
- * - Side and radial cinematic vignettes.
+ * - Staggered character fade-in glitch for name ("Hashim Malik").
+ * - Once name stagger finishes, the cyber rolling matrix glitch on ("Welcome to HashVerse") begins.
+ * - Once subtitle finishes, triggers the upward Wipe Reveal unmasking the homepage.
+ * - Luminous wipe beam line leading the unmasking transition.
  */
 export default function CloudPreloader({ onStartReveal }) {
   const [isVideoReady, setIsVideoReady] = useState(false);
+  const [isNameComplete, setIsNameComplete] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -71,9 +71,8 @@ export default function CloudPreloader({ onStartReveal }) {
     return () => clearTimeout(fallbackTimer);
   }, []);
 
-  // Real-time Subtle Pixelation Render Loop (automatically halts on exit to free GPU/CPU)
+  // Real-time Subtle Pixelation Render Loop
   useEffect(() => {
-    if (isExiting) return;
     const video = videoRef.current;
     const canvas = canvasRef.current;
     if (!video || !canvas) return;
@@ -108,7 +107,7 @@ export default function CloudPreloader({ onStartReveal }) {
     return () => {
       cancelAnimationFrame(animId);
     };
-  }, [isExiting]);
+  }, []);
 
   useEffect(() => {
     // Intercept scroll/touch gestures
@@ -150,29 +149,26 @@ export default function CloudPreloader({ onStartReveal }) {
 
   return (
     <motion.div
-      initial={{ opacity: 1 }}
-      exit={{
-        opacity: 0,
-        scale: 1.08,
-        filter: "blur(8px)",
-        transition: { duration: 0.85, ease: [0.22, 1, 0.36, 1] },
-      }}
+      initial={{ y: "0%", opacity: 1 }}
       animate={
         isExiting
           ? {
-              opacity: 0,
-              scale: 1.08,
-              filter: "blur(8px)",
+              y: "-100%",
+              opacity: 1,
             }
           : {
+              y: "0%",
               opacity: 1,
-              scale: 1,
-              filter: "blur(0px)",
             }
       }
-      transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
+      exit={{
+        y: "-100%",
+        opacity: 1,
+        transition: { duration: 0.95, ease: [0.85, 0, 0.15, 1] },
+      }}
+      transition={{ duration: 0.95, ease: [0.85, 0, 0.15, 1] }}
       onClick={handleTrigger}
-      className="fixed inset-0 z-[100] flex flex-col justify-between items-center py-12 sm:py-16 px-6 bg-black cursor-pointer overflow-hidden touch-none select-none pointer-events-auto"
+      className="fixed inset-0 z-[100] flex flex-col justify-between items-center py-12 sm:py-16 px-6 bg-black cursor-pointer overflow-hidden touch-none select-none pointer-events-auto transform-gpu"
     >
       {/* Video element (Active in DOM for decoder playback) */}
       <video
@@ -226,7 +222,7 @@ export default function CloudPreloader({ onStartReveal }) {
         initial={{ opacity: 0, y: -10 }}
         animate={
           isExiting
-            ? { opacity: 0, y: -10 }
+            ? { opacity: 0, y: -25 }
             : isVideoReady
             ? { opacity: 1, y: 0 }
             : { opacity: 0, y: -10 }
@@ -240,12 +236,12 @@ export default function CloudPreloader({ onStartReveal }) {
         <span>{new Date().getFullYear()}</span>
       </motion.div>
 
-      {/* Center: Ultra-Minimal "Hashim Malik" in Longsile Font */}
+      {/* Center: Ultra-Minimal Name & Cyber Glitch/Rolling Subtitle */}
       <motion.div
         initial={{ opacity: 0, y: 15 }}
         animate={
           isExiting
-            ? { opacity: 0, y: -15, scale: 0.97 }
+            ? { opacity: 0, y: -45, scale: 0.96 }
             : isVideoReady
             ? { opacity: 1, y: 0, scale: 1 }
             : { opacity: 0, y: 15 }
@@ -253,45 +249,40 @@ export default function CloudPreloader({ onStartReveal }) {
         transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
         className="relative z-10 flex flex-col items-center text-center gap-3.5 my-auto"
       >
-        <motion.h1
+        {/* Staggered Glitch Entrance for Name */}
+        <motion.div
           animate={{
-            y: [0, 6, 0],
-            opacity: [0.65, 1, 0.65],
+            y: [0, 5, 0],
+            opacity: [0.75, 1, 0.75],
           }}
           transition={{
             repeat: Infinity,
-            duration: 2.2,
+            duration: 2.6,
             ease: "easeInOut",
           }}
-          style={{
-            willChange: "transform, opacity",
-            transform: "translate3d(0, 0, 0)",
-            WebkitFontSmoothing: "antialiased",
-          }}
-          className="font-longsile text-5xl sm:text-7xl md:text-8xl lg:text-9xl text-white/95 font-normal tracking-wide drop-shadow-[0_4px_24px_rgba(0,0,0,0.85)] select-none"
         >
-          {name}
-        </motion.h1>
+          <StaggerGlitchText
+            text={name}
+            isReady={isVideoReady}
+            initialDelay={0.12}
+            staggerDelay={0.045}
+            onComplete={() => setIsNameComplete(true)}
+            className="font-longsile text-5xl sm:text-7xl md:text-8xl lg:text-9xl text-white/95 font-normal tracking-wide drop-shadow-[0_4px_24px_rgba(0,0,0,0.85)]"
+          />
+        </motion.div>
 
-        {/* Minimal Subtitle */}
-        <motion.span
-          animate={{
-            y: [0, 6, 0],
-            opacity: [0.4, 0.8, 0.4],
-          }}
-          transition={{
-            repeat: Infinity,
-            duration: 2.2,
-            ease: "easeInOut",
-          }}
-          style={{
-            willChange: "transform, opacity",
-            transform: "translate3d(0, 0, 0)",
-          }}
-          className="font-jakarta text-[9.5px] sm:text-[10.5px] tracking-[0.4em] uppercase text-white/60 font-light"
-        >
-          {subtitle}
-        </motion.span>
+        {/* Glitch & Rolling Decoder Subtitle: Appears after Name completes */}
+        <div className="font-jakarta text-[9.5px] sm:text-[11px] md:text-[11.5px] tracking-[0.4em] uppercase text-white/80 font-light">
+          <GlitchRollingText
+            text={subtitle}
+            isReady={isNameComplete}
+            startDelay={150}
+            speed={50}
+            enableGlitch={true}
+            holdDurationAfterComplete={450}
+            onComplete={handleTrigger}
+          />
+        </div>
       </motion.div>
 
       {/* Bottom: Minimalist Downward Floating Indicator */}
@@ -299,7 +290,7 @@ export default function CloudPreloader({ onStartReveal }) {
         initial={{ opacity: 0, y: 10 }}
         animate={
           isExiting
-            ? { opacity: 0, y: 10 }
+            ? { opacity: 0, y: 20 }
             : isVideoReady
             ? { opacity: 1, y: 0 }
             : { opacity: 0, y: 10 }
@@ -329,6 +320,19 @@ export default function CloudPreloader({ onStartReveal }) {
           <ChevronDown className="w-3.5 h-3.5 text-white/60" strokeWidth={1.5} />
         </motion.div>
       </motion.div>
+
+      {/* Luminous Wipe Reveal Lead Beam */}
+      <div
+        className="absolute bottom-0 left-0 right-0 h-[2px] pointer-events-none z-20"
+        style={{
+          background:
+            "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 15%, rgba(168,218,34,0.95) 50%, rgba(255,255,255,0.4) 85%, transparent 100%)",
+          boxShadow:
+            "0 0 16px rgba(168,218,34,0.8), 0 0 32px rgba(255,255,255,0.5)",
+          opacity: isExiting ? 1 : 0.35,
+          transition: "opacity 0.3s ease",
+        }}
+      />
     </motion.div>
   );
 }
