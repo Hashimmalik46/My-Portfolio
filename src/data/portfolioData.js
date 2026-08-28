@@ -59,8 +59,10 @@ export const portfolioData = {
     subtitle: "Welcome to HashVerse",
     topTag: "PORTFOLIO",
     scrollPrompt: "SCROLL",
-    durationSeconds: 6,
-    videoSrc: "/gallery/clouds.webm",
+    videoSrc: {
+      mp4: "/gallery/clouds.mp4",
+      webm: "/gallery/clouds.webm",
+    },
   },
 
   // ==========================================

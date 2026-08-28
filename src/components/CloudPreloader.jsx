@@ -29,7 +29,13 @@ export default function CloudPreloader({ onStartReveal }) {
   const topTag = preloader?.topTag || "PORTFOLIO";
   const scrollPrompt = preloader?.scrollPrompt || "SCROLL";
   const durationSeconds = preloader?.durationSeconds ?? 6;
-  const videoSrc = preloader?.videoSrc || "/gallery/clouds.webm";
+  const videoSources =
+    typeof preloader?.videoSrc === "object"
+      ? preloader.videoSrc
+      : {
+          mp4: "/gallery/clouds.mp4",
+          webm: typeof preloader?.videoSrc === "string" ? preloader.videoSrc : "/gallery/clouds.webm",
+        };
 
   const handleTrigger = useCallback(() => {
     if (hasTriggeredRef.current) return;
@@ -69,6 +75,7 @@ export default function CloudPreloader({ onStartReveal }) {
       video.muted = true;
       video.defaultMuted = true;
       video.playsInline = true;
+      video.load();
       video.play().catch(() => {});
       if (video.readyState >= 2) {
         setIsVideoReady(true);
@@ -97,7 +104,7 @@ export default function CloudPreloader({ onStartReveal }) {
     const pixelBlockSize = 2.2;
 
     const render = () => {
-      if (video.readyState >= 2) {
+      if (video && (video.readyState >= 1 || video.currentTime > 0)) {
         setIsVideoReady(true);
         const vw = video.videoWidth || 1280;
         const vh = video.videoHeight || 720;
@@ -110,7 +117,9 @@ export default function CloudPreloader({ onStartReveal }) {
         }
 
         ctx.imageSmoothingEnabled = false;
-        ctx.drawImage(video, 0, 0, targetW, targetH);
+        try {
+          ctx.drawImage(video, 0, 0, targetW, targetH);
+        } catch (_) {}
       }
       animId = requestAnimationFrame(render);
     };
@@ -189,7 +198,6 @@ export default function CloudPreloader({ onStartReveal }) {
       {/* Video element (Active in DOM for decoder playback) */}
       <video
         ref={videoRef}
-        src={videoSrc}
         autoPlay
         loop
         muted
@@ -199,7 +207,10 @@ export default function CloudPreloader({ onStartReveal }) {
         onCanPlay={() => setIsVideoReady(true)}
         onEnded={handleTrigger}
         className="absolute inset-0 w-full h-full object-cover object-center scale-[1.02] pointer-events-none opacity-0"
-      />
+      >
+        <source src={videoSources.mp4} type="video/mp4" />
+        <source src={videoSources.webm} type="video/webm" />
+      </video>
 
       {/* Real-time Subtle Pixelated Render Canvas */}
       <canvas
