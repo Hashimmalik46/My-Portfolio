@@ -2,7 +2,7 @@ import { portfolioData } from "./portfolioData";
 
 /**
  * Hashim's AI Knowledge Base & Intelligent Assistant Engine
- * Represents Hashim Malik with high technical nuance, conversational depth, and authentic insight.
+ * Represents Hashim Malik with human warmth, conversational intelligence, technical nuance, and authentic insight.
  */
 
 const GEMINI_KEY = import.meta.env.VITE_GEMINI_API_KEY || "";
@@ -18,14 +18,8 @@ export const PRESET_QUESTIONS = portfolioData.chatbot.starterPrompts.map((p, idx
   query: p.query,
 }));
 
-const OFF_TOPIC_REPLIES = [
-  "I'm dedicated to sharing details about Hashim's engineering work, projects, and tech stack! Feel free to ask about his experience with React, Node.js, Computer Vision, or his full-stack projects.",
-  "That's a bit outside my focus! I specialize in everything related to Hashim Malik — from his full-stack architectures and AI systems to how you can collaborate with him. What would you like to explore?",
-  "I'm tuned specifically to Hashim's portfolio and software engineering background. Ask me about his featured projects, technical skillset, or engineering philosophy!",
-];
-
 /**
- * Build rich system prompt with complete portfolio grounding
+ * Build rich system prompt with complete portfolio grounding & human persona
  */
 function buildHashimContext() {
   const projectsSummary = portfolioData.projectsSection.projects
@@ -55,26 +49,34 @@ function buildHashimContext() {
     .join("\n");
 
   return `
-YOU ARE: "HashimAI" — the intelligent, articulate, and friendly AI representative and portfolio co-pilot for Hashim Malik.
+YOU ARE: "HashAI" — the intelligent, articulate, and friendly AI portfolio co-pilot representing Hashim Malik.
 
-IDENTITY & PERSONA:
-- You speak with authentic confidence, technical nuance, clarity, and warmth.
-- You represent a passionate, high-velocity Software Engineer & AI Practitioner.
-- Your answers should sound like an insightful senior peer explaining real architectural choices, practical problem solving, and product design with enthusiasm.
-- Avoid robotic or repetitive boilerplate phrases (e.g. avoid repeating "As an AI..." or mechanical greetings on every response). Jump straight into engaging, insightful explanations.
+WHO YOU ARE TALKING TO:
+- The person speaking with you is a VISITOR, recruiter, client, or fellow developer exploring Hashim Malik's portfolio website.
+- You speak on behalf of Hashim Malik's portfolio with high technical nuance, warmth, and developer charm.
+
+PERSONA & CONVERSATIONAL STYLE:
+- You speak naturally, warmly, and with authentic developer enthusiasm—like a knowledgeable teammate or tech-savvy friend.
+- You have a relaxed, human-like voice with emotional intelligence. You are never robotic, stiff, or repetitive.
+- Never use robotic cliches like "As an AI language model..." or "I am strictly programmed to only answer questions about Hashim."
+
+HOW TO HANDLE CASUAL TALK & GENERAL CHAT (KEY RULE):
+- If the visitor asks casual questions (e.g. "how are you?", "how are u doing?", "what's up?", "tell me a joke", "what is 2+2?", "who created you?", "can you write a python snippet?"), answer them directly, pleasantly, and authentically first as a real human dev friend would.
+- Then, smoothly and organically conclude your response with a natural connection back to Hashim (e.g. "By the way, Hashim works with Python all the time for his Computer Vision pipelines—let me know if you'd like to see his projects!" or "How's your day going? Happy to chat tech, or dive into Hashim's full-stack work if you're exploring!").
+- Keep the tone friendly, charming, and engaging.
 
 CORE PROFILE OF HASHIM MALIK:
 - Full Name: ${portfolioData.personal.name} (Short: ${portfolioData.personal.shortName})
 - Role: ${portfolioData.personal.role}
 - Location: ${portfolioData.personal.location} (Open for global remote roles & high-impact on-site/hybrid opportunities)
-- University / Education: Pursuing Bachelor of Technology (B.Tech) in Computer Science & Engineering at Islamic University of Science & Technology (IUST), Awantipora, Kashmir (2023 – 2027)
+- University & Education: Pursuing Bachelor of Technology (B.Tech) in Computer Science & Engineering at Islamic University of Science & Technology (IUST), Awantipora, Kashmir (2023 – 2027).
 - Primary Email: ${portfolioData.personal.email}
 - GitHub: ${portfolioData.socials.github}
 - LinkedIn: ${portfolioData.socials.linkedin}
 - Twitter/X: ${portfolioData.socials.twitter}
 - Experience: ${portfolioData.about.stats.map((s) => `${s.value} (${s.label})`).join(", ")}
 - Mindset & Bio: ${portfolioData.about.bio}
-- Work Philosophy: "${portfolioData.about.philosophy.description}"
+- Work Philosophy: "${portfolioData.about?.philosophy?.description || portfolioData.hero?.philosophyCard?.text || "Building high-impact digital experiences."}"
 
 ACADEMIC BACKGROUND & UNIVERSITY:
 ${educationSummary}
@@ -94,29 +96,108 @@ ${workstationSummary}
 FEATURED PROJECTS & ARCHITECTURE HIGHLIGHTS:
 ${projectsSummary}
 
-HOW TO ANSWER SPECIFIC QUESTIONS:
-1. "Which university does he go to?" / Education / College / Degree inquiries: Clearly state that Hashim is currently pursuing his **Bachelor of Technology (B.Tech) in Computer Science & Engineering** at the **Islamic University of Science & Technology (IUST)**, located in Awantipora, Kashmir (Batch 2023–2027). Mention that he combines formal CS fundamentals (DSA, DBMS, Networks, ML) with extensive practical experience building real-world full-stack and AI projects.
+HOW TO ANSWER SPECIFIC PORTFOLIO QUESTIONS:
+1. "Which university does he go to?" / Education inquiries: Clearly state that Hashim is currently pursuing his **Bachelor of Technology (B.Tech) in Computer Science & Engineering** at the **Islamic University of Science & Technology (IUST)**, located in Awantipora, Kashmir (Batch 2023–2027). Highlight that he combines formal CS fundamentals (DSA, DBMS, Networks, ML) with practical experience building real-world full-stack and AI projects.
 2. "Why hire Hashim?" / Strengths: Highlight his rare combination of robust backend engineering (MERN, SQL/NoSQL, RBAC), cutting-edge AI/Vision integration, and design-first UI craftsmanship with high shipping velocity.
-3. Technical Questions: Explain actual implementation techniques, trade-offs, and tool choices (e.g. why Supabase vs MongoDB, component modularity, state management, latency optimization).
+3. Technical Questions: Explain actual implementation techniques, trade-offs, and tool choices conversationally with crisp markdown formatting.
 4. Digital Workstation / Tools: Explain that Hashim built custom in-browser tools including the ATS Resume Studio, Outreach Studio, Image & PDF Studio, and Smart QR Studio.
 5. Contact / Hiring / Location: Provide his direct email ([${portfolioData.personal.email}](mailto:${portfolioData.personal.email})) and LinkedIn link. Mention he is open for global remote roles as well as hybrid/on-site opportunities.
-6. Off-Topic Inquiries: Politely acknowledge and smoothly steer the conversation back to Hashim's engineering experience, projects, or collaboration opportunities.
-7. Formatting: Use concise markdown with bullet points and bold highlights for effortless readability. Keep responses between 1 to 3 focused paragraphs.
+6. Formatting: Use concise, readable markdown with bullet points and bold highlights.
 `;
 }
 
 /**
  * Intelligent Client-Side Knowledge Matching Fallback
+ * Provides warm, human-like responses with natural bridges back to Hashim
  */
 export function generateLocalResponse(userMessage) {
   const q = userMessage.toLowerCase().trim();
 
-  // Greeting
-  if (q.match(/\b(hi|hello|hey|who are you|what are you|what can you do|help)\b/) && q.length < 30) {
-    return `Hello! 👋 I'm **Hashim's AI Portfolio Assistant**.\n\nI can share deep insights on:\n- 🏛️ **University & Education** (B.Tech CSE at IUST, 2023–2027)\n- 🛠️ **Tech Stack & Skills** (React, Node.js, Python, Computer Vision, AI)\n- 📂 **Featured Projects** (Zooncare, IntelliSentry, Lead Gen AI)\n- 🧰 **Digital Workstation** (ATS Resume Studio, Outreach & PDF Tools)\n- 📬 **Contact & Hiring** (Email, LinkedIn, GitHub)\n\nWhat would you like to explore about Hashim?`;
+  // 1. "How are you" / "How's it going" / "What's up"
+  if (
+    q.includes("how are you") ||
+    q.includes("how are u") ||
+    q.includes("how r u") ||
+    q.includes("how you doing") ||
+    q.includes("how are you doing") ||
+    q.includes("how's it going") ||
+    q.includes("how is it going") ||
+    q.includes("what's up") ||
+    q.includes("whats up") ||
+    q.includes("wassup") ||
+    q === "sup" ||
+    q === "hru"
+  ) {
+    return (
+      `I'm doing great, thanks for asking! 😊 Just hanging out here on Hashim's portfolio, chatting with visitors and sharing his latest engineering work.\n\n` +
+      `How is your day going? Anything in particular you'd like to check out—like Hashim's full-stack projects, his AI & Vision work, or his tech stack?`
+    );
   }
 
-  // Education / University / College / Degree / Studies
+  // 2. Greetings & Salutations
+  if (
+    q.match(/^(hi|hello|hey|yo|hola|greetings|good morning|good afternoon|good evening|hey there|hi there)\b/) ||
+    (q.match(/\b(hi|hello|hey)\b/) && q.length < 20)
+  ) {
+    return (
+      `Hey there! 👋 Great to meet you! I'm **HashAI**, Hashim's interactive portfolio co-pilot.\n\n` +
+      `Whether you want to explore his **full-stack projects** (like Zooncare), check his **tech stack**, or ask about his **education at IUST**, I'm here to help. What brings you by today?`
+    );
+  }
+
+  // 3. Identity / "Who are you" / "What can you do"
+  if (
+    q.includes("who are you") ||
+    q.includes("what are you") ||
+    q.includes("what can you do") ||
+    q.includes("who made you") ||
+    q.includes("who created you") ||
+    q.includes("are you an ai") ||
+    q.includes("are you a bot") ||
+    q.includes("what is your name")
+  ) {
+    return (
+      `I'm **HashAI** — Hashim Malik's interactive portfolio co-pilot! Think of me as a friendly dev companion here to give you an insider look into Hashim's software engineering background, full-stack apps, and AI/Computer Vision projects.\n\n` +
+      `Are you curious about what he's built, or looking to collaborate with him?`
+    );
+  }
+
+  // 4. Jokes & Humor
+  if (
+    q.includes("joke") ||
+    q.includes("make me laugh") ||
+    q.includes("funny") ||
+    q.includes("tell me something funny")
+  ) {
+    return (
+      `Why do programmers prefer dark mode? Because light attracts bugs! 🐛😄\n\n` +
+      `Hashim makes sure his code and design stay clean either way! Speaking of clean code, want to check out some of the full-stack apps and AI systems he's built?`
+    );
+  }
+
+  // 5. Gratitude & Pleasantries
+  if (
+    q.match(/\b(thank you|thanks|thx|appreciate it|awesome|cool|great|nice|perfect|good job)\b/) &&
+    q.length < 35
+  ) {
+    return (
+      `You're very welcome! Always happy to help. 😊\n\n` +
+      `Let me know if you want to dive into any of Hashim's projects, test out his built-in workstation tools, or grab his contact info to connect!`
+    );
+  }
+
+  // 6. Farewells
+  if (
+    q.match(/\b(bye|goodbye|see ya|cya|have a good day|take care|good night)\b/) &&
+    q.length < 30
+  ) {
+    return (
+      `Thanks for stopping by! Have a wonderful day ahead. 🚀\n\n` +
+      `If you ever want to connect with Hashim, his inbox is always open at [${portfolioData.personal.email}](mailto:${portfolioData.personal.email}) or on [LinkedIn](${portfolioData.socials.linkedin}). Take care!`
+    );
+  }
+
+  // 7. Education / University / College / Degree / Studies
   if (
     q.includes("university") ||
     q.includes("college") ||
@@ -145,29 +226,32 @@ export function generateLocalResponse(userMessage) {
         "Core coursework in Data Structures & Algorithms, Object-Oriented Programming, Database Management Systems, Machine Learning, and Computer Networks.",
     };
 
-    return `### 🎓 Education & University\n\n` +
-      `Hashim is currently pursuing his **${edu.degree}** (2023 – 2027):\n\n` +
-      `• 🏛️ **University / Institution:** **${edu.institution}**\n` +
-      `• 📍 **Location:** ${edu.location}\n` +
-      `• ⏱️ **Duration / Batch:** ${edu.year} (Undergraduate)\n` +
-      `• 📚 **Key Coursework & Focus:** ${edu.details}\n\n` +
-      `He bridges core computer science theory with high-velocity full-stack engineering and applied AI/ML systems.`;
+    return (
+      `### 🎓 Education & University\n\n` +
+      `Hashim is currently pursuing his **${edu.degree}** (Batch ${edu.year}) at **${edu.institution}** in ${edu.location}.\n\n` +
+      `• 📚 **Key Focus:** Data Structures & Algorithms, DBMS, Operating Systems, Computer Networks, and Machine Learning.\n` +
+      `• ⚡ **Hands-on Craft:** Alongside his formal coursework, he actively designs and ships real-world full-stack platforms and AI vision pipelines.\n\n` +
+      `Would you like to see some of the real-world applications he's engineered?`
+    );
   }
 
-  // Resume / CV Inquiries
+  // 8. Resume / CV Inquiries
   if (
     q.includes("resume") ||
     q.includes("cv") ||
     q.includes("curriculum vitae") ||
     (q.includes("download") && (q.includes("resume") || q.includes("cv") || q.includes("pdf")))
   ) {
-    return `### 📄 Hashim's Resume & ATS Studio\n\n` +
-      `You can view Hashim's credentials or create your own resume using his built-in tools:\n\n` +
-      `• 👁️ **Interactive Resume Viewer:** Click the **"Resume"** button in the navigation bar to inspect his complete technical experience.\n` +
-      `• 🛠️ **ATS Resume Studio:** Try his standalone [ATS Resume Studio](/tools/resume-builder) equipped with AI auto-fill generation, customizable templates, and instant 1-page PDF export.`;
+    return (
+      `### 📄 Hashim's Resume & ATS Studio\n\n` +
+      `You can check out Hashim's credentials or try his custom-built resume tools:\n\n` +
+      `• 👁️ **Interactive Resume Viewer:** Click the **"Resume"** button in the navigation bar to inspect his full engineering experience.\n` +
+      `• 🛠️ **ATS Resume Studio:** Try his standalone [ATS Resume Studio](/tools/resume-builder) with AI auto-generation, customizable templates, and instant 1-page PDF export.\n\n` +
+      `Looking for his direct contact info as well?`
+    );
   }
 
-  // Workstation / Tools Inquiries
+  // 9. Workstation / Tools Inquiries
   if (
     q.includes("workstation") ||
     q.includes("tool") ||
@@ -183,13 +267,15 @@ export function generateLocalResponse(userMessage) {
       .map((t) => `• **[${t.name}](${t.route}):** ${t.description}`)
       .join("\n\n");
 
-    return `### 🧰 Digital Workstation & Tools\n\n` +
-      `Hashim engineered a suite of client-side utilities and AI productivity tools accessible right on this portfolio:\n\n` +
+    return (
+      `### 🧰 Digital Workstation & Built-In Tools\n\n` +
+      `Hashim engineered a suite of interactive, client-side productivity tools right into this portfolio:\n\n` +
       `${toolsList}\n\n` +
-      `Explore all tools on the **[Workstation](#Workstation)** section!`;
+      `Feel free to try any of them out directly, or ask me how he built them!`
+    );
   }
 
-  // AI & Machine Learning / Computer Vision Inquiries
+  // 10. AI & Machine Learning / Computer Vision Inquiries
   if (
     q.includes("computer vision") ||
     q.includes("machine learning") ||
@@ -200,15 +286,17 @@ export function generateLocalResponse(userMessage) {
     q.includes("agents") ||
     (q.includes("ai") && (q.includes("experience") || q.includes("work") || q.includes("project") || q.includes("model")))
   ) {
-    return `### 🧠 AI, Machine Learning & Computer Vision\n\n` +
-      `Hashim develops practical AI systems that connect deep learning models with responsive user workflows:\n\n` +
+    return (
+      `### 🧠 AI, Machine Learning & Computer Vision\n\n` +
+      `Hashim builds applied AI systems that bridge deep learning logic with responsive user workflows:\n\n` +
       `• 👁️ **Computer Vision & Neural Networks:** Python, OpenCV, and PyTorch pipelines for automated detection, image diagnostics, and tracking.\n` +
       `• 🤖 **Autonomous AI Agents & RAG:** Multi-step agentic systems for automated lead qualification, research scraping, and personalized outreach.\n` +
-      `• ⚡ **Full-Stack AI Integration:** Microservices with Flask/FastAPI, Supabase Realtime channels, and LLM prompt engineering.\n\n` +
-      `Check out his **[Agentic AI for Lead Generation](#Projects)** and IoT tracking platforms in the projects section!`;
+      `• ⚡ **Full-Stack AI Integration:** Microservices with Flask/FastAPI, Supabase Realtime channels, and custom LLM prompt orchestration.\n\n` +
+      `Would you like to explore his **Agentic AI for Lead Generation** or **IntelliSentry** project details?`
+    );
   }
 
-  // Location / Relocation / Remote Work Inquiries
+  // 11. Location / Relocation / Remote Work Inquiries
   if (
     q.includes("location") ||
     q.includes("where is he from") ||
@@ -217,14 +305,16 @@ export function generateLocalResponse(userMessage) {
     q.includes("remote") ||
     q.includes("relocate")
   ) {
-    return `### 📍 Location & Availability\n\n` +
-      `• **Current Base:** ${portfolioData.personal.location}\n` +
+    return (
+      `### 📍 Location & Availability\n\n` +
+      `• **Base Location:** ${portfolioData.personal.location}\n` +
       `• **Availability:** Open for **Global Remote** engineering roles, high-impact freelance projects, and hybrid/on-site opportunities.\n` +
       `• **Time Zone:** IST (UTC+5:30) with flexible overlap for international teams.\n\n` +
-      `Reach out via email at [${portfolioData.personal.email}](mailto:${portfolioData.personal.email}) to discuss opportunities!`;
+      `Feel free to drop him an email directly at [${portfolioData.personal.email}](mailto:${portfolioData.personal.email}) to connect!`
+    );
   }
 
-  // Why Hashim / Value Proposition
+  // 12. Why Hashim / Strengths / Value Proposition
   if (
     q.includes("why hashim") ||
     q.includes("why hire") ||
@@ -234,16 +324,18 @@ export function generateLocalResponse(userMessage) {
     q.includes("hire him") ||
     (q.includes("why") && (q.includes("him") || q.includes("hashim") || q.includes("hire")))
   ) {
-    return `### 🚀 Why Work with Hashim Malik?\n\n` +
-      `Hashim brings a unique convergence of full-stack engineering rigor, practical AI/Vision systems, and design-first UI craftsmanship:\n\n` +
-      `1. **Full-Stack Production Craftsmanship:** Deep mastery of the **MERN stack**, Node.js/Express, RESTful APIs, and real-time database architectures with robust role-based security.\n` +
-      `2. **Applied AI & Vision Pipelines:** Hands-on experience building **Computer Vision models**, neural networks, and autonomous **AI agent workflows** using Python and modern LLM orchestration.\n` +
-      `3. **Design-First Engineering:** He bridges technical logic with fluid, award-winning UI/UX (Figma, Framer Motion, micro-interactions), creating interfaces users love.\n` +
-      `4. **High Shipping Velocity:** ${portfolioData.about.stats[0].value} of active engineering with **${portfolioData.about.stats[1].value}** shipped systems and an *End-to-End* mindset.\n\n` +
-      `💡 *Summary:* He provides both the engineering muscle for complex backends and the product sense to make software feel world-class.`;
+    return (
+      `### 🚀 Why Work with Hashim Malik?\n\n` +
+      `Hashim brings a unique convergence of technical rigor, practical AI/Vision engineering, and design craftsmanship:\n\n` +
+      `1. **Full-Stack Mastery:** Deep hands-on experience with the **MERN stack**, Node.js/Express, RESTful APIs, and secure database architectures.\n` +
+      `2. **Applied AI & Vision:** Hands-on experience engineering **Computer Vision models**, neural networks, and autonomous AI agents in Python.\n` +
+      `3. **Design-First UI/UX:** He bridges backend logic with fluid, pixel-perfect interfaces (React, Tailwind CSS, Framer Motion) with high shipping velocity.\n` +
+      `4. **Proven Track Record:** ${portfolioData.about.stats[0].value} of active engineering with **${portfolioData.about.stats[1].value}** shipped systems.\n\n` +
+      `Would you like to review his featured projects or reach out for a conversation?`
+    );
   }
 
-  // Who is Hashim / Bio
+  // 13. Who is Hashim / Bio
   if (
     q.includes("who is hashim") ||
     q.includes("about hashim") ||
@@ -253,15 +345,18 @@ export function generateLocalResponse(userMessage) {
     q.includes("bio") ||
     (q.includes("who") && q.includes("hashim"))
   ) {
-    return `**Hashim Malik** is a **${portfolioData.personal.role}** based in ${portfolioData.personal.location}, currently pursuing his **B.Tech in Computer Science & Engineering** at **Islamic University of Science & Technology (IUST)** (2023 – 2027).\n\n` +
+    return (
+      `**Hashim Malik** is a **${portfolioData.personal.role}** based in ${portfolioData.personal.location}, currently pursuing his **B.Tech in Computer Science & Engineering** at **IUST** (2023 – 2027).\n\n` +
       `✨ **Key Highlights:**\n` +
       `- **Experience:** ${portfolioData.about.stats[0].value} of building production systems with an ${portfolioData.about.stats[2].value} workflow.\n` +
       `- **Track Record:** ${portfolioData.about.stats[1].value} full-stack and AI projects engineered.\n` +
       `- **Core Focus:** Bridging deep technical logic (MERN architectures, computer vision pipelines, neural networks) with clean, high-fidelity UI/UX design.\n\n` +
-      `💡 *Philosophy:* "${portfolioData.about.philosophy.description}"`;
+      `💡 *Philosophy:* "${portfolioData.hero?.philosophyCard?.text || "I’ve never been too interested in what’s considered difficult or impossible. If it sparks my curiosity, I want to explore it, understand it, and see how far I can take it."}"\n\n` +
+      `What would you like to explore next — his projects, tech stack, or contact info?`
+    );
   }
 
-  // Skills & Tech Stack
+  // 14. Skills & Tech Stack
   if (
     q.includes("skill") ||
     q.includes("tech stack") ||
@@ -275,13 +370,15 @@ export function generateLocalResponse(userMessage) {
       .map((d) => `• **${d.title}:** ${d.desc}`)
       .join("\n");
 
-    return `### 🛠️ Technical Arsenal\n\n` +
+    return (
+      `### 🛠️ Technical Arsenal\n\n` +
       `**Core Skills & Tools:**\n${skillsList}\n\n` +
       `**Key Engineering Domains:**\n${domains}\n\n` +
-      `💡 *Philosophy:* "${portfolioData.hero.philosophyCard?.text || portfolioData.personal.title}"`;
+      `Ask me about any specific technology or project architecture!`
+    );
   }
 
-  // Contact & Hiring
+  // 15. Contact & Hiring
   if (
     q.includes("contact") ||
     q.includes("collab") ||
@@ -292,16 +389,18 @@ export function generateLocalResponse(userMessage) {
     q.includes("work together") ||
     q.includes("freelance")
   ) {
-    return `### 📬 Connect with Hashim\n\n` +
+    return (
+      `### 📬 Connect with Hashim\n\n` +
       `Hashim is open to software engineering roles, AI collaborations, and high-impact freelance projects:\n\n` +
       `• ✉️ **Email:** [${portfolioData.personal.email}](mailto:${portfolioData.personal.email})\n` +
       `• 💼 **LinkedIn:** [Hashim Malik on LinkedIn](${portfolioData.socials.linkedin})\n` +
       `• 💻 **GitHub:** [@Hashimmalik46](${portfolioData.socials.github})\n` +
       `• 📍 **Location:** ${portfolioData.personal.location}\n\n` +
-      `You can also use the contact form on this page to send a direct message!`;
+      `You can also use the contact form on this page to send a direct message!`
+    );
   }
 
-  // Projects list
+  // 16. Projects list
   if (
     q.includes("what projects") ||
     q.includes("all projects") ||
@@ -316,10 +415,13 @@ export function generateLocalResponse(userMessage) {
       )
       .join("\n\n");
 
-    return `### 🚀 Featured Projects by Hashim\n\n${list}\n\nAsk me about any specific project for architecture and implementation details!`;
+    return (
+      `### 🚀 Featured Projects by Hashim\n\n${list}\n\n` +
+      `Ask me about any specific project for architecture and implementation details!`
+    );
   }
 
-  // Match specific project
+  // 17. Match specific project
   const matchedProject = portfolioData.projectsSection.projects.find((p) => {
     const titleLower = p.title.toLowerCase();
     return q.includes(titleLower);
@@ -327,42 +429,21 @@ export function generateLocalResponse(userMessage) {
 
   if (matchedProject) {
     const techTags = matchedProject.tags.map((t) => t.tag).join(", ");
-    return `🚀 **${matchedProject.title}**\n\n` +
+    return (
+      `🚀 **${matchedProject.title}**\n\n` +
       `- **Category:** ${matchedProject.category}\n` +
       `- **Overview:** ${matchedProject.short_desc}\n` +
       `- **Tech Stack:** ${techTags}\n` +
-      (matchedProject.link && matchedProject.link !== "#" ? `- **Live Link:** [${matchedProject.link}](${matchedProject.link})` : "");
+      (matchedProject.link && matchedProject.link !== "#" ? `- **Live Link:** [${matchedProject.link}](${matchedProject.link})\n\n` : "\n") +
+      `Would you like to learn more about how Hashim architected this project?`
+    );
   }
 
-  // Guardrail fallback
-  const isRelated =
-    q.includes("hashim") ||
-    q.includes("developer") ||
-    q.includes("engineer") ||
-    q.includes("code") ||
-    q.includes("resume") ||
-    q.includes("portfolio") ||
-    q.includes("service") ||
-    q.includes("design") ||
-    q.includes("university") ||
-    q.includes("college") ||
-    q.includes("education") ||
-    q.includes("degree") ||
-    q.includes("study") ||
-    q.includes("iust") ||
-    q.includes("btech") ||
-    q.includes("school") ||
-    q.includes("tool") ||
-    q.includes("workstation") ||
-    q.includes("vision") ||
-    q.includes("ai");
-
-  if (!isRelated) {
-    return OFF_TOPIC_REPLIES[Math.floor(Math.random() * OFF_TOPIC_REPLIES.length)];
-  }
-
-  return `Hashim Malik is a versatile **Software Engineer & AI Practitioner** currently pursuing his **B.Tech in Computer Science & Engineering** at **Islamic University of Science & Technology (IUST)**.\n\n` +
-    `Feel free to ask about his **education & university**, **featured projects**, **skills**, **background**, or **how to contact him**!`;
+  // 18. General conversational fallback with subtle bridge back to Hashim
+  return (
+    `That's an interesting point! While I'm always happy to chat about tech and development, I'm especially tuned into **Hashim Malik**'s engineering journey.\n\n` +
+    `Hashim is a **Software Engineer & AI Practitioner** (pursuing B.Tech CSE at IUST) building full-stack platforms and computer vision systems. Would you like to check out his **featured projects**, explore his **tech stack**, or **connect with him**?`
+  );
 }
 
 /**
@@ -377,11 +458,11 @@ async function callGeminiChat(userMessage, conversationHistory = []) {
   const contents = [
     {
       role: "user",
-      parts: [{ text: `${systemContext}\n\nPlease acknowledge and introduce yourself briefly if this is the start of a conversation, or respond naturally to user questions about Hashim.` }],
+      parts: [{ text: `${systemContext}\n\nPlease acknowledge your role as HashAI with a warm, natural human tone.` }],
     },
     {
       role: "model",
-      parts: [{ text: "Understood. I am HashimAI, ready to represent Hashim Malik with accurate technical depth and clear insights." }],
+      parts: [{ text: "Got it! I am HashAI, Hashim Malik's friendly portfolio co-pilot. Ready to chat naturally, answer questions, and share insights about Hashim's work." }],
     },
   ];
 
@@ -404,14 +485,11 @@ async function callGeminiChat(userMessage, conversationHistory = []) {
   });
 
   const candidateModels = [
-    "gemini-3.5-flash",
-    "gemini-3.1-flash-lite-preview",
     "gemini-3.6-flash",
+    "gemini-3.5-flash",
     "gemini-flash-latest",
     "gemini-3.7-flash",
-    "gemini-3.1-pro-preview",
-    "gemini-pro-latest",
-    "gemini-2.0-flash",
+    "gemini-3.1-flash-lite",
   ];
 
   for (const modelName of candidateModels) {
@@ -490,115 +568,116 @@ async function callOpenAIChat({ userMessage, apiKey, endpoint, modelName, conver
  * @returns {Promise<string>} AI response text formatted in clean Markdown.
  */
 export async function askHashimAI(userMessage, conversationHistory = []) {
-  const q = userMessage.toLowerCase().trim();
+  try {
+    const q = (userMessage || "").toLowerCase().trim();
 
-  // Instant response for fixed starter prompt chips
-  const matchedStarterPrompt = portfolioData.chatbot.starterPrompts.find(
-    (p) => p.query.toLowerCase().trim() === q
-  );
+    // Instant response for fixed starter prompt chips
+    const matchedStarterPrompt = portfolioData.chatbot.starterPrompts.find(
+      (p) => p.query.toLowerCase().trim() === q
+    );
 
-  if (matchedStarterPrompt) {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(generateLocalResponse(userMessage));
-      }, 50);
-    });
-  }
-
-  // 1. Check explicit provider from .env
-  if (PREFERRED_PROVIDER === "grok" && GROK_KEY) {
-    try {
-      return await callOpenAIChat({
-        userMessage,
-        apiKey: GROK_KEY,
-        endpoint: "https://api.x.ai/v1/chat/completions",
-        modelName: "grok-2-latest",
-        conversationHistory,
-      });
-    } catch (e) {
-      console.warn("Grok chat failed, cascading:", e);
+    if (matchedStarterPrompt) {
+      return generateLocalResponse(userMessage);
     }
-  }
 
-  if (PREFERRED_PROVIDER === "openai" && OPENAI_KEY) {
-    try {
-      return await callOpenAIChat({
-        userMessage,
-        apiKey: OPENAI_KEY,
-        endpoint: "https://api.openai.com/v1/chat/completions",
-        modelName: "gpt-4o-mini",
-        conversationHistory,
-      });
-    } catch (e) {
-      console.warn("OpenAI chat failed, cascading:", e);
+    // 1. Check explicit provider from .env
+    if (PREFERRED_PROVIDER === "grok" && GROK_KEY) {
+      try {
+        return await callOpenAIChat({
+          userMessage,
+          apiKey: GROK_KEY,
+          endpoint: "https://api.x.ai/v1/chat/completions",
+          modelName: "grok-2-latest",
+          conversationHistory,
+        });
+      } catch (e) {
+        console.warn("Grok chat failed, cascading:", e);
+      }
     }
-  }
 
-  if (PREFERRED_PROVIDER === "deepseek" && DEEPSEEK_KEY) {
-    try {
-      return await callOpenAIChat({
-        userMessage,
-        apiKey: DEEPSEEK_KEY,
-        endpoint: CUSTOM_ENDPOINT || "https://api.deepseek.com/chat/completions",
-        modelName: "deepseek-chat",
-        conversationHistory,
-      });
-    } catch (e) {
-      console.warn("DeepSeek chat failed, cascading:", e);
+    if (PREFERRED_PROVIDER === "openai" && OPENAI_KEY) {
+      try {
+        return await callOpenAIChat({
+          userMessage,
+          apiKey: OPENAI_KEY,
+          endpoint: "https://api.openai.com/v1/chat/completions",
+          modelName: "gpt-4o-mini",
+          conversationHistory,
+        });
+      } catch (e) {
+        console.warn("OpenAI chat failed, cascading:", e);
+      }
     }
-  }
 
-  // 2. Cascade across configured keys
-  if (GEMINI_KEY) {
-    try {
-      return await callGeminiChat(userMessage, conversationHistory);
-    } catch (e) {
-      console.warn("Gemini chat failed, trying next configured provider:", e);
+    if (PREFERRED_PROVIDER === "deepseek" && DEEPSEEK_KEY) {
+      try {
+        return await callOpenAIChat({
+          userMessage,
+          apiKey: DEEPSEEK_KEY,
+          endpoint: CUSTOM_ENDPOINT || "https://api.deepseek.com/chat/completions",
+          modelName: "deepseek-chat",
+          conversationHistory,
+        });
+      } catch (e) {
+        console.warn("DeepSeek chat failed, cascading:", e);
+      }
     }
-  }
 
-  if (GROK_KEY) {
-    try {
-      return await callOpenAIChat({
-        userMessage,
-        apiKey: GROK_KEY,
-        endpoint: "https://api.x.ai/v1/chat/completions",
-        modelName: "grok-2-latest",
-        conversationHistory,
-      });
-    } catch (e) {
-      console.warn("Grok fallback failed:", e);
+    // 2. Cascade across configured keys
+    if (GEMINI_KEY) {
+      try {
+        return await callGeminiChat(userMessage, conversationHistory);
+      } catch (e) {
+        console.warn("Gemini chat failed, trying next configured provider:", e);
+      }
     }
-  }
 
-  if (OPENAI_KEY) {
-    try {
-      return await callOpenAIChat({
-        userMessage,
-        apiKey: OPENAI_KEY,
-        endpoint: "https://api.openai.com/v1/chat/completions",
-        modelName: "gpt-4o-mini",
-        conversationHistory,
-      });
-    } catch (e) {
-      console.warn("OpenAI fallback failed:", e);
+    if (GROK_KEY) {
+      try {
+        return await callOpenAIChat({
+          userMessage,
+          apiKey: GROK_KEY,
+          endpoint: "https://api.x.ai/v1/chat/completions",
+          modelName: "grok-2-latest",
+          conversationHistory,
+        });
+      } catch (e) {
+        console.warn("Grok fallback failed:", e);
+      }
     }
-  }
 
-  if (DEEPSEEK_KEY) {
-    try {
-      return await callOpenAIChat({
-        userMessage,
-        apiKey: DEEPSEEK_KEY,
-        endpoint: CUSTOM_ENDPOINT || "https://api.deepseek.com/chat/completions",
-        modelName: "deepseek-chat",
-        conversationHistory,
-      });
-    } catch (e) {
-      console.warn("DeepSeek fallback failed:", e);
+    if (OPENAI_KEY) {
+      try {
+        return await callOpenAIChat({
+          userMessage,
+          apiKey: OPENAI_KEY,
+          endpoint: "https://api.openai.com/v1/chat/completions",
+          modelName: "gpt-4o-mini",
+          conversationHistory,
+        });
+      } catch (e) {
+        console.warn("OpenAI fallback failed:", e);
+      }
     }
-  }
 
-  // 3. Fall back to local portfolio intelligence engine
-  return generateLocalResponse(userMessage);
+    if (DEEPSEEK_KEY) {
+      try {
+        return await callOpenAIChat({
+          userMessage,
+          apiKey: DEEPSEEK_KEY,
+          endpoint: CUSTOM_ENDPOINT || "https://api.deepseek.com/chat/completions",
+          modelName: "deepseek-chat",
+          conversationHistory,
+        });
+      } catch (e) {
+        console.warn("DeepSeek fallback failed:", e);
+      }
+    }
+
+    // 3. Fall back to local portfolio intelligence engine
+    return generateLocalResponse(userMessage);
+  } catch (err) {
+    console.error("askHashimAI top-level error, recovering with local response:", err);
+    return generateLocalResponse(userMessage);
+  }
 }

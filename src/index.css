@@ -183,3 +183,24 @@
   scrollbar-width: none;  /* Firefox */
 }
 
+/* ==========================================
+   CHATBOT TEXT SELECTION / COPY HIGHLIGHT
+   ========================================== */
+.chatbot-modal,
+.chatbot-modal * {
+  selection-background-color: #000000;
+  selection-color: #ffffff;
+}
+
+.chatbot-modal ::selection,
+.chatbot-modal *::selection {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+.chatbot-modal ::-moz-selection,
+.chatbot-modal *::-moz-selection {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+

@@ -449,7 +449,7 @@ export default function HeroChatbot() {
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.96, y: 8 }}
                   transition={{ type: "spring", stiffness: 420, damping: 30 }}
-                  className={`relative w-full max-w-lg h-[540px] max-h-[85dvh] flex flex-col rounded-2xl sm:rounded-3xl bg-[#f8f7f3] dark:bg-[#11131b] border border-black/15 dark:border-white/10 overflow-hidden z-10 font-jakarta shadow-[0_25px_70px_rgba(0,0,0,0.55)] ${
+                  className={`chatbot-modal selection:bg-black selection:text-white relative w-full max-w-lg h-[540px] max-h-[85dvh] flex flex-col rounded-2xl sm:rounded-3xl bg-[#f8f7f3] dark:bg-[#11131b] border border-black/15 dark:border-white/10 overflow-hidden z-10 font-jakarta shadow-[0_25px_70px_rgba(0,0,0,0.55)] ${
                     isChatbotDark ? "dark-scope" : "light-scope"
                   }`}
                 >
@@ -494,7 +494,7 @@ export default function HeroChatbot() {
                   {/* Messages Area */}
                   <div
                     data-lenis-prevent="true"
-                    className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-3.5 text-xs sm:text-[13px] bg-[#f8f7f3] dark:bg-[#0c0e14]"
+                    className="chatbot-modal selection:bg-black selection:text-white flex-1 overflow-y-auto p-4 sm:p-5 space-y-3.5 text-xs sm:text-[13px] bg-[#f8f7f3] dark:bg-[#0c0e14]"
                   >
                     {messages.map((msg, idx) => {
                       const isBot = msg.sender === "bot";
@@ -510,8 +510,8 @@ export default function HeroChatbot() {
                               <div className="w-6 h-6 rounded-md bg-secondary dark:bg-white text-white dark:text-black flex items-center justify-center shrink-0 mt-0.5 shadow-xs">
                                 <Bot size={13} />
                               </div>
-                              <div className="flex-1 bg-white dark:bg-[#161922] border border-black/10 dark:border-white/10 rounded-2xl rounded-tl-sm p-3.5 sm:p-4 text-zinc-900 dark:text-gray-200 shadow-[0_2px_8px_rgba(0,0,0,0.04)] text-left">
-                                <div className="space-y-1 text-left">
+                              <div className="selection:bg-black selection:text-white flex-1 bg-white dark:bg-[#161922] border border-black/10 dark:border-white/10 rounded-2xl rounded-tl-sm p-3.5 sm:p-4 text-zinc-900 dark:text-gray-200 shadow-[0_2px_8px_rgba(0,0,0,0.04)] text-left">
+                                <div className="space-y-1 text-left selection:bg-black selection:text-white">
                                   {renderMessageContent(msg.text)}
                                 </div>
                                 <div className="flex items-center justify-between mt-2.5 pt-2 border-t border-black/5 dark:border-white/10 text-[10px] text-zinc-500 dark:text-gray-400 font-medium">
@@ -519,12 +519,16 @@ export default function HeroChatbot() {
                                   <button
                                     type="button"
                                     onClick={() => handleCopyText(msg.text, msg.id)}
-                                    className="flex items-center gap-1 text-zinc-500 dark:text-gray-400 hover:text-black dark:hover:text-white font-semibold transition-colors cursor-pointer"
+                                    className={`flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-semibold transition-all cursor-pointer ${
+                                      copiedId === msg.id
+                                        ? "bg-black text-white dark:bg-white dark:text-black shadow-xs scale-105"
+                                        : "text-zinc-500 hover:text-black hover:bg-black/5 dark:text-gray-400 dark:hover:text-white dark:hover:bg-white/10"
+                                    }`}
                                   >
                                     {copiedId === msg.id ? (
                                       <>
-                                        <Check size={11} className="text-emerald-700 dark:text-emerald-400" />
-                                        <span className="text-emerald-700 dark:text-emerald-400 font-semibold">Copied</span>
+                                        <Check size={11} className="text-white dark:text-black font-bold" />
+                                        <span>Copied!</span>
                                       </>
                                     ) : (
                                       <>
@@ -537,7 +541,7 @@ export default function HeroChatbot() {
                               </div>
                             </div>
                           ) : (
-                            <div className="max-w-[85%] bg-white dark:bg-white text-zinc-950 dark:text-zinc-950 border border-black/10 dark:border-white/20 rounded-2xl rounded-tr-xs px-3.5 py-2.5 shadow-[0_2px_8px_rgba(0,0,0,0.04)] font-medium text-left">
+                            <div className="selection:bg-black selection:text-white max-w-[85%] bg-white dark:bg-white text-zinc-950 dark:text-zinc-950 border border-black/10 dark:border-white/20 rounded-2xl rounded-tr-xs px-3.5 py-2.5 shadow-[0_2px_8px_rgba(0,0,0,0.04)] font-medium text-left">
                               <p className="leading-relaxed text-left text-zinc-950 dark:text-zinc-950 font-medium">{msg.text}</p>
                               <span className="text-[9px] text-zinc-400 dark:text-zinc-500 block text-right mt-1 font-medium">
                                 {msg.timestamp}
