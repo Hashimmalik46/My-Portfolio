@@ -188,6 +188,7 @@ export default function CloudPreloader({ onStartReveal }) {
       {/* Video element (Active in DOM for decoder playback) */}
       <video
         ref={videoRef}
+        src={videoSources.mp4}
         autoPlay
         loop
         muted
@@ -196,19 +197,8 @@ export default function CloudPreloader({ onStartReveal }) {
         onLoadedData={() => setIsVideoReady(true)}
         onCanPlay={() => setIsVideoReady(true)}
         onEnded={handleTrigger}
-        className="absolute inset-0 w-full h-full object-cover object-center scale-[1.02] pointer-events-none opacity-0"
-      >
-        <source src={videoSources.mp4} type="video/mp4" />
-        <source src={videoSources.webm} type="video/webm" />
-      </video>
-
-      {/* Real-time Subtle Pixelated Render Canvas */}
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 w-full h-full object-cover object-center scale-[1.03] pointer-events-none transition-opacity duration-700 ease-out"
+        className="absolute inset-0 w-full h-full object-cover object-center scale-[1.02] pointer-events-none transition-opacity duration-700 ease-out"
         style={{
-          imageRendering: "pixelated",
-          filter: "contrast(1.04) brightness(0.96)",
           opacity: isVideoReady ? 1 : 0,
         }}
       />

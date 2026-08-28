@@ -151,30 +151,28 @@ function SeamlessBackgroundVideo({ isLoading = false }) {
     >
       <video
         ref={video1Ref}
+        src={videoSrc.mp4}
+        autoPlay
+        loop={false}
         muted
         playsInline
         preload="auto"
         className={`absolute inset-0 w-full h-full object-cover object-[25%_center] sm:object-[26%_center] md:object-[28%_center] lg:object-[32%_center] xl:object-center scale-[1.05] transition-opacity duration-1000 ease-in-out ${
           activeVideo === 1 ? "opacity-100" : "opacity-0"
         }`}
-      >
-        <source src={videoSrc.mp4} type="video/mp4" />
-        <source src={videoSrc.webm} type="video/webm" />
-      </video>
+      />
 
       {/* Dual crossfade video instance */}
       <video
         ref={video2Ref}
+        src={videoSrc.mp4}
         muted
         playsInline
         preload="auto"
         className={`absolute inset-0 w-full h-full object-cover object-[25%_center] sm:object-[26%_center] md:object-[28%_center] lg:object-[32%_center] xl:object-center scale-[1.05] transition-opacity duration-1000 ease-in-out ${
           activeVideo === 2 ? "opacity-100" : "opacity-0"
         }`}
-      >
-        <source src={videoSrc.mp4} type="video/mp4" />
-        <source src={videoSrc.webm} type="video/webm" />
-      </video>
+      />
     </div>
   );
 }
