@@ -189,7 +189,6 @@ export default function CloudPreloader({ onStartReveal }) {
       <video
         ref={videoRef}
         src={videoSources.mp4}
-        autoPlay
         loop
         muted
         playsInline

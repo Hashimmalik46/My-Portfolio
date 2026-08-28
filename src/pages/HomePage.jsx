@@ -152,8 +152,6 @@ function SeamlessBackgroundVideo({ isLoading = false }) {
       <video
         ref={video1Ref}
         src={videoSrc.mp4}
-        autoPlay
-        loop={false}
         muted
         playsInline
         preload="auto"
