@@ -11,6 +11,8 @@ import OmniMediaStudioPage from "./pages/OmniMediaStudioPage";
 import QRCodeStudioPage from "./pages/QRCodeStudioPage";
 import { AnimatePresence } from "motion/react";
 import { ThemeProvider } from "./context/ThemeContext";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -208,6 +210,8 @@ function App() {
       <BrowserRouter>
         <AppContent />
       </BrowserRouter>
+      <Analytics />
+      <SpeedInsights />
     </ThemeProvider>
   );
 }
