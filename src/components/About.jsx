@@ -410,23 +410,21 @@ function About() {
         </motion.div>
 
         {/* Right Column: Tactile Paper Bento Grid */}
-        <div className="lg:col-span-7 flex flex-col gap-4">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.08 }}
+          transition={{ duration: 0.7, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
+          className="lg:col-span-7 flex flex-col gap-4"
+        >
           {/* 2x2 Specialized Domain Compact Paper Badges */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {about.domainCards.map((item, idx) => {
               const IconComp = item.icon;
 
               return (
-                <motion.div
+                <div
                   key={idx}
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.15 }}
-                  transition={{
-                    duration: 0.5,
-                    delay: idx * 0.06,
-                    ease: [0.16, 1, 0.3, 1],
-                  }}
                   className="group relative bg-[#FAF8F5] border border-secondary/12 hover:border-secondary/25 rounded-xl sm:rounded-2xl px-4 py-3.5 flex items-center justify-between shadow-[0_4px_16px_rgba(28,25,23,0.03),0_1px_2px_rgba(28,25,23,0.02),inset_0_1px_0_rgba(255,255,255,0.95)] hover:shadow-[0_10px_24px_rgba(28,25,23,0.06)] sm:hover:-translate-y-0.5 transition-all duration-300 overflow-hidden"
                 >
                   {/* Paper Fiber Texture Layer */}
@@ -449,18 +447,14 @@ function About() {
                   </div>
 
                   <ArrowUpRight className="w-3.5 h-3.5 text-pAccent group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0 relative z-10 ml-2" />
-                </motion.div>
+                </div>
               );
             })}
           </div>
 
           {/* Career & Academic Timeline (Tactile Parchment Card) */}
           {about.timeline && about.timeline.length > 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.1 }}
-              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            <div
               className="relative bg-[#FAF8F5] border border-secondary/12 hover:border-secondary/22 rounded-2xl sm:rounded-3xl p-5 sm:p-6 shadow-[0_16px_40px_rgba(28,25,23,0.05),0_1px_3px_rgba(28,25,23,0.03),inset_0_1px_0_rgba(255,255,255,0.95)] transition-all duration-300 overflow-hidden"
             >
               {/* Paper Fiber Texture Layer */}
@@ -501,12 +495,8 @@ function About() {
                     const isFirst = idx === 0;
 
                     return (
-                      <motion.div
+                      <div
                         key={item.id || idx}
-                        initial={{ opacity: 0, x: -12 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.5, delay: idx * 0.1, ease: [0.16, 1, 0.3, 1] }}
                         className="relative group"
                       >
                         {/* Timeline Node Dot (Scroll-linked illumination) */}
@@ -541,14 +531,14 @@ function About() {
                             {item.description}
                           </p>
                         </div>
-                      </motion.div>
+                      </div>
                     );
                   })}
                 </div>
               </div>
-            </motion.div>
+            </div>
           )}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

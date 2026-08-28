@@ -60,8 +60,14 @@ function Contact() {
       />
 
       <div className="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center relative z-10">
-        {/* Left Column: Heading, Info & Direct Contact Channels */}
-        <div className="lg:col-span-6 flex flex-col gap-6">
+        {/* Left Column: Heading, Info & Direct Contact Channels (Enters from Left) */}
+        <motion.div
+          initial={{ opacity: 0, x: -44 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, amount: 0.15 }}
+          transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
+          className="lg:col-span-6 flex flex-col gap-6"
+        >
           {/* Editorial Eyebrow */}
           <div className="flex items-center gap-3">
             <span className="font-clashM text-xs px-2.5 py-0.5 rounded-full bg-secondary text-pAccent tracking-[0.2em] uppercase font-bold shadow-sm">
@@ -183,10 +189,16 @@ function Contact() {
               </div>
             )}
           </div>
-        </div>
+        </motion.div>
 
-        {/* Right Column: Tactile Paper Contact Form */}
-        <div className="lg:col-span-6 flex flex-col justify-center">
+        {/* Right Column: Tactile Paper Contact Form (Enters from Left with Stagger) */}
+        <motion.div
+          initial={{ opacity: 0, x: -36 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, amount: 0.12 }}
+          transition={{ duration: 0.75, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
+          className="lg:col-span-6 flex flex-col justify-center"
+        >
           <div className="relative w-full rounded-3xl overflow-hidden bg-[#FAF8F5] border border-secondary/12 p-7 md:p-9 shadow-[0_24px_60px_rgba(28,25,23,0.06),0_1px_3px_rgba(28,25,23,0.04),inset_0_1px_0_rgba(255,255,255,0.95)]">
             <PaperGrainOverlay />
             <BorderBeam duration={25} size={140} colorFrom="#111827" colorTo="#a8da22" />
@@ -297,7 +309,7 @@ function Contact() {
               </form>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
