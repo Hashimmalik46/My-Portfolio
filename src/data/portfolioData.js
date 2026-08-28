@@ -162,11 +162,6 @@ export const portfolioData = {
       { value: "10+", label: "Projects Built" },
       { value: "End-to-End", label: "From Idea to Build" },
     ],
-    philosophy: {
-      badge: "My Approach",
-      description:
-        "I like understanding things from the ground up, experimenting with different approaches, and building beyond the obvious solution. Whether it's a web app, an ML model, or a visual concept, I care about how it works, how it feels, and how it can be made better.",
-    },
     domainCards: [
       {
         icon: Layers,

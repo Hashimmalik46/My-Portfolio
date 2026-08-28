@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Sparkles, ArrowUpRight, Briefcase, UserRound } from "lucide-react";
-import TypewriterText from "./ui/TypewriterText";
+import ArchitecturalBackground from "./ui/ArchitecturalBackground";
+import ScrollFadeText from "./ui/ScrollFadeText";
 import {
   motion,
   useMotionValue,
@@ -81,6 +82,8 @@ function ScrollTimelineDot({ isFirst, idx, progress }) {
     />
   );
 }
+
+
 
 function AboutImageCard({ imageSrc, imageCaption, imageTag }) {
   return (
@@ -201,9 +204,15 @@ function About() {
   return (
     <section
       id="About"
-      className="relative w-full min-h-screen flex items-center justify-center px-4 sm:px-6 md:px-16 py-20 sm:py-28 z-10 bg-c1 text-secondary selection:bg-secondary selection:text-white"
+      className="relative w-full min-h-screen flex items-center justify-center px-4 sm:px-6 md:px-16 py-20 sm:py-28 z-10 bg-c1 text-secondary selection:bg-secondary selection:text-white overflow-hidden"
     >
-      <div className="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+      {/* Subtle Architectural Cream Background Layer */}
+      <ArchitecturalBackground
+        watermarkText="ABOUT"
+        watermarkPosition="top-left"
+      />
+
+      <div className="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-12 gap-10 items-start relative z-10">
         {/* Left Column: Heading, Bio & Metrics */}
         <motion.div
           initial={{ opacity: 0, x: -30 }}
@@ -237,9 +246,11 @@ function About() {
             />
           )}
 
-          <p className="font-cormorant italic text-2xl sm:text-3xl text-secondary/85 font-light leading-relaxed">
-            <TypewriterText text={about.subheading} cursorClassName="text-secondary" />
-          </p>
+          <ScrollFadeText
+            text={about.subheading}
+            className="font-cormorant italic text-2xl sm:text-3xl text-secondary/85 font-light leading-relaxed"
+            activeColor="text-secondary"
+          />
 
           <p className="font-jakarta text-sm sm:text-base text-secondary/70 leading-relaxed">
             {about.bio}
@@ -265,41 +276,17 @@ function About() {
               </motion.div>
             ))}
           </div>
+
         </motion.div>
 
-        {/* Right Column: Porcelain Glass Bento Grid */}
+        {/* Right Column: Porcelain Bento Grid */}
         <div className="lg:col-span-7 flex flex-col gap-5">
-          {/* Main Philosophy Card */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.15 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            whileHover={{
-              y: -4,
-              scale: 1.01,
-              transition: { duration: 0.25, ease: "easeOut" },
-            }}
-            className="group relative bg-white/80 hover:bg-white/95 backdrop-blur-2xl border border-secondary/10 hover:border-secondary/20 rounded-3xl p-7 md:p-8 shadow-[0_20px_50px_rgba(0,0,0,0.06),0_1px_3px_rgba(0,0,0,0.04)] transition-[background-color,border-color,box-shadow] duration-300"
-          >
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-[11px] font-jakarta tracking-[0.2em] uppercase text-secondary/50 font-semibold">
-                {about.philosophy.badge}
-              </span>
-              <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center shadow-sm">
-                <Sparkles className="w-4 h-4 text-pAccent animate-pulse" />
-              </div>
-            </div>
 
-            <p className="font-jakarta text-base md:text-lg text-secondary/90 leading-relaxed font-normal">
-              {about.philosophy.description}
-            </p>
-          </motion.div>
-
-          {/* 2x2 Specialized Domain Cards */}
+          {/* 2x2 Specialized Domain Cards with Staggered Parallax Float */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {about.domainCards.map((item, idx) => {
               const IconComp = item.icon;
+
               return (
                 <motion.div
                   key={idx}
@@ -316,7 +303,7 @@ function About() {
                     scale: 1.015,
                     transition: { duration: 0.25, ease: "easeOut" },
                   }}
-                  className="group relative bg-white/70 hover:bg-white backdrop-blur-2xl border border-secondary/10 hover:border-secondary/25 rounded-2xl p-5 flex flex-col justify-between shadow-[0_10px_30px_rgba(0,0,0,0.04),0_1px_2px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.08)] transition-[background-color,border-color,box-shadow] duration-300"
+                  className="group relative bg-white border border-secondary/10 hover:border-secondary/25 rounded-2xl p-5 flex flex-col justify-between shadow-[0_10px_30px_rgba(0,0,0,0.04),0_1px_2px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.08)] transition-all duration-300"
                 >
                   <div>
                     <motion.div
@@ -350,28 +337,28 @@ function About() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.15 }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="relative bg-white/80 hover:bg-white/95 backdrop-blur-2xl border border-secondary/10 hover:border-secondary/20 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 shadow-[0_20px_50px_rgba(0,0,0,0.06),0_1px_3px_rgba(0,0,0,0.04)] transition-[background-color,border-color,box-shadow] duration-300"
+              className="relative bg-white border border-secondary/10 hover:border-secondary/20 rounded-2xl sm:rounded-3xl p-5 sm:p-7 md:p-8 shadow-[0_20px_50px_rgba(0,0,0,0.06),0_1px_3px_rgba(0,0,0,0.04)] transition-all duration-300"
             >
-              <div className="flex items-center justify-between gap-3 mb-5 sm:mb-6 pb-3 border-b border-secondary/10">
+              <div className="flex items-center justify-between gap-3 mb-6 pb-4 border-b border-secondary/10">
                 <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-secondary flex items-center justify-center shadow-sm shrink-0">
-                    <Briefcase className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-pAccent" />
+                  <div className="w-8 h-8 rounded-xl bg-secondary flex items-center justify-center shadow-sm shrink-0">
+                    <Briefcase className="w-4 h-4 text-pAccent" />
                   </div>
                   <h3 className="font-clash text-base sm:text-lg md:text-xl font-bold text-secondary tracking-tight truncate">
                     Journey & Milestones
                   </h3>
                 </div>
-                <span className="hidden xs:inline-block text-[10px] sm:text-[11px] font-jakarta tracking-[0.15em] sm:tracking-[0.2em] uppercase text-secondary/50 font-semibold shrink-0">
+                <span className="hidden xs:inline-flex items-center text-[10px] sm:text-[11px] font-jakarta tracking-[0.15em] uppercase text-secondary/50 font-semibold px-2.5 py-1 rounded-lg bg-secondary/[0.04] border border-secondary/10 shrink-0">
                   Experience & Education
                 </span>
               </div>
 
               <div
                 ref={timelineRef}
-                className="relative ml-1.5 sm:ml-3 pl-4 sm:pl-6 space-y-6 sm:space-y-7"
+                className="relative ml-1.5 sm:ml-3 pl-4 sm:pl-6 space-y-4 sm:space-y-5"
               >
                 {/* Vertical Timeline Track (Scroll-Driven Growth) */}
-                <div className="absolute left-0 top-2 bottom-2 w-[2px] bg-secondary/15 rounded-full overflow-hidden">
+                <div className="absolute left-0 top-3 bottom-3 w-[2px] bg-secondary/15 rounded-full overflow-hidden">
                   {/* Scroll-Driven Dynamic Lime Beam */}
                   <motion.div
                     style={{
@@ -395,34 +382,37 @@ function About() {
                       className="relative group"
                     >
                       {/* Timeline Node Dot (Scroll-linked illumination) */}
-                      <div className="absolute -left-4 sm:-left-6 top-1 sm:top-1.5 -translate-x-1/2 z-10 flex items-center justify-center pointer-events-none">
+                      <div className="absolute -left-4 sm:-left-6 top-4 -translate-x-1/2 z-10 flex items-center justify-center pointer-events-none">
                         <ScrollTimelineDot
                           isFirst={isFirst}
                           idx={idx}
-                          progress={smoothScaleY}
+                          progress={scrollYProgress}
+                          total={about.timeline.length}
                         />
                       </div>
 
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between items-start gap-1 sm:gap-2 mb-1">
-                        <span className="font-clash text-base sm:text-lg font-semibold text-secondary group-hover:text-black transition-colors leading-snug">
-                          {item.role}
-                        </span>
+                      {/* Milestone Card */}
+                      <div className="rounded-2xl p-4 sm:p-5 bg-c1/40 hover:bg-c1/75 border border-secondary/8 hover:border-secondary/20 transition-all duration-300 shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
+                        {/* Top Header Row: Role & Year Pill */}
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-3 mb-2">
+                          <h4 className="font-clash text-base sm:text-lg font-semibold text-secondary group-hover:text-black transition-colors leading-snug">
+                            {item.role}
+                          </h4>
+                          <span className="self-start sm:self-auto inline-flex items-center text-[10px] sm:text-[11px] font-jakarta font-semibold px-2.5 py-0.5 rounded-full bg-secondary/8 text-secondary/80 border border-secondary/10 tracking-normal shrink-0">
+                            {item.year}
+                          </span>
+                        </div>
 
-                        {/* Minimal Date Pill */}
-                        <span className="inline-flex items-center text-[10px] sm:text-[11px] font-jakarta font-semibold px-2.5 py-0.5 rounded-full bg-secondary/[0.05] text-secondary/70 border border-secondary/10 tracking-normal transition-colors group-hover:text-secondary/90 group-hover:border-secondary/25 shrink-0">
-                          {item.year}
-                        </span>
+                        {/* Organization Subtitle */}
+                        <div className="text-xs sm:text-[13px] font-medium font-jakarta text-secondary/70 mb-2.5">
+                          {item.organization}
+                        </div>
+
+                        {/* Description: Clean readable body copy */}
+                        <p className="text-xs sm:text-[13px] text-secondary/65 font-jakarta leading-relaxed font-normal">
+                          {item.description}
+                        </p>
                       </div>
-
-                      {/* Organization: Clear sub-header */}
-                      <div className="text-xs sm:text-[13px] font-semibold font-jakarta text-secondary/85 mb-2">
-                        {item.organization}
-                      </div>
-
-                      {/* Description: Clean readable body copy */}
-                      <p className="text-xs sm:text-[13px] text-secondary/60 font-jakarta leading-relaxed font-normal">
-                        {item.description}
-                      </p>
                     </motion.div>
                   );
                 })}

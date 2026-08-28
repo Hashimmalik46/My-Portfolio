@@ -1,12 +1,15 @@
 import { useForm, ValidationError } from "@formspree/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Send, CheckCircle2, Mail, MessageSquare, Copy, Check } from "lucide-react";
-import TypewriterText from "./ui/TypewriterText";
+import ArchitecturalBackground from "./ui/ArchitecturalBackground";
+import ScrollFadeText from "./ui/ScrollFadeText";
 import { BorderBeam } from "./ui/border-beam";
 import { MdEmail } from "react-icons/md";
 import { IoLocationSharp } from "react-icons/io5";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, useScroll, useTransform, useSpring } from "motion/react";
 import { portfolioData } from "../data/portfolioData";
+
+
 
 function Contact() {
   const { contact } = portfolioData;
@@ -28,9 +31,15 @@ function Contact() {
   return (
     <section
       id="Contact"
-      className="relative w-full min-h-screen flex items-center justify-center px-6 md:px-16 py-28 z-10 bg-c1 text-secondary selection:bg-secondary selection:text-white"
+      className="relative w-full min-h-screen flex items-center justify-center px-6 md:px-16 py-28 z-10 bg-c1 text-secondary selection:bg-secondary selection:text-white overflow-hidden"
     >
-      <div className="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+      {/* Subtle Architectural Cream Background Layer */}
+      <ArchitecturalBackground
+        watermarkText="CONTACT"
+        watermarkPosition="top-right"
+      />
+
+      <div className="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center relative z-10">
         {/* Left Column: Heading, Info & Direct Contact Channels */}
         <motion.div
           initial={{ opacity: 0, x: -30 }}
@@ -55,9 +64,11 @@ function Contact() {
             {contact.heading}
           </h2>
 
-          <p className="font-cormorant italic text-2xl sm:text-3xl text-secondary/85 font-light leading-relaxed">
-            <TypewriterText text={contact.subheading} cursorClassName="text-secondary" />
-          </p>
+          <ScrollFadeText
+            text={contact.subheading}
+            className="font-cormorant italic text-2xl sm:text-3xl text-secondary/85 font-light leading-relaxed"
+            activeColor="text-secondary"
+          />
 
           <p className="font-jakarta text-sm sm:text-base text-secondary/70 leading-relaxed max-w-lg">
             {contact.description}
@@ -164,7 +175,7 @@ function Contact() {
           </div>
         </motion.div>
 
-        {/* Right Column: Porcelain Glass Contact Form */}
+        {/* Right Column: Porcelain Contact Form */}
         <motion.div
           initial={{ opacity: 0, scale: 0.96, y: 30 }}
           whileInView={{ opacity: 1, scale: 1, y: 0 }}
@@ -172,7 +183,7 @@ function Contact() {
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           className="lg:col-span-6 flex flex-col justify-center"
         >
-          <div className="relative w-full rounded-3xl overflow-hidden bg-white/90 backdrop-blur-2xl border border-secondary/10 p-7 md:p-9 shadow-[0_24px_60px_rgba(0,0,0,0.07),0_1px_3px_rgba(0,0,0,0.04)]">
+          <div className="relative w-full rounded-3xl overflow-hidden bg-white border border-secondary/10 p-7 md:p-9 shadow-[0_24px_60px_rgba(0,0,0,0.07),0_1px_3px_rgba(0,0,0,0.04)]">
             <BorderBeam duration={25} size={140} colorFrom="#111827" colorTo="#a8da22" />
 
             <div className="flex items-center justify-between mb-6">
