@@ -17,6 +17,7 @@ import {
 } from "motion/react";
 import { Link } from "react-router-dom";
 import { portfolioData } from "../data/portfolioData";
+import TorchAnimal from "./TorchAnimal";
 
 /**
  * BigInteractiveName
@@ -94,6 +95,14 @@ function BigInteractiveName({ name = "Hashim" }) {
             {name}
           </h1>
         </motion.div>
+
+        {/* 3. Cute Animated Torch Animal Follower casting the spotlight */}
+        <TorchAnimal
+          isVisible={isHovered}
+          smoothX={smoothX}
+          smoothY={smoothY}
+          containerRef={textRef}
+        />
       </div>
     </div>
   );
