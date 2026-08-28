@@ -19,7 +19,6 @@ export default function CloudPreloader({ onStartReveal }) {
   const [isVideoReady, setIsVideoReady] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
   const videoRef = useRef(null);
-  const canvasRef = useRef(null);
   const touchStartY = useRef(null);
   const hasTriggeredRef = useRef(false);
 
@@ -59,7 +58,7 @@ export default function CloudPreloader({ onStartReveal }) {
     return () => clearTimeout(timer);
   }, [isVideoReady, handleTrigger, durationSeconds]);
 
-  // Ensure Video plays immediately on mount & fallback safety timer
+  // Ensure Video plays immediately on mount
   useEffect(() => {
     const video = videoRef.current;
     if (video) {
@@ -67,59 +66,9 @@ export default function CloudPreloader({ onStartReveal }) {
       video.defaultMuted = true;
       video.playsInline = true;
       video.play().catch(() => {});
-      if (video.readyState >= 2) {
-        setIsVideoReady(true);
-      }
     }
-
-    // Safety fallback so UI always emerges gracefully even on slow connections
-    const fallbackTimer = setTimeout(() => {
-      setIsVideoReady(true);
-    }, 500);
-
-    return () => clearTimeout(fallbackTimer);
+    setIsVideoReady(true);
   }, []);
-
-  // Real-time Subtle Pixelation Render Loop (automatically halts on exit to free GPU/CPU)
-  useEffect(() => {
-    if (isExiting) return;
-    const video = videoRef.current;
-    const canvas = canvasRef.current;
-    if (!video || !canvas) return;
-
-    const ctx = canvas.getContext("2d", { alpha: true });
-    let animId;
-
-    // Subtle, fine pixel resolution: 2.2px gives an ultra-delicate digital texture
-    const pixelBlockSize = 2.2;
-
-    const render = () => {
-      if (video && (video.readyState >= 1 || video.currentTime > 0)) {
-        setIsVideoReady(true);
-        const vw = video.videoWidth || 1280;
-        const vh = video.videoHeight || 720;
-        const targetW = Math.max(Math.floor(vw / pixelBlockSize), 120);
-        const targetH = Math.max(Math.floor(vh / pixelBlockSize), 68);
-
-        if (canvas.width !== targetW || canvas.height !== targetH) {
-          canvas.width = targetW;
-          canvas.height = targetH;
-        }
-
-        ctx.imageSmoothingEnabled = false;
-        try {
-          ctx.drawImage(video, 0, 0, targetW, targetH);
-        } catch (_) {}
-      }
-      animId = requestAnimationFrame(render);
-    };
-
-    animId = requestAnimationFrame(render);
-
-    return () => {
-      cancelAnimationFrame(animId);
-    };
-  }, [isExiting]);
 
   useEffect(() => {
     // Intercept scroll/touch gestures
@@ -189,17 +138,13 @@ export default function CloudPreloader({ onStartReveal }) {
       <video
         ref={videoRef}
         src={videoSources.mp4}
+        autoPlay
         loop
         muted
         playsInline
         preload="auto"
-        onLoadedData={() => setIsVideoReady(true)}
-        onCanPlay={() => setIsVideoReady(true)}
         onEnded={handleTrigger}
-        className="absolute inset-0 w-full h-full object-cover object-center scale-[1.02] pointer-events-none transition-opacity duration-700 ease-out"
-        style={{
-          opacity: isVideoReady ? 1 : 0,
-        }}
+        className="absolute inset-0 w-full h-full object-cover object-center scale-[1.02] pointer-events-none"
       />
 
       {/* Subtle Micro Dither Mesh */}
