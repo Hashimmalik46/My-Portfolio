@@ -164,7 +164,7 @@ export default function Projects() {
                     </div>
                   </motion.div>
 
-                  {/* Right Side: Taller Project Image Frame with In-View Animation & Clear Spacing from Number */}
+                  {/* Right Side: Taller Project Image Frame with In-View Animation & Link */}
                   <motion.div
                     initial={{ opacity: 0, scale: 0.94, y: 30 }}
                     whileInView={{ opacity: 1, scale: 1, y: 0 }}
@@ -172,15 +172,23 @@ export default function Projects() {
                     transition={{ duration: 0.75, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
                     className="lg:col-span-6 w-full flex items-center justify-center lg:justify-end order-1 lg:order-2 mt-6 sm:mt-7 lg:mt-8 xl:mt-10 mb-2 sm:mb-4 lg:mb-0"
                   >
-                    <div className="group relative w-full max-w-lg lg:max-w-xl aspect-[4/3] sm:aspect-[4/3] lg:aspect-[4/3] overflow-hidden rounded-md sm:rounded-lg border border-white/10 hover:border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.7)] transition-all duration-500">
+                    <a
+                      href={project.link && project.link !== "#" ? project.link : undefined}
+                      target={project.link && project.link !== "#" ? "_blank" : undefined}
+                      rel="noreferrer"
+                      aria-label={`Visit ${project.title} live website`}
+                      className={`group relative block w-full max-w-lg lg:max-w-xl aspect-[4/3] sm:aspect-[4/3] lg:aspect-[4/3] overflow-hidden rounded-md sm:rounded-lg border border-white/10 hover:border-white/25 shadow-[0_20px_50px_rgba(0,0,0,0.7)] transition-all duration-500 ${
+                        project.link && project.link !== "#" ? "cursor-pointer" : ""
+                      }`}
+                    >
                       <img
                         src={project.img}
                         alt={project.title}
                         loading="lazy"
                         decoding="async"
-                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.02]"
+                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.025]"
                       />
-                    </div>
+                    </a>
                   </motion.div>
                 </div>
               </div>

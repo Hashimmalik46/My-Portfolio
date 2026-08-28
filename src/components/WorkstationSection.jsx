@@ -40,7 +40,7 @@ export default function WorkstationSection() {
                 i % 2 === 0 ? "text-white" : "text-pAccent"
               }`}
             >
-              {i % 2 === 0 ? "Workstation" : "Tools"}
+              {i % 2 === 0 ? "Tools" : "Workstation"}
             </span>
             <ArrowUpRight
               className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 shrink-0 text-white/40"
