@@ -198,11 +198,9 @@ function Footer() {
         <img
           src="/Texturelabs_Sky_168M.jpg"
           alt=""
-          className="w-full h-full object-cover opacity-[0.30] mix-blend-screen"
+          className="w-full h-full object-cover opacity-[0.20] mix-blend-screen"
           loading="lazy"
         />
-        {/* Ambient vertical edge fade */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-transparent to-black/90 pointer-events-none" />
       </div>
 
       {/* ========================================================================= */}
