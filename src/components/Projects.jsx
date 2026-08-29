@@ -10,7 +10,7 @@ import {
   Sparkles,
   ExternalLink,
 } from "lucide-react";
-import { motion, useScroll, useTransform, useSpring } from "motion/react";
+import { motion, AnimatePresence, useScroll, useTransform, useSpring } from "motion/react";
 import { portfolioData } from "../data/portfolioData";
 import ArchitecturalBackground from "./ui/ArchitecturalBackground";
 import ScrollFadeText from "./ui/ScrollFadeText";
@@ -234,7 +234,7 @@ function ProjectCardItem({
   const brightness = useTransform(progress, range, [1, targetBrightness]);
   const filter = useTransform(brightness, (b) => `brightness(${b * 100}%)`);
   const y = useTransform(progress, range, [0, targetY]);
-  const rotateX = useTransform(progress, range, [0, targetRotateX]);
+  const rotateX = useTransform(progress, range, [0, isDesktop ? targetRotateX : 0]);
 
   // Staggered cascading top offset so previous cards' terminal headers remain visible
   const stickyTop = isDesktop
@@ -256,7 +256,7 @@ function ProjectCardItem({
   return (
     <div
       ref={cardRef}
-      className="sticky w-full flex items-center justify-center px-3 sm:px-4 md:px-6 lg:px-8 mb-20 sm:mb-28 md:mb-36 [perspective:1200px]"
+      className="sticky w-full flex items-center justify-center px-3 sm:px-4 md:px-6 lg:px-8 mb-20 sm:mb-28 md:mb-36 sm:[perspective:1200px] transform-gpu"
       style={{
         top: stickyTop,
         zIndex: index + 10,
@@ -268,7 +268,17 @@ function ProjectCardItem({
           rotateX,
           y,
           filter,
-          transformStyle: "preserve-3d",
+          transformStyle: isDesktop ? "preserve-3d" : "flat",
+          backfaceVisibility: "hidden",
+          WebkitBackfaceVisibility: "hidden",
+        }}
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, amount: 0.08 }}
+        transition={{
+          duration: 0.5,
+          delay: Math.min(index * 0.06, 0.18),
+          ease: "easeOut",
         }}
         whileHover={{
           scale: 1.008,
@@ -280,8 +290,18 @@ function ProjectCardItem({
         <div className="absolute top-0 right-0 -mr-24 -mt-24 w-80 h-80 rounded-full bg-pAccent/[0.03] group-hover/card:bg-pAccent/[0.05] blur-[80px] transition-colors duration-500 pointer-events-none" />
         <div className="absolute bottom-0 left-0 -ml-24 -mb-24 w-80 h-80 rounded-full bg-emerald-500/[0.02] group-hover/card:bg-emerald-500/[0.04] blur-[80px] transition-colors duration-500 pointer-events-none" />
 
-        {/* Outer Card Terminal Header Bar */}
-        <div className="w-full flex items-center justify-between px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3.5 bg-white/[0.025] border-b border-white/[0.08] backdrop-blur-md select-none">
+        {/* Outer Card Terminal Header Bar with On-Load Reveal */}
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.1 }}
+          transition={{
+            duration: 0.45,
+            delay: Math.min(index * 0.06, 0.18),
+            ease: [0.16, 1, 0.3, 1],
+          }}
+          className="w-full flex items-center justify-between px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3.5 bg-white/[0.025] border-b border-white/[0.08] backdrop-blur-md select-none"
+        >
           {/* 3 Terminal Window Buttons */}
           <div className="flex items-center gap-1.5 sm:gap-2">
             <span className="w-2.5 sm:w-3 h-2.5 sm:h-3 rounded-full bg-[#ff5f56] opacity-90 shadow-[0_0_6px_rgba(255,95,86,0.45)]" />
@@ -298,16 +318,26 @@ function ProjectCardItem({
           <div className="text-[11px] sm:text-xs font-mono text-white/50 tracking-widest uppercase">
             <span>0{index + 1}</span>
           </div>
-        </div>
+        </motion.div>
 
-        {/* Card Content Area */}
-        <div className="p-4 sm:p-6 lg:p-8 xl:p-9">
+        {/* Card Content Area with On-Load Glide */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.1 }}
+          transition={{
+            duration: 0.55,
+            delay: Math.min(index * 0.08, 0.22),
+            ease: [0.16, 1, 0.3, 1],
+          }}
+          className="p-4 sm:p-6 lg:p-8 xl:p-9"
+        >
           <ProjectCardContent
             project={project}
             index={index}
             scrollProgress={entranceProgress}
           />
-        </div>
+        </motion.div>
       </motion.div>
     </div>
   );
@@ -632,7 +662,7 @@ export default function Projects() {
                           />
                         ) : (
                           <span className="text-[11px] font-mono font-bold text-pAccent bg-pAccent/20 px-2 py-0.5 rounded-full border border-pAccent/30">
-                            {count < 10 ? `0${count}` : count}
+                            {count === 0 ? "0" : count < 10 ? `0${count}` : count}
                           </span>
                         )}
                       </div>
@@ -650,7 +680,7 @@ export default function Projects() {
                               : "bg-white/10 text-white/50 group-hover:text-white/80"
                           }`}
                         >
-                          {count < 10 ? `0${count}` : count}
+                          {count === 0 ? "0" : count < 10 ? `0${count}` : count}
                         </span>
                       </div>
                     </div>
@@ -667,53 +697,79 @@ export default function Projects() {
         ref={projectsContainerRef}
         className="relative w-full pb-24 sm:pb-32 md:pb-44 flex flex-col items-center"
       >
-        <motion.div
-          key={activeCategoryId}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.18, ease: "easeOut" }}
-          className="w-full flex flex-col items-center"
-        >
-          {filteredProjects.length > 0 ? (
-            filteredProjects.map((project, index) => {
-              const total = filteredProjects.length;
-              const isLast = index === total - 1;
-              // Immediate 1:1 scroll step partition (zero delay)
-              const step = 1 / Math.max(1, total);
-              const startRange = index * step * 0.85;
-              const endRange = Math.min(1, (index + 1) * step);
-              const range = [startRange, endRange];
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeCategoryId}
+            initial={{ opacity: 0, y: 28, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.98 }}
+            transition={{
+              duration: 0.35,
+              ease: [0.16, 1, 0.3, 1],
+            }}
+            className="w-full flex flex-col items-center"
+          >
+            {filteredProjects.length > 0 ? (
+              filteredProjects.map((project, index) => {
+                const total = filteredProjects.length;
+                const isLast = index === total - 1;
+                // Immediate 1:1 scroll step partition (zero delay)
+                const step = 1 / Math.max(1, total);
+                const startRange = index * step * 0.85;
+                const endRange = Math.min(1, (index + 1) * step);
+                const range = [startRange, endRange];
 
-              const targetScale = isLast ? 1 : Math.max(0.88, 1 - (total - index) * 0.04);
-              const targetBrightness = isLast ? 1 : Math.max(0.68, 1 - (total - index) * 0.09);
-              const targetY = isLast ? 0 : -((total - index) * 14);
-              const targetRotateX = isLast ? 0 : -((total - index) * 2.2);
+                const targetScale = isLast ? 1 : Math.max(0.88, 1 - (total - index) * 0.04);
+                const targetBrightness = isLast ? 1 : Math.max(0.68, 1 - (total - index) * 0.09);
+                const targetY = isLast ? 0 : -((total - index) * 14);
+                const targetRotateX = isLast ? 0 : -((total - index) * 2.2);
 
-              return (
-                <ProjectCardItem
-                  key={project.id || `${activeCategoryId}-${index}`}
-                  project={project}
-                  index={index}
-                  totalProjects={total}
-                  progress={projectsScrollProgress}
-                  range={range}
-                  targetScale={targetScale}
-                  targetBrightness={targetBrightness}
-                  targetY={targetY}
-                  targetRotateX={targetRotateX}
-                />
-              );
-            })
-          ) : (
-            <div className="w-full max-w-md my-16 p-8 rounded-3xl bg-white/[0.02] border border-white/10 text-center flex flex-col items-center gap-4">
-              <Sparkles className="w-8 h-8 text-pAccent" />
-              <h4 className="font-clashM text-lg text-white">No projects in this category</h4>
-              <p className="text-xs font-jakarta text-white/60">
-                New builds and experiments in this domain are currently in development.
-              </p>
-            </div>
-          )}
-        </motion.div>
+                return (
+                  <ProjectCardItem
+                    key={project.id || `${activeCategoryId}-${index}`}
+                    project={project}
+                    index={index}
+                    totalProjects={total}
+                    progress={projectsScrollProgress}
+                    range={range}
+                    targetScale={targetScale}
+                    targetBrightness={targetBrightness}
+                    targetY={targetY}
+                    targetRotateX={targetRotateX}
+                  />
+                );
+              })
+            ) : (
+              <motion.div
+                initial={{ opacity: 0, y: 20, scale: 0.96 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -16, scale: 0.96 }}
+                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                className="relative w-full max-w-md my-14 sm:my-18 p-7 sm:p-8 rounded-2xl sm:rounded-3xl bg-[#0D0E15]/80 backdrop-blur-xl border border-white/[0.08] shadow-[0_20px_50px_rgba(0,0,0,0.8)] text-center flex flex-col items-center gap-3 overflow-hidden"
+              >
+                {/* Contextual Content Icon */}
+                {(() => {
+                  const ActiveEmptyIcon = CATEGORY_ICONS[activeCategoryId] || Clapperboard;
+                  return (
+                    <div className="w-11 h-11 rounded-xl bg-white/[0.04] border border-white/[0.1] flex items-center justify-center text-pAccent shadow-[0_0_16px_rgba(168,218,34,0.12)] mb-0.5">
+                      <ActiveEmptyIcon size={20} strokeWidth={2.2} className="text-pAccent" />
+                    </div>
+                  );
+                })()}
+
+                {/* Clean Heading */}
+                <h4 className="font-clashM text-lg sm:text-xl text-white/90 tracking-wide">
+                  Adding Soon...
+                </h4>
+
+                {/* Minimalist Subtitle */}
+                <p className="text-xs sm:text-[13px] font-jakarta text-white/50 max-w-xs leading-relaxed">
+                  Curating case studies and visual experiments in this category. Check back soon!
+                </p>
+              </motion.div>
+            )}
+          </motion.div>
+        </AnimatePresence>
       </div>
     </section>
   );
