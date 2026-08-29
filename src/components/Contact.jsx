@@ -250,7 +250,7 @@ function Contact() {
                     type="text"
                     name="name"
                     required
-                    placeholder="e.g. John Doe"
+                    placeholder="Your Name"
                     className="w-full px-4 py-3 rounded-xl bg-[#F4F0E8]/70 focus:bg-white border border-secondary/12 focus:border-secondary text-secondary placeholder-secondary/35 text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-secondary/10 shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)] transition-all font-medium"
                   />
                 </div>
@@ -264,7 +264,7 @@ function Contact() {
                     type="email"
                     name="email"
                     required
-                    placeholder="e.g. john@example.com"
+                    placeholder="you@example.com"
                     className="w-full px-4 py-3 rounded-xl bg-[#F4F0E8]/70 focus:bg-white border border-secondary/12 focus:border-secondary text-secondary placeholder-secondary/35 text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-secondary/10 shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)] transition-all font-medium"
                   />
                   <ValidationError

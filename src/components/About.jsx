@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowUpRight, Briefcase, UserRound } from "lucide-react";
+import { Briefcase, UserRound } from "lucide-react";
 import ArchitecturalBackground from "./ui/ArchitecturalBackground";
 import ScrollFadeText from "./ui/ScrollFadeText";
 import {
@@ -395,13 +395,13 @@ function About() {
           <DraggableSpringLine />
 
           {/* Metrics */}
-          <div className="grid grid-cols-3 gap-3 pt-0 -mt-3.5">
+          <div className="grid grid-cols-3 gap-2 sm:gap-4 pt-0 -mt-3.5 px-3 sm:px-4 lg:px-1">
             {about.stats.map((s, idx) => (
               <div key={idx} className="flex flex-col">
-                <span className="font-clash text-xl sm:text-2xl font-bold text-secondary tracking-tight">
+                <span className="font-clash text-lg sm:text-2xl font-bold text-secondary tracking-tight">
                   <CounterUp value={s.value} />
                 </span>
-                <span className="font-jakarta text-[9px] sm:text-[10px] text-secondary/55 uppercase tracking-wider mt-0.5 font-medium">
+                <span className="font-jakarta text-[9px] sm:text-[10px] text-secondary/55 uppercase tracking-wider mt-0.5 font-medium leading-tight">
                   {s.label}
                 </span>
               </div>
@@ -418,35 +418,33 @@ function About() {
           className="lg:col-span-7 flex flex-col gap-4"
         >
           {/* 2x2 Specialized Domain Compact Paper Badges */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
             {about.domainCards.map((item, idx) => {
               const IconComp = item.icon;
 
               return (
                 <div
                   key={idx}
-                  className="group relative bg-[#FAF8F5] border border-secondary/12 hover:border-secondary/25 rounded-xl sm:rounded-2xl px-4 py-3.5 flex items-center justify-between shadow-[0_4px_16px_rgba(28,25,23,0.03),0_1px_2px_rgba(28,25,23,0.02),inset_0_1px_0_rgba(255,255,255,0.95)] hover:shadow-[0_10px_24px_rgba(28,25,23,0.06)] sm:hover:-translate-y-0.5 transition-all duration-300 overflow-hidden"
+                  className="group relative bg-[#FAF8F5] border border-secondary/12 hover:border-secondary/25 rounded-xl sm:rounded-2xl p-3 sm:px-4 sm:py-3.5 flex items-center shadow-[0_4px_16px_rgba(28,25,23,0.03),0_1px_2px_rgba(28,25,23,0.02),inset_0_1px_0_rgba(255,255,255,0.95)] hover:shadow-[0_10px_24px_rgba(28,25,23,0.06)] sm:hover:-translate-y-0.5 transition-all duration-300 overflow-hidden"
                 >
                   {/* Paper Fiber Texture Layer */}
                   <PaperGrainOverlay />
 
-                  <div className="flex items-center gap-3 relative z-10 min-w-0">
-                    <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center shrink-0 shadow-sm">
-                      <IconComp className="w-4 h-4 text-pAccent" />
+                  <div className="flex items-center gap-2.5 sm:gap-3 relative z-10 min-w-0">
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-secondary flex items-center justify-center shrink-0 shadow-sm">
+                      <IconComp className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-pAccent" />
                     </div>
                     <div className="flex flex-col min-w-0">
-                      <h3 className="font-clash text-sm sm:text-[15px] font-semibold text-secondary group-hover:text-black transition-colors truncate">
+                      <h3 className="font-clash text-xs sm:text-[15px] font-semibold text-secondary group-hover:text-black transition-colors truncate">
                         {item.title}
                       </h3>
                       {item.tag && (
-                        <span className="text-[10px] font-jakarta uppercase tracking-wider text-secondary/50 font-medium">
+                        <span className="text-[9px] sm:text-[10px] font-jakarta uppercase tracking-wider text-secondary/50 font-medium truncate">
                           {item.tag}
                         </span>
                       )}
                     </div>
                   </div>
-
-                  <ArrowUpRight className="w-3.5 h-3.5 text-pAccent group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform shrink-0 relative z-10 ml-2" />
                 </div>
               );
             })}
