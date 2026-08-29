@@ -224,13 +224,46 @@ export const portfolioData = {
     badgeLabel: "Portfolio",
     heading: "Selected Projects",
     subheading:
-      "A showcase of full-stack engineering, AI implementations, and production web platforms.",
+      "A showcase of full-stack engineering, autonomous AI workflows, high-precision UI/UX, and creative visual systems.",
+    categories: [
+      {
+        id: "web-platforms",
+        label: "Web Platforms",
+        match: ["Web Platform", "Web Platforms", "EdTech", "Social Platform"],
+        desc: "Production client portals, custom edtech LMS platforms, and high-performance CMS hubs.",
+      },
+      {
+        id: "ai-automation",
+        label: "AI & Systems",
+        match: ["AI & Automation", "Real-Time Tracking"],
+        desc: "Autonomous multi-agent pipelines, intelligent telemetry & computer vision systems.",
+      },
+      {
+        id: "full-stack",
+        label: "Full Stack",
+        match: ["Full Stack"],
+        desc: "Granular RBAC systems, scalable APIs, and real-time database architectures.",
+      },
+      {
+        id: "ui-ux",
+        label: "UI/UX Design",
+        match: ["UI/UX Design"],
+        desc: "Modular design systems, dark-mode ergonomics, micro-interactions & high-fidelity UI kits.",
+      },
+      {
+        id: "creative",
+        label: "Creative & Media",
+        match: ["Creative & Media", "Creative"],
+        desc: "Cinematic visual design, 3D motion environments, and narrative audio-visual direction.",
+      },
+    ],
     projects: [
       {
         id: "zooncare",
         title: "Role Based Clinic Management System",
         img: "/gallery/Zooncare.webp",
         category: "Full Stack",
+        status: "Production",
         short_desc:
           "Full-stack clinical management platform built with role-based access architecture, secure doctor-patient records, and real-time scheduling.",
         highlights: [
@@ -247,10 +280,76 @@ export const portfolioData = {
         github: "https://github.com/Hashimmalik46",
       },
       {
+        id: "agentic-ai",
+        title: "Agentic AI for Lead Generation",
+        img: "/gallery/agentic.webp",
+        category: "AI & Automation",
+        status: "Autonomous System",
+        short_desc:
+          "Autonomous agent-driven workflow designed to extract, qualify, and route high-intent leads using machine intelligence and API pipelines.",
+        highlights: [
+          "Autonomous multi-agent orchestration with specialized research & qualification agents",
+          "Intent scoring heuristic engine analyzing company signals and funding data",
+          "Seamless Supabase realtime sync with automated CRM export webhooks",
+        ],
+        tags: [
+          { id: 1, img: "/gallery/react.webp", tag: "React" },
+          { id: 2, img: "/gallery/flask.webp", tag: "Flask" },
+          { id: 3, img: "/gallery/supabase.webp", tag: "Supabase" },
+        ],
+        link: "#",
+        github: "https://github.com/Hashimmalik46",
+      },
+      {
+        id: "aurora-ui",
+        title: "Aurora Design System & Analytics UI Kit",
+        img: "/gallery/uiux.jpg",
+        category: "UI/UX Design",
+        status: "Figma System",
+        short_desc:
+          "High-precision obsidian dark-mode design system featuring comprehensive tokenized component libraries, data visualization graphs, and fluid micro-interactions.",
+        highlights: [
+          "Complete atomic design token taxonomy (colors, elevation, glassmorphism & typography)",
+          "Interactive dashboard widgets with real-time responsive analytics layouts",
+          "Engineered with strict accessibility contrast ratios and fluid motion curves",
+        ],
+        tags: [
+          { id: 1, tag: "Figma" },
+          { id: 2, tag: "Design Systems" },
+          { id: 3, tag: "UI/UX Architecture" },
+          { id: 4, tag: "Micro-Interactions" },
+        ],
+        link: "https://github.com/Hashimmalik46",
+        github: "https://github.com/Hashimmalik46",
+      },
+      {
+        id: "hashverse-creative",
+        title: "HashVerse Visual & Cinematic Motion Lab",
+        img: "/gallery/character.webp",
+        category: "Creative & Media",
+        status: "Creative Showcase",
+        short_desc:
+          "Experimental creative studio blending 3D abstract visual compositions, atmospheric soundscapes, dynamic video editing, and modern digital motion direction.",
+        highlights: [
+          "3D spatial lighting studies & geometric character composition",
+          "High-tempo video editing, kinetic typography & sound design synchronization",
+          "Exploration of interactive storytelling blending filmic aesthetics with web UI",
+        ],
+        tags: [
+          { id: 1, tag: "Motion Design" },
+          { id: 2, tag: "Visual Direction" },
+          { id: 3, tag: "3D Aesthetics" },
+          { id: 4, tag: "Sound Design" },
+        ],
+        link: "https://github.com/Hashimmalik46",
+        github: "https://github.com/Hashimmalik46",
+      },
+      {
         id: "dandwoat",
         title: "Dandwoat Dental Clinic",
         img: "/gallery/dandwoat.webp",
-        category: "Web Platform",
+        category: "Web Platforms",
+        status: "Live Client Portal",
         short_desc:
           "Comprehensive dental healthcare portal featuring online appointment bookings, treatment guides, and patient inquiry workflows.",
         highlights: [
@@ -271,6 +370,7 @@ export const portfolioData = {
         title: "IntelliSentry Hostel Management System",
         img: "/gallery/intellisentry.webp",
         category: "Full Stack",
+        status: "Deployed Platform",
         short_desc:
           "Smart hostel administration platform handling automated check-ins, student records, and room allocations with custom backend logic.",
         highlights: [
@@ -287,10 +387,32 @@ export const portfolioData = {
         github: "https://github.com/Hashimmalik46",
       },
       {
+        id: "school-bus",
+        title: "Safe School Bus Tracker",
+        img: "/gallery/bus.webp",
+        category: "AI & Automation",
+        status: "IoT & Telemetry",
+        short_desc:
+          "Real-time school transport and child tracking application with instant route updates and synchronized parent alerts.",
+        highlights: [
+          "Sub-second GPS coordinate sync powered by Supabase Realtime channels",
+          "Dynamic ETA calculation with geofence proximity alerts",
+          "Parent-friendly mobile-first UI with emergency driver contact triggers",
+        ],
+        tags: [
+          { id: 1, img: "/gallery/react.webp", tag: "React" },
+          { id: 2, img: "/gallery/supabase.webp", tag: "Supabase" },
+          { id: 3, img: "/gallery/tailwind.webp", tag: "Tailwind" },
+        ],
+        link: "https://live-school-bus-tracking.vercel.app/",
+        github: "https://github.com/Hashimmalik46",
+      },
+      {
         id: "campus-connect",
         title: "Campus Connect",
         img: "/gallery/CC.webp",
-        category: "Social Platform",
+        category: "Full Stack",
+        status: "Social Platform",
         short_desc:
           "Closed academic social network enabling campus-wide student communication, event feeds, and peer collaborations.",
         highlights: [
@@ -310,7 +432,8 @@ export const portfolioData = {
         id: "arabic-sajad",
         title: "Arabic with Dr Sajad",
         img: "/gallery/SS.webp",
-        category: "EdTech",
+        category: "Web Platforms",
+        status: "LMS EdTech",
         short_desc:
           "Content-driven publishing and educational platform with integrated video course delivery, membership tiers, and payments.",
         highlights: [
@@ -323,46 +446,6 @@ export const portfolioData = {
           { id: 2, img: "/gallery/js.webp", tag: "JavaScript" },
         ],
         link: "https://arabicwithdrsajad.com/",
-        github: "https://github.com/Hashimmalik46",
-      },
-      {
-        id: "agentic-ai",
-        title: "Agentic AI for Lead Generation",
-        img: "/gallery/agentic.webp",
-        category: "AI & Automation",
-        short_desc:
-          "Autonomous agent-driven workflow designed to extract, qualify, and route high-intent leads using machine intelligence and API pipelines.",
-        highlights: [
-          "Autonomous multi-agent orchestration with specialized research & qualification agents",
-          "Intent scoring heuristic engine analyzing company signals and funding data",
-          "Seamless Supabase realtime sync with automated CRM export webhooks",
-        ],
-        tags: [
-          { id: 1, img: "/gallery/react.webp", tag: "React" },
-          { id: 2, img: "/gallery/flask.webp", tag: "Flask" },
-          { id: 3, img: "/gallery/supabase.webp", tag: "Supabase" },
-        ],
-        link: "#",
-        github: "https://github.com/Hashimmalik46",
-      },
-      {
-        id: "school-bus",
-        title: "Safe School Bus Tracker",
-        img: "/gallery/bus.webp",
-        category: "Real-Time Tracking",
-        short_desc:
-          "Real-time school transport and child tracking application with instant route updates and synchronized parent alerts.",
-        highlights: [
-          "Sub-second GPS coordinate sync powered by Supabase Realtime channels",
-          "Dynamic ETA calculation with geofence proximity alerts",
-          "Parent-friendly mobile-first UI with emergency driver contact triggers",
-        ],
-        tags: [
-          { id: 1, img: "/gallery/react.webp", tag: "React" },
-          { id: 2, img: "/gallery/supabase.webp", tag: "Supabase" },
-          { id: 3, img: "/gallery/tailwind.webp", tag: "Tailwind" },
-        ],
-        link: "https://live-school-bus-tracking.vercel.app/",
         github: "https://github.com/Hashimmalik46",
       },
     ],

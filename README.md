@@ -42,6 +42,8 @@
 ### 1. Immersive Portfolio Experience (`/`)
 - **Atmospheric Audio Engine**: Generative Web Audio API ambient soundscape with floating volume controls and Vinyl / Minimalist audio player switcher.
 - **Dynamic Preloader**: Interactive SVG cloud reveal with synchronized smooth scrolling via Lenis.
+- **Precision Drafting & Mathematical Geometry**: Dynamic background blueprint system featuring millimeter scale rulers, 30°-60°-90° drafting triangle, drafting compass, harmonic sine wave, and 3D coordinate grids.
+- **Interactive Character Spotlight (`AstroExplorer`)**: Zero-G Chibi Astronaut Explorer holding a rotating Celestial Starlight Orb with an undulating spacecraft umbilical tether, casting dynamic radial spotlight illumination across the giant stroked "HASHIM" typography, with an ambient companion mode on mobile/tablet viewports.
 - **Interactive Project Modals**: Deep-dive project showcases with live demo links, architecture breakdowns, and tech pills.
 - **AI Portfolio Assistant (`HeroChatbot`)**: Real-time interactive AI chat agent powered by Gemini Flash, contextual topic carousel, and localized **Dark / Light theme toggle**.
 - **Responsive Floating Dock**: Quick-access global navigation with smooth anchor scrolling and instant resume triggers.
@@ -93,7 +95,7 @@ Curated standalone career acceleration and developer utilities engineered to run
 ### Core Framework & Build
 <p align="center">
   <img src="https://img.shields.io/badge/React_19-20232A?style=flat&logo=react&logoColor=61DAFB&labelColor=374151" alt="React 19" />
-  <img src="https://img.shields.io/badge/Vite_8-646CFF?style=flat&logo=vite&logoColor=white&labelColor=374151" alt="Vite 8" />
+  <img src="https://img.shields.io/badge/Vite_7-646CFF?style=flat&logo=vite&logoColor=white&labelColor=374151" alt="Vite 7" />
   <img src="https://img.shields.io/badge/React_Router_7-CA4245?style=flat&logo=react-router&logoColor=white&labelColor=374151" alt="React Router" />
   <img src="https://img.shields.io/badge/Context_API-0284C7?style=flat&logo=react&logoColor=white&labelColor=374151" alt="Context API" />
 </p>
@@ -170,6 +172,7 @@ npm run build
 ```
 src/
 ├── components/
+│   ├── AstroExplorer.jsx
 │   ├── StandaloneResumeBuilder.jsx
 │   ├── OutreachStudio.jsx
 │   ├── OmniMediaStudio.jsx
@@ -180,7 +183,10 @@ src/
 │   ├── Hero.jsx
 │   ├── Projects.jsx
 │   ├── Skills.jsx
-│   └── ...
+│   ├── Footer.jsx
+│   └── ui/
+│       ├── ArchitecturalBackground.jsx
+│       └── ...
 ├── pages/
 │   ├── HomePage.jsx
 │   ├── ToolsHub.jsx

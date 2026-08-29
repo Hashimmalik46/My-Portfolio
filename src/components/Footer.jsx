@@ -17,7 +17,7 @@ import {
 } from "motion/react";
 import { Link } from "react-router-dom";
 import { portfolioData } from "../data/portfolioData";
-import TorchAnimal from "./TorchAnimal";
+import AstroExplorer, { FloatingAstroGraphic } from "./AstroExplorer";
 
 /**
  * BigInteractiveName
@@ -71,7 +71,7 @@ function BigInteractiveName({ name = "Hashim" }) {
           className="font-clash font-bold leading-none tracking-normal text-[22vw] sm:text-[21.5vw] md:text-[21vw] lg:text-[20.5vw] select-none transition-all duration-300 pointer-events-auto"
           style={{
             color: "#000000",
-            WebkitTextStroke: "2.2px rgba(255, 255, 255, 0.2)",
+            WebkitTextStroke: "1.8px rgba(255, 255, 255, 0.1)",
             paintOrder: "stroke fill",
           }}
         >
@@ -96,8 +96,8 @@ function BigInteractiveName({ name = "Hashim" }) {
           </h1>
         </motion.div>
 
-        {/* 3. Cute Animated Torch Animal Follower casting the spotlight */}
-        <TorchAnimal
+        {/* 3. Cute Animated Astronaut Explorer casting the celestial starlight spotlight */}
+        <AstroExplorer
           isVisible={isHovered}
           smoothX={smoothX}
           smoothY={smoothY}
@@ -190,18 +190,37 @@ function Footer() {
       transition={{ duration: 0.8 }}
       className="relative w-full bg-black text-white border-t border-white/10 overflow-hidden isolate"
     >
+      {/* Texturelabs Photographic Atmospheric Sky/Texture Layer (168M) */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 w-full h-full pointer-events-none select-none z-0 overflow-hidden"
+      >
+        <img
+          src="/Texturelabs_Sky_168M.jpg"
+          alt=""
+          className="w-full h-full object-cover opacity-[0.30] mix-blend-screen"
+          loading="lazy"
+        />
+        {/* Ambient vertical edge fade */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-transparent to-black/90 pointer-events-none" />
+      </div>
 
       {/* ========================================================================= */}
       {/* 1. TOP SECTION: GIANT STROKED 'HASHIM' (HIDDEN ON PHONE & TABLET/IPAD LAYOUTS) */}
       {/* ========================================================================= */}
-      <div className="w-full relative hidden xl:block">
+      <div className="w-full relative hidden xl:block z-10">
         <BigInteractiveName name={personal?.shortName || "Hashim"} />
       </div>
 
       {/* ========================================================================= */}
       {/* 2. MIDDLE SECTION: MULTI-COLUMN STRUCTURE */}
       {/* ========================================================================= */}
-      <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-14 pt-20 sm:pt-24 md:pt-24 lg:pt-24 xl:pt-8 pb-12 sm:pb-16">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-10 lg:px-14 pt-20 sm:pt-24 md:pt-24 lg:pt-24 xl:pt-8 pb-12 sm:pb-16">
+        {/* Cute Zero-G Floating Astronaut Looking Towards Hash Logo (Visible only on mobile/tablet) */}
+        <div className="xl:hidden absolute top-2 right-4 sm:top-4 sm:right-8 md:top-6 md:right-10 pointer-events-none select-none z-20">
+          <FloatingAstroGraphic className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32" flipped={true} />
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8">
           {/* ------------------------------------------------------------- */}
           {/* COLUMN 1: Hash Logo & Social Profiles */}
@@ -213,18 +232,16 @@ function Footer() {
                 type="button"
                 onClick={toggleAudioMode}
                 className="flex items-center gap-3 cursor-pointer group select-none text-left focus:outline-none"
-                title={`Audio Mode: ${
-                  audioMode === "player"
-                    ? "Vinyl Playlist Player"
-                    : "Simple Ambient Mute"
-                } (Click to switch)`}
+                title={`Audio Mode: ${audioMode === "player"
+                  ? "Vinyl Playlist Player"
+                  : "Simple Ambient Mute"
+                  } (Click to switch)`}
               >
                 <span
-                  className={`w-3 h-3 rounded-full ${
-                    audioMode === "player"
-                      ? "bg-purple-400 shadow-[0_0_12px_rgba(192,132,252,1)]"
-                      : "bg-pAccent shadow-[0_0_12px_rgba(168,218,34,0.9)]"
-                  } animate-pulse group-hover:scale-125 transition-transform shrink-0`}
+                  className={`w-3 h-3 rounded-full ${audioMode === "player"
+                    ? "bg-purple-400 shadow-[0_0_12px_rgba(192,132,252,1)]"
+                    : "bg-pAccent shadow-[0_0_12px_rgba(168,218,34,0.9)]"
+                    } animate-pulse group-hover:scale-125 transition-transform shrink-0`}
                 />
                 <span className="font-khuma text-3xl font-bold tracking-wider text-white group-hover:text-pAccent transition-colors">
                   {footer?.brandName || "Hash"}
@@ -352,7 +369,7 @@ function Footer() {
       {/* ========================================================================= */}
       {/* 3. BOTTOM BAR (SUB-FOOTER): COPYRIGHT, TECH NOTE & BACK TO TOP */}
       {/* ========================================================================= */}
-      <div className="w-full border-t border-white/[0.08] bg-black/40 backdrop-blur-xl py-6 px-6 sm:px-10 lg:px-14">
+      <div className="relative z-10 w-full border-t border-white/[0.08] bg-black/40 backdrop-blur-xl py-6 px-6 sm:px-10 lg:px-14">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-jakarta text-white/50">
           {/* Copyright */}
           <div>
