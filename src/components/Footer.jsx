@@ -195,10 +195,24 @@ function Footer() {
         aria-hidden="true"
         className="absolute inset-0 w-full h-full pointer-events-none select-none z-0 overflow-hidden"
       >
+        {/* Mobile & Tablet: Rich starry texture near astronaut (top-right) with smooth gradual fade downwards */}
         <img
           src="/Texturelabs_Sky_168M.jpg"
           alt=""
-          className="w-full h-full object-cover opacity-[0.20] mix-blend-screen"
+          className="xl:hidden w-full h-full object-cover opacity-[0.58] sm:opacity-[0.46] md:opacity-[0.38] mix-blend-screen transition-opacity duration-300"
+          style={{
+            maskImage:
+              "radial-gradient(ellipse 110% 85% at 85% 10%, black 0%, rgba(0,0,0,0.8) 30%, rgba(0,0,0,0.35) 65%, rgba(0,0,0,0.12) 100%)",
+            WebkitMaskImage:
+              "radial-gradient(ellipse 110% 85% at 85% 10%, black 0%, rgba(0,0,0,0.8) 30%, rgba(0,0,0,0.35) 65%, rgba(0,0,0,0.12) 100%)",
+          }}
+          loading="lazy"
+        />
+        {/* Desktop: Balanced uniform atmospheric overlay */}
+        <img
+          src="/Texturelabs_Sky_168M.jpg"
+          alt=""
+          className="hidden xl:block w-full h-full object-cover opacity-[0.20] mix-blend-screen"
           loading="lazy"
         />
       </div>
