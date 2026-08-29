@@ -231,10 +231,9 @@ function ProjectCardItem({
 
   // Dynamic transforms driven by the overall projects scroll progress
   const scale = useTransform(progress, range, [1, targetScale]);
-  const brightness = useTransform(progress, range, [1, targetBrightness]);
-  const filter = useTransform(brightness, (b) => `brightness(${b * 100}%)`);
   const y = useTransform(progress, range, [0, targetY]);
   const rotateX = useTransform(progress, range, [0, isDesktop ? targetRotateX : 0]);
+  const overlayOpacity = useTransform(progress, range, [0, Math.max(0, 1 - targetBrightness)]);
 
   // Staggered cascading top offset so previous cards' terminal headers remain visible
   const stickyTop = isDesktop
@@ -267,18 +266,9 @@ function ProjectCardItem({
           scale,
           rotateX,
           y,
-          filter,
           transformStyle: isDesktop ? "preserve-3d" : "flat",
           backfaceVisibility: "hidden",
           WebkitBackfaceVisibility: "hidden",
-        }}
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true, amount: 0.08 }}
-        transition={{
-          duration: 0.5,
-          delay: Math.min(index * 0.06, 0.18),
-          ease: "easeOut",
         }}
         whileHover={{
           scale: 1.008,
@@ -286,22 +276,18 @@ function ProjectCardItem({
         }}
         className="group/card relative w-full max-w-6xl bg-[#0D0E15]/95 backdrop-blur-2xl rounded-2xl sm:rounded-3xl lg:rounded-[2.5rem] border border-white/[0.12] hover:border-white/[0.18] shadow-[0_25px_60px_rgba(0,0,0,0.92),0_0_40px_rgba(0,0,0,0.6)] hover:shadow-[0_30px_70px_rgba(0,0,0,0.95),0_0_20px_rgba(168,218,34,0.04)] overflow-hidden transition-all duration-300 will-change-transform"
       >
+        {/* Atmospheric Depth Dimming Overlay (100% GPU flash-free alpha blend) */}
+        <motion.div
+          style={{ opacity: overlayOpacity }}
+          className="absolute inset-0 bg-[#07080c] pointer-events-none z-20 rounded-[inherit]"
+        />
+
         {/* Subtle Ambient Gradient Corner Glow with Delicate Hover Pulse */}
         <div className="absolute top-0 right-0 -mr-24 -mt-24 w-80 h-80 rounded-full bg-pAccent/[0.03] group-hover/card:bg-pAccent/[0.05] blur-[80px] transition-colors duration-500 pointer-events-none" />
         <div className="absolute bottom-0 left-0 -ml-24 -mb-24 w-80 h-80 rounded-full bg-emerald-500/[0.02] group-hover/card:bg-emerald-500/[0.04] blur-[80px] transition-colors duration-500 pointer-events-none" />
 
-        {/* Outer Card Terminal Header Bar with On-Load Reveal */}
-        <motion.div
-          initial={{ opacity: 0, y: -8 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.1 }}
-          transition={{
-            duration: 0.45,
-            delay: Math.min(index * 0.06, 0.18),
-            ease: [0.16, 1, 0.3, 1],
-          }}
-          className="w-full flex items-center justify-between px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3.5 bg-white/[0.025] border-b border-white/[0.08] backdrop-blur-md select-none"
-        >
+        {/* Outer Card Terminal Header Bar */}
+        <div className="w-full flex items-center justify-between px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3.5 bg-white/[0.025] border-b border-white/[0.08] backdrop-blur-md select-none relative z-10">
           {/* 3 Terminal Window Buttons */}
           <div className="flex items-center gap-1.5 sm:gap-2">
             <span className="w-2.5 sm:w-3 h-2.5 sm:h-3 rounded-full bg-[#ff5f56] opacity-90 shadow-[0_0_6px_rgba(255,95,86,0.45)]" />
@@ -318,26 +304,16 @@ function ProjectCardItem({
           <div className="text-[11px] sm:text-xs font-mono text-white/50 tracking-widest uppercase">
             <span>0{index + 1}</span>
           </div>
-        </motion.div>
+        </div>
 
-        {/* Card Content Area with On-Load Glide */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.1 }}
-          transition={{
-            duration: 0.55,
-            delay: Math.min(index * 0.08, 0.22),
-            ease: [0.16, 1, 0.3, 1],
-          }}
-          className="p-4 sm:p-6 lg:p-8 xl:p-9"
-        >
+        {/* Card Content Area */}
+        <div className="p-4 sm:p-6 lg:p-8 xl:p-9 relative z-10">
           <ProjectCardContent
             project={project}
             index={index}
             scrollProgress={entranceProgress}
           />
-        </motion.div>
+        </div>
       </motion.div>
     </div>
   );

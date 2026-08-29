@@ -92,6 +92,7 @@ function TypewriterSubtitle({ phrases = DEFAULT_SUBTITLE_PHRASES }) {
 function InteractiveContactCard({ contact, portfolioData, copied, setCopied }) {
   const cardRef = useRef(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0, opacity: 0 });
+  const [isHovered, setIsHovered] = useState(false);
 
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -117,38 +118,75 @@ function InteractiveContactCard({ contact, portfolioData, copied, setCopied }) {
     x.set(normX);
     y.set(normY);
     setMousePos({ x: mouseX, y: mouseY, opacity: 1 });
+    setIsHovered(true);
   };
 
   const handleMouseLeave = () => {
     x.set(0);
     y.set(0);
     setMousePos((prev) => ({ ...prev, opacity: 0 }));
+    setIsHovered(false);
   };
 
   return (
     <div style={{ perspective: 1200 }} className="w-full max-w-lg">
       <motion.div
-        ref={cardRef}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
-        whileHover={{ scale: 1.012, y: -2 }}
-        transition={{ type: "spring", stiffness: 350, damping: 25 }}
-        style={{
-          rotateX,
-          rotateY,
-          transformStyle: "preserve-3d",
-          transformPerspective: 1200,
+        initial={{
+          opacity: 0,
+          y: 40,
+          rotateX: 16,
+          rotateY: -6,
+          scale: 0.94,
         }}
-        className="group relative w-full rounded-3xl bg-[#0c0d14] text-white border border-white/[0.12] hover:border-white/[0.25] p-6 sm:p-7 shadow-[0_16px_35px_rgba(0,0,0,0.35)] hover:shadow-[0_24px_50px_rgba(0,0,0,0.6)] flex flex-col gap-5 mt-2 overflow-hidden cursor-default transition-colors duration-300"
+        whileInView={{
+          opacity: 1,
+          y: 0,
+          rotateX: 0,
+          rotateY: 0,
+          scale: 1,
+        }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{
+          duration: 0.85,
+          ease: [0.16, 1, 0.3, 1],
+        }}
+        className="w-full"
       >
-        {/* Subtle Specular Cursor Light Reflection */}
-        <div
-          className="pointer-events-none absolute -inset-px rounded-3xl transition-opacity duration-300 z-0"
+        <motion.div
+          ref={cardRef}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
+          whileHover={{ scale: 1.012, y: -2 }}
+          transition={{ type: "spring", stiffness: 350, damping: 25 }}
           style={{
-            opacity: mousePos.opacity,
-            background: `radial-gradient(380px circle at ${mousePos.x}px ${mousePos.y}px, rgba(255, 255, 255, 0.08), transparent 70%)`,
+            rotateX: isHovered ? rotateX : 0,
+            rotateY: isHovered ? rotateY : 0,
+            transformStyle: "preserve-3d",
+            transformPerspective: 1200,
           }}
-        />
+          className="group relative w-full rounded-3xl bg-[#0c0d14] text-white border border-white/[0.12] hover:border-white/[0.25] p-6 sm:p-7 shadow-[0_16px_35px_rgba(0,0,0,0.35)] hover:shadow-[0_24px_50px_rgba(0,0,0,0.6)] flex flex-col gap-5 mt-2 overflow-hidden cursor-default transition-colors duration-300 transform-gpu"
+        >
+          {/* Glass Specular Glare Sweep on Load */}
+          <motion.div
+            initial={{ x: "-100%", opacity: 0 }}
+            whileInView={{ x: "200%", opacity: [0, 0.35, 0] }}
+            viewport={{ once: true }}
+            transition={{
+              duration: 1.1,
+              delay: 0.2,
+              ease: "easeInOut",
+            }}
+            className="pointer-events-none absolute inset-0 -skew-x-12 bg-gradient-to-r from-transparent via-white/[0.08] to-transparent z-30"
+          />
+
+          {/* Subtle Specular Cursor Light Reflection */}
+          <div
+            className="pointer-events-none absolute -inset-px rounded-3xl transition-opacity duration-300 z-0"
+            style={{
+              opacity: mousePos.opacity,
+              background: `radial-gradient(380px circle at ${mousePos.x}px ${mousePos.y}px, rgba(255, 255, 255, 0.08), transparent 70%)`,
+            }}
+          />
 
         {/* 1. Identity Header */}
         <div className="relative z-10 flex items-center justify-between pb-4 border-b border-white/[0.08] gap-3">
@@ -288,7 +326,8 @@ function InteractiveContactCard({ contact, portfolioData, copied, setCopied }) {
           ⚡ Responds in ~1 day
         </span>
       </div>
-    </motion.div>
+        </motion.div>
+      </motion.div>
     </div>
   );
 }
