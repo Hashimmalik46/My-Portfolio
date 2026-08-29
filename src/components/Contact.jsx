@@ -26,22 +26,19 @@ function PaperGrainOverlay() {
   );
 }
 
-const DEFAULT_SUBTITLE_PHRASES = [
-  "Full Stack Engineer",
-  "AI Systems Developer",
-  "UI/UX & Motion Design",
-  "Autonomous Agent Builder",
-  "Creative Web Architect",
-];
-
-function TypewriterSubtitle({ phrases = DEFAULT_SUBTITLE_PHRASES }) {
+function TypewriterSubtitle({ phrases }) {
+  const phraseList =
+    phrases && phrases.length > 0
+      ? phrases
+      : portfolioData.contact?.subtitlePhrases || [];
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
   const [displayedText, setDisplayedText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const currentPhrase = phrases[currentPhraseIndex] || "";
+  const currentPhrase = phraseList[currentPhraseIndex] || "";
 
   useEffect(() => {
+    if (!phraseList.length) return;
     let timeout;
     if (!isDeleting) {
       if (displayedText.length < currentPhrase.length) {
@@ -61,14 +58,14 @@ function TypewriterSubtitle({ phrases = DEFAULT_SUBTITLE_PHRASES }) {
       } else {
         timeout = setTimeout(() => {
           setIsDeleting(false);
-          setCurrentPhraseIndex((prev) => (prev + 1) % phrases.length);
+          setCurrentPhraseIndex((prev) => (prev + 1) % phraseList.length);
         }, 400);
       }
     }
     return () => clearTimeout(timeout);
-  }, [displayedText, isDeleting, currentPhrase, phrases.length]);
+  }, [displayedText, isDeleting, currentPhrase, phraseList.length]);
 
-  const longestPhrase = phrases.reduce(
+  const longestPhrase = phraseList.reduce(
     (a, b) => (a.length > b.length ? a : b),
     ""
   );
@@ -194,7 +191,7 @@ function InteractiveContactCard({ contact, portfolioData, copied, setCopied }) {
             <h3 className="font-clash font-bold text-lg sm:text-xl text-white tracking-tight group-hover:text-white transition-colors truncate">
               {portfolioData.personal?.name || "Hashim Malik"}
             </h3>
-            <TypewriterSubtitle />
+            <TypewriterSubtitle phrases={contact?.subtitlePhrases || portfolioData.contact?.subtitlePhrases} />
           </div>
 
           {/* Top-Right Modern Chat Message Bubble */}

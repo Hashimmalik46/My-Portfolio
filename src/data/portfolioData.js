@@ -464,6 +464,13 @@ export const portfolioData = {
     formspreeFormId: "xeerdlnq",
     email: "hashimzahoor2003@gmail.com",
     location: "Srinagar, Kashmir",
+    subtitlePhrases: [
+      "Full Stack Engineer",
+      "AI Systems Builder",
+      "Creative UI Engineer",
+      "Intelligent Systems Developer",
+      "Interactive Web Architect",
+    ],
     socialLinks: [
       {
         name: "LinkedIn",
