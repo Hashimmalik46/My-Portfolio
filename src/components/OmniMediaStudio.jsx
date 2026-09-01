@@ -928,52 +928,50 @@ export default function OmniMediaStudio() {
   ];
 
   return (
-    <div className="relative w-full max-w-5xl min-h-[580px] sm:min-h-[620px] my-auto flex flex-col rounded-2xl sm:rounded-3xl bg-white dark:bg-[#11131b] border border-gray-200 dark:border-white/[0.08] overflow-hidden z-10 font-jakarta shadow-2xl transition-colors duration-200">
+    <div className="relative w-full max-w-5xl min-h-0 sm:min-h-[580px] lg:min-h-[620px] my-auto flex flex-col rounded-2xl sm:rounded-3xl bg-white dark:bg-[#11131b] border border-gray-200 dark:border-white/[0.08] overflow-hidden z-10 font-jakarta shadow-2xl transition-colors duration-200">
       {/* ===================================================================
           LEVEL 1: MAIN STUDIO HUB (2 SLEEK PASTEL / NEUTRAL CARDS)
       =================================================================== */}
       {currentView === "hub" && (
-        <div className="flex-1 flex flex-col justify-between p-6 sm:p-8 space-y-6">
+        <div className="flex-1 flex flex-col justify-between p-5 sm:p-8 md:p-10 space-y-6 sm:space-y-8">
           {/* Header */}
-          <div className="text-center max-w-xl mx-auto space-y-2.5 pt-5 sm:pt-8 pb-1">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/[0.03] dark:bg-white/[0.04] border border-black/[0.08] dark:border-white/[0.08] text-xs font-medium text-gray-600 dark:text-gray-400">
-              <ShieldCheck size={14} className="text-gray-700 dark:text-gray-300 shrink-0" />
-              <span>100% Private</span>
-              <span className="text-black/20 dark:text-white/20">•</span>
-              <span>Runs Directly On Your Device</span>
+          <div className="text-center max-w-xl mx-auto space-y-2 sm:space-y-3 pt-2 sm:pt-4 pb-1">
+            <div className="inline-flex items-center justify-center gap-1.5 px-3 py-1 rounded-full bg-black/[0.03] dark:bg-white/[0.04] border border-black/[0.08] dark:border-white/[0.08] text-[10.5px] sm:text-[11px] font-medium text-gray-600 dark:text-gray-400 whitespace-nowrap">
+              <ShieldCheck size={13} className="text-gray-700 dark:text-gray-300 shrink-0 inline-block align-middle -mt-[1px]" />
+              <span className="inline-block align-middle">100% Private • Runs On Your Device</span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white font-clash tracking-tight">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-white font-clash tracking-tight">
               Image & PDF Studio
             </h2>
-            <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+            <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 leading-relaxed max-w-md mx-auto">
               Fast, private media optimizer and document workstation.
             </p>
           </div>
 
-          {/* 2 Simple Minimal Pastel Cards - Bigger Height & Distinct Colors */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 max-w-3xl mx-auto w-full my-auto">
+          {/* 2 Simple Minimal Pastel Cards - Optimized Spacing & Padding */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-7 max-w-3xl mx-auto w-full my-auto">
             {/* 1. Image Studio Card (Warm Amber / Sand Pastel) */}
             <motion.div
-              whileHover={{ y: -4 }}
+              whileHover={{ y: -3 }}
               transition={{ duration: 0.18 }}
               onClick={() => handleOpenSuite("image")}
-              className="group relative rounded-3xl bg-[#faf6f0] dark:bg-[#1a1612] hover:bg-[#f6eee3] dark:hover:bg-[#201a15] border border-amber-200/80 dark:border-amber-900/40 hover:border-amber-400 dark:hover:border-amber-600/50 p-6 sm:p-7 flex flex-col justify-between cursor-pointer shadow-2xs hover:shadow-md transition-all duration-200 min-h-[220px] sm:min-h-[240px]"
+              className="group relative rounded-2xl sm:rounded-3xl bg-[#faf6f0] dark:bg-[#1a1612] hover:bg-[#f6eee3] dark:hover:bg-[#201a15] border border-amber-200/80 dark:border-amber-900/40 hover:border-amber-400 dark:hover:border-amber-600/50 p-5 sm:p-7 md:p-8 flex flex-col justify-between cursor-pointer shadow-2xs hover:shadow-md transition-all duration-200 min-h-0 sm:min-h-[230px] md:min-h-[250px]"
             >
-              <div className="space-y-4">
+              <div className="space-y-3.5 sm:space-y-5">
                 <div className="flex items-center justify-between">
-                  <div className="w-12 h-12 rounded-2xl bg-amber-100 dark:bg-amber-950/70 text-amber-900 dark:text-amber-300 flex items-center justify-center shadow-2xs">
-                    <ImageIcon size={22} />
+                  <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-amber-100 dark:bg-amber-950/70 text-amber-900 dark:text-amber-300 flex items-center justify-center shadow-2xs">
+                    <ImageIcon size={20} className="sm:w-[22px] sm:h-[22px]" />
                   </div>
-                  <span className="px-3 py-1 rounded-full bg-amber-100/90 dark:bg-amber-950/60 text-amber-900 dark:text-amber-300 text-xs font-bold">
+                  <span className="px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full bg-amber-100/90 dark:bg-amber-950/60 text-amber-900 dark:text-amber-300 text-[11px] sm:text-xs font-bold">
                     3 Tools
                   </span>
                 </div>
 
                 <div>
-                  <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white font-clash flex items-center gap-1.5">
+                  <h3 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 dark:text-white font-clash flex items-center gap-1.5">
                     <span>Image Studio</span>
                     <ArrowUpRight
-                      size={16}
+                      size={15}
                       className="opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all text-amber-900 dark:text-amber-300"
                     />
                   </h3>
@@ -983,34 +981,34 @@ export default function OmniMediaStudio() {
                 </div>
               </div>
 
-              <div className="mt-6 pt-3.5 border-t border-amber-200/60 dark:border-white/[0.06] flex items-center justify-between text-xs font-bold text-amber-900 dark:text-amber-300">
+              <div className="mt-5 sm:mt-7 pt-3 sm:pt-4 border-t border-amber-200/60 dark:border-white/[0.06] flex items-center justify-between text-xs font-bold text-amber-900 dark:text-amber-300">
                 <span className="group-hover:underline">Open Image Studio ➔</span>
-                <span className="text-[11px] text-amber-800/60 dark:text-amber-400/60 font-mono">100% In-Browser</span>
+                <span className="text-[10.5px] sm:text-[11px] text-amber-800/60 dark:text-amber-400/60 font-mono">100% In-Browser</span>
               </div>
             </motion.div>
 
             {/* 2. PDF Suite Card (Cool Indigo / Lavender Pastel) */}
             <motion.div
-              whileHover={{ y: -4 }}
+              whileHover={{ y: -3 }}
               transition={{ duration: 0.18 }}
               onClick={() => handleOpenSuite("pdf")}
-              className="group relative rounded-3xl bg-[#f4f5fb] dark:bg-[#131522] hover:bg-[#ebedf8] dark:hover:bg-[#171a2a] border border-indigo-200/80 dark:border-indigo-900/40 hover:border-indigo-400 dark:hover:border-indigo-600/50 p-6 sm:p-7 flex flex-col justify-between cursor-pointer shadow-2xs hover:shadow-md transition-all duration-200 min-h-[220px] sm:min-h-[240px]"
+              className="group relative rounded-2xl sm:rounded-3xl bg-[#f4f5fb] dark:bg-[#131522] hover:bg-[#ebedf8] dark:hover:bg-[#171a2a] border border-indigo-200/80 dark:border-indigo-900/40 hover:border-indigo-400 dark:hover:border-indigo-600/50 p-5 sm:p-7 md:p-8 flex flex-col justify-between cursor-pointer shadow-2xs hover:shadow-md transition-all duration-200 min-h-0 sm:min-h-[230px] md:min-h-[250px]"
             >
-              <div className="space-y-4">
+              <div className="space-y-3.5 sm:space-y-5">
                 <div className="flex items-center justify-between">
-                  <div className="w-12 h-12 rounded-2xl bg-indigo-100 dark:bg-indigo-950/70 text-indigo-900 dark:text-indigo-300 flex items-center justify-center shadow-2xs">
-                    <FileText size={22} />
+                  <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-indigo-100 dark:bg-indigo-950/70 text-indigo-900 dark:text-indigo-300 flex items-center justify-center shadow-2xs">
+                    <FileText size={20} className="sm:w-[22px] sm:h-[22px]" />
                   </div>
-                  <span className="px-3 py-1 rounded-full bg-indigo-100/90 dark:bg-indigo-950/60 text-indigo-900 dark:text-indigo-300 text-xs font-bold">
+                  <span className="px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full bg-indigo-100/90 dark:bg-indigo-950/60 text-indigo-900 dark:text-indigo-300 text-[11px] sm:text-xs font-bold">
                     7 Tools
                   </span>
                 </div>
 
                 <div>
-                  <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white font-clash flex items-center gap-1.5">
+                  <h3 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 dark:text-white font-clash flex items-center gap-1.5">
                     <span>PDF Suite</span>
                     <ArrowUpRight
-                      size={16}
+                      size={15}
                       className="opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all text-indigo-900 dark:text-indigo-300"
                     />
                   </h3>
@@ -1020,18 +1018,18 @@ export default function OmniMediaStudio() {
                 </div>
               </div>
 
-              <div className="mt-6 pt-3.5 border-t border-indigo-200/60 dark:border-white/[0.06] flex items-center justify-between text-xs font-bold text-indigo-900 dark:text-indigo-300">
+              <div className="mt-5 sm:mt-7 pt-3 sm:pt-4 border-t border-indigo-200/60 dark:border-white/[0.06] flex items-center justify-between text-xs font-bold text-indigo-900 dark:text-indigo-300">
                 <span className="group-hover:underline">Open PDF Suite ➔</span>
-                <span className="text-[11px] text-indigo-800/60 dark:text-indigo-400/60 font-mono">100% In-Browser</span>
+                <span className="text-[10.5px] sm:text-[11px] text-indigo-800/60 dark:text-indigo-400/60 font-mono">100% In-Browser</span>
               </div>
             </motion.div>
           </div>
 
           {/* Footer Note */}
-          <div className="flex items-center justify-center gap-2 text-center text-xs text-gray-500 dark:text-gray-400 pt-1">
-            <ShieldCheck size={14} className="text-emerald-600 dark:text-emerald-400 shrink-0" />
-            <span>Your files stay on your device and are never uploaded to any server.</span>
-          </div>
+          <p className="text-center text-[11px] sm:text-xs text-gray-500 dark:text-gray-400 pt-3 sm:pt-4 border-t border-gray-100 dark:border-white/[0.04] leading-relaxed max-w-md mx-auto">
+            <ShieldCheck size={13} className="inline-block -mt-0.5 mr-1 text-emerald-600 dark:text-emerald-400 shrink-0 align-middle" />
+            <span className="align-middle">Your files stay on your device and are never uploaded to any server.</span>
+          </p>
         </div>
       )}
 
