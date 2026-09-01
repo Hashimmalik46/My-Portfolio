@@ -666,8 +666,8 @@ PERSONA & TONE:
         id: "media-converter",
         name: "Image & PDF Studio",
         description:
-          "Zero-upload suite: PDF to Images, Passport & Photo Resizer, Image Compressor, Format Converter, Images to PDF, and PDF Merger.",
-        tags: ["PDF to Images", "Passport Resizer", "Compressor", "Format Converter", "PDF Merge & Split"],
+          "Zero-upload suite: PDF Compressor, PDF to DOCX, DOCX to PDF, PDF to Images, Passport & Photo Resizer, Image Compressor, Format Converter, and PDF Merge & Split.",
+        tags: ["PDF Compressor", "PDF to Word (.docx)", "Word to PDF", "PDF to Images", "Passport Resizer", "PDF Merge & Split"],
         route: "/tools/media-converter",
         icon: FileText,
       },

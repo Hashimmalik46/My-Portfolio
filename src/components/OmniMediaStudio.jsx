@@ -25,6 +25,10 @@ import {
   Grid,
   Move,
   RotateCcw,
+  ArrowLeft,
+  ArrowUpRight,
+  ChevronRight,
+  ShieldCheck,
 } from "lucide-react";
 import {
   loadImageFromFile,
@@ -40,18 +44,40 @@ import {
   generatePrintablePassportSheet,
   convertPdfToImages,
   downloadAllPagesAsZip,
+  compressPdfDocument,
+  PDF_COMPRESSION_PRESETS,
+  convertPdfToDocx,
+  convertDocxToPdf,
 } from "../services/imageProcessor";
 import { triggerFileDownload } from "../services/mediaDownloader";
 
 export default function OmniMediaStudio() {
+  // Progressive Navigation: 'hub' (Level 1: 2 main cards) | 'suite' (Level 2: suite tools grid) | 'tool' (Level 3: focused workspace)
+  const [currentView, setCurrentView] = useState("hub");
+
   // Main Suite Switcher: 'image' | 'pdf'
   const [activeSuite, setActiveSuite] = useState("image");
 
   // Sub-tabs for Image Suite: 'compressor' | 'converter' | 'resizer'
   const [activeImageTab, setActiveImageTab] = useState("compressor");
 
-  // Sub-tabs for PDF Suite: 'pdfToImg' | 'imgToPdf' | 'mergePdf' | 'splitPdf'
-  const [activePdfTab, setActivePdfTab] = useState("pdfToImg");
+  // Sub-tabs for PDF Suite: 'compressPdf' | 'pdfToDocx' | 'docxToPdf' | 'pdfToImg' | 'imgToPdf' | 'mergePdf' | 'splitPdf'
+  const [activePdfTab, setActivePdfTab] = useState("compressPdf");
+
+  const handleOpenSuite = (suiteId) => {
+    setActiveSuite(suiteId);
+    setCurrentView("suite");
+  };
+
+  const handleOpenTool = (suiteId, toolId) => {
+    setActiveSuite(suiteId);
+    if (suiteId === "image") {
+      setActiveImageTab(toolId);
+    } else {
+      setActivePdfTab(toolId);
+    }
+    setCurrentView("tool");
+  };
 
   // =========================================================================
   // 1. IMAGE COMPRESSOR STATE
@@ -383,7 +409,218 @@ export default function OmniMediaStudio() {
   };
 
   // =========================================================================
-  // 5. PDF TO IMAGES STATE (NEW FEATURE)
+  // 4. PDF COMPRESSOR STATE (NEW FEATURE)
+  // =========================================================================
+  const [compressPdfFile, setCompressPdfFile] = useState(null);
+  const [pdfCompressPreset, setPdfCompressPreset] = useState("balanced"); // 'extreme' | 'balanced' | 'light' | 'target' | 'custom'
+  const [pdfTargetMaxKb, setPdfTargetMaxKb] = useState(0); // 0 = standard presets, >0 = strict KB limit
+  const [pdfCustomQuality, setPdfCustomQuality] = useState(70); // 10% - 95%
+  const [pdfCustomScale, setPdfCustomScale] = useState(1.2); // 0.5x - 2.0x
+  const [pdfCompressResult, setPdfCompressResult] = useState(null);
+  const [isCompressingPdfDoc, setIsCompressingPdfDoc] = useState(false);
+  const [pdfCompressProgress, setPdfCompressProgress] = useState(null);
+  const [pdfCompressError, setPdfCompressError] = useState("");
+  const [pdfPreviewActiveIndex, setPdfPreviewActiveIndex] = useState(0);
+  const compressPdfInputRef = useRef(null);
+
+  const executePdfCompression = async (fileToCompress, customOpts = {}) => {
+    const targetFile = fileToCompress || compressPdfFile;
+    if (!targetFile) return;
+
+    setIsCompressingPdfDoc(true);
+    setPdfCompressError("");
+    setPdfCompressProgress({
+      currentPage: 1,
+      totalPages: 1,
+      percent: 10,
+      status: "Analyzing PDF structure...",
+    });
+
+    try {
+      const preset =
+        customOpts.presetId !== undefined
+          ? customOpts.presetId
+          : pdfCompressPreset;
+      const targetKb =
+        customOpts.targetMaxKb !== undefined
+          ? customOpts.targetMaxKb
+          : pdfTargetMaxKb;
+      const isCustom = preset === "custom";
+      const qualityVal = isCustom
+        ? customOpts.quality !== undefined
+          ? customOpts.quality
+          : pdfCustomQuality / 100
+        : null;
+      const scaleVal = isCustom
+        ? customOpts.scale !== undefined
+          ? customOpts.scale
+          : pdfCustomScale
+        : null;
+
+      const result = await compressPdfDocument(targetFile, {
+        presetId: preset,
+        targetMaxKb: targetKb > 0 ? targetKb : null,
+        quality: qualityVal,
+        scale: scaleVal,
+        progressCallback: (p) => setPdfCompressProgress(p),
+      });
+
+      setPdfCompressResult(result);
+      setPdfPreviewActiveIndex(0);
+    } catch (err) {
+      console.error("PDF compression error:", err);
+      setPdfCompressError(
+        err.message || "Failed to compress PDF. Please verify the document."
+      );
+    } finally {
+      setIsCompressingPdfDoc(false);
+      setPdfCompressProgress(null);
+    }
+  };
+
+  const handleCompressPdfUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setCompressPdfFile(file);
+    setPdfCompressResult(null);
+    setPdfCompressError("");
+    setPdfPreviewActiveIndex(0);
+
+    // Trigger initial compression immediately
+    executePdfCompression(file, {
+      presetId: pdfCompressPreset,
+      targetMaxKb: pdfTargetMaxKb,
+    });
+  };
+
+  const handleDownloadCompressedPdf = () => {
+    if (!pdfCompressResult?.blob) return;
+    triggerFileDownload(
+      pdfCompressResult.blob,
+      pdfCompressResult.filename ||
+        `compressed_${compressPdfFile?.name || "document.pdf"}`
+    );
+  };
+
+  // =========================================================================
+  // 5. PDF TO DOCX STATE (NEW FEATURE)
+  // =========================================================================
+  const [pdfToDocxFile, setPdfToDocxFile] = useState(null);
+  const [pdfToDocxMode, setPdfToDocxMode] = useState("smartText"); // 'smartText' | 'visualLayout' | 'hybrid'
+  const [pdfToDocxResult, setPdfToDocxResult] = useState(null);
+  const [isConvertingPdfToDocx, setIsConvertingPdfToDocx] = useState(false);
+  const [pdfToDocxProgress, setPdfToDocxProgress] = useState(null);
+  const [pdfToDocxError, setPdfToDocxError] = useState("");
+  const pdfToDocxInputRef = useRef(null);
+
+  const executePdfToDocx = async (fileToConvert, modeToUse) => {
+    const target = fileToConvert || pdfToDocxFile;
+    if (!target) return;
+
+    const effectiveMode = modeToUse || pdfToDocxMode;
+    setIsConvertingPdfToDocx(true);
+    setPdfToDocxError("");
+    setPdfToDocxProgress({
+      currentPage: 1,
+      totalPages: 1,
+      percent: 10,
+      status: "Initializing conversion...",
+    });
+
+    try {
+      const result = await convertPdfToDocx(target, {
+        mode: effectiveMode,
+        progressCallback: (p) => setPdfToDocxProgress(p),
+      });
+      setPdfToDocxResult(result);
+    } catch (err) {
+      console.error("PDF to DOCX error:", err);
+      setPdfToDocxError(
+        err.message || "Failed to convert PDF to DOCX format."
+      );
+    } finally {
+      setIsConvertingPdfToDocx(false);
+      setPdfToDocxProgress(null);
+    }
+  };
+
+  const handlePdfToDocxUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setPdfToDocxFile(file);
+    setPdfToDocxResult(null);
+    setPdfToDocxError("");
+    executePdfToDocx(file, pdfToDocxMode);
+  };
+
+  const handleDownloadPdfToDocx = () => {
+    if (!pdfToDocxResult?.blob) return;
+    triggerFileDownload(
+      pdfToDocxResult.blob,
+      pdfToDocxResult.filename ||
+        `${pdfToDocxFile?.name?.replace(/\.[^/.]+$/, "") || "document"}.docx`
+    );
+  };
+
+  // =========================================================================
+  // 6. DOCX TO PDF STATE (NEW FEATURE)
+  // =========================================================================
+  const [docxToPdfFile, setDocxToPdfFile] = useState(null);
+  const [docxToPdfOrientation, setDocxToPdfOrientation] = useState("portrait");
+  const [docxToPdfResult, setDocxToPdfResult] = useState(null);
+  const [isConvertingDocxToPdf, setIsConvertingDocxToPdf] = useState(false);
+  const [docxToPdfProgress, setDocxToPdfProgress] = useState(null);
+  const [docxToPdfError, setDocxToPdfError] = useState("");
+  const docxToPdfInputRef = useRef(null);
+
+  const executeDocxToPdf = async (fileToConvert, orient) => {
+    const target = fileToConvert || docxToPdfFile;
+    if (!target) return;
+
+    setIsConvertingDocxToPdf(true);
+    setDocxToPdfError("");
+    setDocxToPdfProgress({
+      percent: 15,
+      status: "Unpacking Word document...",
+    });
+
+    try {
+      const result = await convertDocxToPdf(target, {
+        orientation: orient || docxToPdfOrientation,
+        progressCallback: (p) => setDocxToPdfProgress(p),
+      });
+      setDocxToPdfResult(result);
+    } catch (err) {
+      console.error("DOCX to PDF error:", err);
+      setDocxToPdfError(
+        err.message || "Failed to convert DOCX document to PDF."
+      );
+    } finally {
+      setIsConvertingDocxToPdf(false);
+      setDocxToPdfProgress(null);
+    }
+  };
+
+  const handleDocxToPdfUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setDocxToPdfFile(file);
+    setDocxToPdfResult(null);
+    setDocxToPdfError("");
+    executeDocxToPdf(file, docxToPdfOrientation);
+  };
+
+  const handleDownloadDocxToPdf = () => {
+    if (!docxToPdfResult?.blob) return;
+    triggerFileDownload(
+      docxToPdfResult.blob,
+      docxToPdfResult.filename ||
+        `${docxToPdfFile?.name?.replace(/\.[^/.]+$/, "") || "document"}.pdf`
+    );
+  };
+
+  // =========================================================================
+  // 7. PDF TO IMAGES STATE
   // =========================================================================
   const [pdfToImgFile, setPdfToImgFile] = useState(null);
   const [pdfToImgFormat, setPdfToImgFormat] = useState("image/png");
@@ -543,111 +780,397 @@ export default function OmniMediaStudio() {
     }
   };
 
-  // Master Suites Definition
-  const suites = [
-    { id: "image", label: "Image Suite", icon: ImageIcon, count: "3 Tools" },
-    { id: "pdf", label: "PDF Suite", icon: FileText, count: "4 Tools" },
+  // Tools Configurations with soft pastel / neutral themes
+  const imageToolsConfig = [
+    {
+      id: "compressor",
+      label: "Image Compressor",
+      shortLabel: "Compressor",
+      tag: "Size Limit",
+      icon: Minimize2,
+      description: "Reduce image file size with quality sliders or strict target KB limits.",
+      cardBg:
+        "bg-[#f4f9f6] dark:bg-[#111915] border-emerald-200/60 dark:border-emerald-900/30 hover:border-emerald-400/60 dark:hover:border-emerald-700/50",
+      iconBg:
+        "bg-emerald-100/80 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300",
+      tagBg:
+        "bg-emerald-100/70 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300",
+    },
+    {
+      id: "converter",
+      label: "Format Converter",
+      shortLabel: "Converter",
+      tag: "Multi-Format",
+      icon: RefreshCw,
+      description: "Convert images between WebP, PNG, and JPG in seconds.",
+      cardBg:
+        "bg-[#f3f8fc] dark:bg-[#111722] border-sky-200/60 dark:border-sky-900/30 hover:border-sky-400/60 dark:hover:border-sky-700/50",
+      iconBg:
+        "bg-sky-100/80 dark:bg-sky-950/60 text-sky-800 dark:text-sky-300",
+      tagBg:
+        "bg-sky-100/70 dark:bg-sky-950/50 text-sky-800 dark:text-sky-300",
+    },
+    {
+      id: "resizer",
+      label: "Passport & Photo Resizer",
+      shortLabel: "Passport & Resizer",
+      tag: "Visa / ID",
+      icon: Camera,
+      description: "Create US, Schengen, and Indian passport photos with printable 4x6 sheet.",
+      cardBg:
+        "bg-[#f8f5fc] dark:bg-[#181324] border-purple-200/60 dark:border-purple-900/30 hover:border-purple-400/60 dark:hover:border-purple-700/50",
+      iconBg:
+        "bg-purple-100/80 dark:bg-purple-950/60 text-purple-800 dark:text-purple-300",
+      tagBg:
+        "bg-purple-100/70 dark:bg-purple-950/50 text-purple-800 dark:text-purple-300",
+    },
   ];
 
-  const imageTabs = [
-    { id: "compressor", label: "Compressor", icon: Minimize2, tag: "Size Limit" },
-    { id: "converter", label: "Converter", icon: RefreshCw, tag: "Multi-Format" },
-    { id: "resizer", label: "Passport & Resizer", icon: Camera, tag: "Visa / ID" },
-  ];
-
-  const pdfTabs = [
-    { id: "pdfToImg", label: "PDF to Images", icon: Grid, tag: "High-Res" },
-    { id: "imgToPdf", label: "Images to PDF", icon: FilePlus2, tag: "Compile" },
-    { id: "mergePdf", label: "Merge PDFs", icon: Layers, tag: "Combine" },
-    { id: "splitPdf", label: "Split Pages", icon: Scissors, tag: "Extract" },
+  const pdfToolsConfig = [
+    {
+      id: "compressPdf",
+      label: "PDF Compressor",
+      shortLabel: "Compress PDF",
+      tag: "Size Limit",
+      icon: Minimize2,
+      description: "Compress PDF documents up to 90% with custom target KB limits.",
+      cardBg:
+        "bg-[#f4f9f6] dark:bg-[#111915] border-emerald-200/60 dark:border-emerald-900/30 hover:border-emerald-400/60 dark:hover:border-emerald-700/50",
+      iconBg:
+        "bg-emerald-100/80 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300",
+      tagBg:
+        "bg-emerald-100/70 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300",
+    },
+    {
+      id: "pdfToDocx",
+      label: "PDF to Word (.docx)",
+      shortLabel: "PDF to DOCX",
+      tag: "Word Export",
+      icon: FileText,
+      description: "Convert PDF documents into editable Microsoft Word (.docx) files.",
+      cardBg:
+        "bg-[#f3f7fc] dark:bg-[#111622] border-blue-200/60 dark:border-blue-900/30 hover:border-blue-400/60 dark:hover:border-blue-700/50",
+      iconBg:
+        "bg-blue-100/80 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300",
+      tagBg:
+        "bg-blue-100/70 dark:bg-blue-950/50 text-blue-800 dark:text-blue-300",
+    },
+    {
+      id: "docxToPdf",
+      label: "Word (.docx) to PDF",
+      shortLabel: "DOCX to PDF",
+      tag: "Word to PDF",
+      icon: FilePlus2,
+      description: "Convert Microsoft Word (.docx) files into clean, standard A4 PDFs.",
+      cardBg:
+        "bg-[#f5f4fb] dark:bg-[#151324] border-indigo-200/60 dark:border-indigo-900/30 hover:border-indigo-400/60 dark:hover:border-indigo-700/50",
+      iconBg:
+        "bg-indigo-100/80 dark:bg-indigo-950/60 text-indigo-800 dark:text-indigo-300",
+      tagBg:
+        "bg-indigo-100/70 dark:bg-indigo-950/50 text-indigo-800 dark:text-indigo-300",
+    },
+    {
+      id: "pdfToImg",
+      label: "PDF to High-Res Images",
+      shortLabel: "PDF to Images",
+      tag: "High-Res",
+      icon: Grid,
+      description: "Extract every page of a PDF into PNG or JPG with 1-click ZIP export.",
+      cardBg:
+        "bg-[#fbf7f0] dark:bg-[#1c1710] border-amber-200/60 dark:border-amber-900/30 hover:border-amber-400/60 dark:hover:border-amber-700/50",
+      iconBg:
+        "bg-amber-100/80 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300",
+      tagBg:
+        "bg-amber-100/70 dark:bg-amber-950/50 text-amber-800 dark:text-amber-300",
+    },
+    {
+      id: "imgToPdf",
+      label: "Photos to PDF Document",
+      shortLabel: "Images to PDF",
+      tag: "Compile",
+      icon: FilePlus2,
+      description: "Combine multiple photos or document scans into a single A4 PDF.",
+      cardBg:
+        "bg-[#faf4f6] dark:bg-[#1c1319] border-rose-200/60 dark:border-rose-900/30 hover:border-rose-400/60 dark:hover:border-rose-700/50",
+      iconBg:
+        "bg-rose-100/80 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300",
+      tagBg:
+        "bg-rose-100/70 dark:bg-rose-950/50 text-rose-800 dark:text-rose-300",
+    },
+    {
+      id: "mergePdf",
+      label: "Merge Multiple PDFs",
+      shortLabel: "Merge PDFs",
+      tag: "Combine",
+      icon: Layers,
+      description: "Combine two or more separate PDF files into a seamless document.",
+      cardBg:
+        "bg-[#f2f8f8] dark:bg-[#11191a] border-teal-200/60 dark:border-teal-900/30 hover:border-teal-400/60 dark:hover:border-teal-700/50",
+      iconBg:
+        "bg-teal-100/80 dark:bg-teal-950/60 text-teal-800 dark:text-teal-300",
+      tagBg:
+        "bg-teal-100/70 dark:bg-teal-950/50 text-teal-800 dark:text-teal-300",
+    },
+    {
+      id: "splitPdf",
+      label: "Split & Extract Pages",
+      shortLabel: "Split Pages",
+      tag: "Extract",
+      icon: Scissors,
+      description: "Extract specific page numbers or page ranges into a separate PDF.",
+      cardBg:
+        "bg-[#f6f7f9] dark:bg-[#15171d] border-slate-200/60 dark:border-slate-800/30 hover:border-slate-400/60 dark:hover:border-slate-700/50",
+      iconBg:
+        "bg-slate-200/80 dark:bg-slate-800/60 text-slate-800 dark:text-slate-300",
+      tagBg:
+        "bg-slate-200/70 dark:bg-slate-800/50 text-slate-800 dark:text-slate-300",
+    },
   ];
 
   return (
-    <div className="relative w-full max-w-5xl min-h-[700px] my-auto flex flex-col rounded-2xl sm:rounded-3xl bg-white dark:bg-[#11131b] border border-gray-200 dark:border-white/[0.08] overflow-hidden z-10 font-jakarta shadow-2xl transition-colors duration-200">
-      {/* 1. Master Suite Header */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between px-3.5 sm:px-6 py-2.5 sm:py-3 border-b border-gray-200 dark:border-white/[0.08] bg-white dark:bg-[#11131b] shrink-0 gap-2.5 transition-colors duration-200">
-        <div className="flex items-center gap-2.5 min-w-0">
-          <div className="w-8 h-8 rounded-xl bg-gray-900 dark:bg-white text-white dark:text-black flex items-center justify-center shadow-xs shrink-0">
-            {activeSuite === "image" ? <ImageIcon size={16} /> : <FileText size={16} />}
+    <div className="relative w-full max-w-5xl min-h-[580px] sm:min-h-[620px] my-auto flex flex-col rounded-2xl sm:rounded-3xl bg-white dark:bg-[#11131b] border border-gray-200 dark:border-white/[0.08] overflow-hidden z-10 font-jakarta shadow-2xl transition-colors duration-200">
+      {/* ===================================================================
+          LEVEL 1: MAIN STUDIO HUB (2 SLEEK PASTEL / NEUTRAL CARDS)
+      =================================================================== */}
+      {currentView === "hub" && (
+        <div className="flex-1 flex flex-col justify-between p-6 sm:p-8 space-y-6">
+          {/* Header */}
+          <div className="text-center max-w-xl mx-auto space-y-2.5 pt-5 sm:pt-8 pb-1">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/[0.03] dark:bg-white/[0.04] border border-black/[0.08] dark:border-white/[0.08] text-xs font-medium text-gray-600 dark:text-gray-400">
+              <ShieldCheck size={14} className="text-gray-700 dark:text-gray-300 shrink-0" />
+              <span>100% Private</span>
+              <span className="text-black/20 dark:text-white/20">•</span>
+              <span>Runs Directly On Your Device</span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white font-clash tracking-tight">
+              Image & PDF Studio
+            </h2>
+            <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+              Fast, private media optimizer and document workstation.
+            </p>
           </div>
-          <div className="min-w-0">
-            <div className="flex items-center gap-2">
-              <span className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white font-clash tracking-wide truncate">
-                Image & PDF Studio
-              </span>
-              <span className="px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold">
-                100% Private (No Upload)
+
+          {/* 2 Simple Minimal Pastel Cards - Bigger Height & Distinct Colors */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 max-w-3xl mx-auto w-full my-auto">
+            {/* 1. Image Studio Card (Warm Amber / Sand Pastel) */}
+            <motion.div
+              whileHover={{ y: -4 }}
+              transition={{ duration: 0.18 }}
+              onClick={() => handleOpenSuite("image")}
+              className="group relative rounded-3xl bg-[#faf6f0] dark:bg-[#1a1612] hover:bg-[#f6eee3] dark:hover:bg-[#201a15] border border-amber-200/80 dark:border-amber-900/40 hover:border-amber-400 dark:hover:border-amber-600/50 p-6 sm:p-7 flex flex-col justify-between cursor-pointer shadow-2xs hover:shadow-md transition-all duration-200 min-h-[220px] sm:min-h-[240px]"
+            >
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="w-12 h-12 rounded-2xl bg-amber-100 dark:bg-amber-950/70 text-amber-900 dark:text-amber-300 flex items-center justify-center shadow-2xs">
+                    <ImageIcon size={22} />
+                  </div>
+                  <span className="px-3 py-1 rounded-full bg-amber-100/90 dark:bg-amber-950/60 text-amber-900 dark:text-amber-300 text-xs font-bold">
+                    3 Tools
+                  </span>
+                </div>
+
+                <div>
+                  <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white font-clash flex items-center gap-1.5">
+                    <span>Image Studio</span>
+                    <ArrowUpRight
+                      size={16}
+                      className="opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all text-amber-900 dark:text-amber-300"
+                    />
+                  </h3>
+                  <p className="text-xs sm:text-[13px] text-gray-600 dark:text-gray-300 mt-1.5 leading-relaxed">
+                    Compress images with target KB limits, convert between WebP/PNG/JPG, and resize passport photos.
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-6 pt-3.5 border-t border-amber-200/60 dark:border-white/[0.06] flex items-center justify-between text-xs font-bold text-amber-900 dark:text-amber-300">
+                <span className="group-hover:underline">Open Image Studio ➔</span>
+                <span className="text-[11px] text-amber-800/60 dark:text-amber-400/60 font-mono">100% In-Browser</span>
+              </div>
+            </motion.div>
+
+            {/* 2. PDF Suite Card (Cool Indigo / Lavender Pastel) */}
+            <motion.div
+              whileHover={{ y: -4 }}
+              transition={{ duration: 0.18 }}
+              onClick={() => handleOpenSuite("pdf")}
+              className="group relative rounded-3xl bg-[#f4f5fb] dark:bg-[#131522] hover:bg-[#ebedf8] dark:hover:bg-[#171a2a] border border-indigo-200/80 dark:border-indigo-900/40 hover:border-indigo-400 dark:hover:border-indigo-600/50 p-6 sm:p-7 flex flex-col justify-between cursor-pointer shadow-2xs hover:shadow-md transition-all duration-200 min-h-[220px] sm:min-h-[240px]"
+            >
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="w-12 h-12 rounded-2xl bg-indigo-100 dark:bg-indigo-950/70 text-indigo-900 dark:text-indigo-300 flex items-center justify-center shadow-2xs">
+                    <FileText size={22} />
+                  </div>
+                  <span className="px-3 py-1 rounded-full bg-indigo-100/90 dark:bg-indigo-950/60 text-indigo-900 dark:text-indigo-300 text-xs font-bold">
+                    7 Tools
+                  </span>
+                </div>
+
+                <div>
+                  <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white font-clash flex items-center gap-1.5">
+                    <span>PDF Suite</span>
+                    <ArrowUpRight
+                      size={16}
+                      className="opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all text-indigo-900 dark:text-indigo-300"
+                    />
+                  </h3>
+                  <p className="text-xs sm:text-[13px] text-gray-600 dark:text-gray-300 mt-1.5 leading-relaxed">
+                    Compress PDFs, convert to & from Word (.docx), extract high-res images, merge, and split.
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-6 pt-3.5 border-t border-indigo-200/60 dark:border-white/[0.06] flex items-center justify-between text-xs font-bold text-indigo-900 dark:text-indigo-300">
+                <span className="group-hover:underline">Open PDF Suite ➔</span>
+                <span className="text-[11px] text-indigo-800/60 dark:text-indigo-400/60 font-mono">100% In-Browser</span>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Footer Note */}
+          <div className="flex items-center justify-center gap-2 text-center text-xs text-gray-500 dark:text-gray-400 pt-1">
+            <ShieldCheck size={14} className="text-emerald-600 dark:text-emerald-400 shrink-0" />
+            <span>Your files stay on your device and are never uploaded to any server.</span>
+          </div>
+        </div>
+      )}
+
+      {/* ===================================================================
+          LEVEL 2: SUITE HUB (MINIMAL PASTEL CARDS GRID)
+      =================================================================== */}
+      {currentView === "suite" && (
+        <div className="flex-1 flex flex-col p-5 sm:p-6 space-y-5">
+          {/* Suite Top Navigation */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-gray-200 dark:border-white/[0.08]">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <button
+                type="button"
+                onClick={() => setCurrentView("hub")}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gray-100 hover:bg-gray-200 dark:bg-white/[0.08] dark:hover:bg-white/15 text-xs font-semibold text-gray-800 dark:text-white transition-all cursor-pointer shrink-0"
+              >
+                <ArrowLeft size={13} />
+                <span>Studio Hub</span>
+              </button>
+              <span className="text-gray-300 dark:text-white/20">/</span>
+              <span className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white font-clash truncate">
+                {activeSuite === "image" ? "Image Studio" : "PDF Suite"}
               </span>
             </div>
+
+            {/* Switch Suite Toggle */}
+            <div className="flex items-center bg-gray-100 dark:bg-white/[0.06] p-1 rounded-xl border border-gray-200 dark:border-white/10 shrink-0 self-start sm:self-auto">
+              <button
+                type="button"
+                onClick={() => setActiveSuite("image")}
+                className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                  activeSuite === "image"
+                    ? "bg-white dark:bg-white/[0.14] text-gray-900 dark:text-white shadow-xs"
+                    : "text-gray-500 hover:text-black dark:hover:text-white"
+                }`}
+              >
+                Image Studio (3)
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveSuite("pdf")}
+                className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                  activeSuite === "pdf"
+                    ? "bg-white dark:bg-white/[0.14] text-gray-900 dark:text-white shadow-xs"
+                    : "text-gray-500 hover:text-black dark:hover:text-white"
+                }`}
+              >
+                PDF Suite (7)
+              </button>
+            </div>
+          </div>
+
+          {/* Simple Minimal Pastel Cards Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 items-start content-start auto-rows-max overflow-y-auto pr-1 py-1">
+            {(activeSuite === "image" ? imageToolsConfig : pdfToolsConfig).map((tool) => {
+              const Icon = tool.icon;
+              return (
+                <motion.div
+                  key={tool.id}
+                  whileHover={{ y: -2 }}
+                  transition={{ duration: 0.16 }}
+                  onClick={() => handleOpenTool(activeSuite, tool.id)}
+                  className={`group rounded-2xl border p-4 sm:p-5 flex flex-col justify-between cursor-pointer shadow-2xs hover:shadow-md transition-all duration-200 h-auto ${tool.cardBg}`}
+                >
+                  <div className="space-y-2.5">
+                    <div className="flex items-center justify-between">
+                      <div
+                        className={`w-9 h-9 rounded-xl flex items-center justify-center shadow-2xs ${tool.iconBg}`}
+                      >
+                        <Icon size={17} />
+                      </div>
+                      <span
+                        className={`px-2 py-0.5 rounded-md text-[10px] font-bold ${tool.tagBg}`}
+                      >
+                        {tool.tag}
+                      </span>
+                    </div>
+
+                    <div>
+                      <h4 className="text-sm font-bold text-gray-900 dark:text-white font-clash flex items-center justify-between">
+                        <span>{tool.label}</span>
+                        <ArrowUpRight
+                          size={13}
+                          className="opacity-0 group-hover:opacity-100 transition-opacity text-gray-500 dark:text-gray-400"
+                        />
+                      </h4>
+                      <p className="text-[11.5px] text-gray-600 dark:text-gray-300 mt-1 leading-relaxed">
+                        {tool.description}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 pt-2.5 border-t border-black/[0.05] dark:border-white/[0.05] flex items-center justify-between text-[11px] font-semibold text-gray-800 dark:text-gray-200 group-hover:underline">
+                    <span>Open Tool ➔</span>
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
+      )}
 
-        {/* Master Suite Switcher */}
-        <div className="flex items-center bg-gray-100 dark:bg-white/[0.06] p-1 rounded-xl border border-gray-200 dark:border-white/10 shrink-0 self-start sm:self-auto">
-          {suites.map((s) => {
-            const Icon = s.icon;
-            const isSel = activeSuite === s.id;
-            return (
+      {/* ===================================================================
+          LEVEL 3: FOCUSED TOOL WORKSPACE (ACTIVE TOOL CANVAS)
+      =================================================================== */}
+      {currentView === "tool" && (
+        <div className="flex-1 flex flex-col min-h-0">
+          {/* Tool Workspace Top Header */}
+          <div className="flex items-center justify-between px-4 sm:px-6 py-3 border-b border-gray-200 dark:border-white/[0.08] bg-white dark:bg-[#11131b] shrink-0 transition-colors duration-200">
+            <div className="flex items-center gap-2.5 min-w-0">
               <button
-                key={s.id}
                 type="button"
-                onClick={() => setActiveSuite(s.id)}
-                className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                  isSel
-                    ? "bg-white dark:bg-white/[0.14] text-gray-900 dark:text-white shadow-xs"
-                    : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
-                }`}
+                onClick={() => setCurrentView("suite")}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gray-100 hover:bg-gray-200 dark:bg-white/[0.08] dark:hover:bg-white/15 text-xs font-semibold text-gray-800 dark:text-white transition-all cursor-pointer shrink-0"
               >
-                <Icon size={13} className="shrink-0" />
-                <span>{s.label}</span>
+                <ArrowLeft size={13} />
+                <span>Back to {activeSuite === "image" ? "Image Studio" : "PDF Suite"}</span>
               </button>
-            );
-          })}
-        </div>
-      </div>
 
-      {/* 2. Sub-Tab Bar */}
-      <div className="px-3.5 sm:px-6 py-2 bg-gray-50/80 dark:bg-[#0c0e14] border-b border-gray-200 dark:border-white/[0.08] flex items-center gap-1.5 overflow-x-auto no-scrollbar">
-        {(activeSuite === "image" ? imageTabs : pdfTabs).map((tab) => {
-          const Icon = tab.icon;
-          const isActive =
-            activeSuite === "image"
-              ? activeImageTab === tab.id
-              : activePdfTab === tab.id;
+              <span className="text-gray-300 dark:text-white/20">/</span>
 
-          return (
-            <button
-              key={tab.id}
-              type="button"
-              onClick={() =>
-                activeSuite === "image"
-                  ? setActiveImageTab(tab.id)
-                  : setActivePdfTab(tab.id)
-              }
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer shrink-0 ${
-                isActive
-                  ? "bg-gray-900 dark:bg-white text-white dark:text-black shadow-xs"
-                  : "bg-white dark:bg-white/[0.05] text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white border border-gray-200 dark:border-white/10"
-              }`}
-            >
-              <Icon size={12} className="shrink-0" />
-              <span>{tab.label}</span>
-              <span
-                className={`text-[9.5px] px-1.5 py-0.2 rounded-md ${
-                  isActive
-                    ? "bg-white/20 dark:bg-black/20 text-white dark:text-black"
-                    : "bg-gray-100 dark:bg-white/10 text-gray-500 dark:text-gray-400"
-                }`}
-              >
-                {tab.tag}
+              <span className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white font-clash truncate">
+                {activeSuite === "image"
+                  ? imageToolsConfig.find((t) => t.id === activeImageTab)?.label || "Image Tool"
+                  : pdfToolsConfig.find((t) => t.id === activePdfTab)?.label || "PDF Tool"}
               </span>
-            </button>
-          );
-        })}
-      </div>
+            </div>
 
-      {/* 3. Main Studio Canvas Area */}
-      <div className="flex-1 bg-[#f8f7f3]/50 dark:bg-[#090b10] p-3.5 sm:p-6 overflow-y-auto min-h-0 flex flex-col transition-colors duration-200">
+            <button
+              type="button"
+              onClick={() => setCurrentView("hub")}
+              className="text-xs text-gray-500 hover:text-black dark:hover:text-white transition-colors cursor-pointer hidden sm:inline"
+            >
+              Studio Hub
+            </button>
+          </div>
+
+          {/* Active Tool Canvas */}
+          <div className="flex-1 bg-[#f8f7f3]/50 dark:bg-[#090b10] p-3.5 sm:p-6 overflow-y-auto min-h-0 flex flex-col transition-colors duration-200">
         {/* ===================================================================
             IMAGE SUITE: TAB 1 - IMAGE COMPRESSOR
         =================================================================== */}
@@ -1473,7 +1996,790 @@ export default function OmniMediaStudio() {
         )}
 
         {/* ===================================================================
-            PDF SUITE: TAB 1 - PDF TO IMAGES (NEW FEATURE)
+            PDF SUITE: TAB 1 - PDF COMPRESSOR (NEW FEATURE)
+        =================================================================== */}
+        {activeSuite === "pdf" && activePdfTab === "compressPdf" && (
+          <div className="flex-1 flex flex-col space-y-4">
+            <div className="bg-white dark:bg-[#131620] border border-gray-200 dark:border-white/[0.08] rounded-2xl p-4 sm:p-5 shadow-xs space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-gray-100 dark:border-white/[0.06]">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-sm sm:text-base font-bold text-gray-900 dark:text-white font-clash">
+                      Precision PDF Compressor
+                    </h3>
+                    <span className="px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold">
+                      Up to 90% Reduction
+                    </span>
+                  </div>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                    Reduce PDF file size with live byte reduction metrics, quality presets, or strict portal limits.
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <input
+                    ref={compressPdfInputRef}
+                    type="file"
+                    accept=".pdf,application/pdf"
+                    onChange={handleCompressPdfUpload}
+                    className="hidden"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => compressPdfInputRef.current?.click()}
+                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#111827] hover:bg-black dark:bg-white dark:hover:bg-gray-100 text-white dark:text-black text-xs font-semibold shadow-xs transition-all cursor-pointer"
+                  >
+                    <UploadCloud size={13} />
+                    <span>{compressPdfFile ? "Change PDF" : "Select PDF Document"}</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Controls */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 text-xs">
+                {/* Mode / Preset / Target KB */}
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <label className="text-[11px] font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400">
+                      Compression Mode / Limit
+                    </label>
+                    <span className="text-[10.5px] text-emerald-600 dark:text-emerald-400 font-bold">
+                      {pdfTargetMaxKb > 0 ? `< ${pdfTargetMaxKb} KB` : pdfCompressPreset.toUpperCase()}
+                    </span>
+                  </div>
+                  <select
+                    value={pdfTargetMaxKb > 0 ? `target_${pdfTargetMaxKb}` : pdfCompressPreset}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val.startsWith("target_")) {
+                        const kb = Number(val.replace("target_", ""));
+                        setPdfTargetMaxKb(kb);
+                        setPdfCompressPreset("target");
+                        if (compressPdfFile) {
+                          executePdfCompression(compressPdfFile, { presetId: "target", targetMaxKb: kb });
+                        }
+                      } else if (val === "custom") {
+                        setPdfTargetMaxKb(0);
+                        setPdfCompressPreset("custom");
+                        if (compressPdfFile) {
+                          executePdfCompression(compressPdfFile, {
+                            presetId: "custom",
+                            quality: pdfCustomQuality / 100,
+                            scale: pdfCustomScale,
+                          });
+                        }
+                      } else {
+                        setPdfTargetMaxKb(0);
+                        setPdfCompressPreset(val);
+                        if (compressPdfFile) {
+                          executePdfCompression(compressPdfFile, { presetId: val, targetMaxKb: 0 });
+                        }
+                      }
+                    }}
+                    className="w-full px-3 py-1.5 rounded-lg bg-gray-50 dark:bg-[#0c0e14] border border-gray-200 dark:border-white/10 text-xs font-semibold text-gray-900 dark:text-white"
+                  >
+                    <option value="balanced">⚖️ Recommended (~60-80% Reduction)</option>
+                    <option value="extreme">⚡ Extreme Compression (~85-95% Reduction)</option>
+                    <option value="light">💎 Light Compression (~40-60% Reduction)</option>
+                    <option value="target_100">🎯 Strict &lt; 100 KB (Govt Strict Limit)</option>
+                    <option value="target_200">🎯 Strict &lt; 200 KB (Passport & Visa Portal)</option>
+                    <option value="target_500">🎯 Strict &lt; 500 KB (Job Application Portal)</option>
+                    <option value="target_1000">🎯 Strict &lt; 1 MB (Email Standard)</option>
+                    <option value="target_2000">🎯 Strict &lt; 2 MB (Web Portal Standard)</option>
+                    <option value="custom">🛠️ Custom (Manual Sliders Mode)</option>
+                  </select>
+                </div>
+
+                {/* Quality Slider */}
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <label className="text-[11px] font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400">
+                      Quality: {pdfCompressPreset === "custom" ? `${pdfCustomQuality}%` : pdfCompressPreset === "extreme" ? "35% (Lowest)" : pdfCompressPreset === "light" ? "70% (High)" : "48% (Balanced)"}
+                    </label>
+                  </div>
+                  <input
+                    type="range"
+                    min="15"
+                    max="95"
+                    disabled={pdfCompressPreset !== "custom"}
+                    value={pdfCustomQuality}
+                    onChange={(e) => setPdfCustomQuality(Number(e.target.value))}
+                    onPointerUp={(e) => {
+                      if (compressPdfFile && pdfCompressPreset === "custom") {
+                        executePdfCompression(compressPdfFile, {
+                          presetId: "custom",
+                          quality: Number(e.target.value) / 100,
+                          scale: pdfCustomScale,
+                        });
+                      }
+                    }}
+                    className="w-full accent-black dark:accent-white cursor-pointer disabled:opacity-40"
+                  />
+                </div>
+
+                {/* Resolution Scale Slider */}
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <label className="text-[11px] font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400">
+                      Scale Resolution: {pdfCompressPreset === "custom" ? `${Math.round(pdfCustomScale * 100)}%` : pdfCompressPreset === "extreme" ? "72%" : pdfCompressPreset === "light" ? "110%" : "88%"}
+                    </label>
+                    {compressPdfFile && (
+                      <button
+                        type="button"
+                        onClick={() => executePdfCompression()}
+                        disabled={isCompressingPdfDoc}
+                        className="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold hover:underline cursor-pointer disabled:opacity-40"
+                      >
+                        Re-Compress
+                      </button>
+                    )}
+                  </div>
+                  <input
+                    type="range"
+                    min="0.4"
+                    max="1.8"
+                    step="0.05"
+                    disabled={pdfCompressPreset !== "custom"}
+                    value={pdfCustomScale}
+                    onChange={(e) => setPdfCustomScale(Number(e.target.value))}
+                    onPointerUp={(e) => {
+                      if (compressPdfFile && pdfCompressPreset === "custom") {
+                        executePdfCompression(compressPdfFile, {
+                          presetId: "custom",
+                          quality: pdfCustomQuality / 100,
+                          scale: Number(e.target.value),
+                        });
+                      }
+                    }}
+                    className="w-full accent-black dark:accent-white cursor-pointer disabled:opacity-40"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Main Content Area */}
+            {compressPdfFile ? (
+              <div className="bg-white dark:bg-[#131620] border border-gray-200 dark:border-white/[0.08] rounded-2xl p-4 sm:p-5 shadow-xs flex-1 flex flex-col justify-between space-y-4">
+                {/* Result Top Stats */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-gray-100 dark:border-white/[0.06]">
+                  <div className="flex items-center gap-2 min-w-0 flex-wrap">
+                    <span className="font-bold text-xs text-gray-900 dark:text-white truncate max-w-[200px]">
+                      {compressPdfFile.name}
+                    </span>
+                    {pdfCompressResult && (
+                      <>
+                        <span className="px-2 py-0.5 rounded-md bg-indigo-100 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 text-[10.5px] font-bold">
+                          {pdfCompressResult.numPages} {pdfCompressResult.numPages === 1 ? "Page" : "Pages"}
+                        </span>
+                        <div className="flex items-center gap-1.5 font-mono text-xs">
+                          <span className="text-gray-400 line-through">
+                            {formatBytes(pdfCompressResult.originalSize)}
+                          </span>
+                          <span className="text-black dark:text-white font-bold">➔</span>
+                          <span className="text-emerald-600 dark:text-emerald-400 font-bold">
+                            {formatBytes(pdfCompressResult.compressedSize)}
+                          </span>
+                          {pdfCompressResult.reductionPercent > 0 && (
+                            <span className="px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold">
+                              -{pdfCompressResult.reductionPercent}% Saved
+                            </span>
+                          )}
+                        </div>
+                      </>
+                    )}
+                  </div>
+
+                  {pdfCompressResult && (
+                    <button
+                      type="button"
+                      onClick={handleDownloadCompressedPdf}
+                      className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-xs transition-all cursor-pointer self-start sm:self-auto"
+                    >
+                      <Download size={13} />
+                      <span>Download PDF</span>
+                    </button>
+                  )}
+                </div>
+
+                {/* Compressing State or Page Preview */}
+                {isCompressingPdfDoc ? (
+                  <div className="flex-1 min-h-[220px] flex flex-col items-center justify-center space-y-3 p-6 text-center">
+                    <Loader2 size={36} className="animate-spin text-emerald-600" />
+                    <div className="space-y-1">
+                      <span className="text-sm font-bold text-gray-900 dark:text-white">
+                        {pdfCompressProgress?.status || "Compressing PDF Document..."}
+                      </span>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        {pdfCompressProgress?.percent ? `${pdfCompressProgress.percent}% completed` : "Optimizing streams & embedded graphics..."}
+                      </p>
+                    </div>
+                    {/* Progress Track */}
+                    <div className="w-full max-w-xs bg-gray-100 dark:bg-white/10 rounded-full h-2 overflow-hidden">
+                      <div
+                        className="bg-emerald-500 h-full transition-all duration-200 rounded-full"
+                        style={{ width: `${pdfCompressProgress?.percent || 20}%` }}
+                      />
+                    </div>
+                  </div>
+                ) : pdfCompressError ? (
+                  <div className="flex-1 min-h-[200px] flex flex-col items-center justify-center space-y-2 p-6 text-center text-red-500">
+                    <AlertCircle size={32} />
+                    <span className="text-xs font-bold">{pdfCompressError}</span>
+                  </div>
+                ) : pdfCompressResult?.previewPages && pdfCompressResult.previewPages.length > 0 ? (
+                  <div className="flex-1 flex flex-col md:flex-row gap-4 min-h-0">
+                    {/* Left Thumbnail Strip */}
+                    <div className="flex md:flex-col gap-2 overflow-x-auto md:overflow-y-auto no-scrollbar md:w-44 max-h-[300px] p-2 bg-gray-50 dark:bg-[#0c0e14] rounded-xl border border-gray-200 dark:border-white/10 shrink-0">
+                      {pdfCompressResult.previewPages.map((page, idx) => (
+                        <button
+                          key={page.pageNum}
+                          type="button"
+                          onClick={() => setPdfPreviewActiveIndex(idx)}
+                          className={`p-1.5 rounded-lg border text-left transition-all cursor-pointer shrink-0 md:shrink flex md:flex-row items-center gap-2 ${
+                            pdfPreviewActiveIndex === idx
+                              ? "bg-white dark:bg-white/[0.14] border-emerald-500 shadow-xs"
+                              : "bg-white dark:bg-[#161922] border-gray-200 dark:border-white/10 opacity-70 hover:opacity-100"
+                          }`}
+                        >
+                          <div className="w-12 h-14 bg-gray-100 dark:bg-black/40 rounded overflow-hidden flex items-center justify-center shrink-0">
+                            <img
+                              src={page.dataUrl}
+                              alt={`Page ${page.pageNum}`}
+                              className="max-h-full max-w-full object-contain"
+                            />
+                          </div>
+                          <div className="hidden md:block min-w-0">
+                            <span className="text-[11px] font-bold text-gray-900 dark:text-white block">
+                              Page {page.pageNum}
+                            </span>
+                            <span className="text-[10px] text-gray-400">
+                              {page.width}×{page.height}px
+                            </span>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Right Active Page Full-View Canvas */}
+                    <div className="flex-1 bg-gray-100 dark:bg-black/40 rounded-xl p-3 flex flex-col items-center justify-center border border-gray-200 dark:border-white/10 relative overflow-hidden min-h-[220px]">
+                      {pdfCompressResult.previewPages[pdfPreviewActiveIndex] && (
+                        <>
+                          <img
+                            src={pdfCompressResult.previewPages[pdfPreviewActiveIndex].dataUrl}
+                            alt={`Preview Page ${pdfPreviewActiveIndex + 1}`}
+                            className="max-h-[260px] max-w-full object-contain rounded shadow-md"
+                          />
+                          <div className="absolute bottom-2 left-3 bg-black/75 text-white text-[10px] font-mono px-2 py-0.5 rounded backdrop-blur-xs">
+                            Inspecting Page {pdfPreviewActiveIndex + 1} of {pdfCompressResult.numPages}
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                ) : null}
+
+                {/* Footer Controls */}
+                <div className="flex items-center justify-between pt-2 border-t border-gray-100 dark:border-white/[0.06]">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCompressPdfFile(null);
+                      setPdfCompressResult(null);
+                      setPdfCompressError("");
+                    }}
+                    className="text-xs text-red-600 dark:text-red-400 font-semibold cursor-pointer"
+                  >
+                    Clear Document
+                  </button>
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      disabled={isCompressingPdfDoc || !compressPdfFile}
+                      onClick={() => executePdfCompression()}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gray-100 dark:bg-white/10 hover:bg-gray-200 dark:hover:bg-white/15 text-gray-900 dark:text-white text-xs font-semibold shadow-xs cursor-pointer disabled:opacity-40"
+                    >
+                      <RefreshCw size={12} className={isCompressingPdfDoc ? "animate-spin" : ""} />
+                      <span>Re-Compress</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      disabled={!pdfCompressResult?.blob || isCompressingPdfDoc}
+                      onClick={handleDownloadCompressedPdf}
+                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-xs cursor-pointer disabled:opacity-40"
+                    >
+                      <Download size={13} />
+                      <span>
+                        Download Compressed PDF
+                        {pdfCompressResult ? ` (${formatBytes(pdfCompressResult.compressedSize)})` : ""}
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div
+                onClick={() => compressPdfInputRef.current?.click()}
+                className="flex-1 min-h-[220px] rounded-2xl border-2 border-dashed border-gray-300 dark:border-white/20 hover:border-gray-900 dark:hover:border-white/50 bg-white dark:bg-white/[0.02] flex flex-col items-center justify-center p-6 text-center cursor-pointer group"
+              >
+                <div className="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-3">
+                  <Minimize2 size={24} />
+                </div>
+                <h4 className="text-sm font-bold text-gray-900 dark:text-white font-clash">
+                  Select PDF Document to Compress
+                </h4>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 max-w-sm">
+                  100% Client-Side In-Browser Compression. Reduce file size up to 90% for Govt Portals, Visa applications, and email limits.
+                </p>
+                <div className="mt-4 flex items-center gap-2 flex-wrap justify-center text-[10.5px] font-semibold text-gray-600 dark:text-gray-400">
+                  <span className="px-2.5 py-1 rounded-full bg-gray-100 dark:bg-white/[0.06] border border-gray-200 dark:border-white/10">
+                    ⚡ Up to 90% Reduction
+                  </span>
+                  <span className="px-2.5 py-1 rounded-full bg-gray-100 dark:bg-white/[0.06] border border-gray-200 dark:border-white/10">
+                    🔒 Zero Uploads / Private
+                  </span>
+                  <span className="px-2.5 py-1 rounded-full bg-gray-100 dark:bg-white/[0.06] border border-gray-200 dark:border-white/10">
+                    🏛️ Govt & Job Portal Ready
+                  </span>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ===================================================================
+            PDF SUITE: TAB 2 - PDF TO DOCX (NEW FEATURE)
+        =================================================================== */}
+        {activeSuite === "pdf" && activePdfTab === "pdfToDocx" && (
+          <div className="flex-1 flex flex-col space-y-4">
+            <div className="bg-white dark:bg-[#131620] border border-gray-200 dark:border-white/[0.08] rounded-2xl p-4 sm:p-5 shadow-xs space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-gray-100 dark:border-white/[0.06]">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-sm sm:text-base font-bold text-gray-900 dark:text-white font-clash">
+                      PDF to Editable Word (.docx)
+                    </h3>
+                    <span className="px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300 text-[10px] font-bold">
+                      Editable Paragraphs
+                    </span>
+                  </div>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                    Extract structured paragraphs, headings, bullet points, and text into a Microsoft Word document.
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <input
+                    ref={pdfToDocxInputRef}
+                    type="file"
+                    accept=".pdf,application/pdf"
+                    onChange={handlePdfToDocxUpload}
+                    className="hidden"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => pdfToDocxInputRef.current?.click()}
+                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#111827] hover:bg-black dark:bg-white dark:hover:bg-gray-100 text-white dark:text-black text-xs font-semibold shadow-xs transition-all cursor-pointer"
+                  >
+                    <UploadCloud size={13} />
+                    <span>{pdfToDocxFile ? "Change PDF" : "Select PDF Document"}</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Conversion Mode Controls */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs">
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 block">
+                    Word Conversion Mode
+                  </label>
+                  <select
+                    value={pdfToDocxMode}
+                    onChange={(e) => {
+                      const newMode = e.target.value;
+                      setPdfToDocxMode(newMode);
+                      if (pdfToDocxFile) {
+                        executePdfToDocx(pdfToDocxFile, newMode);
+                      }
+                    }}
+                    className="w-full px-3 py-1.5 rounded-lg bg-gray-50 dark:bg-[#0c0e14] border border-gray-200 dark:border-white/10 text-xs font-semibold text-gray-900 dark:text-white"
+                  >
+                    <option value="smartText">📝 Smart Editable Text (Reconstructed Flow)</option>
+                    <option value="visualLayout">🌟 Exact Visual Layout (Pixel-Perfect Match)</option>
+                    <option value="hybrid">⚡ Hybrid Pro (Visual Pages + Editable Text)</option>
+                  </select>
+                </div>
+
+                <div className="flex items-center justify-between p-2.5 rounded-lg bg-gray-50 dark:bg-[#0c0e14] border border-gray-200 dark:border-white/10">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="w-2 h-2 rounded-full bg-blue-500 shrink-0" />
+                    <span className="text-[11px] font-medium text-gray-600 dark:text-gray-400 truncate">
+                      {pdfToDocxMode === "visualLayout"
+                        ? "Preserves tables, graphics & fonts identically"
+                        : pdfToDocxMode === "hybrid"
+                        ? "Visual replica with editable text stream"
+                        : "Accurate character spacing & headings"}
+                    </span>
+                  </div>
+                  {pdfToDocxFile && (
+                    <button
+                      type="button"
+                      onClick={() => executePdfToDocx()}
+                      disabled={isConvertingPdfToDocx}
+                      className="text-[11px] text-blue-600 dark:text-blue-400 font-bold hover:underline cursor-pointer disabled:opacity-40 shrink-0 ml-2"
+                    >
+                      Re-Convert
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Content Area */}
+            {pdfToDocxFile ? (
+              <div className="bg-white dark:bg-[#131620] border border-gray-200 dark:border-white/[0.08] rounded-2xl p-4 sm:p-5 shadow-xs flex-1 flex flex-col justify-between space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-gray-100 dark:border-white/[0.06]">
+                  <div className="flex items-center gap-2 min-w-0 flex-wrap">
+                    <span className="font-bold text-xs text-gray-900 dark:text-white truncate max-w-[220px]">
+                      {pdfToDocxFile.name}
+                    </span>
+                    {pdfToDocxResult && (
+                      <>
+                        <span className="px-2 py-0.5 rounded-md bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 text-[10.5px] font-bold">
+                          {pdfToDocxResult.numPages} Pages Extracted
+                        </span>
+                        <span className="px-2 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 text-[10.5px] font-bold">
+                          {pdfToDocxResult.mode === "visualLayout"
+                            ? "Exact Layout"
+                            : `${pdfToDocxResult.totalParagraphs} Paragraphs`}
+                        </span>
+                        <span className="text-[11px] text-gray-400 font-mono">
+                          Output: {formatBytes(pdfToDocxResult.docxSize)}
+                        </span>
+                      </>
+                    )}
+                  </div>
+
+                  {pdfToDocxResult && (
+                    <button
+                      type="button"
+                      onClick={handleDownloadPdfToDocx}
+                      className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow-xs transition-all cursor-pointer self-start sm:self-auto"
+                    >
+                      <Download size={13} />
+                      <span>Download .DOCX</span>
+                    </button>
+                  )}
+                </div>
+
+                {/* State: Processing, Error, or Preview */}
+                {isConvertingPdfToDocx ? (
+                  <div className="flex-1 min-h-[220px] flex flex-col items-center justify-center space-y-3 p-6 text-center">
+                    <Loader2 size={36} className="animate-spin text-blue-600" />
+                    <div className="space-y-1">
+                      <span className="text-sm font-bold text-gray-900 dark:text-white">
+                        {pdfToDocxProgress?.status || "Converting PDF to Word (.docx)..."}
+                      </span>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        {pdfToDocxProgress?.percent ? `${pdfToDocxProgress.percent}% completed` : "Reconstructing layout and typography..."}
+                      </p>
+                    </div>
+                    <div className="w-full max-w-xs bg-gray-100 dark:bg-white/10 rounded-full h-2 overflow-hidden">
+                      <div
+                        className="bg-blue-500 h-full transition-all duration-200 rounded-full"
+                        style={{ width: `${pdfToDocxProgress?.percent || 25}%` }}
+                      />
+                    </div>
+                  </div>
+                ) : pdfToDocxError ? (
+                  <div className="flex-1 min-h-[200px] flex flex-col items-center justify-center space-y-2 p-6 text-center text-red-500">
+                    <AlertCircle size={32} />
+                    <span className="text-xs font-bold">{pdfToDocxError}</span>
+                  </div>
+                ) : pdfToDocxResult ? (
+                  <div className="flex-1 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-bold uppercase tracking-wider text-gray-500">
+                        Document Content Preview
+                      </span>
+                      <span className="text-[10.5px] text-emerald-600 dark:text-emerald-400 font-bold">
+                        {pdfToDocxMode === "visualLayout"
+                          ? "✓ High-Fidelity Page Layout Packaged"
+                          : "✓ Formatted Text Ready for Word"}
+                      </span>
+                    </div>
+                    <div className="p-4 bg-gray-50 dark:bg-[#0c0e14] rounded-xl border border-gray-200 dark:border-white/10 max-h-[240px] overflow-y-auto text-xs text-gray-800 dark:text-gray-200 font-mono whitespace-pre-wrap leading-relaxed">
+                      {pdfToDocxResult.textPreview || "Visual document layout packaged into Microsoft Word format with pixel-perfect fidelity."}
+                    </div>
+                  </div>
+                ) : null}
+
+                {/* Footer Controls */}
+                <div className="flex items-center justify-between pt-2 border-t border-gray-100 dark:border-white/[0.06]">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setPdfToDocxFile(null);
+                      setPdfToDocxResult(null);
+                      setPdfToDocxError("");
+                    }}
+                    className="text-xs text-red-600 dark:text-red-400 font-semibold cursor-pointer"
+                  >
+                    Clear Document
+                  </button>
+
+                  <button
+                    type="button"
+                    disabled={!pdfToDocxResult?.blob || isConvertingPdfToDocx}
+                    onClick={handleDownloadPdfToDocx}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow-xs cursor-pointer disabled:opacity-40"
+                  >
+                    <Download size={13} />
+                    <span>Download Word Document (.docx)</span>
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div
+                onClick={() => pdfToDocxInputRef.current?.click()}
+                className="flex-1 min-h-[220px] rounded-2xl border-2 border-dashed border-gray-300 dark:border-white/20 hover:border-gray-900 dark:hover:border-white/50 bg-white dark:bg-white/[0.02] flex flex-col items-center justify-center p-6 text-center cursor-pointer group"
+              >
+                <div className="w-12 h-12 rounded-2xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 flex items-center justify-center mb-3">
+                  <FileText size={24} />
+                </div>
+                <h4 className="text-sm font-bold text-gray-900 dark:text-white font-clash">
+                  Select PDF Document to Convert to Word (.docx)
+                </h4>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 max-w-sm">
+                  Converts PDF pages into editable Microsoft Word (.docx) documents with extracted headings, paragraphs, and formatting.
+                </p>
+                <div className="mt-4 flex items-center gap-2 flex-wrap justify-center text-[10.5px] font-semibold text-gray-600 dark:text-gray-400">
+                  <span className="px-2.5 py-1 rounded-full bg-gray-100 dark:bg-white/[0.06] border border-gray-200 dark:border-white/10">
+                    📝 Editable Text Runs
+                  </span>
+                  <span className="px-2.5 py-1 rounded-full bg-gray-100 dark:bg-white/[0.06] border border-gray-200 dark:border-white/10">
+                    🔒 Zero Uploads / Private
+                  </span>
+                  <span className="px-2.5 py-1 rounded-full bg-gray-100 dark:bg-white/[0.06] border border-gray-200 dark:border-white/10">
+                    💼 MS Word & Google Docs Compatible
+                  </span>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ===================================================================
+            PDF SUITE: TAB 3 - DOCX TO PDF (NEW FEATURE)
+        =================================================================== */}
+        {activeSuite === "pdf" && activePdfTab === "docxToPdf" && (
+          <div className="flex-1 flex flex-col space-y-4">
+            <div className="bg-white dark:bg-[#131620] border border-gray-200 dark:border-white/[0.08] rounded-2xl p-4 sm:p-5 shadow-xs space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-gray-100 dark:border-white/[0.06]">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-sm sm:text-base font-bold text-gray-900 dark:text-white font-clash">
+                      Word (.docx) to PDF Converter
+                    </h3>
+                    <span className="px-2 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-950/60 text-indigo-800 dark:text-indigo-300 text-[10px] font-bold">
+                      Standard A4 PDF
+                    </span>
+                  </div>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                    Convert Microsoft Word (.docx) files into clean, shareable standard PDF documents.
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <input
+                    ref={docxToPdfInputRef}
+                    type="file"
+                    accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                    onChange={handleDocxToPdfUpload}
+                    className="hidden"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => docxToPdfInputRef.current?.click()}
+                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#111827] hover:bg-black dark:bg-white dark:hover:bg-gray-100 text-white dark:text-black text-xs font-semibold shadow-xs transition-all cursor-pointer"
+                  >
+                    <UploadCloud size={13} />
+                    <span>{docxToPdfFile ? "Change DOCX" : "Select Word Document"}</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Options */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs">
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 block">
+                    Page Orientation
+                  </label>
+                  <select
+                    value={docxToPdfOrientation}
+                    onChange={(e) => {
+                      setDocxToPdfOrientation(e.target.value);
+                      if (docxToPdfFile) {
+                        executeDocxToPdf(docxToPdfFile, e.target.value);
+                      }
+                    }}
+                    className="w-full px-3 py-1.5 rounded-lg bg-gray-50 dark:bg-[#0c0e14] border border-gray-200 dark:border-white/10 text-xs font-semibold text-gray-900 dark:text-white"
+                  >
+                    <option value="portrait">📄 Portrait (Standard Letter / A4)</option>
+                    <option value="landscape">📑 Landscape (Wide Format)</option>
+                  </select>
+                </div>
+
+                <div className="flex items-center justify-between p-2.5 rounded-lg bg-gray-50 dark:bg-[#0c0e14] border border-gray-200 dark:border-white/10">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                    <span className="text-[11px] font-medium text-gray-600 dark:text-gray-400">
+                      Standard Print Typography & Margins
+                    </span>
+                  </div>
+                  {docxToPdfFile && (
+                    <button
+                      type="button"
+                      onClick={() => executeDocxToPdf()}
+                      disabled={isConvertingDocxToPdf}
+                      className="text-[11px] text-indigo-600 dark:text-indigo-400 font-bold hover:underline cursor-pointer disabled:opacity-40"
+                    >
+                      Re-Convert
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Content Area */}
+            {docxToPdfFile ? (
+              <div className="bg-white dark:bg-[#131620] border border-gray-200 dark:border-white/[0.08] rounded-2xl p-4 sm:p-5 shadow-xs flex-1 flex flex-col justify-between space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-gray-100 dark:border-white/[0.06]">
+                  <div className="flex items-center gap-2 min-w-0 flex-wrap">
+                    <span className="font-bold text-xs text-gray-900 dark:text-white truncate max-w-[220px]">
+                      {docxToPdfFile.name}
+                    </span>
+                    {docxToPdfResult && (
+                      <>
+                        <span className="px-2 py-0.5 rounded-md bg-indigo-100 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 text-[10.5px] font-bold">
+                          {docxToPdfResult.pageCount} {docxToPdfResult.pageCount === 1 ? "Page" : "Pages"} Generated
+                        </span>
+                        <span className="text-[11px] text-gray-400 font-mono">
+                          PDF Size: {formatBytes(docxToPdfResult.pdfSize)}
+                        </span>
+                      </>
+                    )}
+                  </div>
+
+                  {docxToPdfResult && (
+                    <button
+                      type="button"
+                      onClick={handleDownloadDocxToPdf}
+                      className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-xs transition-all cursor-pointer self-start sm:self-auto"
+                    >
+                      <Download size={13} />
+                      <span>Download PDF</span>
+                    </button>
+                  )}
+                </div>
+
+                {isConvertingDocxToPdf ? (
+                  <div className="flex-1 min-h-[220px] flex flex-col items-center justify-center space-y-3 p-6 text-center">
+                    <Loader2 size={36} className="animate-spin text-indigo-600" />
+                    <div className="space-y-1">
+                      <span className="text-sm font-bold text-gray-900 dark:text-white">
+                        {docxToPdfProgress?.status || "Converting Word Document to PDF..."}
+                      </span>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        {docxToPdfProgress?.percent ? `${docxToPdfProgress.percent}% completed` : "Parsing Word OpenXML body..."}
+                      </p>
+                    </div>
+                    <div className="w-full max-w-xs bg-gray-100 dark:bg-white/10 rounded-full h-2 overflow-hidden">
+                      <div
+                        className="bg-indigo-500 h-full transition-all duration-200 rounded-full"
+                        style={{ width: `${docxToPdfProgress?.percent || 30}%` }}
+                      />
+                    </div>
+                  </div>
+                ) : docxToPdfError ? (
+                  <div className="flex-1 min-h-[200px] flex flex-col items-center justify-center space-y-2 p-6 text-center text-red-500">
+                    <AlertCircle size={32} />
+                    <span className="text-xs font-bold">{docxToPdfError}</span>
+                  </div>
+                ) : docxToPdfResult ? (
+                  <div className="flex-1 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-bold uppercase tracking-wider text-gray-500">
+                        Extracted Document Text
+                      </span>
+                      <span className="text-[10.5px] text-emerald-600 dark:text-emerald-400 font-bold">
+                        ✓ Formatted for PDF
+                      </span>
+                    </div>
+                    <div className="p-4 bg-gray-50 dark:bg-[#0c0e14] rounded-xl border border-gray-200 dark:border-white/10 max-h-[240px] overflow-y-auto text-xs text-gray-800 dark:text-gray-200 font-mono whitespace-pre-wrap leading-relaxed">
+                      {docxToPdfResult.textPreview || "Word document paragraphs successfully formatted into PDF."}
+                    </div>
+                  </div>
+                ) : null}
+
+                {/* Footer Controls */}
+                <div className="flex items-center justify-between pt-2 border-t border-gray-100 dark:border-white/[0.06]">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setDocxToPdfFile(null);
+                      setDocxToPdfResult(null);
+                      setDocxToPdfError("");
+                    }}
+                    className="text-xs text-red-600 dark:text-red-400 font-semibold cursor-pointer"
+                  >
+                    Clear Document
+                  </button>
+
+                  <button
+                    type="button"
+                    disabled={!docxToPdfResult?.blob || isConvertingDocxToPdf}
+                    onClick={handleDownloadDocxToPdf}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-xs cursor-pointer disabled:opacity-40"
+                  >
+                    <Download size={13} />
+                    <span>Download PDF ({docxToPdfResult ? formatBytes(docxToPdfResult.pdfSize) : ""})</span>
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div
+                onClick={() => docxToPdfInputRef.current?.click()}
+                className="flex-1 min-h-[220px] rounded-2xl border-2 border-dashed border-gray-300 dark:border-white/20 hover:border-gray-900 dark:hover:border-white/50 bg-white dark:bg-white/[0.02] flex flex-col items-center justify-center p-6 text-center cursor-pointer group"
+              >
+                <div className="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center mb-3">
+                  <FilePlus2 size={24} />
+                </div>
+                <h4 className="text-sm font-bold text-gray-900 dark:text-white font-clash">
+                  Select Word Document (.docx) to Convert to PDF
+                </h4>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 max-w-sm">
+                  100% Client-Side In-Browser Conversion. Converts Microsoft Word documents into clean, standard A4 PDF files.
+                </p>
+                <div className="mt-4 flex items-center gap-2 flex-wrap justify-center text-[10.5px] font-semibold text-gray-600 dark:text-gray-400">
+                  <span className="px-2.5 py-1 rounded-full bg-gray-100 dark:bg-white/[0.06] border border-gray-200 dark:border-white/10">
+                    📄 Standard A4 Layout
+                  </span>
+                  <span className="px-2.5 py-1 rounded-full bg-gray-100 dark:bg-white/[0.06] border border-gray-200 dark:border-white/10">
+                    🔒 Zero Uploads / Private
+                  </span>
+                  <span className="px-2.5 py-1 rounded-full bg-gray-100 dark:bg-white/[0.06] border border-gray-200 dark:border-white/10">
+                    ✨ Clean Font Typography
+                  </span>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ===================================================================
+            PDF SUITE: TAB 4 - PDF TO IMAGES
         =================================================================== */}
         {activeSuite === "pdf" && activePdfTab === "pdfToImg" && (
           <div className="flex-1 flex flex-col space-y-4">
@@ -2034,7 +3340,9 @@ export default function OmniMediaStudio() {
             </div>
           </div>
         )}
-      </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
